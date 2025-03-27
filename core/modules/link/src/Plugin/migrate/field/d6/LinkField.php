@@ -3,21 +3,19 @@
 namespace Drupal\link\Plugin\migrate\field\d6;
 
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Attribute\MigrateField;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
- * Migrate field plugin for Drupal 6 link fields.
+ * @MigrateField(
+ *   id = "link",
+ *   core = {6},
+ *   type_map = {
+ *     "link" = "link",
+ *   },
+ *   source_module = "link",
+ *   destination_module = "link"
+ * )
  */
-#[MigrateField(
-  id: 'link',
-  core: [6],
-  type_map: [
-    'link' => 'link',
-  ],
-  source_module: 'link',
-  destination_module: 'link',
-)]
 class LinkField extends FieldPluginBase {
 
   /**

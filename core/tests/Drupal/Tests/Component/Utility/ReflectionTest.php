@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Reflection;
@@ -22,7 +20,7 @@ class ReflectionTest extends TestCase {
    * @covers ::getParameterClassName
    * @dataProvider providerGetParameterClassName
    */
-  public function testGetParameterClassName(?string $expected, \ReflectionParameter $parameter): void {
+  public function testGetParameterClassName(?string $expected, \ReflectionParameter $parameter) {
     $this->assertEquals($expected, Reflection::getParameterClassName($parameter));
   }
 
@@ -30,11 +28,8 @@ class ReflectionTest extends TestCase {
    * Data provider for ::testGetParameterClassName().
    *
    * @return array[]
-   *   An array of test cases. Each test case is an associative array containing:
-   *   - string|null $expected: The expected class name.
-   *   - \ReflectionParameter $parameter: The reflection parameter.
    */
-  public static function providerGetParameterClassName() {
+  public function providerGetParameterClassName() {
     $reflection_method = new \ReflectionMethod(static::class, 'existsForTesting');
     $parameters = $reflection_method->getParameters();
     return [

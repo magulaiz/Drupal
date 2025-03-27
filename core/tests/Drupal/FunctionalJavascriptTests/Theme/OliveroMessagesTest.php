@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalJavascriptTests\Theme;
 
 use Drupal\FunctionalJavascriptTests\Core\JsMessageTest;
@@ -46,7 +44,7 @@ class OliveroMessagesTest extends JsMessageTest {
   /**
    * Tests data-drupal-selector="messages" exists.
    */
-  public function testDataDrupalSelectors(): void {
+  public function testDataDrupalSelectors() {
     $web_assert = $this->assertSession();
     $this->drupalGet('js_message_test_link');
 

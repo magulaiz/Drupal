@@ -1,16 +1,9 @@
-// cspell:ignore sourceediting
-
 module.exports = {
   '@tags': ['core', 'ckeditor5'],
   before(browser) {
-    browser
-      .drupalInstall({ installProfile: 'testing' })
-      .drupalInstallModule('ckeditor5', true)
-      .drupalInstallModule('field_ui')
-      .drupalInstallModule('node', true);
-
+    browser.drupalInstall({ installProfile: 'minimal' });
     // Set fixed (desktop-ish) size to ensure a maximum viewport.
-    browser.window.resize(1920, 1080);
+    browser.resizeWindow(1920, 1080);
   },
   after(browser) {
     browser.drupalUninstall();
@@ -18,6 +11,17 @@ module.exports = {
   'Ensure CKEditor respects field widget row value': (browser) => {
     browser.drupalLoginAsAdmin(() => {
       browser
+        // Enable required modules.
+        .drupalRelativeURL('/admin/modules')
+        .click('[name="modules[ckeditor5][enable]"]')
+        .click('[name="modules[field_ui][enable]"]')
+        .submitForm('input[type="submit"]') // Submit module form.
+        .waitForElementVisible(
+          '.system-modules-confirm-form input[value="Continue"]',
+        )
+        .submitForm('input[value="Continue"]') // Confirm installation of dependencies.
+        .waitForElementVisible('.system-modules', 10000)
+
         // Create new input format.
         .drupalRelativeURL('/admin/config/content/formats/add')
         .waitForElementVisible('[data-drupal-selector="edit-name"]')
@@ -31,10 +35,7 @@ module.exports = {
           '[data-drupal-selector="edit-editor-settings-toolbar"]',
         )
         .click('.ckeditor5-toolbar-button-sourceEditing') // Select the Source Editing button.
-        // Hit the down arrow key to move it to the toolbar.
-        .perform(function () {
-          return this.actions().sendKeys(browser.Keys.ARROW_DOWN);
-        })
+        .keys(browser.Keys.DOWN) // Hit the down arrow key to move it to the toolbar.
         // Wait for new source editing vertical tab to be present before continuing.
         .waitForElementVisible(
           '[href*=edit-editor-settings-plugins-ckeditor5-sourceediting]',
@@ -121,47 +122,6 @@ module.exports = {
             browser.assert.ok(
               result.value,
               'Editor area should never exceed full viewport.',
-            );
-          },
-        )
-        // Source Editor textarea should have vertical scrollbar when needed.
-        .click('.ck-source-editing-button')
-        .waitForElementVisible('.ck-source-editing-area')
-        .execute(
-          // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
-          function () {
-            function isScrollableY(element) {
-              const style = window.getComputedStyle(element);
-
-              if (
-                element.scrollHeight > element.clientHeight &&
-                style.overflow !== 'hidden' &&
-                style['overflow-y'] !== 'hidden' &&
-                style.overflow !== 'clip' &&
-                style['overflow-y'] !== 'clip'
-              ) {
-                if (
-                  element === document.scrollingElement ||
-                  (style.overflow !== 'visible' &&
-                    style['overflow-y'] !== 'visible')
-                ) {
-                  return true;
-                }
-              }
-
-              return false;
-            }
-
-            return isScrollableY(
-              document.querySelector('.ck-source-editing-area textarea'),
-            );
-          },
-          [],
-          (result) => {
-            browser.assert.strictEqual(
-              result.value,
-              true,
-              'Source Editor textarea should have vertical scrollbar when needed.',
             );
           },
         )

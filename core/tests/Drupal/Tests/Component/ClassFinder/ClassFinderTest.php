@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\ClassFinder;
 
 use Composer\Autoload\ClassLoader;
@@ -17,13 +15,12 @@ class ClassFinderTest extends TestCase {
   /**
    * @covers ::findFile
    */
-  public function testFindFile(): void {
+  public function testFindFile() {
     $finder = new ClassFinder();
 
     // The full path is returned therefore only tests with
     // assertStringEndsWith() so the test is portable.
-    $expected_path = str_replace('/', DIRECTORY_SEPARATOR, 'core/tests/Drupal/Tests/Component/ClassFinder/ClassFinderTest.php');
-    $this->assertStringEndsWith($expected_path, $finder->findFile(ClassFinderTest::class));
+    $this->assertStringEndsWith('core/tests/Drupal/Tests/Component/ClassFinder/ClassFinderTest.php', $finder->findFile(ClassFinderTest::class));
     $class = 'Not\\A\\Class';
     $this->assertNull($finder->findFile($class));
 
@@ -33,7 +30,7 @@ class ClassFinderTest extends TestCase {
     $loader->register();
     $this->assertEquals(__FILE__, $finder->findFile($class));
     // This shouldn't prevent us from finding the original file.
-    $this->assertStringEndsWith($expected_path, $finder->findFile(ClassFinderTest::class));
+    $this->assertStringEndsWith('core/tests/Drupal/Tests/Component/ClassFinder/ClassFinderTest.php', $finder->findFile(ClassFinderTest::class));
 
     // Clean up the additional autoloader after the test.
     $loader->unregister();

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Unit\Plugin\migrate\process;
 
 use Drupal\user\Plugin\migrate\process\ConvertTokens;
@@ -25,7 +23,7 @@ class ConvertTokensTest extends MigrateProcessTestCase {
   /**
    * Tests conversion of user tokens.
    */
-  public function testConvertTokens(): void {
+  public function testConvertTokens() {
     $value = $this->plugin->transform('Account details for !username at !site', $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertEquals('Account details for [user:name] at [site:name]', $value);
   }
@@ -33,7 +31,7 @@ class ConvertTokensTest extends MigrateProcessTestCase {
   /**
    * Tests conversion of user tokens with a NULL value.
    */
-  public function testConvertTokensNull(): void {
+  public function testConvertTokensNull() {
     $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertEquals('', $value);
   }

@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Test unicode handling features implemented in Unicode component.
@@ -24,7 +22,7 @@ class UnicodeTest extends TestCase {
    * @dataProvider providerUcfirst
    * @covers ::ucfirst
    */
-  public function testUcfirst($text, $expected): void {
+  public function testUcfirst($text, $expected) {
     $this->assertEquals($expected, Unicode::ucfirst($text));
   }
 
@@ -36,7 +34,7 @@ class UnicodeTest extends TestCase {
    * @return array
    *   An array containing a string and its uppercase first version.
    */
-  public static function providerUcfirst() {
+  public function providerUcfirst() {
     // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'THe QUIcK bRoWn'],
@@ -55,7 +53,7 @@ class UnicodeTest extends TestCase {
    * @dataProvider providerLcfirst
    * @covers ::lcfirst
    */
-  public function testLcfirst($text, $expected): void {
+  public function testLcfirst($text, $expected) {
     $this->assertEquals($expected, Unicode::lcfirst($text));
   }
 
@@ -67,7 +65,7 @@ class UnicodeTest extends TestCase {
    * @return array
    *   An array containing a string and its lowercase version.
    */
-  public static function providerLcfirst() {
+  public function providerLcfirst() {
     // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'tHe QUIcK bRoWn'],
@@ -86,7 +84,7 @@ class UnicodeTest extends TestCase {
    * @dataProvider providerUcwords
    * @covers ::ucwords
    */
-  public function testUcwords($text, $expected): void {
+  public function testUcwords($text, $expected) {
     $this->assertEquals($expected, Unicode::ucwords($text));
   }
 
@@ -98,7 +96,7 @@ class UnicodeTest extends TestCase {
    * @return array
    *   An array containing a string and its capitalized version.
    */
-  public static function providerUcwords() {
+  public function providerUcwords() {
     // cSpell:disable
     return [
       ['tHe QUIcK bRoWn', 'THe QUIcK BRoWn'],
@@ -119,7 +117,7 @@ class UnicodeTest extends TestCase {
    * @dataProvider providerTruncate
    * @covers ::truncate
    */
-  public function testTruncate($text, $max_length, $expected, $wordsafe = FALSE, $add_ellipsis = FALSE): void {
+  public function testTruncate($text, $max_length, $expected, $wordsafe = FALSE, $add_ellipsis = FALSE) {
     $this->assertEquals($expected, Unicode::truncate($text, $max_length, $wordsafe, $add_ellipsis));
   }
 
@@ -136,7 +134,7 @@ class UnicodeTest extends TestCase {
    *     - (optional) Boolean for the $wordsafe flag. Defaults to FALSE.
    *     - (optional) Boolean for the $add_ellipsis flag. Defaults to FALSE.
    */
-  public static function providerTruncate() {
+  public function providerTruncate() {
     // cSpell:disable
     $tests = [
       ['frànçAIS is über-åwesome', 24, 'frànçAIS is über-åwesome'],
@@ -208,17 +206,17 @@ EOF;
   /**
    * Tests multibyte truncate bytes.
    *
+   * @dataProvider providerTestTruncateBytes
+   * @covers ::truncateBytes
+   *
    * @param string $text
    *   The string to truncate.
    * @param int $max_length
    *   The upper limit on the returned string length.
    * @param string $expected
    *   The expected return from Unicode::truncateBytes().
-   *
-   * @dataProvider providerTestTruncateBytes
-   * @covers ::truncateBytes
    */
-  public function testTruncateBytes($text, $max_length, $expected): void {
+  public function testTruncateBytes($text, $max_length, $expected) {
     $this->assertEquals($expected, Unicode::truncateBytes($text, $max_length), 'The string was not correctly truncated.');
   }
 
@@ -229,7 +227,7 @@ EOF;
    *   An array of arrays, each containing the parameters to
    *   self::testTruncateBytes().
    */
-  public static function providerTestTruncateBytes() {
+  public function providerTestTruncateBytes() {
     return [
       // String shorter than max length.
       ['Short string', 42, 'Short string'],
@@ -243,31 +241,30 @@ EOF;
   /**
    * Tests UTF-8 validation.
    *
+   * @dataProvider providerTestValidateUtf8
+   * @covers ::validateUtf8
+   *
    * @param string $text
    *   The text to validate.
    * @param bool $expected
    *   The expected return value from Unicode::validateUtf8().
    * @param string $message
    *   The message to display on failure.
-   *
-   * @dataProvider providerTestValidateUtf8
-   * @covers ::validateUtf8
    */
-  public function testValidateUtf8($text, $expected, $message): void {
+  public function testValidateUtf8($text, $expected, $message) {
     $this->assertEquals($expected, Unicode::validateUtf8($text), $message);
   }
 
   /**
    * Provides data for self::testValidateUtf8().
    *
-   * Invalid UTF-8 examples sourced from
-   * http://stackoverflow.com/a/11709412/109119.
+   * Invalid UTF-8 examples sourced from http://stackoverflow.com/a/11709412/109119.
    *
    * @return array
    *   An array of arrays, each containing the parameters for
    *   self::testValidateUtf8().
    */
-  public static function providerTestValidateUtf8() {
+  public function providerTestValidateUtf8() {
     return [
       // Empty string.
       ['', TRUE, 'An empty string did not validate.'],
@@ -283,17 +280,17 @@ EOF;
   /**
    * Tests UTF-8 conversion.
    *
+   * @dataProvider providerTestConvertToUtf8
+   * @covers ::convertToUtf8
+   *
    * @param string $data
    *   The data to be converted.
    * @param string $encoding
    *   The encoding the data is in.
    * @param string|bool $expected
    *   The expected result.
-   *
-   * @dataProvider providerTestConvertToUtf8
-   * @covers ::convertToUtf8
    */
-  public function testConvertToUtf8($data, $encoding, $expected): void {
+  public function testConvertToUtf8($data, $encoding, $expected) {
     $this->assertEquals($expected, Unicode::convertToUtf8($data, $encoding));
   }
 
@@ -304,7 +301,7 @@ EOF;
    *   An array of arrays, each containing the parameters to
    *   self::testConvertUtf8().  }
    */
-  public static function providerTestConvertToUtf8() {
+  public function providerTestConvertToUtf8() {
     return [
       [chr(0x97), 'Windows-1252', '—'],
       [chr(0x99), 'Windows-1252', '™'],

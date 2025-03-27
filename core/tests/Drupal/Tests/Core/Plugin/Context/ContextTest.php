@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Plugin\Context\ContextTest.
+ */
 
 namespace Drupal\Tests\Core\Plugin\Context;
 
@@ -50,7 +53,7 @@ class ContextTest extends UnitTestCase {
   /**
    * @covers ::getContextValue
    */
-  public function testDefaultValue(): void {
+  public function testDefaultValue() {
     $this->setUpDefaultValue('test');
 
     $context = new Context($this->contextDefinition);
@@ -61,7 +64,7 @@ class ContextTest extends UnitTestCase {
   /**
    * @covers ::getContextData
    */
-  public function testDefaultDataValue(): void {
+  public function testDefaultDataValue() {
     $this->setUpDefaultValue('test');
 
     $context = new Context($this->contextDefinition);
@@ -72,7 +75,7 @@ class ContextTest extends UnitTestCase {
   /**
    * @covers ::getContextData
    */
-  public function testNullDataValue(): void {
+  public function testNullDataValue() {
     $this->setUpDefaultValue(NULL);
 
     $context = new Context($this->contextDefinition);
@@ -83,9 +86,11 @@ class ContextTest extends UnitTestCase {
   /**
    * @covers ::setContextValue
    */
-  public function testSetContextValueTypedData(): void {
+  public function testSetContextValueTypedData() {
 
-    $this->contextDefinition = $this->createMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
+    $this->contextDefinition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinitionInterface')
+      ->onlyMethods(['getDefaultValue', 'getDataDefinition'])
+      ->getMockForAbstractClass();
 
     $typed_data = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
     $context = new Context($this->contextDefinition, $typed_data);
@@ -95,7 +100,7 @@ class ContextTest extends UnitTestCase {
   /**
    * @covers ::setContextValue
    */
-  public function testSetContextValueCacheableDependency(): void {
+  public function testSetContextValueCacheableDependency() {
     $container = new Container();
     $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
@@ -136,10 +141,12 @@ class ContextTest extends UnitTestCase {
    * @param mixed $default_value
    *   The default value to assign to the mock context definition.
    */
-  protected function setUpDefaultValue($default_value = NULL): void {
+  protected function setUpDefaultValue($default_value = NULL) {
     $mock_data_definition = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
 
-    $this->contextDefinition = $this->createMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
+    $this->contextDefinition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinitionInterface')
+      ->onlyMethods(['getDefaultValue', 'getDataDefinition'])
+      ->getMockForAbstractClass();
 
     $this->contextDefinition->expects($this->once())
       ->method('getDefaultValue')

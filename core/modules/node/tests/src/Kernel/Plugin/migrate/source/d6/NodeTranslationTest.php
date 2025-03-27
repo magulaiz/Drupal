@@ -1,10 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Kernel\Plugin\migrate\source\d6;
-
-// cspell:ignore tnid
 
 /**
  * Tests D6 node translation source plugin.
@@ -23,7 +19,7 @@ class NodeTranslationTest extends NodeTest {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public function providerSource() {
     // Get the source data from parent.
     $tests = parent::providerSource();
 

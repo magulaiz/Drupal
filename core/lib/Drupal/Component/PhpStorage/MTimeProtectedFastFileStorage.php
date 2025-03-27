@@ -158,7 +158,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       try {
         $dir_iterator = new \FilesystemIterator($directory, $flags);
       }
-      catch (\UnexpectedValueException) {
+      catch (\UnexpectedValueException $e) {
         // FilesystemIterator throws an UnexpectedValueException if the
         // specified path is not a directory, or if it is not accessible.
         continue;
@@ -185,7 +185,8 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   }
 
   /**
-   * Gets the full path of the file storage directory's parent.
+   * Gets the full path of the containing directory where the file is or should
+   * be stored.
    *
    * @param string $name
    *   The virtual file name. Can be a relative path.
@@ -200,7 +201,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     // file. Thus, when switching between MTimeProtectedFastFileStorage and
     // FileStorage, the subdirectory or the file cannot be created in case the
     // other file type exists already.
-    if (str_ends_with($name, '.php')) {
+    if (substr($name, -4) === '.php') {
       $name = substr($name, 0, -4);
     }
     return $this->directory . '/' . str_replace('/', '#', $name);
@@ -217,9 +218,9 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   /**
    * A brute force tempnam implementation supporting streams.
    *
-   * @param string $directory
+   * @param $directory
    *   The directory where the temporary filename will be created.
-   * @param string $prefix
+   * @param $prefix
    *   The prefix of the generated temporary filename.
    *
    * @return string

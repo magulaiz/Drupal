@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Asset;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -59,13 +57,13 @@ class DeprecatedAssetsTest extends KernelTestBase {
    * @return array
    *   See description above.
    */
-  public static function deprecatedLibrariesProvider(): array {
+  public function deprecatedLibrariesProvider(): array {
     return [
       'Tests deprecation of library core/js-cookie' => [
         'core',
         'js-cookie',
         'asset library is deprecated in Drupal 10.1.0 and will be removed in Drupal 11.0.0. There is no replacement. See https://www.drupal.org/node/3322720',
-        '5d6a84c6143d0fa766cabdb1ff0a270d',
+        '07ce73936a26710db875a3e9ee70cd6e',
       ],
     ];
   }

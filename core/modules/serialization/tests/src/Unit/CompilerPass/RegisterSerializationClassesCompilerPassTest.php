@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\serialization\Unit\CompilerPass;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -19,7 +17,7 @@ class RegisterSerializationClassesCompilerPassTest extends UnitTestCase {
   /**
    * @covers ::process
    */
-  public function testEncoders(): void {
+  public function testEncoders() {
     $container = new ContainerBuilder();
 
     $serializer_definition = new Definition(Serializer::class, [[], []]);

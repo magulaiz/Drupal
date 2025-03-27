@@ -5,23 +5,24 @@ namespace Drupal\contextual\Element;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\Attribute;
-use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\RenderElementBase;
+use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Provides a contextual_links_placeholder element.
+ *
+ * @RenderElement("contextual_links_placeholder")
  */
-#[RenderElement('contextual_links_placeholder')]
-class ContextualLinksPlaceholder extends RenderElementBase {
+class ContextualLinksPlaceholder extends RenderElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#pre_render' => [
-        [static::class, 'preRenderPlaceholder'],
+        [$class, 'preRenderPlaceholder'],
       ],
       '#id' => NULL,
     ];
@@ -48,7 +49,6 @@ class ContextualLinksPlaceholder extends RenderElementBase {
     $attribute = new Attribute([
       'data-contextual-id' => $element['#id'],
       'data-contextual-token' => $token,
-      'data-drupal-ajax-container' => '',
     ]);
     $element['#markup'] = new FormattableMarkup('<div@attributes></div>', ['@attributes' => $attribute]);
 

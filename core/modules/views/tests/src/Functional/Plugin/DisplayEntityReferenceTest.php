@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 
@@ -20,7 +18,7 @@ use Drupal\views\Views;
  */
 class DisplayEntityReferenceTest extends ViewTestBase {
 
-  use EntityReferenceFieldCreationTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * Views used by this test.
@@ -30,7 +28,9 @@ class DisplayEntityReferenceTest extends ViewTestBase {
   public static $testViews = ['test_display_entity_reference'];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['entity_test', 'field', 'views_ui'];
 
@@ -93,7 +93,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
 
     // Add an entity reference field to reference the same base table.
     $this->entityRefFieldName = 'field_test_entity_ref_entity_ref';
-    $this->createEntityReferenceField('entity_test', 'entity_test', $this->entityRefFieldName, '', 'entity_test');
+    $this->createEntityReferenceField('entity_test', 'entity_test', $this->entityRefFieldName, NULL, 'entity_test');
 
     // Create some entities to search. Add a common string to the name and
     // the text field in two entities so we can test that we can search in both.
@@ -129,7 +129,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
   /**
    * Tests the entity reference display plugin.
    */
-  public function testEntityReferenceDisplay(): void {
+  public function testEntityReferenceDisplay() {
     // Test that the 'title' settings are not shown.
     $this->drupalGet('admin/structure/views/view/test_display_entity_reference/edit/entity_reference_1');
     $this->assertSession()->linkByHrefNotExists('admin/structure/views/nojs/display/test_display_entity_reference/entity_reference_1/title');

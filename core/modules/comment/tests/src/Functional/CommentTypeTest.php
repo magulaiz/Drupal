@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\Core\Url;
@@ -49,7 +47,6 @@ class CommentTypeTest extends CommentTestBase {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');
-    $this->drupalPlaceBlock('system_breadcrumb_block');
 
     $this->adminUser = $this->drupalCreateUser($this->permissions);
   }
@@ -57,7 +54,7 @@ class CommentTypeTest extends CommentTestBase {
   /**
    * Tests creating a comment type programmatically and via a form.
    */
-  public function testCommentTypeCreation(): void {
+  public function testCommentTypeCreation() {
     // Create a comment type programmatically.
     $type = $this->createCommentType('other');
 
@@ -70,31 +67,16 @@ class CommentTypeTest extends CommentTestBase {
     // Ensure that the new comment type admin page can be accessed.
     $this->drupalGet('admin/structure/comment/manage/' . $type->id());
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->elementTextEquals('css', 'h1', "Edit {$comment_type->label()} comment type");
 
     // Create a comment type via the user interface.
     $edit = [
       'id' => 'foo',
       'label' => 'title for foo',
       'description' => '',
+      'target_entity_type_id' => 'node',
     ];
     $this->drupalGet('admin/structure/comment/types/add');
-
-    // Ensure that target entity type is a required field.
-    $this->submitForm($edit, 'Save and manage fields');
-    $this->assertSession()->pageTextContains('Target entity type field is required.');
-
-    // Ensure that comment type is saved when target entity type is provided.
-    $edit['target_entity_type_id'] = 'node';
-    $this->submitForm($edit, 'Save and manage fields');
-    $this->assertSession()->pageTextContains('Comment type title for foo has been added.');
-
-    // Asserts that form submit redirects to the expected manage fields page.
-    $this->assertSession()->addressEquals('admin/structure/comment/manage/' . $edit['id'] . '/fields');
-
-    // Asserts that the comment type is visible in breadcrumb.
-    $this->assertTrue($this->assertSession()->elementExists('css', 'nav[role="navigation"]')->hasLink('title for foo'));
-
+    $this->submitForm($edit, 'Save');
     $comment_type = CommentType::load('foo');
     $this->assertInstanceOf(CommentType::class, $comment_type);
 
@@ -109,18 +91,15 @@ class CommentTypeTest extends CommentTestBase {
     // Save the form and ensure the entity-type value is preserved even though
     // the field isn't present.
     $this->submitForm([], 'Save');
+    \Drupal::entityTypeManager()->getStorage('comment_type')->resetCache(['foo']);
     $comment_type = CommentType::load('foo');
     $this->assertEquals('node', $comment_type->getTargetEntityTypeId());
-
-    // Ensure that target type is displayed in the comment type list.
-    $this->drupalGet('admin/structure/comment');
-    $this->assertSession()->elementExists('xpath', '//td[text() = "Content"]');
   }
 
   /**
    * Tests editing a comment type using the UI.
    */
-  public function testCommentTypeEditing(): void {
+  public function testCommentTypeEditing() {
     $this->drupalLogin($this->adminUser);
 
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
@@ -155,7 +134,7 @@ class CommentTypeTest extends CommentTestBase {
   /**
    * Tests deleting a comment type that still has content.
    */
-  public function testCommentTypeDeletion(): void {
+  public function testCommentTypeDeletion() {
     // Create a comment type programmatically.
     $type = $this->createCommentType('foo');
     $this->drupalCreateContentType(['type' => 'page']);
@@ -199,7 +178,7 @@ class CommentTypeTest extends CommentTestBase {
       $this->addDefaultCommentField('comment', 'comment', 'bar');
       $this->fail('Exception not thrown.');
     }
-    catch (\InvalidArgumentException) {
+    catch (\InvalidArgumentException $e) {
       // Expected exception; just continue testing.
     }
 

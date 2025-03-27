@@ -127,7 +127,6 @@ class ActiveTheme {
    * Returns the machine name of the theme.
    *
    * @return string
-   *   The machine name for the theme.
    */
   public function getName() {
     return $this->name;
@@ -137,7 +136,6 @@ class ActiveTheme {
    * Returns the path to the theme directory.
    *
    * @return string
-   *   The file path of the theme directory.
    */
   public function getPath() {
     return $this->path;
@@ -147,7 +145,6 @@ class ActiveTheme {
    * Returns the theme engine.
    *
    * @return string
-   *   The engine of the theme.
    */
   public function getEngine() {
     return $this->engine;
@@ -156,10 +153,9 @@ class ActiveTheme {
   /**
    * Returns the path to the theme engine for root themes.
    *
-   * @return mixed
-   *   The path to the theme engine for root themes.
-   *
    * @see \Drupal\Core\Extension\ThemeExtensionList::doList()
+   *
+   * @return mixed
    */
   public function getOwner() {
     return $this->owner;
@@ -169,7 +165,6 @@ class ActiveTheme {
    * Returns the extension object.
    *
    * @return \Drupal\Core\Extension\Extension
-   *   The extension object for the theme.
    */
   public function getExtension() {
     return $this->extension;
@@ -179,7 +174,6 @@ class ActiveTheme {
    * Returns the libraries provided by the theme.
    *
    * @return mixed
-   *   The libraries provided by the theme.
    */
   public function getLibraries() {
     return $this->libraries;
@@ -189,11 +183,9 @@ class ActiveTheme {
    * Returns an array of base theme extension objects keyed by name.
    *
    * The order starts with the base theme of $this and ends with the root of
-   * the dependency chain. For most use cases, parent themes are expected to
-   * be called first, so this order needs to be reversed with array_reverse()
+   * the dependency chain.
    *
    * @return \Drupal\Core\Extension\Extension[]
-   *   An array of base theme extension objects keyed by name.
    */
   public function getBaseThemeExtensions() {
     return $this->baseThemeExtensions;

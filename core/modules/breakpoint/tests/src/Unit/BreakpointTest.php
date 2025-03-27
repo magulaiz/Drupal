@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\breakpoint\Unit;
 
 use Drupal\breakpoint\Breakpoint;
@@ -56,7 +54,7 @@ class BreakpointTest extends UnitTestCase {
   /**
    * Sets up the breakpoint defaults.
    */
-  protected function setupBreakpoint(): void {
+  protected function setupBreakpoint() {
     $this->breakpoint = new Breakpoint([], $this->pluginId, $this->pluginDefinition);
     $this->breakpoint->setStringTranslation($this->stringTranslation);
   }
@@ -64,7 +62,7 @@ class BreakpointTest extends UnitTestCase {
   /**
    * @covers ::getLabel
    */
-  public function testGetLabel(): void {
+  public function testGetLabel() {
     $this->pluginDefinition['label'] = 'Test label';
     $this->setupBreakpoint();
     $this->assertEquals(new TranslatableMarkup('Test label', [], ['context' => 'breakpoint'], $this->stringTranslation), $this->breakpoint->getLabel());
@@ -73,7 +71,7 @@ class BreakpointTest extends UnitTestCase {
   /**
    * @covers ::getWeight
    */
-  public function testGetWeight(): void {
+  public function testGetWeight() {
     $this->pluginDefinition['weight'] = '4';
     $this->setupBreakpoint();
     // Assert that the type returned in an integer.
@@ -83,7 +81,7 @@ class BreakpointTest extends UnitTestCase {
   /**
    * @covers ::getMediaQuery
    */
-  public function testGetMediaQuery(): void {
+  public function testGetMediaQuery() {
     $this->pluginDefinition['mediaQuery'] = 'only screen and (min-width: 1220px)';
     $this->setupBreakpoint();
     $this->assertEquals('only screen and (min-width: 1220px)', $this->breakpoint->getMediaQuery());
@@ -92,7 +90,7 @@ class BreakpointTest extends UnitTestCase {
   /**
    * @covers ::getMultipliers
    */
-  public function testGetMultipliers(): void {
+  public function testGetMultipliers() {
     $this->pluginDefinition['multipliers'] = ['1x', '2x'];
     $this->setupBreakpoint();
     $this->assertSame(['1x', '2x'], $this->breakpoint->getMultipliers());
@@ -101,7 +99,7 @@ class BreakpointTest extends UnitTestCase {
   /**
    * @covers ::getProvider
    */
-  public function testGetProvider(): void {
+  public function testGetProvider() {
     $this->pluginDefinition['provider'] = 'Breakpoint';
     $this->setupBreakpoint();
     $this->assertEquals('Breakpoint', $this->breakpoint->getProvider());
@@ -110,7 +108,7 @@ class BreakpointTest extends UnitTestCase {
   /**
    * @covers ::getGroup
    */
-  public function testGetGroup(): void {
+  public function testGetGroup() {
     $this->pluginDefinition['group'] = 'Breakpoint';
     $this->setupBreakpoint();
     $this->assertEquals('Breakpoint', $this->breakpoint->getGroup());

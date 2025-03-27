@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\language\Unit\process;
 
 use Drupal\language\Plugin\migrate\process\LanguageTypes;
@@ -17,7 +15,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
   /**
    * Tests successful transformation of all language types.
    */
-  public function testTransformAll(): void {
+  public function testTransformAll() {
     $this->plugin = new LanguageTypes([], 'map', []);
     $source = [
       'language' => TRUE,
@@ -36,7 +34,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
   /**
    * Tests successful transformation of configurable language types.
    */
-  public function testTransformConfigurable(): void {
+  public function testTransformConfigurable() {
     $this->plugin = new LanguageTypes(['filter_configurable' => TRUE], 'map', []);
     $source = [
       'language' => TRUE,
@@ -53,7 +51,7 @@ class LanguageTypesTest extends MigrateProcessTestCase {
   /**
    * Tests string input.
    */
-  public function testStringInput(): void {
+  public function testStringInput() {
     $this->plugin = new LanguageTypes([], 'map', []);
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input should be an array');

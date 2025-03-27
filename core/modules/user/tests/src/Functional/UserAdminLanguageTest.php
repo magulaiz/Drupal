@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -29,9 +27,11 @@ class UserAdminLanguageTest extends BrowserTestBase {
   protected $regularUser;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
-  protected static $modules = ['user', 'language', 'language_test', 'user_language_test'];
+  protected static $modules = ['user', 'language', 'language_test'];
 
   /**
    * {@inheritdoc}
@@ -55,7 +55,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   /**
    * Tests that admin language is not configurable in single language sites.
    */
-  public function testUserAdminLanguageConfigurationNotAvailableWithOnlyOneLanguage(): void {
+  public function testUserAdminLanguageConfigurationNotAvailableWithOnlyOneLanguage() {
     $this->drupalLogin($this->adminUser);
     $this->setLanguageNegotiation();
     $path = 'user/' . $this->adminUser->id() . '/edit';
@@ -67,7 +67,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   /**
    * Tests that admin language negotiation is configurable only if enabled.
    */
-  public function testUserAdminLanguageConfigurationAvailableWithAdminLanguageNegotiation(): void {
+  public function testUserAdminLanguageConfigurationAvailableWithAdminLanguageNegotiation() {
     $this->drupalLogin($this->adminUser);
     $this->addCustomLanguage();
     $path = 'user/' . $this->adminUser->id() . '/edit';
@@ -95,7 +95,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
    * have a setting for pages they cannot access, so they should not be able to
    * set a language for those pages.
    */
-  public function testUserAdminLanguageConfigurationAvailableIfAdminLanguageNegotiationIsEnabled(): void {
+  public function testUserAdminLanguageConfigurationAvailableIfAdminLanguageNegotiationIsEnabled() {
     $this->drupalLogin($this->adminUser);
     // Adds a new language, because with only one language, setting won't show.
     $this->addCustomLanguage();
@@ -122,7 +122,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   /**
    * Tests the actual language negotiation.
    */
-  public function testActualNegotiation(): void {
+  public function testActualNegotiation() {
     $this->drupalLogin($this->adminUser);
     $this->addCustomLanguage();
     $this->setLanguageNegotiation();
@@ -156,13 +156,6 @@ class UserAdminLanguageTest extends BrowserTestBase {
     $this->drupalGet('xx/' . $path);
     $this->assertSession()->pageTextContains('Language negotiation method: language-user-admin');
 
-    // Make sure 'language-user-admin' plugin does not fail when a route is
-    // restricted to POST requests and language negotiation with the admin
-    // language method is used.
-    $this->drupalGet('/user-language-test/form');
-    $this->submitForm([], 'Send');
-    $this->assertSession()->statusCodeEquals(200);
-
     // Unset the preferred language code for the user.
     $edit = [];
     $edit['preferred_admin_langcode'] = '';
@@ -183,7 +176,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
    * @param bool $admin_first
    *   Whether the admin negotiation should be first.
    */
-  public function setLanguageNegotiation($admin_first = FALSE): void {
+  public function setLanguageNegotiation($admin_first = FALSE) {
     $edit = [
       'language_interface[enabled][language-user-admin]' => TRUE,
       'language_interface[enabled][language-url]' => TRUE,
@@ -197,7 +190,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   /**
    * Helper method for adding a custom language.
    */
-  public function addCustomLanguage(): void {
+  public function addCustomLanguage() {
     $langcode = 'xx';
     // The English name for the language.
     $name = $this->randomMachineName(16);

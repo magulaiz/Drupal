@@ -56,7 +56,7 @@ interface ConditionInterface {
    *   The operator to use. Supported for all supported databases are at least:
    *   - The comparison operators =, <>, <, <=, >, >=.
    *   - The operators (NOT) BETWEEN, (NOT) IN, (NOT) EXISTS, (NOT) LIKE.
-   *   Other operators (e.g. LIKE BINARY) may or may not work. Defaults to =.
+   *   Other operators (e.g. LIKE, BINARY) may or may not work. Defaults to =.
    *
    * @return $this
    *   The called object.
@@ -148,11 +148,11 @@ interface ConditionInterface {
    * The data structure that is returned is an indexed array of entries, where
    * each entry looks like the following:
    * @code
-   * [
+   * array(
    *   'field' => $field,
    *   'value' => $value,
    *   'operator' => $operator,
-   * ];
+   * );
    * @endcode
    *
    * In the special case that $operator is NULL, the $field is taken as a raw
@@ -181,9 +181,9 @@ interface ConditionInterface {
    * This method does not return anything, but simply prepares data to be
    * retrieved via __toString() and arguments().
    *
-   * @param \Drupal\Core\Database\Connection $connection
+   * @param $connection
    *   The database connection for which to compile the conditionals.
-   * @param \Drupal\Core\Database\Query\PlaceholderInterface $queryPlaceholder
+   * @param $queryPlaceholder
    *   The query this condition belongs to. If not given, the current query is
    *   used.
    */
@@ -202,7 +202,7 @@ interface ConditionInterface {
    *
    * See andConditionGroup() and orConditionGroup() for more.
    *
-   * @param string $conjunction
+   * @param $conjunction
    *   - AND (default): this is the equivalent of andConditionGroup().
    *   - OR: this is the equivalent of orConditionGroup().
    *
@@ -215,7 +215,6 @@ interface ConditionInterface {
    * Creates a new group of conditions ANDed together.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
-   *   An object holding a group of conditions.
    */
   public function andConditionGroup();
 
@@ -223,7 +222,6 @@ interface ConditionInterface {
    * Creates a new group of conditions ORed together.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
-   *   An object holding a group of conditions.
    */
   public function orConditionGroup();
 

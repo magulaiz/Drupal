@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -51,7 +50,7 @@ use Drupal\migrate\Row;
  *   bar:
  *     plugin: explode
  *     source: foo
- *     limit: 2
+ *     limit: 1
  *     delimiter: /
  * @endcode
  *
@@ -59,7 +58,7 @@ use Drupal\migrate\Row;
  * equivalent of this would be:
  *
  * @code
- *   $bar = explode('/', $foo, 2);
+ *   $bar = explode('/', $foo, 1);
  * @endcode
  *
  * If the 'strict' configuration is set to FALSE, the input value is casted to a
@@ -87,8 +86,11 @@ use Drupal\migrate\Row;
  * configuration, if foo is '', NULL or FALSE, then bar will be [].
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
+ *
+ * @MigrateProcessPlugin(
+ *   id = "explode"
+ * )
  */
-#[MigrateProcess('explode')]
 class Explode extends ProcessPluginBase {
 
   /**

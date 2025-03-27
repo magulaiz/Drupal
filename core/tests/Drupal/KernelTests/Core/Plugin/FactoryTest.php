@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Plugin;
 
 use Drupal\Component\Plugin\Exception\ExceptionInterface;
@@ -21,11 +19,11 @@ class FactoryTest extends PluginTestBase {
   /**
    * Tests that DefaultFactory can create a plugin instance.
    */
-  public function testDefaultFactory(): void {
+  public function testDefaultFactory() {
     // Ensure a non-derivative plugin can be instantiated.
-    $plugin = $this->testPluginManager->createInstance('user_login', ['title' => 'Enter your login name and password']);
+    $plugin = $this->testPluginManager->createInstance('user_login', ['title' => 'Please enter your login name and password']);
     $this->assertSame('Drupal\\plugin_test\\Plugin\\plugin_test\\mock_block\\MockUserLoginBlock', get_class($plugin), 'Correct plugin class instantiated with default factory.');
-    $this->assertSame('Enter your login name and password', $plugin->getTitle(), 'Plugin instance correctly configured.');
+    $this->assertSame('Please enter your login name and password', $plugin->getTitle(), 'Plugin instance correctly configured.');
 
     // Ensure that attempting to instantiate non-existing plugins throws a
     // PluginException.
@@ -48,11 +46,11 @@ class FactoryTest extends PluginTestBase {
    * reflection factory and it provides some additional variety in plugin
    * object creation.
    */
-  public function testReflectionFactory(): void {
+  public function testReflectionFactory() {
     // Ensure a non-derivative plugin can be instantiated.
-    $plugin = $this->mockBlockManager->createInstance('user_login', ['title' => 'Enter your login name and password']);
+    $plugin = $this->mockBlockManager->createInstance('user_login', ['title' => 'Please enter your login name and password']);
     $this->assertSame('Drupal\\plugin_test\\Plugin\\plugin_test\\mock_block\\MockUserLoginBlock', get_class($plugin), 'Correct plugin class instantiated.');
-    $this->assertSame('Enter your login name and password', $plugin->getTitle(), 'Plugin instance correctly configured.');
+    $this->assertSame('Please enter your login name and password', $plugin->getTitle(), 'Plugin instance correctly configured.');
 
     // Ensure a derivative plugin can be instantiated.
     $plugin = $this->mockBlockManager->createInstance('menu:main_menu', ['depth' => 2]);

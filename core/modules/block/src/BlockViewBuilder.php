@@ -75,13 +75,6 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
         $build[$entity_id] += [
           '#lazy_builder' => [static::class . '::lazyBuilder', [$entity_id, $view_mode, $langcode]],
         ];
-        // Only add create_placeholder if it's explicitly set to TRUE, so it can
-        // be set to TRUE by automatic placeholdering conditions if it's absent.
-        if ($plugin->createPlaceholder()) {
-          $build[$entity_id] += [
-            '#create_placeholder' => TRUE,
-          ];
-        }
       }
     }
 
@@ -151,13 +144,11 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   }
 
   /**
-   * Render API callback: Builds a block that can be pre-rendered.
+   * #lazy_builder callback; builds a #pre_render-able block.
    *
-   * This function is assigned as a #lazy_builder callback.
-   *
-   * @param string $entity_id
+   * @param $entity_id
    *   A block config entity ID.
-   * @param string $view_mode
+   * @param $view_mode
    *   The view mode the block is being viewed in.
    *
    * @return array
@@ -168,9 +159,7 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
   }
 
   /**
-   * Render API callback: Builds a block.
-   *
-   * This function is assigned as a #pre_render callback.
+   * #pre_render callback for building a block.
    *
    * Renders the content using the provided block plugin, and then:
    * - if there is no content, aborts rendering, and makes sure the block won't

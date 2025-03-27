@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Unit\Plugin\argument_default;
 
 use Drupal\Core\Path\CurrentPathStack;
@@ -22,7 +20,7 @@ class RawTest extends UnitTestCase {
    *
    * @see \Drupal\views\Plugin\views\argument_default\Raw::getArgument()
    */
-  public function testGetArgument(): void {
+  public function testGetArgument() {
     $view = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->getMock();

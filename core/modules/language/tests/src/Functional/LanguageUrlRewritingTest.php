@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Language\Language;
@@ -19,7 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 class LanguageUrlRewritingTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['language', 'language_test'];
 
@@ -67,7 +67,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
   /**
    * Check that non-installed languages are not considered.
    */
-  public function testUrlRewritingEdgeCases(): void {
+  public function testUrlRewritingEdgeCases() {
     // Check URL rewriting with a non-installed language.
     $non_existing = new Language(['id' => $this->randomMachineName()]);
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.');
@@ -89,7 +89,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
    * @param string $message
    *   Message to display in assertion that language prefixes are not added.
    */
-  private function checkUrl(LanguageInterface $language, $message): void {
+  private function checkUrl(LanguageInterface $language, $message) {
     $options = ['language' => $language, 'script' => ''];
     $base_path = trim(base_path(), '/');
     $rewritten_path = trim(str_replace($base_path, '', Url::fromRoute('<front>', [], $options)->toString()), '/');
@@ -100,7 +100,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     // If the rewritten URL has not a language prefix we pick a random prefix so
     // we can always check the prefixed URL.
     $prefixes = $this->config('language.negotiation')->get('url.prefixes');
-    $stored_prefix = $prefixes[$language->getId()] ?? $this->randomMachineName();
+    $stored_prefix = isset($prefixes[$language->getId()]) ? $prefixes[$language->getId()] : $this->randomMachineName();
     $this->assertNotEquals($prefix, $stored_prefix, $message);
     $prefix = $stored_prefix;
 
@@ -111,7 +111,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
   /**
    * Check URL rewriting when using a domain name and a non-standard port.
    */
-  public function testDomainNameNegotiationPort(): void {
+  public function testDomainNameNegotiationPort() {
     global $base_url;
     $language_domain = 'example.fr';
     // Get the current host URI we're running on.
@@ -137,7 +137,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
 
     // In case index.php is part of the URLs, we need to adapt the asserted
     // URLs as well.
-    $index_php = str_contains(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), 'index.php');
+    $index_php = strpos(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), 'index.php') !== FALSE;
 
     $request = Request::createFromGlobals();
     $server = $request->server->all();

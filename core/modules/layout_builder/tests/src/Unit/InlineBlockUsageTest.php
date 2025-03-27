@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\Core\Database\Connection;
@@ -20,7 +18,7 @@ class InlineBlockUsageTest extends UnitTestCase {
    *
    * @covers ::deleteUsage
    */
-  public function testEmptyDeleteUsageCall(): void {
+  public function testEmptyDeleteUsageCall() {
     $connection = $this->prophesize(Connection::class);
     $connection->delete('inline_block_usage')->shouldNotBeCalled();
 

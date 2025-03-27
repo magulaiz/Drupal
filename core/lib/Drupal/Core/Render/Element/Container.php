@@ -4,7 +4,6 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\Html as HtmlUtility;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 
 /**
@@ -41,23 +40,25 @@ use Drupal\Core\Render\Element;
  *   '#title' => $this->t('Dietary Restrictions'),
  * ];
  * @endcode
+ *
+ * @RenderElement("container")
  */
-#[RenderElement('container')]
-class Container extends RenderElementBase {
+class Container extends RenderElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#optional' => FALSE,
       '#process' => [
-        [static::class, 'processGroup'],
-        [static::class, 'processContainer'],
+        [$class, 'processGroup'],
+        [$class, 'processContainer'],
       ],
       '#pre_render' => [
-        [static::class, 'preRenderGroup'],
-        [static::class, 'preRenderContainer'],
+        [$class, 'preRenderGroup'],
+        [$class, 'preRenderContainer'],
       ],
       '#theme_wrappers' => ['container'],
     ];

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
@@ -61,7 +59,7 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * Provides test data for ::testLayoutSectionFormatter().
    */
-  public static function providerTestLayoutSectionFormatter() {
+  public function providerTestLayoutSectionFormatter() {
     $data = [];
     $data['block_with_global_context'] = [
       [
@@ -85,7 +83,7 @@ class LayoutSectionTest extends BrowserTestBase {
       ],
       'user',
       'user:2',
-      'UNCACHEABLE (poor cacheability)',
+      'UNCACHEABLE',
     ];
     $data['block_with_entity_context'] = [
       [
@@ -171,7 +169,7 @@ class LayoutSectionTest extends BrowserTestBase {
    *
    * @dataProvider providerTestLayoutSectionFormatter
    */
-  public function testLayoutSectionFormatter($layout_data, $expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, $expected_dynamic_cache): void {
+  public function testLayoutSectionFormatter($layout_data, $expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, $expected_dynamic_cache) {
     $node = $this->createSectionNode($layout_data);
 
     $canonical_url = $node->toUrl('canonical');
@@ -179,13 +177,13 @@ class LayoutSectionTest extends BrowserTestBase {
     $this->assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, $expected_dynamic_cache);
 
     $this->drupalGet($canonical_url->toString() . '/layout');
-    $this->assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, 'UNCACHEABLE (poor cacheability)');
+    $this->assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts, $expected_cache_tags, 'UNCACHEABLE');
   }
 
   /**
    * Tests the access checking of the section formatter.
    */
-  public function testLayoutSectionFormatterAccess(): void {
+  public function testLayoutSectionFormatterAccess() {
     $node = $this->createSectionNode([
       [
         'section' => new Section('layout_onecol', [], [
@@ -197,23 +195,23 @@ class LayoutSectionTest extends BrowserTestBase {
     ]);
 
     // Restrict access to the block.
-    $this->container->get('keyvalue')->get('block_test')->set('access', FALSE);
+    $this->container->get('state')->set('test_block_access', FALSE);
 
     $this->drupalGet($node->toUrl('canonical'));
-    $this->assertLayoutSection('.layout--onecol', NULL, '', '', 'UNCACHEABLE (poor cacheability)');
+    $this->assertLayoutSection('.layout--onecol', NULL, '', '', 'UNCACHEABLE');
     // Ensure the block was not rendered.
     $this->assertSession()->pageTextNotContains('Hello test world');
 
     // Grant access to the block, and ensure it was rendered.
-    $this->container->get('keyvalue')->get('block_test')->set('access', TRUE);
+    $this->container->get('state')->set('test_block_access', TRUE);
     $this->drupalGet($node->toUrl('canonical'));
-    $this->assertLayoutSection('.layout--onecol', 'Hello test world', '', '', 'UNCACHEABLE (poor cacheability)');
+    $this->assertLayoutSection('.layout--onecol', 'Hello test world', '', '', 'UNCACHEABLE');
   }
 
   /**
    * Ensures that the entity title is displayed.
    */
-  public function testLayoutPageTitle(): void {
+  public function testLayoutPageTitle() {
     $this->drupalPlaceBlock('page_title_block');
     $node = $this->createSectionNode([]);
 
@@ -225,7 +223,7 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * Tests that no Layout link shows without a section field.
    */
-  public function testLayoutUrlNoSectionField(): void {
+  public function testLayoutUrlNoSectionField() {
     $node = $this->createNode([
       'type' => 'bundle_without_section_field',
       'title' => 'The node title',
@@ -238,13 +236,13 @@ class LayoutSectionTest extends BrowserTestBase {
     $node->save();
 
     $this->drupalGet($node->toUrl('canonical')->toString() . '/layout');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
    * Tests that deleting a field removes it from the layout.
    */
-  public function testLayoutDeletingField(): void {
+  public function testLayoutDeletingField() {
     $assert_session = $this->assertSession();
 
     $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/display/default/layout');
@@ -268,7 +266,7 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * Tests that deleting a bundle removes the layout.
    */
-  public function testLayoutDeletingBundle(): void {
+  public function testLayoutDeletingBundle() {
     $assert_session = $this->assertSession();
 
     $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
@@ -294,8 +292,7 @@ class LayoutSectionTest extends BrowserTestBase {
    * @param string $expected_cache_tags
    *   A string of cache tags to be found in the header.
    * @param string $expected_dynamic_cache
-   *   The expected dynamic cache header. Either 'HIT', 'MISS' or
-   *   'UNCACHEABLE (poor cacheability)'.
+   *   The expected dynamic cache header. Either 'HIT', 'MISS' or 'UNCACHEABLE'.
    *
    * @internal
    */

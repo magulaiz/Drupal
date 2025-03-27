@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
-
-// cspell:ignore descripcion mostrar
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Tests parsing js files for translatable strings.
@@ -18,7 +15,9 @@ use Drupal\Tests\BrowserTestBase;
 class LocaleJavascriptTranslationTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['locale', 'locale_test'];
 
@@ -27,10 +26,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * @covers ::\_locale_parse_js_file
-   */
-  public function testFileParsing(): void {
+  public function testFileParsing() {
 
     // This test is for ensuring that the regular expression in
     // _locale_parse_js_file() finds translatable source strings in all valid
@@ -38,7 +34,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
     // respect to optional whitespace, line breaks, etc.
     // - We test locale_test.js, because that is the one that contains a
     //   variety of whitespace styles.
-    $files[] = __DIR__ . '/../../js/locale_test.js';
+    $files[] = __DIR__ . '/../../locale_test.js';
 
     foreach ($files as $filename) {
       // Parse the file to look for source strings.
@@ -97,9 +93,10 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
 
       // Assert that all strings were found properly.
       foreach ($test_strings as $str => $context) {
+        $args = ['%source' => $str, '%context' => $context];
 
         // Make sure that the string was found in the file.
-        $this->assertTrue(isset($source_strings[$str]), "Found source string: $str");
+        $this->assertTrue(isset($source_strings[$str]), new FormattableMarkup('Found source string: %source', $args));
 
         // Make sure that the proper context was matched.
         $this->assertArrayHasKey($str, $source_strings);
@@ -113,7 +110,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
   /**
    * Assert translations JS is added before drupal.js, because it depends on it.
    */
-  public function testLocaleTranslationJsDependencies(): void {
+  public function testLocaleTranslationJsDependencies() {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser([
       'administer languages',
@@ -152,7 +149,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
       ->getStrings([
         'source' => 'Show description',
         'type' => 'javascript',
-        'name' => 'core/modules/locale/js/locale.admin.js',
+        'name' => 'core/modules/locale/locale.admin.js',
       ]);
     $string = $strings[0];
 

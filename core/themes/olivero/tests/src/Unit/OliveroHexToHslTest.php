@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\olivero\Unit;
 
 use Drupal\Tests\UnitTestCase;
@@ -41,7 +39,7 @@ final class OliveroHexToHslTest extends UnitTestCase {
    * @return array[]
    *   The test data.
    */
-  public static function hexCodes(): array {
+  public function hexCodes(): array {
     return [
       'Blue Lagoon' => ['#1b9ae4', [202, 79, 50]],
       'Firehouse' => ['#a30f0f', [0, 83, 35]],

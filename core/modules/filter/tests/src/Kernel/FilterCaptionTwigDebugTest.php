@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\filter\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -24,7 +22,7 @@ class FilterCaptionTwigDebugTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container): void {
+  public function register(ContainerBuilder $container) {
     parent::register($container);
     // Enable Twig debugging.
     $parameters = $container->getParameter('twig.config');
@@ -35,7 +33,7 @@ class FilterCaptionTwigDebugTest extends KernelTestBase {
   /**
    * Tests the caption filter with Twig debugging on.
    */
-  public function testCaptionFilter(): void {
+  public function testCaptionFilter() {
     $manager = $this->container->get('plugin.manager.filter');
     $bag = new FilterPluginCollection($manager, []);
     $filter = $bag->get('filter_caption');
@@ -55,7 +53,7 @@ class FilterCaptionTwigDebugTest extends KernelTestBase {
 
     // Data-caption attribute.
     $input = '<img src="llama.jpg" data-caption="Loquacious llama!" />';
-    $expected = '<img src="llama.jpg">' . "\n" . '<figcaption>Loquacious llama!</figcaption>';
+    $expected = '<img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption>';
     $output = $test($input)->getProcessedText();
     $this->assertStringContainsString($expected, $output);
     $this->assertStringContainsString("<!-- THEME HOOK: 'filter_caption' -->", $output);

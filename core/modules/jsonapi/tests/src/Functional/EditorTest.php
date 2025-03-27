@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -49,7 +46,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     $this->grantPermissionsToTestedRole(['administer filters']);
   }
 
@@ -78,19 +75,16 @@ class EditorTest extends ConfigEntityResourceTestBase {
     $camelids = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ]);
     $camelids
       ->setImageUploadSettings([
-        'status' => TRUE,
+        'status' => FALSE,
         'scheme' => 'public',
         'directory' => 'inline-images',
-        'max_size' => NULL,
+        'max_size' => '',
         'max_dimensions' => [
-          'width' => NULL,
-          'height' => NULL,
+          'width' => '',
+          'height' => '',
         ],
       ])
       ->save();
@@ -101,16 +95,16 @@ class EditorTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/editor/editor/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -132,10 +126,10 @@ class EditorTest extends ConfigEntityResourceTestBase {
           ],
           'editor' => 'ckeditor5',
           'image_upload' => [
-            'status' => TRUE,
+            'status' => FALSE,
             'scheme' => 'public',
             'directory' => 'inline-images',
-            'max_size' => NULL,
+            'max_size' => '',
             'max_dimensions' => [
               'width' => NULL,
               'height' => NULL,
@@ -160,7 +154,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }
@@ -168,7 +162,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessMessage($method): string {
+  protected function getExpectedUnauthorizedAccessMessage($method) {
     return "The 'administer filters' permission is required.";
   }
 
@@ -193,19 +187,16 @@ class EditorTest extends ConfigEntityResourceTestBase {
     $entity = Editor::create([
       'format' => 'pachyderm',
       'editor' => 'ckeditor5',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ]);
 
     $entity->setImageUploadSettings([
-      'status' => TRUE,
+      'status' => FALSE,
       'scheme' => 'public',
       'directory' => 'inline-images',
-      'max_size' => NULL,
+      'max_size' => '',
       'max_dimensions' => [
-        'width' => NULL,
-        'height' => NULL,
+        'width' => '',
+        'height' => '',
       ],
     ])->save();
 

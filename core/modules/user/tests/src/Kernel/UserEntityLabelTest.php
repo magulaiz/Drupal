@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -29,9 +27,9 @@ class UserEntityLabelTest extends KernelTestBase {
   /**
    * Tests label callback.
    */
-  public function testLabelCallback(): void {
+  public function testLabelCallback() {
+    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
-    $this->installConfig(['user']);
 
     $account = $this->createUser();
     $anonymous = User::create(['uid' => 0]);
@@ -46,7 +44,7 @@ class UserEntityLabelTest extends KernelTestBase {
     $this->assertEmpty($anonymous->getAccountName());
 
     // Set to test the altered username.
-    \Drupal::keyValue('user_hooks_test')->set('user_format_name_alter', TRUE);
+    \Drupal::state()->set('user_hooks_test_user_format_name_alter', TRUE);
 
     // The user display name should be altered.
     $this->assertEquals('<em>' . $account->id() . '</em>', $account->getDisplayName());

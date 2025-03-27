@@ -1,17 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\element_info_test\Element;
 
-use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\RenderElementBase;
+use Drupal\Core\Render\Element\RenderElement;
 
 /**
  * Provides deprecated render element for testing.
+ *
+ * @RenderElement("deprecated")
  */
-#[RenderElement('deprecated')]
-class Deprecated extends RenderElementBase {
+class Deprecated extends RenderElement {
 
   /**
    * {@inheritdoc}

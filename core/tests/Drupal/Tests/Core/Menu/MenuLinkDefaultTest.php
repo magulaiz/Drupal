@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\MenuLinkDefault;
@@ -17,7 +15,7 @@ class MenuLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::updateLink
    */
-  public function testUpdateLink(): void {
+  public function testUpdateLink() {
     $plugin_definition = [
       'title' => 'Hey jude',
       'enabled' => 1,
@@ -41,7 +39,7 @@ class MenuLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::updateLink
    */
-  public function testUpdateLinkWithoutPersist(): void {
+  public function testUpdateLinkWithoutPersist() {
     $plugin_definition = [
       'title' => 'Hey jude',
       'enabled' => 1,

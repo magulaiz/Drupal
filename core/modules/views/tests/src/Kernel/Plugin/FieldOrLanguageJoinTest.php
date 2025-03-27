@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views\Plugin\views\join\FieldOrLanguageJoin;
@@ -50,7 +48,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
    * \Drupal\Tests\views\Kernel\Plugin\JoinTest::testBasePlugin() to ensure that
    * no functionality provided by the base join plugin is broken.
    */
-  public function testBase(): void {
+  public function testBase() {
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');
     $view->initDisplay();
@@ -124,16 +122,13 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     $this->assertStringContainsString('views_test_data.uid = users4.uid', $join_info['condition']);
     $this->assertStringContainsString('users4.name = :views_join_condition_0', $join_info['condition']);
     $this->assertStringContainsString('users4.name IN ( :views_join_condition_1[] )', $join_info['condition']);
-    $this->assertSame(
-      $join_info['arguments'][':views_join_condition_1[]'],
-      [$random_name_2, $random_name_3, $random_name_4]
-    );
+    $this->assertSame($join_info['arguments'][':views_join_condition_1[]'], [$random_name_2, $random_name_3, $random_name_4]);
   }
 
   /**
    * Tests the adding of conditions by the join plugin.
    */
-  public function testLanguageBundleConditions(): void {
+  public function testLanguageBundleConditions() {
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');
     $view->initDisplay();
@@ -187,9 +182,9 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
    *
    * @param \Drupal\views\ViewExecutable $view
    *   The view used in this test.
-   * @param array $configuration
+   * @param $configuration
    *   The join plugin configuration.
-   * @param string $table_alias
+   * @param $table_alias
    *   The table alias to use for the join.
    *
    * @return array

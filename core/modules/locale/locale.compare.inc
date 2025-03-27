@@ -2,10 +2,10 @@
 
 /**
  * @file
+ * The API for comparing project translation status with available translation.
  */
 
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
 use Drupal\Core\Utility\ProjectInfo;
 
 /**
@@ -18,8 +18,7 @@ require_once __DIR__ . '/locale.translation.inc';
 /**
  * Clear the project data table.
  */
-#[StopProceduralHookScan]
-function locale_translation_flush_projects(): void {
+function locale_translation_flush_projects() {
   \Drupal::service('locale.project')->deleteAll();
 }
 
@@ -39,6 +38,8 @@ function locale_translation_flush_projects(): void {
  *   - "project_type": Project type, e.g. 'module', 'theme'.
  *   - "core": Core release version, e.g. 8.x
  *   - "version": Project release version, e.g. 8.x-1.0
+ *     See http://drupalcode.org/project/drupalorg.git/blob/refs/heads/7.x-3.x:/drupalorg_project/plugins/release_packager/DrupalorgProjectPackageRelease.class.php#l219
+ *     for how the version strings are created.
  *   - "server_pattern": Translation server po file pattern.
  *   - "status": Project status, 1 = enabled.
  */
@@ -104,7 +105,7 @@ function locale_translation_project_list() {
       'interface translation server pattern',
     ];
     $module_data = _locale_translation_prepare_project_list(\Drupal::service('extension.list.module')->getList(), 'module');
-    $theme_data = _locale_translation_prepare_project_list(\Drupal::service('extension.list.theme')->reset()->getList(), 'theme');
+    $theme_data = _locale_translation_prepare_project_list(\Drupal::service('theme_handler')->rebuildThemeData(), 'theme');
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $module_data, 'module', TRUE, $additional_whitelist);
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE, $additional_whitelist);
@@ -161,8 +162,10 @@ function locale_translation_default_translation_server() {
   // An additional check is required here. During the upgrade process
   // \Drupal::config()->get() returns NULL. We use the defined value as
   // fallback.
+  $pattern = $pattern ? $pattern : LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN;
+
   return [
-    'pattern' => $pattern ?: \Drupal::TRANSLATION_DEFAULT_SERVER_PATTERN,
+    'pattern' => $pattern,
   ];
 }
 
@@ -174,9 +177,12 @@ function locale_translation_default_translation_server() {
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  *
+ * @return array
+ *   Available sources indexed by project and language.
+ *
  * @todo Return batch or NULL.
  */
-function locale_translation_check_projects($projects = [], $langcodes = []): void {
+function locale_translation_check_projects($projects = [], $langcodes = []) {
   if (locale_translation_use_remote_source()) {
     // Retrieve the status of both remote and local translation sources by
     // using a batch process.
@@ -202,7 +208,7 @@ function locale_translation_check_projects($projects = [], $langcodes = []): voi
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  */
-function locale_translation_check_projects_batch($projects = [], $langcodes = []): void {
+function locale_translation_check_projects_batch($projects = [], $langcodes = []) {
   // Build and set the batch process.
   $batch = locale_translation_batch_status_build($projects, $langcodes);
   batch_set($batch);
@@ -227,8 +233,8 @@ function locale_translation_check_projects_batch($projects = [], $langcodes = []
  *   Batch definition array.
  */
 function locale_translation_batch_status_build($projects = [], $langcodes = []) {
-  $projects = $projects ?: array_keys(locale_translation_get_projects());
-  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+  $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
+  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
   $options = _locale_translation_default_update_options();
 
   $operations = _locale_translation_batch_status_operations($projects, $langcodes, $options);
@@ -247,7 +253,8 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
 }
 
 /**
- * Constructs batch operations for checking remote translation status.
+ * Helper function to construct batch operations checking remote translation
+ * status.
  *
  * @param array $projects
  *   Array of project names to be processed.
@@ -259,13 +266,12 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
  * @return array
  *   Array of batch operations.
  */
-function _locale_translation_batch_status_operations($projects, $langcodes, $options = []): array {
+function _locale_translation_batch_status_operations($projects, $langcodes, $options = []) {
   $operations = [];
 
   foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
-      // Check version and status translation sources.
-      $operations[] = ['locale_translation_batch_version_check', [$project, $langcode]];
+      // Check status of local and remote translation sources.
       $operations[] = ['locale_translation_batch_status_check', [$project, $langcode, $options]];
     }
   }
@@ -292,9 +298,9 @@ function _locale_translation_batch_status_operations($projects, $langcodes, $opt
  * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  */
-function locale_translation_check_projects_local($projects = [], $langcodes = []): void {
+function locale_translation_check_projects_local($projects = [], $langcodes = []) {
   $projects = locale_translation_get_projects($projects);
-  $langcodes = $langcodes ?: array_keys(locale_translatable_language_list());
+  $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
 
   // For each project and each language we check if a local po file is
   // available. When found the source object is updated with the appropriate

@@ -2,7 +2,6 @@
 
 namespace Drupal\system\Controller;
 
-use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -63,8 +62,7 @@ class SystemInfoController implements ContainerInjectionInterface {
   public function php() {
     if (function_exists('phpinfo')) {
       ob_start();
-      $phpinfo_flags = Settings::get('sa_core_2023_004_phpinfo_flags', ~ (INFO_VARIABLES | INFO_ENVIRONMENT));
-      phpinfo($phpinfo_flags);
+      phpinfo();
       $output = ob_get_clean();
     }
     else {

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Composer\Plugin\Scaffold;
 
 use Symfony\Component\Process\Process;
@@ -24,7 +22,7 @@ trait ExecTrait {
    * @return string
    *   Standard output from the command
    */
-  protected function mustExec($cmd, $cwd, array $env = []): string {
+  protected function mustExec($cmd, $cwd, array $env = []) {
     $process = Process::fromShellCommandline($cmd, $cwd, $env + ['PATH' => getenv('PATH'), 'HOME' => getenv('HOME')]);
     $process->setTimeout(300)->setIdleTimeout(300)->run();
     $exitCode = $process->getExitCode();

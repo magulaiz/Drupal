@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Uuid;
 
 use Drupal\Component\Uuid\Uuid;
@@ -23,7 +21,7 @@ class UuidTest extends TestCase {
    *
    * @dataProvider providerUuidInstances
    */
-  public function testGenerateUuid(UuidInterface $instance): void {
+  public function testGenerateUuid(UuidInterface $instance) {
     $this->assertTrue(Uuid::isValid($instance->generate()), sprintf('UUID generation for %s works.', get_class($instance)));
   }
 
@@ -32,7 +30,7 @@ class UuidTest extends TestCase {
    *
    * @dataProvider providerUuidInstances
    */
-  public function testUuidIsUnique(UuidInterface $instance): void {
+  public function testUuidIsUnique(UuidInterface $instance) {
     $this->assertNotEquals($instance->generate(), $instance->generate(), sprintf('Same UUID was not generated twice with %s.', get_class($instance)));
   }
 
@@ -40,9 +38,8 @@ class UuidTest extends TestCase {
    * Data provider for UUID instance tests.
    *
    * @return array
-   *   An array of UUID generator instances.
    */
-  public static function providerUuidInstances() {
+  public function providerUuidInstances() {
 
     $instances = [];
     $instances[][] = new Php();
@@ -72,7 +69,7 @@ class UuidTest extends TestCase {
    *
    * @dataProvider providerTestValidation
    */
-  public function testValidation($uuid, $is_valid, $message): void {
+  public function testValidation($uuid, $is_valid, $message) {
     $this->assertSame($is_valid, Uuid::isValid($uuid), $message);
   }
 
@@ -85,7 +82,7 @@ class UuidTest extends TestCase {
    *   - (bool) Whether or not the Uuid is valid.
    *   - Failure message.
    */
-  public static function providerTestValidation() {
+  public function providerTestValidation() {
     return [
       // These valid UUIDs.
       ['6ba7b810-9dad-11d1-80b4-00c04fd430c8', TRUE, 'Basic FQDN UUID did not validate'],

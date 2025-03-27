@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\system\Kernel\Scripts\DbCommandBaseTest.
+ */
 
 namespace Drupal\Tests\system\Kernel\Scripts;
 
@@ -25,7 +28,7 @@ class DbCommandBaseTest extends KernelTestBase {
   /**
    * Tests specifying a database key.
    */
-  public function testSpecifyDatabaseKey(): void {
+  public function testSpecifyDatabaseKey() {
     $command = new DbCommandBaseTester();
     $command_tester = new CommandTester($command);
 
@@ -41,7 +44,7 @@ class DbCommandBaseTest extends KernelTestBase {
   /**
    * Invalid database names will throw a useful exception.
    */
-  public function testSpecifyDatabaseDoesNotExist(): void {
+  public function testSpecifyDatabaseDoesNotExist() {
     $command = new DbCommandBaseTester();
     $command_tester = new CommandTester($command);
     $command_tester->execute([
@@ -52,9 +55,9 @@ class DbCommandBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests supplying database connection as a URL.
+   * Tests supplying database connection as a url.
    */
-  public function testSpecifyDbUrl(): void {
+  public function testSpecifyDbUrl() {
     $command = new DbCommandBaseTester();
     $command_tester = new CommandTester($command);
     $command_tester->execute([
@@ -72,7 +75,7 @@ class DbCommandBaseTest extends KernelTestBase {
   /**
    * Tests specifying a prefix for different connections.
    */
-  public function testPrefix(): void {
+  public function testPrefix() {
     if (Database::getConnection()->driver() == 'sqlite') {
       $this->markTestSkipped('SQLITE modifies the prefixes so we cannot effectively test it');
     }
@@ -111,7 +114,7 @@ class DbCommandBaseTester extends DbCommandBase {
   /**
    * {@inheritdoc}
    */
-  public function configure(): void {
+  public function configure() {
     parent::configure();
     $this->setName('test');
   }

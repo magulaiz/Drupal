@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\Core\TempStore\SharedTempStore;
@@ -20,7 +18,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
    * @covers ::get
    * @covers ::has
    */
-  public function testGetEmptyTempstore(): void {
+  public function testGetEmptyTempstore() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');
     $section_storage->getStorageId()->willReturn('my_storage_id');
@@ -43,7 +41,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
    * @covers ::get
    * @covers ::has
    */
-  public function testGetLoadedTempstore(): void {
+  public function testGetLoadedTempstore() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');
     $section_storage->getStorageId()->willReturn('my_storage_id');
@@ -66,7 +64,7 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
   /**
    * @covers ::get
    */
-  public function testGetInvalidEntry(): void {
+  public function testGetInvalidEntry() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');
     $section_storage->getStorageId()->willReturn('my_storage_id');

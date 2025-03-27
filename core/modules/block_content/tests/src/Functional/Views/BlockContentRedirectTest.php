@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block_content\Functional\Views;
 
 /**
@@ -19,7 +17,9 @@ class BlockContentRedirectTest extends BlockContentTestBase {
   public static $testViews = ['test_block_content_redirect_destination'];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['block', 'block_content', 'views'];
 
@@ -31,12 +31,12 @@ class BlockContentRedirectTest extends BlockContentTestBase {
   /**
    * Tests the redirect destination when editing block content.
    */
-  public function testRedirectDestination(): void {
-    $this->drupalLogin($this->drupalCreateUser(['access block library', 'administer block content']));
-    $this->drupalGet('admin/content/block');
+  public function testRedirectDestination() {
+    $this->drupalLogin($this->drupalCreateUser(['administer blocks']));
+    $this->drupalGet('admin/content/block-content');
 
-    // Create a content block.
-    $this->clickLink('content block');
+    // Create a custom block.
+    $this->clickLink('custom block');
     $edit = [];
     $edit['info[0][value]'] = 'Test redirect destination';
     $edit['body[0][value]'] = $this->randomMachineName(16);

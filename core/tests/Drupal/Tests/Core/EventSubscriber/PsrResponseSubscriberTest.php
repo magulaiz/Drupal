@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Tests\UnitTestCase;
@@ -35,8 +33,6 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $factory = $this->getMockBuilder('Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface')
       ->disableOriginalConstructor()
       ->getMock();
@@ -55,7 +51,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    *
    * @covers ::onKernelView
    */
-  public function testConvertsControllerResult(): void {
+  public function testConvertsControllerResult() {
     $event = $this->createEvent($this->createMock('Psr\Http\Message\ResponseInterface'));
     $this->psrResponseSubscriber->onKernelView($event);
     $this->assertInstanceOf(Response::class, $event->getResponse());
@@ -66,7 +62,7 @@ class PsrResponseSubscriberTest extends UnitTestCase {
    *
    * @covers ::onKernelView
    */
-  public function testDoesNotConvertControllerResult(): void {
+  public function testDoesNotConvertControllerResult() {
     $event = $this->createEvent([]);
     $this->psrResponseSubscriber->onKernelView($event);
     $this->assertNull($event->getResponse());

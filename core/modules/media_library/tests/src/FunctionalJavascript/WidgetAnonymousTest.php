@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\user\Entity\Role;
@@ -45,7 +43,7 @@ class WidgetAnonymousTest extends MediaLibraryTestBase {
   /**
    * Tests that the widget works as expected for anonymous users.
    */
-  public function testWidgetAnonymous(): void {
+  public function testWidgetAnonymous() {
     $assert_session = $this->assertSession();
 
     // Allow the anonymous user to create pages and view media.

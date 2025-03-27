@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\media\Controller\OEmbedIframeController;
 use Drupal\media\OEmbed\Provider;
 use Drupal\media\OEmbed\Resource;
-use Drupal\TestTools\Random;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,15 +25,14 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    * Data provider for testBadHashParameter().
    *
    * @return array
-   *   An array of test cases.OffCanvasDialogTest.php
    */
-  public static function providerBadHashParameter() {
+  public function providerBadHashParameter() {
     return [
       'no hash' => [
         '',
       ],
       'invalid hash' => [
-        Random::string(),
+        $this->randomString(),
       ],
     ];
   }
@@ -51,7 +47,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    *
    * @covers ::render
    */
-  public function testBadHashParameter($hash): void {
+  public function testBadHashParameter($hash) {
     /** @var callable $controller */
     $controller = $this->container
       ->get('controller_resolver')
@@ -59,7 +55,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
 
     $this->assertIsCallable($controller);
 
-    $this->expectException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
+    $this->expectException('\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException');
     $this->expectExceptionMessage('This resource is not available');
     $request = new Request([
       'url' => 'https://example.com/path/to/resource',
@@ -75,7 +71,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    *
    * @covers ::render
    */
-  public function testResourcePassedToPreprocess(): void {
+  public function testResourcePassedToPreprocess() {
     $hash = $this->container->get('media.oembed.iframe_url_helper')
       ->getHash('', 0, 0);
 

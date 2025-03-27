@@ -2,23 +2,15 @@
 
 namespace Drupal\Core\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Implements the class resolver interface supporting class names and services.
  */
-class ClassResolver implements ClassResolverInterface {
-
+class ClassResolver implements ClassResolverInterface, ContainerAwareInterface {
   use DependencySerializationTrait;
-
-  /**
-   * Constructs a new ClassResolver object.
-   *
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The service container.
-   */
-  public function __construct(protected ContainerInterface $container) {
-  }
+  use ContainerAwareTrait;
 
   /**
    * {@inheritdoc}
@@ -38,6 +30,10 @@ class ClassResolver implements ClassResolverInterface {
       else {
         $instance = new $definition();
       }
+    }
+
+    if ($instance instanceof ContainerAwareInterface) {
+      $instance->setContainer($this->container);
     }
 
     return $instance;

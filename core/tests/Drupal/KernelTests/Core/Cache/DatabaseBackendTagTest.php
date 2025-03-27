@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Core\Cache\Cache;
@@ -18,14 +16,16 @@ use Symfony\Component\DependencyInjection\Reference;
 class DatabaseBackendTagTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['system'];
 
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container): void {
+  public function register(ContainerBuilder $container) {
     parent::register($container);
     // Change container to database cache backends.
     $container
@@ -34,7 +34,7 @@ class DatabaseBackendTagTest extends KernelTestBase {
       ->addMethodCall('setContainer', [new Reference('service_container')]);
   }
 
-  public function testTagInvalidations(): void {
+  public function testTagInvalidations() {
     // Create cache entry in multiple bins.
     $tags = ['test_tag:1', 'test_tag:2', 'test_tag:3'];
     $bins = ['data', 'bootstrap', 'render'];

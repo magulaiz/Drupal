@@ -5,27 +5,21 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
-class DrupalDialogEvent extends Event {
-  constructor(type, dialog, settings = null) {
-    super(`dialog:${type}`, { bubbles: true });
-    this.dialog = dialog;
-    this.settings = settings;
-  }
-}
-
-(function ($, Drupal, drupalSettings, bodyScrollLock) {
+(function ($, Drupal, drupalSettings) {
   /**
    * Default dialog options.
    *
    * @type {object}
    *
    * @prop {boolean} [autoOpen=true]
+   * @prop {string} [dialogClass='']
    * @prop {string} [buttonClass='button']
    * @prop {string} [buttonPrimaryClass='button--primary']
    * @prop {function} close
    */
   drupalSettings.dialog = {
     autoOpen: true,
+    dialogClass: '',
     // Drupal-specific extensions: see dialog.jquery-ui.js.
     buttonClass: 'button',
     buttonPrimaryClass: 'button--primary',
@@ -67,10 +61,7 @@ class DrupalDialogEvent extends Event {
    */
   Drupal.dialog = function (element, options) {
     let undef;
-
     const $element = $(element);
-    const domElement = $element.get(0);
-
     const dialog = {
       open: false,
       returnValue: undef,
@@ -78,41 +69,19 @@ class DrupalDialogEvent extends Event {
 
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
-      if (settings.dialogClass) {
-        Drupal.deprecationError({
-          message:
-            'dialogClass is deprecated in drupal:10.4.x and will be removed from drupal:12.0.0.',
-        });
-      }
-
       // Trigger a global event to allow scripts to bind events to the dialog.
-      const event = new DrupalDialogEvent('beforecreate', dialog, settings);
-      domElement.dispatchEvent(event);
-      $element.dialog(event.settings);
+      $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
+      $element.dialog(settings);
       dialog.open = true;
-
-      // Locks the body scroll only when it opens in modal.
-      if (event.settings.modal) {
-        // Locks the body when the dialog opens.
-        bodyScrollLock.lock(domElement);
-      }
-
-      domElement.dispatchEvent(
-        new DrupalDialogEvent('aftercreate', dialog, event.settings),
-      );
+      $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
     }
 
     function closeDialog(value) {
-      domElement.dispatchEvent(new DrupalDialogEvent('beforeclose', dialog));
-
-      // Unlocks the body when the dialog closes.
-      bodyScrollLock.clearBodyLocks();
-
+      $(window).trigger('dialog:beforeclose', [dialog, $element]);
       $element.dialog('close');
       dialog.returnValue = value;
       dialog.open = false;
-
-      domElement.dispatchEvent(new DrupalDialogEvent('afterclose', dialog));
+      $(window).trigger('dialog:afterclose', [dialog, $element]);
     }
 
     dialog.show = () => {
@@ -125,4 +94,4 @@ class DrupalDialogEvent extends Event {
 
     return dialog;
   };
-})(jQuery, Drupal, drupalSettings, bodyScrollLock);
+})(jQuery, Drupal, drupalSettings);

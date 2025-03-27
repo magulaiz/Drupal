@@ -4,7 +4,6 @@ namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
@@ -32,34 +31,31 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @code
  * process:
- *   path_to_file:
- *     plugin: download
- *     source:
- *       - source_url
- *       - destination_uri
+ *   plugin: download
+ *   source:
+ *     - source_url
+ *     - destination_uri
  * @endcode
  *
  * This will download source_url to destination_uri.
  *
  * @code
  * process:
- *   uri:
- *     plugin: download
- *     source:
- *       - source_url
- *       - destination_uri
- *     file_exists: rename
- *   # other fields ...
- * destination:
- *   plugin: entity:file
+ *   plugin: download
+ *   source:
+ *     - source_url
+ *     - destination_uri
+ *   file_exists: rename
  * @endcode
  *
  * This will download source_url to destination_uri and ensure that the
  * destination URI is unique. If a file with the same name exists at the
  * destination, a numbered suffix like '_0' will be appended to make it unique.
- * The destination URI is saved in a file entity.
+ *
+ * @MigrateProcessPlugin(
+ *   id = "download"
+ * )
  */
-#[MigrateProcess('download')]
 class Download extends FileProcessBase implements ContainerFactoryPluginInterface {
 
   /**

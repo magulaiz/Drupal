@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\shortcut\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
@@ -28,35 +26,10 @@ class ShortcutSetValidationTest extends ConfigEntityValidationTestBase {
     $this->installEntitySchema('shortcut');
 
     $this->entity = ShortcutSet::create([
-      'id' => 'test-shortcut-set',
+      'id' => 'test',
       'label' => 'Test',
     ]);
     $this->entity->save();
-  }
-
-  /**
-   * Shortcut set IDs are atypical: they allow dashes and disallow underscores.
-   */
-  public static function providerInvalidMachineNameCharacters(): array {
-    $cases = parent::providerInvalidMachineNameCharacters();
-
-    // Remove the existing test case that verifies a machine name containing
-    // dashes is invalid.
-    self::assertSame(['dash-separated', FALSE], $cases['INVALID: dash separated']);
-    unset($cases['INVALID: dash separated']);
-    // And instead add a test case that verifies it is allowed for shortcut
-    // sets.
-    $cases['VALID: dash separated'] = ['dash-separated', TRUE];
-
-    // Remove the existing test case that verifies a machine name containing
-    // underscores is valid.
-    self::assertSame(['underscore_separated', TRUE], $cases['VALID: underscore separated']);
-    unset($cases['VALID: underscore separated']);
-    // And instead add a test case that verifies it is disallowed for shortcut
-    // sets.
-    $cases['INVALID: underscore separated'] = ['underscore_separated', FALSE];
-
-    return $cases;
   }
 
 }

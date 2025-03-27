@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 
 /**
@@ -13,22 +12,24 @@ use Drupal\Core\Render\Element;
  *
  * @see \Drupal\Core\Render\Element\Radios
  * @see \Drupal\Core\Render\Element\Checkbox
+ *
+ * @FormElement("radio")
  */
-#[FormElement('radio')]
-class Radio extends FormElementBase {
+class Radio extends FormElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#default_value' => NULL,
       '#process' => [
-        [static::class, 'processAjaxForm'],
+        [$class, 'processAjaxForm'],
       ],
       '#pre_render' => [
-        [static::class, 'preRenderRadio'],
+        [$class, 'preRenderRadio'],
       ],
       '#theme' => 'input__radio',
       '#theme_wrappers' => ['form_element'],

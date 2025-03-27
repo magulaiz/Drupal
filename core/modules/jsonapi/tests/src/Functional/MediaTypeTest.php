@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Url;
 use Drupal\media\Entity\MediaType;
 
@@ -45,7 +42,7 @@ class MediaTypeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     $this->grantPermissionsToTestedRole(['administer media types']);
   }
 
@@ -55,7 +52,7 @@ class MediaTypeTest extends ConfigEntityResourceTestBase {
   protected function createEntity() {
     // Create a "Camelids" media type.
     $camelids = MediaType::create([
-      'label' => 'Camelids',
+      'name' => 'Camelids',
       'id' => 'camelids',
       'description' => 'Camelids are large, strictly herbivorous animals with slender necks and long legs.',
       'source' => 'file',
@@ -69,16 +66,16 @@ class MediaTypeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/media_type/media_type/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -93,7 +90,7 @@ class MediaTypeTest extends ConfigEntityResourceTestBase {
           'dependencies' => [],
           'description' => 'Camelids are large, strictly herbivorous animals with slender necks and long legs.',
           'field_map' => [],
-          'label' => 'Camelids',
+          'label' => NULL,
           'langcode' => 'en',
           'new_revision' => FALSE,
           'queue_thumbnail_downloads' => FALSE,
@@ -111,7 +108,7 @@ class MediaTypeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }

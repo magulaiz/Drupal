@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\rest\Unit\EventSubscriber;
 
 use Drupal\Component\Serialization\Json;
@@ -35,9 +33,9 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    * @covers ::onResponse
    * @dataProvider providerTestSerialization
    */
-  public function testSerialization($data, $expected_response = FALSE): void {
+  public function testSerialization($data, $expected_response = FALSE) {
     $request = new Request();
-    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'rest_plugin'], ['_format' => 'json']));
+    $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => 'restplugin'], ['_format' => 'json']));
 
     $handler_response = new ResourceResponse($data);
     $resource_response_subscriber = $this->getFunctioningResourceResponseSubscriber($route_match);
@@ -53,10 +51,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     $this->assertEquals($expected_response !== FALSE ? $expected_response : Json::encode($data), $event->getResponse()->getContent());
   }
 
-  /**
-   * Provides data to testSerialization().
-   */
-  public static function providerTestSerialization() {
+  public function providerTestSerialization() {
     return [
       // The default data for \Drupal\rest\ResourceResponse.
       'default' => [NULL, ''],
@@ -69,20 +64,22 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       'associative array' => [['test' => 'foobar']],
       'boolean true' => [TRUE],
       'boolean false' => [FALSE],
+      // @todo Not supported. https://www.drupal.org/node/2427811
+      // [new \stdClass()],
+      // [(object) ['test' => 'foobar']],
     ];
   }
 
   /**
-   * Tests the response format.
+   * @covers ::getResponseFormat
    *
    * Note this does *not* need to test formats being requested that are not
    * accepted by the server, because the routing system would have already
    * prevented those from reaching the controller.
    *
-   * @covers ::getResponseFormat
    * @dataProvider providerTestResponseFormat
    */
-  public function testResponseFormat($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
+  public function testResponseFormat($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));
@@ -119,7 +116,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    *
    * @dataProvider providerTestResponseFormat
    */
-  public function testOnResponseWithCacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
+  public function testOnResponseWithCacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));
@@ -139,7 +136,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => $this->randomMachineName()], $route_requirements));
 
       // The RequestHandler must return a ResourceResponseInterface object.
-      $handler_response = new ResourceResponse(['REST' => 'Drupal']);
+      $handler_response = new ResourceResponse($method !== 'DELETE' ? ['REST' => 'Drupal'] : NULL);
       $this->assertInstanceOf(ResourceResponseInterface::class, $handler_response);
       $this->assertInstanceOf(CacheableResponseInterface::class, $handler_response);
 
@@ -169,7 +166,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    *
    * @dataProvider providerTestResponseFormat
    */
-  public function testOnResponseWithUncacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
+  public function testOnResponseWithUncacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
       $key = strtoupper(str_replace('-', '_', $key));
@@ -189,7 +186,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       $route_match = new RouteMatch('test', new Route('/rest/test', ['_rest_resource_config' => $this->randomMachineName()], $route_requirements));
 
       // The RequestHandler must return a ResourceResponseInterface object.
-      $handler_response = new ModifiedResourceResponse(['REST' => 'Drupal']);
+      $handler_response = new ModifiedResourceResponse($method !== 'DELETE' ? ['REST' => 'Drupal'] : NULL);
       $this->assertInstanceOf(ResourceResponseInterface::class, $handler_response);
       $this->assertNotInstanceOf(CacheableResponseInterface::class, $handler_response);
 
@@ -222,13 +219,14 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    *   6. expected response content type
    *   7. expected response body
    */
-  public static function providerTestResponseFormat() {
+  public function providerTestResponseFormat() {
     $json_encoded = Json::encode(['REST' => 'Drupal']);
     $xml_encoded = "<?xml version=\"1.0\"?>\n<response><REST>Drupal</REST></response>\n";
 
     $safe_method_test_cases = [
       'safe methods: client requested format (JSON)' => [
-        ['GET', 'HEAD'],
+        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
+        ['GET'],
         ['xml', 'json'],
         [],
         'json',
@@ -239,7 +237,8 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $json_encoded,
       ],
       'safe methods: client requested format (XML)' => [
-        ['GET', 'HEAD'],
+        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
+        ['GET'],
         ['xml', 'json'],
         [],
         'xml',
@@ -250,7 +249,8 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $xml_encoded,
       ],
       'safe methods: client requested no format: response should use the first configured format (JSON)' => [
-        ['GET', 'HEAD'],
+        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
+        ['GET'],
         ['json', 'xml'],
         [],
         FALSE,
@@ -261,7 +261,8 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $json_encoded,
       ],
       'safe methods: client requested no format: response should use the first configured format (XML)' => [
-        ['GET', 'HEAD'],
+        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
+        ['GET'],
         ['xml', 'json'],
         [],
         FALSE,
@@ -342,8 +343,8 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
       ],
     ];
 
-    $unsafe_method_no_body_test_cases = [
-      'unsafe methods without request bodies (DELETE): client requested no format, response should have the first acceptable format' => [
+    $unsafe_method_bodyless_test_cases = [
+      'unsafe methods without response bodies (DELETE): client requested no format, response should have no format' => [
         ['DELETE'],
         ['xml', 'json'],
         ['xml', 'json'],
@@ -351,10 +352,10 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         ['Content-Type' => 'application/json'],
         NULL,
         'xml',
-        'text/xml',
-        $xml_encoded,
+        NULL,
+        '',
       ],
-      'unsafe methods without request bodies (DELETE): client requested format (XML), response should have xml format' => [
+      'unsafe methods without response bodies (DELETE): client requested format (XML), response should have no format' => [
         ['DELETE'],
         ['xml', 'json'],
         ['xml', 'json'],
@@ -362,10 +363,10 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         ['Content-Type' => 'application/json'],
         NULL,
         'xml',
-        'text/xml',
-        $xml_encoded,
+        NULL,
+        '',
       ],
-      'unsafe methods without request bodies (DELETE): client requested format (JSON), response should have json format' => [
+      'unsafe methods without response bodies (DELETE): client requested format (JSON), response should have no format' => [
         ['DELETE'],
         ['xml', 'json'],
         ['xml', 'json'],
@@ -373,17 +374,16 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         ['Content-Type' => 'application/json'],
         NULL,
         'json',
-        'application/json',
-        $json_encoded,
+        NULL,
+        '',
       ],
     ];
 
-    return $safe_method_test_cases + $unsafe_method_bodied_test_cases + $unsafe_method_no_body_test_cases;
+    return $safe_method_test_cases + $unsafe_method_bodied_test_cases + $unsafe_method_bodyless_test_cases;
   }
 
   /**
    * @return \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
-   *   A functioning ResourceResponseSubscriber.
    */
   protected function getFunctioningResourceResponseSubscriber(RouteMatchInterface $route_match) {
     // Create a dummy of the renderer service.
@@ -415,7 +415,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    * @return array
    *   An array of route requirements.
    */
-  protected function generateRouteRequirements(array $supported_response_formats, array $supported_request_formats): array {
+  protected function generateRouteRequirements(array $supported_response_formats, array $supported_request_formats) {
     $route_requirements = [
       '_format' => implode('|', $supported_response_formats),
     ];

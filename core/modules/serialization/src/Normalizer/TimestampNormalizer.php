@@ -15,8 +15,6 @@ use Drupal\Core\TypedData\Plugin\DataType\Timestamp;
  */
 class TimestampNormalizer extends DateTimeNormalizer {
 
-  use SchematicNormalizerTrait;
-
   /**
    * {@inheritdoc}
    */
@@ -25,6 +23,11 @@ class TimestampNormalizer extends DateTimeNormalizer {
     'ISO 8601' => \DateTime::ISO8601,
     'RFC 3339' => \DateTime::RFC3339,
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $supportedInterfaceOrClass = Timestamp::class;
 
   /**
    * {@inheritdoc}
@@ -39,15 +42,6 @@ class TimestampNormalizer extends DateTimeNormalizer {
   public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     $denormalized = parent::denormalize($data, $class, $format, $context);
     return $denormalized->getTimestamp();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSupportedTypes(?string $format): array {
-    return [
-      Timestamp::class => TRUE,
-    ];
   }
 
 }

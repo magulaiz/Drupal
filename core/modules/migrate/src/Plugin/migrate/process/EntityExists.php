@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -22,8 +21,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     source: tid
  *     entity_type: taxonomy_term
  * @endcode
-*/
-#[MigrateProcess('entity_exists')]
+ *
+ * @MigrateProcessPlugin(
+ *  id = "entity_exists"
+ * )
+ */
 class EntityExists extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -42,7 +44,7 @@ class EntityExists extends ProcessPluginBase implements ContainerFactoryPluginIn
    *   The plugin ID.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   * @param $storage
    *   The entity storage.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $storage) {
@@ -53,7 +55,7 @@ class EntityExists extends ProcessPluginBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
       $configuration,
       $plugin_id,

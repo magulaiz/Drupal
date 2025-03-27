@@ -9,8 +9,7 @@ use Drupal\Core\Render\BubbleableMetadata;
  * Used to return generated links, along with associated cacheability metadata.
  *
  * Note: not to be confused with \Drupal\Core\Link, which is for passing around
- *   links that are not generated (typically link text + route name + route
- *   parameters).
+ *   ungenerated links (typically link text + route name + route parameters).
  */
 class GeneratedLink extends BubbleableMetadata implements MarkupInterface, \Countable {
 
@@ -30,7 +29,6 @@ class GeneratedLink extends BubbleableMetadata implements MarkupInterface, \Coun
    * Gets the generated link.
    *
    * @return string
-   *   The generated link.
    */
   public function getGeneratedLink() {
     return $this->generatedLink;
@@ -59,14 +57,16 @@ class GeneratedLink extends BubbleableMetadata implements MarkupInterface, \Coun
   /**
    * {@inheritdoc}
    */
-  public function jsonSerialize(): string {
+  #[\ReturnTypeWillChange]
+  public function jsonSerialize() {
     return $this->__toString();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function count(): int {
+  #[\ReturnTypeWillChange]
+  public function count() {
     return mb_strlen($this->__toString());
   }
 

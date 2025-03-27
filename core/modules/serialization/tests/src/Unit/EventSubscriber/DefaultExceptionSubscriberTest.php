@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\serialization\Unit\EventSubscriber;
 
 use Drupal\serialization\Encoder\JsonEncoder;
@@ -23,7 +21,7 @@ class DefaultExceptionSubscriberTest extends UnitTestCase {
   /**
    * @covers ::on4xx
    */
-  public function testOn4xx(): void {
+  public function testOn4xx() {
     $kernel = $this->prophesize(HttpKernelInterface::class);
     $request = Request::create('/test');
     $request->setRequestFormat('json');

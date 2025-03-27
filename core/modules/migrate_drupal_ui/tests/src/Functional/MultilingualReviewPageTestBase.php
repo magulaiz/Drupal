@@ -1,8 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
+
+use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
  * Provides a base class for testing the review step of the Upgrade form.
@@ -10,6 +10,8 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
  * When using this test class, enable translation modules.
  */
 abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
+
+  use CreateTestContentEntitiesTrait;
 
   /**
    * {@inheritdoc}
@@ -38,7 +40,7 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
    *
    * @see \Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase
    */
-  public function testMigrateUpgradeReviewPage(): void {
+  public function testMigrateUpgradeReviewPage() {
     $this->prepare();
     // Start the upgrade process.
     $this->submitCredentialForm();

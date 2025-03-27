@@ -24,6 +24,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class ResourceIdentifierNormalizer extends NormalizerBase implements DenormalizerInterface {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $supportedInterfaceOrClass = ResourceIdentifier::class;
+
+  /**
    * The entity field manager.
    *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
@@ -137,10 +142,8 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
   /**
    * {@inheritdoc}
    */
-  public function getSupportedTypes(?string $format): array {
-    return [
-      ResourceIdentifier::class => TRUE,
-    ];
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

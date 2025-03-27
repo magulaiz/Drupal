@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Component\Utility\UrlHelper;
@@ -69,7 +67,6 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
 
   /**
    * The mocked access unaware router.
-   *
    * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $accessUnawareRouter;
@@ -85,8 +82,6 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->configFactory = $this->getConfigFactoryStub(['system.site' => ['page.403' => '/access-denied-page', 'page.404' => '/not-found-page']]);
 
     $this->kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
@@ -131,7 +126,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   /**
    * Tests onHandleException with a POST request.
    */
-  public function testHandleWithPostRequest(): void {
+  public function testHandleWithPostRequest() {
     $request = Request::create('/test', 'POST', ['name' => 'druplicon', 'pass' => '12345']);
 
     $request_context = new RequestContext();
@@ -157,7 +152,7 @@ class CustomPageExceptionHtmlSubscriberTest extends UnitTestCase {
   /**
    * Tests onHandleException with a GET request.
    */
-  public function testHandleWithGetRequest(): void {
+  public function testHandleWithGetRequest() {
     $request = Request::create('/test', 'GET', ['name' => 'druplicon', 'pass' => '12345']);
     $request->attributes->set(AccessAwareRouterInterface::ACCESS_RESULT, AccessResult::forbidden()->addCacheTags(['druplicon']));
 

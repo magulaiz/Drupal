@@ -11,8 +11,6 @@
 
 use Drupal\Core\Locale\CountryManager;
 
-// cspell:ignore localenames
-
 // Determine DRUPAL_ROOT.
 $dir = dirname(__FILE__);
 while (!defined('DRUPAL_ROOT')) {
@@ -27,12 +25,23 @@ $uri = DRUPAL_ROOT . '/territories.json';
 
 if (!file_exists($uri)) {
   $usage = <<< USAGE
-- Download territories.json from
-  https://github.com/unicode-org/cldr-json/blob/main/cldr-json/cldr-localenames-full/main/en/territories.json
-  and place it in the Drupal root directory.
+- Choose the latest release data from http://cldr.unicode.org/index/downloads
+  and download the json.zip file.
+- Unzip the json.zip file and place the main/en/territories.json in the
+  Drupal root directory.
 - Run this script.
 USAGE;
   exit('CLDR data file not found. (' . $uri . ")\n\n" . $usage . "\n");
+}
+
+// Fake the t() function used in CountryManager.php instead of attempting a full
+// Drupal bootstrap of core/includes/bootstrap.inc (where t() is declared).
+if (!function_exists('t')) {
+
+  function t($string) {
+    return $string;
+  }
+
 }
 
 // Read in existing codes.
@@ -93,7 +102,7 @@ $out = '';
 foreach ($countries as $code => $name) {
   // For .po translation file's sake, use double-quotes instead of escaped
   // single-quotes.
-  $name = str_contains($name, '\'' ? '"' . $name . '"' : "'" . $name . "'");
+  $name = (strpos($name, '\'') !== FALSE ? '"' . $name . '"' : "'" . $name . "'");
   $out .= '      ' . var_export($code, TRUE) . ' => t(' . $name . '),' . "\n";
 }
 

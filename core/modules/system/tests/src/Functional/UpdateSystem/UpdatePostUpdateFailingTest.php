@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Core\Database\Database;
@@ -52,7 +50,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
   /**
    * Tests hook_post_update_NAME().
    */
-  public function testPostUpdate(): void {
+  public function testPostUpdate() {
     // There are expected to be failed updates.
     $this->checkFailedUpdates = FALSE;
 
@@ -68,7 +66,7 @@ class UpdatePostUpdateFailingTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doSelectionTest(): void {
+  protected function doSelectionTest() {
     // First update, should not be run since this module's update hooks fail.
     $this->assertSession()->responseContains('8001 - This update will fail.');
     $this->assertSession()->responseContains('8002 - A further update');

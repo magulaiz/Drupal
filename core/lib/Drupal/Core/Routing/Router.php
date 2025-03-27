@@ -3,7 +3,6 @@
 namespace Drupal\Core\Routing;
 
 use Drupal\Core\Path\CurrentPathStack;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -86,6 +85,22 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   }
 
   /**
+   * Adds a deprecated route filter.
+   *
+   * @param \Drupal\Core\Routing\FilterInterface $route_filter
+   *   The route filter.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   route_filter instead.
+   *
+   * @see https://www.drupal.org/node/2894934
+   */
+  public function addDeprecatedRouteFilter(FilterInterface $route_filter) {
+    @trigger_error('non_lazy_route_filter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use route_filter instead. See https://www.drupal.org/node/2894934', E_USER_DEPRECATED);
+    $this->filters[] = $route_filter;
+  }
+
+  /**
    * Adds a route enhancer.
    *
    * @param \Drupal\Core\Routing\EnhancerInterface $route_enhancer
@@ -96,15 +111,26 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   }
 
   /**
+   * Adds a deprecated route enhancer.
+   *
+   * @param \Drupal\Core\Routing\EnhancerInterface $route_enhancer
+   *   The route enhancer.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   route_enhancer instead.
+   *
+   * @see https://www.drupal.org/node/2894934
+   */
+  public function addDeprecatedRouteEnhancer(EnhancerInterface $route_enhancer) {
+    @trigger_error('non_lazy_route_enhancer is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use route_enhancer instead. See https://www.drupal.org/node/2894934', E_USER_DEPRECATED);
+    $this->enhancers[] = $route_enhancer;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function match($pathinfo): array {
-    try {
-      $request = Request::create($pathinfo);
-    }
-    catch (BadRequestException $e) {
-      throw new ResourceNotFoundException($e->getMessage(), $e->getCode(), $e);
-    }
+    $request = Request::create($pathinfo);
 
     return $this->matchRequest($request);
   }
@@ -151,7 +177,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
    * RouteProvider::getRoutesByPath().
    *
    * @param string $pathinfo
-   *   The path info to be parsed.
+   *   The path info to be parsed
    * @param \Symfony\Component\Routing\RouteCollection $routes
    *   The set of routes.
    * @param bool $case_sensitive
@@ -317,9 +343,8 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   }
 
   /**
-   * This method is intentionally not implemented.
-   *
-   * Use Drupal\Core\Url instead.
+   * This method is intentionally not implemented. Use
+   * Drupal\Core\Url instead.
    *
    * @see https://www.drupal.org/node/2820197
    *

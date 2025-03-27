@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Unit\Theme;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Session\AccountInterface;
@@ -21,11 +20,12 @@ class AdminNegotiatorTest extends UnitTestCase {
   /**
    * @dataProvider getThemes
    */
-  public function testDetermineActiveTheme($admin_theme, $expected): void {
+  public function testDetermineActiveTheme($admin_theme, $expected) {
     $user = $this->prophesize(AccountInterface::class);
     $config_factory = $this->getConfigFactoryStub(['system.theme' => ['admin' => $admin_theme]]);
+    $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $admin_context = $this->prophesize(AdminContext::class);
-    $negotiator = new AdminNegotiator($user->reveal(), $config_factory, $admin_context->reveal());
+    $negotiator = new AdminNegotiator($user->reveal(), $config_factory, $entity_type_manager->reveal(), $admin_context->reveal());
     $route_match = $this->prophesize(RouteMatch::class);
     $this->assertSame($expected, $negotiator->determineActiveTheme($route_match->reveal()));
   }
@@ -33,7 +33,7 @@ class AdminNegotiatorTest extends UnitTestCase {
   /**
    * Provides a list of theme names to test.
    */
-  public static function getThemes() {
+  public function getThemes() {
     return [
       ['claro', 'claro'],
       [NULL, NULL],

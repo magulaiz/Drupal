@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Authentication\AuthenticationManagerTest.
+ */
 
 namespace Drupal\Tests\Core\Authentication;
 
@@ -25,7 +28,7 @@ class AuthenticationManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestDefaultFilter
    */
-  public function testDefaultFilter($applies, $has_route, $auth_option, $provider_id, $global): void {
+  public function testDefaultFilter($applies, $has_route, $auth_option, $provider_id, $global) {
     $auth_provider = $this->createMock('Drupal\Core\Authentication\AuthenticationProviderInterface');
     $auth_collector = new AuthenticationCollector();
     $auth_collector->addProvider($auth_provider, $provider_id, 0, $global);
@@ -46,7 +49,7 @@ class AuthenticationManagerTest extends UnitTestCase {
   /**
    * @covers ::applyFilter
    */
-  public function testApplyFilterWithFilterProvider(): void {
+  public function testApplyFilterWithFilterProvider() {
     $auth_provider = $this->createMock('Drupal\Tests\Core\Authentication\TestAuthenticationProviderInterface');
     $auth_provider->expects($this->once())
       ->method('appliesToRoutedRequest')
@@ -64,7 +67,7 @@ class AuthenticationManagerTest extends UnitTestCase {
   /**
    * Provides data to self::testDefaultFilter().
    */
-  public static function providerTestDefaultFilter() {
+  public function providerTestDefaultFilter() {
     $data = [];
     // No route, cookie is global, should apply.
     $data[] = [TRUE, FALSE, [], 'cookie', TRUE];

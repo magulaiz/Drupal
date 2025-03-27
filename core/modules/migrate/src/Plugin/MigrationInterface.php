@@ -89,7 +89,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * An alias for getPluginId() for backwards compatibility reasons.
    *
    * @return string
-   *   The plugin ID of the plugin instance.
+   *   The plugin_id of the plugin instance.
    *
    * @see \Drupal\migrate\Plugin\MigrationInterface::getPluginId()
    */
@@ -106,8 +106,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Get a list of required plugin IDs.
    *
-   * @return string[]
-   *   An array of required plugin IDs.
+   * @returns string[]
    */
   public function getRequirements(): array;
 
@@ -122,17 +121,14 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Returns the process plugins.
    *
-   * @param array|null $process
-   *   (Optional) A process configuration array. Defaults to NULL. If specified,
-   *   then the plugins from the given process array are returned. If not
-   *   specified, then the plugins from this migration's process array are
-   *   returned.
+   * @param array $process
+   *   A process configuration array.
    *
    * @return \Drupal\migrate\Plugin\MigrateProcessInterface[][]
    *   An associative array. The keys are the destination property names. Values
    *   are process pipelines. Each pipeline contains an array of plugins.
    */
-  public function getProcessPlugins(?array $process = NULL);
+  public function getProcessPlugins(array $process = NULL);
 
   /**
    * Returns the initialized destination plugin.
@@ -199,7 +195,8 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function clearInterruptionResult();
 
   /**
-   * Sets the migration status as interrupted with a given result code.
+   * Signal that the migration should be interrupted with the specified result
+   * code.
    *
    * @param int $result
    *   One of the MigrationInterface::RESULT_* constants.
@@ -207,7 +204,8 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function interruptMigration($result);
 
   /**
-   * Gets the normalized process plugin configuration.
+   * Get the normalized process pipeline configuration describing the process
+   * plugins.
    *
    * The process configuration is always normalized. All shorthand processing
    * will be expanded into their full representations.
@@ -261,6 +259,34 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function mergeProcessOfProperty($property, array $process_of_property);
 
   /**
+   * Checks if the migration should track time of last import.
+   *
+   * @return bool
+   *   TRUE if the migration is tracking last import time.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * replacement.
+   *
+   * @see https://www.drupal.org/node/3282894
+   */
+  public function isTrackLastImported();
+
+  /**
+   * Set if the migration should track time of last import.
+   *
+   * @param bool $track_last_imported
+   *   Boolean value to indicate if the migration should track last import time.
+   *
+   * @return $this
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * replacement.
+   *
+   * @see https://www.drupal.org/node/3282894
+   */
+  public function setTrackLastImported($track_last_imported);
+
+  /**
    * Get the dependencies for this migration.
    *
    * @return array
@@ -285,6 +311,19 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function getSourceConfiguration();
 
   /**
+   * If true, track time of last import.
+   *
+   * @return bool
+   *   Flag to determine desire of tracking time of last import.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * replacement.
+   *
+   * @see https://www.drupal.org/node/3282894
+   */
+  public function getTrackLastImported();
+
+  /**
    * The destination identifiers.
    *
    * An array of destination identifiers: the keys are the name of the
@@ -307,7 +346,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * Indicates if the migration is auditable.
    *
    * @return bool
-   *   TRUE if the migration is auditable, FALSE otherwise.
    */
   public function isAuditable();
 

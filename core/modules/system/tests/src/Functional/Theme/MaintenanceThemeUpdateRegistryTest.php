@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Core\Serialization\Yaml;
@@ -24,7 +22,7 @@ class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareSettings(): void {
+  protected function prepareSettings() {
     parent::prepareSettings();
     $this->writeSettings([
       'settings' => [
@@ -39,7 +37,7 @@ class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $info = [
       'type' => 'profile',
@@ -65,9 +63,8 @@ class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
   /**
    * Tests that after installing the profile there are no outstanding updates.
    */
-  public function testMaintenanceThemeUpdateRegistration(): void {
-    $this->drupalLogin($this->drupalCreateUser(['administer software updates']));
-
+  public function testMaintenanceThemeUpdateRegistration() {
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('update.php/selection');
     $this->updateRequirementsProblem();
     $this->drupalGet('update.php/selection');

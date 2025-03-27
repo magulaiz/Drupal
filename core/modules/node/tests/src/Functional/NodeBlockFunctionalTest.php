@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\block\Entity\Block;
@@ -40,7 +38,9 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   protected $webUser;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['block', 'views', 'node_block_test'];
 
@@ -67,7 +67,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   /**
    * Tests the recent comments block.
    */
-  public function testRecentNodeBlock(): void {
+  public function testRecentNodeBlock() {
     $this->drupalLogin($this->adminUser);
 
     // Disallow anonymous users to view content.
@@ -148,7 +148,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet("admin/structure/block/add/system_powered_by_block/{$theme}");
     $this->assertSession()->pageTextContains('Content type');
     $edit = [
-      'id' => $this->randomMachineName(),
+      'id' => strtolower($this->randomMachineName()),
       'region' => 'sidebar_first',
       'visibility[entity_bundle:node][bundles][article]' => 'article',
     ];
@@ -171,13 +171,10 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextNotContains($label);
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'theme', 'url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'url.site', 'user', 'route']);
 
-    // Ensure that a page that does not have a node context can still be cached.
-    \Drupal::service('module_installer')->install(['dynamic_page_cache_test']);
-    $this->drupalGet(Url::fromRoute('dynamic_page_cache_test.cacheable_response'));
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'MISS');
-    $this->drupalGet(Url::fromRoute('dynamic_page_cache_test.cacheable_response'));
+    // Ensure that a page that does not have a node context can still be cached,
+    // the front page is the user page which is already cached from the login
+    // request above.
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
-    \Drupal::service('module_installer')->uninstall(['dynamic_page_cache_test']);
 
     $this->drupalGet('node/add/article');
     // Check that block is displayed on the add article page.
@@ -185,7 +182,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'session', 'theme', 'url.path', 'url.query_args', 'user', 'route']);
 
     // The node/add/article page is an admin path and currently uncacheable.
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'UNCACHEABLE (poor cacheability)');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'UNCACHEABLE');
 
     $this->drupalGet('node/' . $node1->id());
     // Check that block is displayed on the node page when node is of type

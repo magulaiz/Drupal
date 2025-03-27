@@ -1,12 +1,13 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Plugin\CategorizingPluginManagerTraitTest.
+ */
 
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -15,7 +16,6 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\Core\Plugin\CategorizingPluginManagerTrait
  * @group Plugin
- * @runTestsInSeparateProcesses
  */
 class CategorizingPluginManagerTraitTest extends UnitTestCase {
 
@@ -30,29 +30,23 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $module_handler->expects($this->any())
       ->method('getModuleList')
       ->willReturn(['node' => []]);
-    $module_extension_list = $this->createMock(ModuleExtensionList::class);
-    $module_extension_list->expects($this->any())
+    $module_handler->expects($this->any())
       ->method('getName')
-      ->willReturnCallback(function ($argument) {
-        if ($argument == 'node') {
-          return 'Node';
-        }
-        throw new UnknownExtensionException();
-      });
-    $this->pluginManager = new CategorizingPluginManager($module_handler, $module_extension_list);
+      ->with('node')
+      ->willReturn('Node');
+
+    $this->pluginManager = new CategorizingPluginManager($module_handler);
     $this->pluginManager->setStringTranslation($this->getStringTranslationStub());
   }
 
   /**
    * @covers ::getCategories
    */
-  public function testGetCategories(): void {
+  public function testGetCategories() {
     $this->assertSame([
       'fruits',
       'vegetables',
@@ -62,7 +56,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
   /**
    * @covers ::getSortedDefinitions
    */
-  public function testGetSortedDefinitions(): void {
+  public function testGetSortedDefinitions() {
     $sorted = $this->pluginManager->getSortedDefinitions();
     $this->assertSame(['apple', 'mango', 'cucumber'], array_keys($sorted));
   }
@@ -70,7 +64,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
   /**
    * @covers ::getGroupedDefinitions
    */
-  public function testGetGroupedDefinitions(): void {
+  public function testGetGroupedDefinitions() {
     $grouped = $this->pluginManager->getGroupedDefinitions();
     $this->assertSame(['fruits', 'vegetables'], array_keys($grouped));
     $this->assertSame(['apple', 'mango'], array_keys($grouped['fruits']));
@@ -80,7 +74,7 @@ class CategorizingPluginManagerTraitTest extends UnitTestCase {
   /**
    * @covers ::processDefinitionCategory
    */
-  public function testProcessDefinitionCategory(): void {
+  public function testProcessDefinitionCategory() {
     // Existing category.
     $definition = [
       'label' => 'some',
@@ -119,14 +113,11 @@ class CategorizingPluginManager extends DefaultPluginManager implements Categori
   /**
    * Replace the constructor so we can instantiate a stub.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject $module_handler
    *   The module handler.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $module_extension_list
-   *   The module extension list.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ModuleExtensionList $module_extension_list) {
+  public function __construct(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
-    $this->moduleExtensionList = $module_extension_list;
   }
 
   /**
@@ -154,7 +145,7 @@ class CategorizingPluginManager extends DefaultPluginManager implements Categori
   /**
    * {@inheritdoc}
    */
-  public function processDefinition(&$definition, $plugin_id): void {
+  public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
     $this->processDefinitionCategory($definition);
   }

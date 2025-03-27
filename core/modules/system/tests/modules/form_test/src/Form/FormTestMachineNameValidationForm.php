@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -79,7 +77,7 @@ class FormTestMachineNameValidationForm extends FormBase {
       '#ajax' => [
         'callback' => '::buildAjaxSnackConfigureForm',
         'wrapper' => 'snack-config-form',
-        'method' => 'replaceWith',
+        'method' => 'replace',
         'effect' => 'fade',
       ],
     ];
@@ -122,14 +120,13 @@ class FormTestMachineNameValidationForm extends FormBase {
   /**
    * Loading stub for machine name.
    *
-   * @param string $machine_name
+   * @param $machine_name
    *   The machine name.
    *
    * @return bool
-   *   TRUE if the machine name is a duplicate, FALSE otherwise.
    */
   public function load($machine_name) {
-    if (str_contains($machine_name, 'duplicate')) {
+    if (strpos($machine_name, 'duplicate') !== FALSE) {
       return TRUE;
     }
 

@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d6;
 
 use Drupal\field\Plugin\migrate\process\d6\FieldInstanceSettings;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
@@ -18,12 +17,13 @@ use Drupal\Tests\UnitTestCase;
 class FieldInstanceSettingsTest extends UnitTestCase {
 
   /**
-   * @covers \Drupal\Core\Field\BaseFieldDefinition::getSettings
+   * @covers ::getSettings
    *
    * @dataProvider getSettingsProvider
    */
-  public function testGetSettings($field_type, $instance_settings, $expected): void {
+  public function testGetSettings($field_type, $instance_settings, $expected) {
     $instance_settings = unserialize($instance_settings);
+    $migration = $this->createMock(MigrationInterface::class);
     $plugin = new FieldInstanceSettings([], 'd6_field_field_settings', []);
 
     $executable = $this->createMock(MigrateExecutableInterface::class);
@@ -42,7 +42,7 @@ class FieldInstanceSettingsTest extends UnitTestCase {
   /**
    * Provides field settings for testGetSettings().
    */
-  public static function getSettingsProvider() {
+  public function getSettingsProvider() {
     return [
       'imagefield size set' => [
         'imagefield_widget',

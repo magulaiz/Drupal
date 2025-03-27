@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -24,7 +22,7 @@ class MediaSourceAudioVideoTest extends MediaSourceTestBase {
   /**
    * Check the Audio source functionality.
    */
-  public function testAudioTypeCreation(): void {
+  public function testAudioTypeCreation() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -73,7 +71,7 @@ class MediaSourceAudioVideoTest extends MediaSourceTestBase {
   /**
    * Check the Video source functionality.
    */
-  public function testVideoTypeCreation(): void {
+  public function testVideoTypeCreation() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

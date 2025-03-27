@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
@@ -127,7 +125,7 @@ class EntityTest extends UnitTestCase {
   /**
    * Ensures that the entity type manager returns an entity storage.
    */
-  protected function setupEntityTypeManager(): void {
+  protected function setupEntityTypeManager() {
     $this->entityTypeManager->expects($this->any())
       ->method('getStorage')
       ->with('entity_test')
@@ -142,9 +140,8 @@ class EntityTest extends UnitTestCase {
    * Data provider for testing different types of tokens.
    *
    * @return array
-   *   An array of test data.
    */
-  public static function providerTestTokens() {
+  public function providerTestTokens() {
     return [
       ['{{ raw_arguments.test1 }}', 5],
       ['{{ arguments.test2 }}', 6],
@@ -158,7 +155,7 @@ class EntityTest extends UnitTestCase {
    * @covers ::defineOptions
    * @covers ::init
    */
-  public function testRenderWithId(): void {
+  public function testRenderWithId() {
     $this->setupEntityTypeManager();
     $options = [
       'target' => 1,
@@ -194,7 +191,7 @@ class EntityTest extends UnitTestCase {
    *
    * @dataProvider providerTestTokens
    */
-  public function testRenderWithIdAndToken($token, $id): void {
+  public function testRenderWithIdAndToken($token, $id) {
     $this->setupEntityTypeManager();
     $options = [
       'target' => $token,
@@ -233,7 +230,7 @@ class EntityTest extends UnitTestCase {
    * @covers ::defineOptions
    * @covers ::init
    */
-  public function testRenderWithUuid(): void {
+  public function testRenderWithUuid() {
     $this->setupEntityTypeManager();
     $uuid = '1d52762e-b9d8-4177-908f-572d1a5845a4';
     $options = [
@@ -266,7 +263,7 @@ class EntityTest extends UnitTestCase {
    *
    * @dataProvider providerTestTokens
    */
-  public function testCalculateDependenciesWithPlaceholder($token, $id): void {
+  public function testCalculateDependenciesWithPlaceholder($token, $id) {
     $this->setupEntityTypeManager();
 
     $options = [
@@ -280,7 +277,7 @@ class EntityTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependenciesWithUuid(): void {
+  public function testCalculateDependenciesWithUuid() {
     $this->setupEntityTypeManager();
 
     $uuid = '1d52762e-b9d8-4177-908f-572d1a5845a4';
@@ -312,7 +309,7 @@ class EntityTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependenciesWithEntityId(): void {
+  public function testCalculateDependenciesWithEntityId() {
     $this->setupEntityTypeManager();
 
     $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');

@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\migrate\Unit\SqlBaseTest.
+ */
 
 namespace Drupal\Tests\migrate\Unit;
 
@@ -33,7 +36,7 @@ class SqlBaseTest extends UnitTestCase {
    *
    * @dataProvider sqlBaseTestProvider
    */
-  public function testMapJoinable($expected_result, $id_map_is_sql, $with_id_map, $source_options = [], $id_map_options = []): void {
+  public function testMapJoinable($expected_result, $id_map_is_sql, $with_id_map, $source_options = [], $id_map_options = []) {
     // Setup a connection object.
     $source_connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
@@ -85,7 +88,7 @@ class SqlBaseTest extends UnitTestCase {
    * @return array
    *   An array of data per test run.
    */
-  public static function sqlBaseTestProvider() {
+  public function sqlBaseTestProvider() {
     return [
       // Source ids are empty so mapJoinable() is false.
       [
@@ -169,7 +172,7 @@ class TestSqlBase extends SqlBase {
    * @param mixed $database
    *   The database mock object.
    */
-  public function setDatabase($database): void {
+  public function setDatabase($database) {
     $this->database = $database;
   }
 
@@ -186,7 +189,7 @@ class TestSqlBase extends SqlBase {
    * @param mixed $migration
    *   The migration mock.
    */
-  public function setMigration($migration): void {
+  public function setMigration($migration) {
     $this->migration = $migration;
   }
 
@@ -210,7 +213,7 @@ class TestSqlBase extends SqlBase {
    * @param array $ids
    *   An array of identifiers.
    */
-  public function setIds($ids): void {
+  public function setIds($ids) {
     $this->ids = $ids;
   }
 

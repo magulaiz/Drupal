@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Module;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\FileStorage;
@@ -17,15 +16,12 @@ use Drupal\TestTools\Extension\SchemaInspector;
 abstract class ModuleTestBase extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['system_test'];
 
-  /**
-   * The test user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
   protected $adminUser;
 
   /**
@@ -44,7 +40,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
   /**
    * Assert that all tables defined in a module's hook_schema() exist.
    *
-   * @param string $module
+   * @param $module
    *   The name of the module.
    */
   public function assertModuleTablesExist($module) {
@@ -56,13 +52,13 @@ abstract class ModuleTestBase extends BrowserTestBase {
         $tables_exist = FALSE;
       }
     }
-    $this->assertTrue($tables_exist, "All database tables defined by the $module module exist.");
+    $this->assertTrue($tables_exist, new FormattableMarkup('All database tables defined by the @module module exist.', ['@module' => $module]));
   }
 
   /**
    * Assert that none of the tables defined in a module's hook_schema() exist.
    *
-   * @param string $module
+   * @param $module
    *   The name of the module.
    */
   public function assertModuleTablesDoNotExist($module) {
@@ -74,7 +70,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
         $tables_exist = TRUE;
       }
     }
-    $this->assertFalse($tables_exist, "None of the database tables defined by the $module module exist.");
+    $this->assertFalse($tables_exist, new FormattableMarkup('None of the database tables defined by the @module module exist.', ['@module' => $module]));
   }
 
   /**
@@ -115,7 +111,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).
-    $this->assertEmpty($names, "All default configuration of $module module found.");
+    $this->assertEmpty($names, new FormattableMarkup('All default configuration of @module module found.', ['@module' => $module]));
   }
 
   /**
@@ -126,48 +122,48 @@ abstract class ModuleTestBase extends BrowserTestBase {
    */
   public function assertNoModuleConfig($module) {
     $names = \Drupal::configFactory()->listAll($module . '.');
-    $this->assertEmpty($names, "No configuration found for $module module.");
+    $this->assertEmpty($names, new FormattableMarkup('No configuration found for @module module.', ['@module' => $module]));
   }
 
   /**
    * Assert the list of modules are enabled or disabled.
    *
-   * @param array $modules
+   * @param $modules
    *   Module list to check.
-   * @param bool $enabled
+   * @param $enabled
    *   Expected module state.
    */
   public function assertModules(array $modules, $enabled) {
     $this->rebuildContainer();
     foreach ($modules as $module) {
       if ($enabled) {
-        $message = 'Module "%s" is enabled.';
+        $message = 'Module "@module" is enabled.';
       }
       else {
-        $message = 'Module "%s" is not enabled.';
+        $message = 'Module "@module" is not enabled.';
       }
-      $this->assertEquals($enabled, $this->container->get('module_handler')->moduleExists($module), sprintf($message, $module));
+      $this->assertEquals($enabled, $this->container->get('module_handler')->moduleExists($module), new FormattableMarkup($message, ['@module' => $module]));
     }
   }
 
   /**
    * Verify a log entry was entered for a module's status change.
    *
-   * @param string $type
+   * @param $type
    *   The category to which this message belongs.
-   * @param string $message
+   * @param $message
    *   The message to store in the log. Keep $message translatable
    *   by not concatenating dynamic values into it! Variables in the
    *   message should be added by using placeholder strings alongside
    *   the variables argument to declare the value of the placeholders.
    *   See t() for documentation on how $message and $variables interact.
-   * @param array $variables
+   * @param $variables
    *   Array of variables to replace in the message on display or
    *   NULL if message is already translated or not possible to
    *   translate.
-   * @param int $severity
+   * @param $severity
    *   The severity of the message, as per RFC 3164.
-   * @param string $link
+   * @param $link
    *   A link to associate with the message.
    */
   public function assertLogMessage($type, $message, $variables = [], $severity = RfcLogLevel::NOTICE, $link = '') {

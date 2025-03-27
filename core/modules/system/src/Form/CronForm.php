@@ -111,12 +111,7 @@ class CronForm extends FormBase {
       '#value' => $this->t('Run cron'),
       '#submit' => ['::runCron'],
     ];
-    if ($time_ago = $this->state->get('system.cron_last')) {
-      $status = '<p>' . $this->t('Last run: %time ago.', ['%time' => $this->dateFormatter->formatTimeDiffSince($time_ago)]) . '</p>';
-    }
-    else {
-      $status = '<p>' . $this->t('Last run: never') . '</p>';
-    }
+    $status = '<p>' . $this->t('Last run: %time ago.', ['%time' => $this->dateFormatter->formatTimeDiffSince($this->state->get('system.cron_last'))]) . '</p>';
     $form['status'] = [
       '#markup' => $status,
     ];
@@ -128,7 +123,7 @@ class CronForm extends FormBase {
 
     if (!$this->moduleHandler->moduleExists('automated_cron')) {
       $form['automated_cron'] = [
-        '#markup' => $this->t('Install the <em>Automated Cron</em> module to allow cron execution at the end of a server response.'),
+        '#markup' => $this->t('Enable the <em>Automated Cron</em> module to allow cron execution at the end of a server response.'),
       ];
     }
 

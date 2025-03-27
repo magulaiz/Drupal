@@ -15,6 +15,13 @@ use Symfony\Component\Validator\ConstraintValidator;
 class CommentNameConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
+   * Validator 2.5 and upwards compatible execution context.
+   *
+   * @var \Symfony\Component\Validator\Context\ExecutionContextInterface
+   */
+  protected $context;
+
+  /**
    * User storage handler.
    *
    * @var \Drupal\user\UserStorageInterface
@@ -41,7 +48,7 @@ class CommentNameConstraintValidator extends ConstraintValidator implements Cont
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint): void {
+  public function validate($entity, Constraint $constraint) {
     $author_name = $entity->name->value;
     $owner_id = (int) $entity->uid->target_id;
 

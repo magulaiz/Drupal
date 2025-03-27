@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\Core\Block\BlockPluginInterface;
@@ -19,7 +17,9 @@ use Drupal\block\Entity\Block;
 class BlockStorageUnitTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to install.
+   *
+   * @var array
    */
   protected static $modules = ['block', 'block_test', 'system'];
 
@@ -44,7 +44,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests CRUD operations.
    */
-  public function testBlockCRUD(): void {
+  public function testBlockCRUD() {
     $this->assertInstanceOf(ConfigEntityStorage::class, $this->controller);
 
     // Run each test method in the same installation.
@@ -56,7 +56,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests the creation of blocks.
    */
-  protected function createTests(): void {
+  protected function createTests() {
     // Attempt to create a block without a plugin.
     try {
       $entity = $this->controller->create([]);
@@ -91,7 +91,7 @@ class BlockStorageUnitTest extends KernelTestBase {
       'id' => 'test_block',
       'theme' => 'stark',
       'region' => 'content',
-      'weight' => 0,
+      'weight' => NULL,
       'provider' => NULL,
       'plugin' => 'test_html',
       'settings' => [
@@ -111,7 +111,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests the loading of blocks.
    */
-  protected function loadTests(): void {
+  protected function loadTests() {
     $entity = $this->controller->load('test_block');
 
     $this->assertInstanceOf(Block::class, $entity);
@@ -126,7 +126,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests the deleting of blocks.
    */
-  protected function deleteTests(): void {
+  protected function deleteTests() {
     $entity = $this->controller->load('test_block');
 
     // Ensure that the storage isn't currently empty.
@@ -145,7 +145,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests the installation of default blocks.
    */
-  public function testDefaultBlocks(): void {
+  public function testDefaultBlocks() {
     \Drupal::service('theme_installer')->install(['stark']);
     $entities = $this->controller->loadMultiple();
     $this->assertEmpty($entities, 'There are no blocks initially.');

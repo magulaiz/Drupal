@@ -3,26 +3,18 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Attribute\ViewsFilter;
 
 /**
  * Simple filter to handle greater than/less than filters.
  *
  * @ingroup views_filter_handlers
+ *
+ * @ViewsFilter("numeric")
  */
-#[ViewsFilter("numeric")]
-class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface {
+class NumericFilter extends FilterPluginBase {
 
-  /**
-   * Exposed filter options.
-   *
-   * @var bool
-   */
   protected $alwaysMultiple = TRUE;
 
-  /**
-   * {@inheritdoc}
-   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -97,9 +89,6 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function operators() {
     $operators = [
       '<' => [
@@ -156,15 +145,9 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
         'method' => 'opRegex',
         'values' => 1,
       ],
-      'not_regular_expression' => [
-        'title' => $this->t('Negated regular expression'),
-        'short' => $this->t('not regex'),
-        'method' => 'opNotRegex',
-        'values' => 1,
-      ],
     ];
 
-    // If the definition allows for the empty operator, add it.
+    // if the definition allows for the empty operator, add it.
     if (!empty($this->definition['allow empty'])) {
       $operators += [
         'empty' => [
@@ -197,9 +180,6 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     return $options;
   }
 
-  /**
-   * Gets the operators that have a given number of values.
-   */
   protected function operatorValues($values = 1) {
     $options = [];
     foreach ($this->operators() as $id => $info) {
@@ -230,7 +210,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
       $identifier = $this->options['expose']['identifier'];
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
-        // Exposed and locked.
+        // exposed and locked.
         $which = in_array($this->operator, $this->operatorValues(2)) ? 'minmax' : 'value';
       }
       else {
@@ -341,9 +321,6 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function query() {
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";
@@ -375,16 +352,10 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     }
   }
 
-  /**
-   * Filters by a simple operator.
-   */
   protected function opSimple($field) {
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], $this->operator);
   }
 
-  /**
-   * Adds a where clause for the operation, 'EMPTY'.
-   */
   protected function opEmpty($field) {
     if ($this->operator == 'empty') {
       $operator = "IS NULL";
@@ -406,19 +377,6 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], 'REGEXP');
   }
 
-  /**
-   * Filters by a negated regular expression.
-   *
-   * @param string $field
-   *   The expression pointing to the queries field, for example "foo.bar".
-   */
-  protected function opNotRegex($field) {
-    $this->query->addWhere($this->options['group'], $field, $this->value['value'], 'NOT REGEXP');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function adminSummary() {
     if ($this->isAGroup()) {
       return $this->t('grouped');
@@ -446,18 +404,15 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
       return TRUE;
     }
 
-    // Rewrite the input value so that it's in the correct format so that
+    // rewrite the input value so that it's in the correct format so that
     // the parent gets the right data.
-    $key = $this->isAGroup() ? 'group_info' : 'expose';
-    if (empty($this->options[$key]['identifier'])) {
-      // Invalid identifier configuration. Value can't be resolved.
-      return FALSE;
-    }
-    $value = &$input[$this->options[$key]['identifier']];
-    if (!is_array($value)) {
-      $value = [
-        'value' => $value,
-      ];
+    if (!empty($this->options['expose']['identifier'])) {
+      $value = &$input[$this->options['expose']['identifier']];
+      if (!is_array($value)) {
+        $value = [
+          'value' => $value,
+        ];
+      }
     }
 
     $rc = parent::acceptExposedInput($input);

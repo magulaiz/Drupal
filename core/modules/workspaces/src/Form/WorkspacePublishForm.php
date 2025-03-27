@@ -6,19 +6,16 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Url;
 use Drupal\workspaces\WorkspaceAccessException;
 use Drupal\workspaces\WorkspaceInterface;
 use Drupal\workspaces\WorkspaceOperationFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-// cspell:ignore differring
-
 /**
  * Provides the workspace publishing form.
  */
-class WorkspacePublishForm extends ConfirmFormBase implements ContainerInjectionInterface, WorkspaceSafeFormInterface {
+class WorkspacePublishForm extends ConfirmFormBase implements WorkspaceFormInterface, ContainerInjectionInterface {
 
   /**
    * The workspace that will be published.
@@ -74,7 +71,7 @@ class WorkspacePublishForm extends ConfirmFormBase implements ContainerInjection
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, ?WorkspaceInterface $workspace = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, WorkspaceInterface $workspace = NULL) {
     $this->workspace = $workspace;
 
     $form = parent::buildForm($form, $form_state);
@@ -136,7 +133,7 @@ class WorkspacePublishForm extends ConfirmFormBase implements ContainerInjection
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return Url::fromRoute('entity.workspace.collection', [], ['query' => $this->getDestinationArray()]);
+    return Url::fromRoute('entity.workspace.collection', [], ['query' => \Drupal::destination()->getAsArray()]);
   }
 
   /**
@@ -154,7 +151,6 @@ class WorkspacePublishForm extends ConfirmFormBase implements ContainerInjection
     }
     catch (\Exception $e) {
       $this->messenger()->addMessage($this->t('Publication failed. All errors have been logged.'), 'error');
-      $this->getLogger('workspaces')->error($e->getMessage());
     }
   }
 

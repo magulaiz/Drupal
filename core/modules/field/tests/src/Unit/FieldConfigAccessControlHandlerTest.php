@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Unit;
 
 use Drupal\field\Entity\FieldConfig;
@@ -37,7 +35,7 @@ class FieldConfigAccessControlHandlerTest extends FieldStorageConfigAccessContro
   /**
    * Ensures field config access is working properly.
    */
-  public function testAccess(): void {
+  public function testAccess() {
     $this->assertAllowOperations([], $this->anon);
     $this->assertAllowOperations(['view', 'update', 'delete'], $this->member);
   }

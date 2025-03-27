@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\link\Kernel;
 
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
@@ -21,7 +19,7 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
   /**
    * Tests link validation.
    */
-  public function testExternalLinkValidation(): void {
+  public function testExternalLinkValidation() {
     $definition = \Drupal::typedDataManager()
       ->createDataDefinition('field_item:link');
     $link_item = \Drupal::typedDataManager()->create($definition);
@@ -53,7 +51,7 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
    *   The first element of the array is the link value to test. The second
    *   value is an array of expected violation messages.
    */
-  protected function getTestLinks(): array {
+  protected function getTestLinks() {
     $violation_0 = "The path '%s' is invalid.";
     $violation_1 = 'This value should be of the correct primitive type.';
     return [

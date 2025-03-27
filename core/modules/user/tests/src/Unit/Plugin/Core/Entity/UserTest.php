@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Unit\Plugin\Core\Entity;
 
 use Drupal\Tests\Core\Session\UserSessionTest;
@@ -44,7 +42,7 @@ class UserTest extends UserSessionTest {
    * @see \Drupal\user\Entity\User::getRoles()
    * @covers ::getRoles
    */
-  public function testUserGetRoles(): void {
+  public function testUserGetRoles() {
     // Anonymous user.
     $user = $this->createUserSession([]);
     $this->assertEquals([RoleInterface::ANONYMOUS_ID], $user->getRoles());

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Layout;
 
 use Drupal\Core\Layout\LayoutDefault;
@@ -18,7 +16,7 @@ class LayoutDefaultTest extends UnitTestCase {
    * @covers ::build
    * @dataProvider providerTestBuild
    */
-  public function testBuild($regions, $expected): void {
+  public function testBuild($regions, $expected) {
     $definition = new LayoutDefinition([
       'theme_hook' => 'layout',
       'library' => 'core/drupal',
@@ -52,7 +50,7 @@ class LayoutDefaultTest extends UnitTestCase {
   /**
    * Provides test data for ::testBuild().
    */
-  public static function providerTestBuild() {
+  public function providerTestBuild() {
     $data = [];
     // Empty regions are not added.
     $data['right_only'] = [

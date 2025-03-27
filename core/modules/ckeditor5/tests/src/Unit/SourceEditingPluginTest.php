@@ -18,7 +18,7 @@ class SourceEditingPluginTest extends UnitTestCase {
   /**
    * Provides a list of configs to test.
    */
-  public static function providerGetDynamicPluginConfig(): array {
+  public function providerGetDynamicPluginConfig(): array {
     return [
       'Empty array of allowed tags' => [
         [
@@ -27,7 +27,6 @@ class SourceEditingPluginTest extends UnitTestCase {
         [
           'htmlSupport' => [
             'allow' => [],
-            'allowEmpty' => [],
           ],
         ],
       ],
@@ -103,13 +102,6 @@ class SourceEditingPluginTest extends UnitTestCase {
                   ],
                 ],
               ],
-            ],
-            'allowEmpty' => [
-              'foo1',
-              'foo2',
-              'foo3',
-              'foo4',
-              'foo5',
             ],
           ],
         ],
@@ -190,11 +182,6 @@ class SourceEditingPluginTest extends UnitTestCase {
                   ],
                 ],
               ],
-            ],
-            'allowEmpty' => [
-              'foo1',
-              'foo2',
-              'foo3',
             ],
           ],
         ],

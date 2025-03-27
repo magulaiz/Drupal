@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
@@ -18,7 +16,7 @@ class PluginTest extends TestCase {
    * @covers ::parse
    * @covers ::get
    */
-  public function testGet(): void {
+  public function testGet() {
     // Assert all values are accepted through constructor and default value is
     // used for non existent but defined property.
     $plugin = new PluginStub([
@@ -34,7 +32,7 @@ class PluginTest extends TestCase {
     $this->assertEquals([
       // This property wasn't in our definition but is defined as a property on
       // our plugin class.
-      'defaultProperty' => 'test_value',
+      'defaultProperty' => 'testvalue',
       1 => 'oak',
       'foo' => 'bar',
       'biz' => [
@@ -53,7 +51,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::getProvider
    */
-  public function testGetProvider(): void {
+  public function testGetProvider() {
     $plugin = new Plugin(['provider' => 'example']);
     $this->assertEquals('example', $plugin->getProvider());
   }
@@ -61,7 +59,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::setProvider
    */
-  public function testSetProvider(): void {
+  public function testSetProvider() {
     $plugin = new Plugin([]);
     $plugin->setProvider('example');
     $this->assertEquals('example', $plugin->getProvider());
@@ -70,7 +68,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::getId
    */
-  public function testGetId(): void {
+  public function testGetId() {
     $plugin = new Plugin(['id' => 'example']);
     $this->assertEquals('example', $plugin->getId());
   }
@@ -78,7 +76,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::getClass
    */
-  public function testGetClass(): void {
+  public function testGetClass() {
     $plugin = new Plugin(['class' => 'example']);
     $this->assertEquals('example', $plugin->getClass());
   }
@@ -86,7 +84,7 @@ class PluginTest extends TestCase {
   /**
    * @covers ::setClass
    */
-  public function testSetClass(): void {
+  public function testSetClass() {
     $plugin = new Plugin([]);
     $plugin->setClass('example');
     $this->assertEquals('example', $plugin->getClass());
@@ -97,12 +95,6 @@ class PluginTest extends TestCase {
  * {@inheritdoc}
  */
 class PluginStub extends Plugin {
-
-  /**
-   * A default property for testing.
-   *
-   * @var string
-   */
-  protected $defaultProperty = 'test_value';
+  protected $defaultProperty = 'testvalue';
 
 }

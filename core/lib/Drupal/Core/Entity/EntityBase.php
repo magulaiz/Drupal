@@ -48,18 +48,6 @@ abstract class EntityBase implements EntityInterface {
   protected $typedData;
 
   /**
-   * The original unchanged entity.
-   *
-   * This property will be set and used during the saving process.
-   *
-   * This is named originalEntity to not clash with the deprecated magic
-   * property "original".
-   *
-   * @var static|null
-   */
-  protected ?EntityInterface $originalEntity = NULL;
-
-  /**
    * Constructs an Entity object.
    *
    * @param array $values
@@ -80,7 +68,6 @@ abstract class EntityBase implements EntityInterface {
    * Gets the entity type manager.
    *
    * @return \Drupal\Core\Entity\EntityTypeManagerInterface
-   *   The entity type manager.
    */
   protected function entityTypeManager() {
     return \Drupal::entityTypeManager();
@@ -90,7 +77,6 @@ abstract class EntityBase implements EntityInterface {
    * Gets the entity type bundle info service.
    *
    * @return \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   *   The entity type bundle info service.
    */
   protected function entityTypeBundleInfo() {
     return \Drupal::service('entity_type.bundle.info');
@@ -100,7 +86,6 @@ abstract class EntityBase implements EntityInterface {
    * Gets the language manager.
    *
    * @return \Drupal\Core\Language\LanguageManagerInterface
-   *   The language manager service.
    */
   protected function languageManager() {
     return \Drupal::languageManager();
@@ -110,7 +95,6 @@ abstract class EntityBase implements EntityInterface {
    * Gets the UUID generator.
    *
    * @return \Drupal\Component\Uuid\UuidInterface
-   *   The UUID service.
    */
   protected function uuidGenerator() {
     return \Drupal::service('uuid');
@@ -172,7 +156,7 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function toUrl($rel = NULL, array $options = []) {
+  public function toUrl($rel = 'canonical', array $options = []) {
     if ($this->id() === NULL) {
       throw new EntityMalformedException(sprintf('The "%s" entity cannot have a URI as it does not have an ID', $this->getEntityTypeId()));
     }
@@ -184,21 +168,6 @@ abstract class EntityBase implements EntityInterface {
     // instead of using the 'revision' link, use the 'canonical' link.
     if ($rel === 'revision' && $this instanceof RevisionableInterface && $this->isDefaultRevision()) {
       $rel = 'canonical';
-    }
-
-    $exception_message = "No link template '$rel' found for the '{$this->getEntityTypeId()}' entity type";
-    // Use the canonical link template by default, or edit-form if there is not
-    // a canonical one.
-    if ($rel === NULL) {
-      if (isset($link_templates['canonical'])) {
-        $rel = 'canonical';
-      }
-      elseif (isset($link_templates['edit-form'])) {
-        $rel = 'edit-form';
-      }
-      else {
-        $exception_message = "Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '{$this->getEntityTypeId()}' entity type";
-      }
     }
 
     if (isset($link_templates[$rel])) {
@@ -224,7 +193,7 @@ abstract class EntityBase implements EntityInterface {
         $uri = call_user_func($uri_callback, $this);
       }
       else {
-        throw new UndefinedLinkTemplateException($exception_message);
+        throw new UndefinedLinkTemplateException("No link template '$rel' found for the '{$this->getEntityTypeId()}' entity type");
       }
     }
 
@@ -321,10 +290,10 @@ abstract class EntityBase implements EntityInterface {
       try {
         $this->toUrl($link_relation_type)->toString(TRUE)->getGeneratedUrl();
       }
-      catch (RouteNotFoundException) {
+      catch (RouteNotFoundException $e) {
         return FALSE;
       }
-      catch (MissingMandatoryParametersException) {
+      catch (MissingMandatoryParametersException $e) {
         return FALSE;
       }
       return TRUE;
@@ -334,7 +303,7 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($operation == 'create') {
       return $this->entityTypeManager()
         ->getAccessControlHandler($this->entityTypeId)
@@ -393,12 +362,6 @@ abstract class EntityBase implements EntityInterface {
     if ($entity_type->hasKey('uuid')) {
       $duplicate->{$entity_type->getKey('uuid')} = $this->uuidGenerator()->generate();
     }
-
-    // Modules might need to add or change the data initially held by the new
-    // entity object, for instance to fill-in default values.
-    \Drupal::moduleHandler()->invokeAll($this->getEntityTypeId() . '_duplicate', [$duplicate, $this]);
-    \Drupal::moduleHandler()->invokeAll('entity_duplicate', [$duplicate, $this]);
-
     return $duplicate;
   }
 
@@ -417,7 +380,7 @@ abstract class EntityBase implements EntityInterface {
     if ($this->getEntityType()->getBundleOf()) {
       // Throw an exception if the bundle ID is longer than 32 characters.
       if (mb_strlen($this->id()) > EntityTypeInterface::BUNDLE_MAX_LENGTH) {
-        throw new ConfigEntityIdLengthException("Attempt to create a bundle with an ID longer than " . EntityTypeInterface::BUNDLE_MAX_LENGTH . " characters: " . $this->id() . ".");
+        throw new ConfigEntityIdLengthException("Attempt to create a bundle with an ID longer than " . EntityTypeInterface::BUNDLE_MAX_LENGTH . " characters: $this->id().");
       }
     }
   }
@@ -483,10 +446,7 @@ abstract class EntityBase implements EntityInterface {
   protected function getListCacheTagsToInvalidate() {
     $tags = $this->getEntityType()->getListCacheTags();
     if ($this->getEntityType()->hasKey('bundle')) {
-      $tags = Cache::mergeTags(
-        $tags,
-        $this->getEntityType()->getBundleListCacheTags($this->bundle())
-      );
+      $tags[] = $this->getEntityTypeId() . '_list:' . $this->bundle();
     }
     return $tags;
   }
@@ -531,7 +491,7 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public static function loadMultiple(?array $ids = NULL) {
+  public static function loadMultiple(array $ids = NULL) {
     $entity_type_repository = \Drupal::service('entity_type.repository');
     $entity_type_manager = \Drupal::entityTypeManager();
     $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(static::class));
@@ -662,7 +622,7 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function __sleep(): array {
+  public function __sleep() {
     $this->typedData = NULL;
     return $this->traitSleep();
   }
@@ -688,67 +648,6 @@ abstract class EntityBase implements EntityInterface {
     // For content entities, use the UUID for the config target identifier.
     // This ensures that references to the target can be deployed reliably.
     return $this->uuid();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getOriginal(): ?static {
-    return $this->originalEntity;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setOriginal(?EntityInterface $original): static {
-    $this->originalEntity = $original;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __get($name) {
-    if ($name == 'original') {
-      @trigger_error("Getting the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::getOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
-      return $this->getOriginal();
-    }
-    return $this->$name ?? NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __set($name, $value) {
-    if ($name == 'original') {
-      @trigger_error("Setting the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::setOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
-      $this->setOriginal($value);
-      return;
-    }
-    $this->$name = $value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __isset($name) {
-    if ($name == 'original') {
-      @trigger_error("Checking for the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::getOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
-      return $this->getOriginal();
-    }
-    return isset($this->$name);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __unset($name) {
-    if ($name == 'original') {
-      @trigger_error("Unsetting the original property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Entity\EntityInterface::setOriginal() instead. See https://www.drupal.org/node/3295826", E_USER_DEPRECATED);
-      $this->setOriginal(NULL);
-      return;
-    }
-    unset($this->$name);
   }
 
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Plugin;
 
 use PHPUnit\Framework\TestCase;
@@ -16,12 +14,12 @@ class PluginBaseTest extends TestCase {
    * @dataProvider providerTestGetPluginId
    * @covers ::getPluginId
    */
-  public function testGetPluginId($plugin_id, $expected): void {
-    $plugin_base = new StubPluginBase(
+  public function testGetPluginId($plugin_id, $expected) {
+    $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       $plugin_id,
       [],
-    );
+    ]);
 
     $this->assertEquals($expected, $plugin_base->getPluginId());
   }
@@ -30,10 +28,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetPluginId().
    *
    * @return array
-   *   An array of test cases, where each item contains a plugin ID and
-   *   the expected plugin ID result.
    */
-  public static function providerTestGetPluginId() {
+  public function providerTestGetPluginId() {
     return [
       ['base_id', 'base_id'],
       ['base_id:derivative', 'base_id:derivative'],
@@ -44,12 +40,13 @@ class PluginBaseTest extends TestCase {
    * @dataProvider providerTestGetBaseId
    * @coves ::getBaseId
    */
-  public function testGetBaseId($plugin_id, $expected): void {
-    $plugin_base = new StubPluginBase(
+  public function testGetBaseId($plugin_id, $expected) {
+    /** @var \Drupal\Component\Plugin\PluginBase|\PHPUnit\Framework\MockObject\MockObject $plugin_base */
+    $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       $plugin_id,
       [],
-    );
+    ]);
 
     $this->assertEquals($expected, $plugin_base->getBaseId());
   }
@@ -58,10 +55,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetBaseId().
    *
    * @return array
-   *   An array of test cases, where each item contains a plugin ID and
-   *   the expected base ID result.
    */
-  public static function providerTestGetBaseId() {
+  public function providerTestGetBaseId() {
     return [
       ['base_id', 'base_id'],
       ['base_id:derivative', 'base_id'],
@@ -72,12 +67,13 @@ class PluginBaseTest extends TestCase {
    * @dataProvider providerTestGetDerivativeId
    * @covers ::getDerivativeId
    */
-  public function testGetDerivativeId($plugin_id = NULL, $expected = NULL): void {
-    $plugin_base = new StubPluginBase(
+  public function testGetDerivativeId($plugin_id = NULL, $expected = NULL) {
+    /** @var \Drupal\Component\Plugin\PluginBase|\PHPUnit\Framework\MockObject\MockObject $plugin_base */
+    $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       $plugin_id,
       [],
-    );
+    ]);
 
     $this->assertEquals($expected, $plugin_base->getDerivativeId());
   }
@@ -86,10 +82,8 @@ class PluginBaseTest extends TestCase {
    * Returns test data for testGetDerivativeId().
    *
    * @return array
-   *   An array of test cases, where each item contains a plugin ID and
-   *   the expected derivative ID result.
    */
-  public static function providerTestGetDerivativeId() {
+  public function providerTestGetDerivativeId() {
     return [
       ['base_id', NULL],
       ['base_id:derivative', 'derivative'],
@@ -99,12 +93,12 @@ class PluginBaseTest extends TestCase {
   /**
    * @covers ::getPluginDefinition
    */
-  public function testGetPluginDefinition(): void {
-    $plugin_base = new StubPluginBase(
+  public function testGetPluginDefinition() {
+    $plugin_base = $this->getMockForAbstractClass('Drupal\Component\Plugin\PluginBase', [
       [],
       'plugin_id',
       ['value', ['key' => 'value']],
-    );
+    ]);
 
     $this->assertEquals(['value', ['key' => 'value']], $plugin_base->getPluginDefinition());
   }

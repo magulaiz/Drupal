@@ -3,7 +3,6 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Color as ColorUtility;
 
@@ -15,30 +14,32 @@ use Drupal\Component\Utility\Color as ColorUtility;
  *
  * Example usage:
  * @code
- * $form['color'] = [
+ * $form['color'] = array(
  *   '#type' => 'color',
  *   '#title' => $this->t('Color'),
  *   '#default_value' => '#ffffff',
- * ];
+ * );
  * @endcode
+ *
+ * @FormElement("color")
  */
-#[FormElement('color')]
-class Color extends FormElementBase {
+class Color extends FormElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
-        [static::class, 'processAjaxForm'],
+        [$class, 'processAjaxForm'],
       ],
       '#element_validate' => [
-        [static::class, 'validateColor'],
+        [$class, 'validateColor'],
       ],
       '#pre_render' => [
-        [static::class, 'preRenderColor'],
+        [$class, 'preRenderColor'],
       ],
       '#theme' => 'input__color',
       '#theme_wrappers' => ['form_element'],
@@ -52,7 +53,7 @@ class Color extends FormElementBase {
     $value = trim($element['#value']);
 
     // Default to black if no value is given.
-    // @see https://www.w3.org/TR/html5/number-state.html#color-state
+    // @see http://www.w3.org/TR/html5/number-state.html#color-state
     if ($value === '') {
       $form_state->setValueForElement($element, '#000000');
     }
@@ -61,7 +62,7 @@ class Color extends FormElementBase {
       try {
         $form_state->setValueForElement($element, ColorUtility::rgbToHex(ColorUtility::hexToRgb($value)));
       }
-      catch (\InvalidArgumentException) {
+      catch (\InvalidArgumentException $e) {
         $form_state->setError($element, t('%name must be a valid color.', ['%name' => empty($element['#title']) ? $element['#parents'][0] : $element['#title']]));
       }
     }

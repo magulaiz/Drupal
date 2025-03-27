@@ -1,13 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
-use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
-use Drupal\user\Entity\Role;
 
 /**
  * Test content_moderation functionality with content_translation.
@@ -17,7 +13,6 @@ use Drupal\user\Entity\Role;
 class ModerationContentTranslationTest extends BrowserTestBase {
 
   use ContentModerationTestTrait;
-  use ContentTranslationTestTrait;
 
   /**
    * A user with permission to bypass access content.
@@ -27,7 +22,9 @@ class ModerationContentTranslationTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'node',
@@ -45,17 +42,22 @@ class ModerationContentTranslationTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser([
-      'bypass node access',
-      'create content translations',
-      'translate any entity',
-    ]);
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($this->rootUser);
     // Create an Article content type.
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article'])->save();
-    static::createLanguageFromLangcode('fr');
+    $edit = [
+      'predefined_langcode' => 'fr',
+    ];
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
     // Enable content translation on articles.
-    $this->enableContentTranslation('node', 'article');
+    $this->drupalGet('admin/config/regional/content-language');
+    $edit = [
+      'entity_types[node]' => TRUE,
+      'settings[node][article][translatable]' => TRUE,
+      'settings[node][article][settings][language][language_alterable]' => TRUE,
+    ];
+    $this->submitForm($edit, 'Save configuration');
     // Adding languages requires a container rebuild in the test running
     // environment so that multilingual services are used.
     $this->rebuildContainer();
@@ -64,7 +66,7 @@ class ModerationContentTranslationTest extends BrowserTestBase {
   /**
    * Tests existing translations being edited after enabling content moderation.
    */
-  public function testModerationWithExistingContent(): void {
+  public function testModerationWithExistingContent() {
     // Create a published article in English.
     $edit = [
       'title[0][value]' => 'Published English node',
@@ -89,7 +91,7 @@ class ModerationContentTranslationTest extends BrowserTestBase {
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'article');
     $workflow->save();
-    $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), ['use editorial transition publish']);
+    $this->drupalLogin($this->rootUser);
 
     // Edit the English node.
     $this->drupalGet('node/' . $english_node->id() . '/edit');

@@ -10,7 +10,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_install().
  */
-function jsonapi_install(): void {
+function jsonapi_install() {
   $module_handler = \Drupal::moduleHandler();
   $potential_conflicts = [
     'content_translation',
@@ -30,7 +30,7 @@ function jsonapi_install(): void {
 /**
  * Implements hook_requirements().
  */
-function jsonapi_requirements($phase): array {
+function jsonapi_requirements($phase) {
   $requirements = [];
   if ($phase === 'runtime') {
     $module_handler = \Drupal::moduleHandler();
@@ -79,6 +79,6 @@ function jsonapi_requirements($phase): array {
 /**
  * Implements hook_update_last_removed().
  */
-function jsonapi_update_last_removed(): int {
+function jsonapi_update_last_removed() {
   return 9401;
 }

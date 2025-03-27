@@ -4,7 +4,6 @@ namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -14,9 +13,10 @@ use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Determines the visibility for a block.
+ * @MigrateProcessPlugin(
+ *   id = "block_visibility"
+ * )
  */
-#[MigrateProcess('block_visibility')]
 class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -69,7 +69,7 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
       $configuration,
       $plugin_id,
@@ -97,22 +97,13 @@ class BlockVisibility extends ProcessPluginBase implements ContainerFactoryPlugi
         ],
         'negate' => FALSE,
       ];
-      // Legacy generated migrations will not have the destination property
-      // '_role_ids'.
-      $role_ids = $row->getDestinationProperty('_role_ids');
+
       foreach ($roles as $key => $role_id) {
-        if (!$role_ids) {
-          $lookup = $this->migrateLookup->lookup(['d6_user_role', 'd7_user_role'], [$role_id]);
-          $lookup_result = $lookup[0]['id'];
-        }
-        else {
-          $lookup_result = $role_ids[$role_id] ?? NULL;
-        }
+        $lookup_result = $this->migrateLookup->lookup(['d6_user_role', 'd7_user_role'], [$role_id]);
         if ($lookup_result) {
-          $roles[$key] = $lookup_result;
+          $roles[$key] = $lookup_result[0]['id'];
         }
       }
-
       $visibility['user_role']['roles'] = array_combine($roles, $roles);
     }
 

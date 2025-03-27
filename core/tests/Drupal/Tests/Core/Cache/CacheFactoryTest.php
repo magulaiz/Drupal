@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -21,7 +19,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testCacheFactoryWithDefaultSettings(): void {
+  public function testCacheFactoryWithDefaultSettings() {
     $settings = new Settings([]);
     $cache_factory = new CacheFactory($settings);
 
@@ -47,7 +45,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testCacheFactoryWithCustomizedDefaultBackend(): void {
+  public function testCacheFactoryWithCustomizedDefaultBackend() {
     $settings = new Settings([
       'cache' => [
         'default' => 'cache.backend.custom',
@@ -77,7 +75,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testCacheFactoryWithDefaultBinBackend(): void {
+  public function testCacheFactoryWithDefaultBinBackend() {
     // Ensure the default bin backends are used before the configured default.
     $settings = new Settings([
       'cache' => [
@@ -113,7 +111,7 @@ class CacheFactoryTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::get
    */
-  public function testCacheFactoryWithSpecifiedPerBinBackend(): void {
+  public function testCacheFactoryWithSpecifiedPerBinBackend() {
     // Ensure the per-bin configuration is used before the configured default
     // and per-bin defaults.
     $settings = new Settings([

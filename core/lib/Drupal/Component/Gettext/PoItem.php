@@ -5,7 +5,7 @@ namespace Drupal\Component\Gettext;
 /**
  * PoItem handles one translation.
  *
- * @todo This class contains some really old legacy code.
+ * @todo: This class contains some really old legacy code.
  * @see https://www.drupal.org/node/1637662
  */
 class PoItem {
@@ -67,8 +67,7 @@ class PoItem {
   /**
    * Gets the language code of the currently used language.
    *
-   * @return string
-   *   The language code for this item.
+   * @return string with langcode
    */
   public function getLangcode() {
     return $this->langcode;
@@ -87,8 +86,7 @@ class PoItem {
   /**
    * Gets the context this translation belongs to.
    *
-   * @return string
-   *   The context for this translation.
+   * @return string $context
    */
   public function getContext() {
     return $this->context;
@@ -105,17 +103,18 @@ class PoItem {
   }
 
   /**
-   * Gets the source string(s) if the translation has plurals.
+   * Gets the source string or the array of strings if the translation has
+   * plurals.
    *
-   * @return string|array
-   *   The source string or array of strings if it has plurals.
+   * @return string or array $translation
    */
   public function getSource() {
     return $this->source;
   }
 
   /**
-   * Sets the source string(s) if the translation has plurals.
+   * Set the source string or the array of strings if the translation has
+   * plurals.
    *
    * @param string|array $source
    *   The source string or the array of strings if the translation has plurals.
@@ -125,17 +124,18 @@ class PoItem {
   }
 
   /**
-   * Gets the translation string(s) if the translation has plurals.
+   * Gets the translation string or the array of strings if the translation has
+   * plurals.
    *
-   * @return string|array
-   *   The translation string or array of strings if it has plurals.
+   * @return string or array $translation
    */
   public function getTranslation() {
     return $this->translation;
   }
 
   /**
-   * Sets the translation string(s) if the translation has plurals.
+   * Set the translation string or the array of strings if the translation has
+   * plurals.
    *
    * @param string|array $translation
    *   The translation string or the array of strings if the translation has
@@ -159,7 +159,6 @@ class PoItem {
    * Get if the translation has plural values.
    *
    * @return bool
-   *   TRUE if the translation has plurals, otherwise FALSE.
    */
   public function isPlural() {
     return $this->plural;
@@ -168,8 +167,7 @@ class PoItem {
   /**
    * Gets the comment of this translation.
    *
-   * @return string
-   *   The comment of this translation.
+   * @return String $comment
    */
   public function getComment() {
     return $this->comment;
@@ -204,7 +202,8 @@ class PoItem {
     if (isset($values['comment'])) {
       $this->setComment($values['comment']);
     }
-    if (isset($this->source) && str_contains($this->source, self::DELIMITER)) {
+    if (isset($this->source) &&
+        strpos($this->source, self::DELIMITER) !== FALSE) {
       $this->setSource(explode(self::DELIMITER, $this->source));
       $this->setTranslation(explode(self::DELIMITER, $this->translation ?? ''));
       $this->setPlural(count($this->source) > 1);

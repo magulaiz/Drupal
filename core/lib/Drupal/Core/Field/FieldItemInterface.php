@@ -263,38 +263,6 @@ interface FieldItemInterface extends ComplexDataInterface {
   public static function defaultFieldSettings();
 
   /**
-   * Returns a short summary of the field's storage-level settings.
-   *
-   * All information returned by this function should communicate fundamental
-   * information about the field storage settings for users. For example, in the
-   * case of a reference field, the configured target entity type is a crucial
-   * piece of information for understanding how the field can be used.
-   *
-   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
-   *   The field storage definition.
-   *
-   * @return array
-   *   A renderable array summarizing storage-level settings.
-   */
-  public static function storageSettingsSummary(FieldStorageDefinitionInterface $storage_definition): array;
-
-  /**
-   * Returns a short summary of the field's field-level settings.
-   *
-   * All information returned by this function should communicate fundamental
-   * information about the field settings for users. For example, in the case of
-   * a reference field, the selected target entity bundles are a crucial
-   * piece of information for understanding how the field can be used.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field entity.
-   *
-   * @return array
-   *   A renderable array summarizing the field-level settings.
-   */
-  public static function fieldSettingsSummary(FieldDefinitionInterface $field_definition): array;
-
-  /**
    * Returns a settings array that can be stored as a configuration value.
    *
    * For all use cases where field settings are stored and managed as
@@ -331,8 +299,8 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Returns a settings array in the field type's canonical representation.
    *
-   * This function does the inverse of static::storageSettingsToConfigData().
-   * It's called when loading a field's settings from a configuration object.
+   * This function does the inverse of static::storageSettingsToConfigData(). It's
+   * called when loading a field's settings from a configuration object.
    *
    * @param array $settings
    *   The field's settings, as it is stored within a configuration object.
@@ -348,8 +316,7 @@ interface FieldItemInterface extends ComplexDataInterface {
   /**
    * Returns a settings array that can be stored as a configuration value.
    *
-   * Same as static::storageSettingsToConfigData(), but for the field's
-   * settings.
+   * Same as static::storageSettingsToConfigData(), but for the field's settings.
    *
    * @param array $settings
    *   The field's settings in the field type's canonical representation.
@@ -436,12 +403,12 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   An array of dependencies grouped by type (config, content, module,
    *   theme). For example:
    *   @code
-   *   [
-   *     'config' => ['user.role.anonymous', 'user.role.authenticated'],
-   *     'content' => ['node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'],
-   *     'module' => ['node', 'user'],
-   *     'theme' => ['claro'],
-   *   ];
+   *   array(
+   *     'config' => array('user.role.anonymous', 'user.role.authenticated'),
+   *     'content' => array('node:article:f0a189e6-55fb-47fb-8005-5bef81c44d6d'),
+   *     'module' => array('node', 'user'),
+   *     'theme' => array('claro'),
+   *   );
    *   @endcode
    *
    * @see \Drupal\Core\Config\Entity\ConfigDependencyManager

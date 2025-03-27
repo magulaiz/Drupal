@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -81,7 +79,7 @@ class ProcessFieldTest extends MigrateTestCase {
    * @covers ::transform
    * @dataProvider providerTestTransform
    */
-  public function testTransform($method, $value, $expected_value, $migrate_exception = '', $plugin_not_found = FALSE): void {
+  public function testTransform($method, $value, $expected_value, $migrate_exception = '', $plugin_not_found = FALSE) {
     if ($method) {
       $this->fieldPlugin->$method($this->row->reveal())->willReturn($expected_value);
     }
@@ -111,7 +109,7 @@ class ProcessFieldTest extends MigrateTestCase {
    *   - The MigrateException message to expect.
    *   - Whether the field plugin is not found.
    */
-  public static function providerTestTransform() {
+  public function providerTestTransform() {
     return [
       // Tests the getFieldType() method.
       [

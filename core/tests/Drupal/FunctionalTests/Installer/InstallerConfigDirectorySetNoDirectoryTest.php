@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Utility\Crypt;
@@ -28,7 +26,7 @@ class InstallerConfigDirectorySetNoDirectoryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->syncDirectory = $this->publicFilesDirectory . '/config_' . Crypt::randomBytesBase64() . '/sync';
     $this->settings['settings']['config_sync_directory'] = (object) [
@@ -40,7 +38,7 @@ class InstallerConfigDirectorySetNoDirectoryTest extends InstallerTestBase {
   /**
    * Verifies that installation succeeded.
    */
-  public function testInstaller(): void {
+  public function testInstaller() {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertDirectoryExists($this->syncDirectory);

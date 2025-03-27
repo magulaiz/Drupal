@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
@@ -29,5 +27,13 @@ class TermXmlAnonTest extends TermResourceTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testPatchPath() {
+    // Deserialization of the XML format is not supported.
+    $this->markTestSkipped();
+  }
 
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\datetime\Kernel\Views;
 
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
@@ -40,7 +38,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
-    static::$date = \Drupal::time()->getRequestTime() + 86400;
+    static::$date = REQUEST_TIME + 86400;
 
     // Set the timezone.
     date_default_timezone_set(static::$timezone);
@@ -73,7 +71,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests filter operations.
    */
-  public function testDatetimeFilter(): void {
+  public function testDatetimeFilter() {
     $this->_testOffset();
     $this->_testBetween();
     $this->_testExact();
@@ -82,9 +80,9 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests offset operations.
    */
-  protected function _testOffset(): void {
+  protected function _testOffset() {
     $view = Views::getView('test_filter_datetime');
-    $field = static::$fieldName . '_value';
+    $field = static::$field_name . '_value';
 
     // Test simple operations.
     $view->initHandlers();
@@ -117,9 +115,9 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests between operations.
    */
-  protected function _testBetween(): void {
+  protected function _testBetween() {
     $view = Views::getView('test_filter_datetime');
-    $field = static::$fieldName . '_value';
+    $field = static::$field_name . '_value';
 
     // Test between with min and max.
     $view->initHandlers();
@@ -180,9 +178,9 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * Tests exact date matching.
    */
-  protected function _testExact(): void {
+  protected function _testExact() {
     $view = Views::getView('test_filter_datetime');
-    $field = static::$fieldName . '_value';
+    $field = static::$field_name . '_value';
 
     // Test between with min and max.
     $view->initHandlers();

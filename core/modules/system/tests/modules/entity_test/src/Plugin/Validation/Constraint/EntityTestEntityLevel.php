@@ -1,28 +1,20 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\entity_test\Plugin\Validation\Constraint;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Constraint as SymfonyConstraint;
+use Symfony\Component\Validator\Constraint;
 
 /**
  * Constraint on entity level.
+ *
+ * @Constraint(
+ *   id = "EntityTestEntityLevel",
+ *   label = @Translation("Constraint on the entity level."),
+ *   type = "entity"
+ * )
  */
-#[Constraint(
-  id: 'EntityTestEntityLevel',
-  label: new TranslatableMarkup('Constraint on the entity level.'),
-  type: ['entity']
-)]
-class EntityTestEntityLevel extends SymfonyConstraint {
+class EntityTestEntityLevel extends Constraint {
 
-  /**
-   * The error message.
-   *
-   * @var string
-   */
   public $message = 'Entity level validation';
 
 }

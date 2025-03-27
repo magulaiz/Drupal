@@ -16,6 +16,7 @@
 }
 
 @media (min-width: 62.5rem) {
+
   .vertical-tabs {
     display: flex;
   }
@@ -34,6 +35,7 @@
 }
 
 @media (min-width: 62.5rem) {
+
   .vertical-tabs__menu {
     width: var(--vertical-tabs-menu-width);
     border-width: var(--vertical-tabs-menu-border-width) 0 var(--vertical-tabs-menu-border-width) var(--vertical-tabs-menu-border-width);
@@ -45,6 +47,7 @@
 }
 
 @media (min-width: 62.5rem) {
+
   .vertical-tabs__panes {
     width: calc(100% - var(--vertical-tabs-menu-width));
     margin-block-start: 0;
@@ -52,6 +55,7 @@
 }
 
 @media (min-width: 62.5rem) {
+
   .vertical-tabs__pane {
     min-height: 100%;
   }
@@ -67,7 +71,7 @@
   display: none;
 }
 
-.vertical-tabs__menu-item:nth-child(n + 2) {
+.vertical-tabs__menu-item:nth-child(n+2) {
   border-block-start: var(--vertical-tabs-menu-border-width) solid var(--color--gray-95);
 }
 
@@ -76,7 +80,6 @@
   padding-block: var(--sp0-5);
   padding-inline-start: var(--sp0-75);
   padding-inline-end: var(--sp0-75);
-  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-text-primary-loud);
   background-color: var(--color--gray-95);
@@ -93,6 +96,7 @@
 }
 
 @media (min-width: 62.5rem) {
+
   .vertical-tabs__menu-item.is-selected {
     margin-inline-end: calc(var(--vertical-tabs-menu-border-width) * -1);
     padding-inline-end: var(--vertical-tabs-menu-border-width);

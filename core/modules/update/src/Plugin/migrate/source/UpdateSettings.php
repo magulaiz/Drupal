@@ -2,7 +2,6 @@
 
 namespace Drupal\update\Plugin\migrate\source;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
 
 /**
@@ -13,11 +12,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\Variable
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "update_settings",
+ *   source_module = "update"
+ * )
  */
-#[MigrateSource(
-  id: 'update_settings',
-  source_module: 'update',
-)]
 class UpdateSettings extends Variable {
 
   /**
@@ -25,7 +25,7 @@ class UpdateSettings extends Variable {
    */
   protected function values() {
     $values = parent::values();
-    if (empty($values['update_fetch_url']) || str_contains($values['update_fetch_url'], 'http://updates.drupal.org/release-history')) {
+    if (empty($values['update_fetch_url']) || strpos($values['update_fetch_url'], 'http://updates.drupal.org/release-history') !== FALSE) {
       $values['update_fetch_url'] = 'https://updates.drupal.org/release-history';
     }
     return $values;

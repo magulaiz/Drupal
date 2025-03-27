@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Cache\Cache;
@@ -71,7 +69,7 @@ class SortRandomTest extends ViewsKernelTestBase {
    *
    * @see DatabaseSelectTestCase::testRandomOrder()
    */
-  public function testRandomOrdering(): void {
+  public function testRandomOrdering() {
     // Execute a basic view first.
     $view = Views::getView('test_view');
     $this->executeView($view);
@@ -92,8 +90,7 @@ class SortRandomTest extends ViewsKernelTestBase {
       'views_test_data_age' => 'views_test_data_name',
     ]);
 
-    // Execute a second random view, we expect the result set to be different
-    // again.
+    // Execute a second random view, we expect the result set to be different again.
     $view_random_2 = $this->getBasicRandomView();
     $this->executeView($view_random_2);
     $this->assertSameSize($this->dataSet(), $view_random_2->result, 'The number of returned rows match.');
@@ -109,7 +106,7 @@ class SortRandomTest extends ViewsKernelTestBase {
    * The random sorting should opt out of caching by defining a max age of 0.
    * At the same time, the row render caching still works.
    */
-  public function testRandomOrderingWithRenderCaching(): void {
+  public function testRandomOrderingWithRenderCaching() {
     $view_random = $this->getBasicRandomView();
 
     $display = &$view_random->storage->getDisplay('default');
@@ -125,7 +122,7 @@ class SortRandomTest extends ViewsKernelTestBase {
     $render_cache = \Drupal::service('render_cache');
 
     $original = $build = DisplayPluginBase::buildBasicRenderable($view_random->id(), 'default');
-    $result = $renderer->renderInIsolation($build);
+    $result = $renderer->renderPlain($build);
 
     $original['#cache'] += ['contexts' => []];
     $original['#cache']['contexts'] = Cache::mergeContexts($original['#cache']['contexts'], $this->container->getParameter('renderer.config')['required_cache_contexts']);
@@ -133,7 +130,7 @@ class SortRandomTest extends ViewsKernelTestBase {
     $this->assertFalse($render_cache->get($original), 'Ensure there is no render cache entry.');
 
     $build = DisplayPluginBase::buildBasicRenderable($view_random->id(), 'default');
-    $result2 = $renderer->renderInIsolation($build);
+    $result2 = $renderer->renderPlain($build);
 
     // Ensure that the random ordering works and don't produce the same result.
     // We use assertNotSame and cast values to strings since HTML tags are

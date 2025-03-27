@@ -2,8 +2,6 @@
 
 namespace Drupal\jsonapi\Serializer;
 
-use Drupal\serialization\Serializer\JsonSchemaProviderSerializerInterface;
-use Drupal\serialization\Serializer\JsonSchemaProviderSerializerTrait;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer as SymfonySerializer;
 
@@ -22,9 +20,7 @@ use Symfony\Component\Serializer\Serializer as SymfonySerializer;
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
-final class Serializer extends SymfonySerializer implements JsonSchemaProviderSerializerInterface {
-
-  use JsonSchemaProviderSerializerTrait;
+final class Serializer extends SymfonySerializer {
 
   /**
    * A normalizer to fall back on when JSON:API cannot normalize an object.
@@ -84,7 +80,7 @@ final class Serializer extends SymfonySerializer implements JsonSchemaProviderSe
   /**
    * {@inheritdoc}
    */
-  public function supportsNormalization($data, ?string $format = NULL, array $context = []): bool {
+  public function supportsNormalization($data, string $format = NULL, array $context = []): bool {
     return $this->selfSupportsNormalization($data, $format, $context) || $this->fallbackNormalizer->supportsNormalization($data, $format, $context);
   }
 
@@ -108,7 +104,7 @@ final class Serializer extends SymfonySerializer implements JsonSchemaProviderSe
   /**
    * {@inheritdoc}
    */
-  public function supportsDenormalization($data, string $type, ?string $format = NULL, array $context = []): bool {
+  public function supportsDenormalization($data, string $type, string $format = NULL, array $context = []): bool {
     return $this->selfSupportsDenormalization($data, $type, $format, $context) || $this->fallbackNormalizer->supportsDenormalization($data, $type, $format, $context);
   }
 

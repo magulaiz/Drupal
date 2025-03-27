@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
@@ -28,7 +26,7 @@ class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBa
    *
    * @dataProvider providerTestCheckRequirements
    */
-  public function testCheckRequirements($module): void {
+  public function testCheckRequirements($module) {
     // Disable the module in the source site.
     $this->sourceDatabase->update('system')
       ->condition('name', $module)
@@ -47,9 +45,8 @@ class CommentEntityTranslationCheckRequirementsTest extends MigrateDrupal7TestBa
    * Provides data for testCheckRequirements.
    *
    * @return string[][]
-   *   An array of module machine names.
    */
-  public static function providerTestCheckRequirements() {
+  public function providerTestCheckRequirements() {
     return [
       ['comment'],
       ['node'],

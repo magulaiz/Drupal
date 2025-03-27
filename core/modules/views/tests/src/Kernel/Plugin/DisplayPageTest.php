@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Core\Url;
@@ -26,17 +24,16 @@ class DisplayPageTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = [
-    'test_page_display',
-    'test_page_display_route',
-    'test_page_display_menu',
-    'test_display_more',
-  ];
+  public static $testViews = ['test_page_display', 'test_page_display_route', 'test_page_display_menu', 'test_display_more'];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
+    // @todo Remove this in https://www.drupal.org/node/3219959
+    'block',
     'system',
     'user',
     'field',
@@ -53,7 +50,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
   /**
    * Checks the behavior of the page for access denied/not found behaviors.
    */
-  public function testPageResponses(): void {
+  public function testPageResponses() {
     \Drupal::currentUser()->setAccount(new AnonymousUserSession());
     $subrequest = Request::create('/test_page_display_403', 'GET');
     $response = $this->container->get('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
@@ -85,7 +82,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
   /**
    * Checks that the router items are properly registered.
    */
-  public function testPageRouterItems(): void {
+  public function testPageRouterItems() {
     $collection = \Drupal::service('views.route_subscriber')->routes();
 
     // Check the controller defaults.
@@ -127,7 +124,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
   /**
    * Tests the generated menu links of views.
    */
-  public function testMenuLinks(): void {
+  public function testMenuLinks() {
     \Drupal::service('plugin.manager.menu.link')->rebuild();
     $tree = \Drupal::menuTree()->load('admin', new MenuTreeParameters());
     $this->assertTrue(isset($tree['system.admin']->subtree['views_view:views.test_page_display_menu.page_4']));
@@ -140,7 +137,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
   /**
    * Tests the calculated dependencies for various views using Page displays.
    */
-  public function testDependencies(): void {
+  public function testDependencies() {
     $view = Views::getView('test_page_display');
     $this->assertSame(['module' => ['views_test_data']], $view->getDependencies());
 
@@ -165,9 +162,9 @@ class DisplayPageTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests the 'read more' functionality.
+   * Tests the readmore functionality.
    */
-  public function testReadMore(): void {
+  public function testReadMore() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -182,7 +179,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
     $this->setRawContent($output);
     $result = $this->xpath('//div[@class=:class]/a', [':class' => 'more-link']);
     $this->assertEquals(Url::fromRoute('view.test_display_more.page_1')->toString(), $result[0]->attributes()->href, 'The right more link is shown.');
-    $this->assertEquals($expected_more_text, trim((string) $result[0][0]), 'The right link text is shown.');
+    $this->assertEquals($expected_more_text, trim($result[0][0]), 'The right link text is shown.');
 
     // Test the renderMoreLink method directly. This could be directly unit
     // tested.
@@ -191,7 +188,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
     $this->setRawContent($more_link);
     $result = $this->xpath('//div[@class=:class]/a', [':class' => 'more-link']);
     $this->assertEquals(Url::fromRoute('view.test_display_more.page_1')->toString(), $result[0]->attributes()->href, 'The right more link is shown.');
-    $this->assertEquals($expected_more_text, trim((string) $result[0][0]), 'The right link text is shown.');
+    $this->assertEquals($expected_more_text, trim($result[0][0]), 'The right link text is shown.');
 
     // Test the useMoreText method directly. This could be directly unit
     // tested.
@@ -234,7 +231,7 @@ class DisplayPageTest extends ViewsKernelTestBase {
   /**
    * Tests the templates with empty rows.
    */
-  public function testEmptyRow(): void {
+  public function testEmptyRow() {
     $view = Views::getView('test_page_display');
     $view->initDisplay();
     $view->newDisplay('page', 'Page', 'empty_row');

@@ -1,13 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal\Kernel;
 
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
-use Drupal\migrate_drupal\Hook\MigrateDrupalHooks;
 
 /**
  * Tests the assignment of the node migration type in migrations_plugin_alter.
@@ -45,17 +42,16 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
    *
    * @throws \Exception
    */
-  public function testMigrationPluginAlter($type, array $migration_definitions, array $expected): void {
+  public function testMigrationPluginAlter($type, array $migration_definitions, array $expected) {
     $this->makeNodeMigrateMapTable($type, '7');
-    $migrateDrupalMigrationPluginsAlter = new MigrateDrupalHooks();
-    $migrateDrupalMigrationPluginsAlter->migrationPluginsAlter($migration_definitions);
+    migrate_drupal_migration_plugins_alter($migration_definitions);
     $this->assertSame($expected, $migration_definitions);
   }
 
   /**
    * Data provider for testMigrationPluginAlter().
    */
-  public static function providerMigrationPluginAlter() {
+  public function providerMigrationPluginAlter() {
     $tests = [];
 
     $migrations = [
@@ -105,13 +101,13 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
 
     // Test migrations are not altered when classic node migrations is in use.
     $tests[0]['type'] = NodeMigrateType::NODE_MIGRATE_TYPE_CLASSIC;
-    $tests[0]['migration_definitions'] = $migrations;
-    $tests[0]['expected'] = $tests[0]['migration_definitions'];
+    $tests[0]['migrations'] = $migrations;
+    $tests[0]['expected_data'] = $tests[0]['migrations'];
 
     // Test migrations are altered when complete node migrations is in use.
     $tests[1] = $tests[0];
     $tests[1]['type'] = NodeMigrateType::NODE_MIGRATE_TYPE_COMPLETE;
-    $tests[1]['expected']['dependencies_altered_if_complete']['migration_dependencies'] = [
+    $tests[1]['expected_data']['dependencies_altered_if_complete']['migration_dependencies'] = [
       'required' => [
         'd7_node_complete',
       ],
@@ -125,7 +121,7 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
   /**
    * Creates data in the source database.
    */
-  protected function setupDb(): void {
+  protected function setupDb() {
     $this->sourceDatabase->schema()->createTable('system', [
       'fields' => [
         'name' => [

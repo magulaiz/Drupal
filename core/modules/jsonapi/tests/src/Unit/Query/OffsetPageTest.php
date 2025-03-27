@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Unit\Query;
 
 use Drupal\Core\Cache\Context\CacheContextsManager;
@@ -37,7 +35,7 @@ class OffsetPageTest extends UnitTestCase {
    * @covers ::createFromQueryParameter
    * @dataProvider parameterProvider
    */
-  public function testCreateFromQueryParameter($original, $expected): void {
+  public function testCreateFromQueryParameter($original, $expected) {
     $actual = OffsetPage::createFromQueryParameter($original);
     $this->assertEquals($expected['offset'], $actual->getOffset());
     $this->assertEquals($expected['limit'], $actual->getSize());
@@ -46,7 +44,7 @@ class OffsetPageTest extends UnitTestCase {
   /**
    * Data provider for testCreateFromQueryParameter.
    */
-  public static function parameterProvider() {
+  public function parameterProvider() {
     return [
       [['offset' => 12, 'limit' => 20], ['offset' => 12, 'limit' => 20]],
       [['offset' => 12, 'limit' => 60], ['offset' => 12, 'limit' => 50]],
@@ -59,7 +57,7 @@ class OffsetPageTest extends UnitTestCase {
   /**
    * @covers ::createFromQueryParameter
    */
-  public function testCreateFromQueryParameterFail(): void {
+  public function testCreateFromQueryParameterFail() {
     $this->expectException(BadRequestHttpException::class);
     OffsetPage::createFromQueryParameter('lorem');
   }

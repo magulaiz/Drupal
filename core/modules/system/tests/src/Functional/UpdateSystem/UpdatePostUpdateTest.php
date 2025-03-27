@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
-
-// cspell:ignore postupdate
 
 /**
  * Tests hook_post_update().
@@ -67,7 +64,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doSelectionTest(): void {
+  protected function doSelectionTest() {
     // Ensure that normal and post_update updates are merged together on the
     // selection page.
     $this->assertSession()->responseContains('<ul><li>8001 - Normal update_N() function.</li><li>First update.</li><li>Second update.</li><li>Test0 update.</li><li>Test1 update.</li><li>Testing batch processing in post updates update.</li></ul>');
@@ -76,7 +73,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
   /**
    * Tests hook_post_update_NAME().
    */
-  public function testPostUpdate(): void {
+  public function testPostUpdate() {
     $this->runUpdates();
 
     $this->assertSession()->responseContains('<h3>Update first</h3>');
@@ -113,7 +110,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
       'update_test_postupdate_post_update_test_batch',
     ];
     foreach ($expected_updates as $expected_update) {
-      $this->assertEquals(1, $existing_updates[$expected_update], "$expected_update exists in 'existing_updates' key and only appears once.");
+      $this->assertEquals(1, $existing_updates[$expected_update], new FormattableMarkup("@expected_update exists in 'existing_updates' key and only appears once.", ['@expected_update' => $expected_update]));
     }
 
     $this->drupalGet('update.php/selection');

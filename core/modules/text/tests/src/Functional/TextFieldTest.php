@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\text\Functional;
 
 use Drupal\Component\Utility\Html;
@@ -10,7 +8,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Render\FilteredMarkup;
-use Drupal\Tests\field\Functional\FunctionalString\StringFieldTest;
+use Drupal\Tests\field\Functional\String\StringFieldTest;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -58,10 +56,10 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Tests text field validation.
    */
-  public function testTextFieldValidation(): void {
+  public function testTextFieldValidation() {
     // Create a field with settings to validate.
     $max_length = 3;
-    $field_name = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -93,7 +91,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Tests required long text with file upload.
    */
-  public function testRequiredLongTextWithFileUpload(): void {
+  public function testRequiredLongTextWithFileUpload() {
     // Create a text field.
     $text_field_name = 'text_long';
     $field_storage = FieldStorageConfig::create([
@@ -155,7 +153,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Tests widgets.
    */
-  public function testTextfieldWidgets(): void {
+  public function testTextfieldWidgets() {
     $this->_testTextfieldWidgets('text', 'text_textfield');
     $this->_testTextfieldWidgets('text_long', 'text_textarea');
   }
@@ -163,7 +161,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Tests widgets + 'formatted_text' setting.
    */
-  public function testTextfieldWidgetsFormatted(): void {
+  public function testTextfieldWidgetsFormatted() {
     $this->_testTextfieldWidgetsFormatted('text', 'text_textfield');
     $this->_testTextfieldWidgetsFormatted('text_long', 'text_textarea');
   }
@@ -171,18 +169,18 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Test widgets for fields with selected allowed formats.
    */
-  public function testTextfieldWidgetsAllowedFormats(): void {
+  public function testTextfieldWidgetsAllowedFormats() {
     // Create one text format.
     $this->drupalLogin($this->adminUser);
     $format1 = FilterFormat::create([
-      'format' => $this->randomMachineName(),
+      'format' => mb_strtolower($this->randomMachineName()),
       'name' => '1_' . $this->randomMachineName(),
     ]);
     $format1->save();
 
     // Create a second text format.
     $format2 = FilterFormat::create([
-      'format' => $this->randomMachineName(),
+      'format' => mb_strtolower($this->randomMachineName()),
       'name' => '2_' . $this->randomMachineName(),
       'filters' => [
         'filter_html' => [
@@ -197,7 +195,7 @@ class TextFieldTest extends StringFieldTest {
 
     // Create a third text format.
     $format3 = FilterFormat::create([
-      'format' => $this->randomMachineName(),
+      'format' => mb_strtolower($this->randomMachineName()),
       'name' => '3_' . $this->randomMachineName(),
     ]);
     $format3->save();
@@ -212,7 +210,7 @@ class TextFieldTest extends StringFieldTest {
     ]);
 
     // Create a field with multiple formats allowed.
-    $field_name = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -307,9 +305,9 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Helper function for testTextfieldWidgetsFormatted().
    */
-  public function _testTextfieldWidgetsFormatted($field_type, $widget_type): void {
+  public function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
     // Create a field.
-    $field_name = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -370,7 +368,7 @@ class TextFieldTest extends StringFieldTest {
     // access to it.
     $this->drupalLogin($this->adminUser);
     $edit = [
-      'format' => $this->randomMachineName(),
+      'format' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomMachineName(),
     ];
     $this->drupalGet('admin/config/content/formats/add');
@@ -398,6 +396,7 @@ class TextFieldTest extends StringFieldTest {
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been updated.');
 
     // Display the entity.
+    $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     $entity = EntityTest::load($id);
     $display = $display_repository->getViewDisplay($entity->getEntityTypeId(), $entity->bundle(), 'full');
     $content = $display->build($entity);

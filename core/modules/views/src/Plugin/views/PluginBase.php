@@ -18,14 +18,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for any views plugin types.
  *
- * Via the plugin definition the plugin may specify a theme function or
+ * Via the @Plugin definition the plugin may specify a theme function or
  * template to be used for the plugin. It also can auto-register the theme
  * implementation for that file or function.
  * - theme: the theme implementation to use in the plugin. This must be the
  *   name of the template file (without template engine extension). The file
  *   has to be placed in the module's templates folder.
- *   Example: theme = "my_module_row" of module "my_module" will implement
- *   my_module-row.html.twig in the [..]/modules/my_module/templates folder.
+ *   Example: theme = "mymodule_row" of module "mymodule" will implement
+ *   mymodule-row.html.twig in the [..]/modules/mymodule/templates folder.
  * - register_theme: (optional) When set to TRUE (default) the theme is
  *   registered automatically. When set to FALSE the plugin reuses an existing
  *   theme implementation, defined by another module or views plugin.
@@ -79,9 +79,9 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *
    * For display plugins this is empty.
    *
-   * @var \Drupal\views\Plugin\views\display\DisplayPluginBase
-   *
    * @todo find a better description
+   *
+   * @var \Drupal\views\Plugin\views\display\DisplayPluginBase
    */
   public $displayHandler;
 
@@ -117,7 +117,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
+   *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    */
@@ -137,7 +137,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     $this->view = $view;
     $this->options = $this->options ?? [];
     $this->setOptionDefaults($this->options, $this->defineOptions());
@@ -149,12 +149,12 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   /**
    * Information about options for all kinds of purposes will be held here.
    * @code
-   * 'option_name' => [
+   * 'option_name' => array(
    *  - 'default' => default value,
    *  - 'contains' => (optional) array of items this contains, with its own
    *      defaults, etc. If contains is set, the default will be ignored and
-   *      assumed to be [].
-   *  ],
+   *      assumed to be array().
+   *  ),
    * @endcode
    *
    * @return array
@@ -269,9 +269,9 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     // Some form elements belong in a fieldset for presentation, but can't
-    // be moved into one because of the $form_state->getValues() hierarchy.
-    // Those elements can add a #fieldset => 'fieldset_name' property, and
-    // they'll be moved to their fieldset during pre_render.
+    // be moved into one because of the $form_state->getValues() hierarchy. Those
+    // elements can add a #fieldset => 'fieldset_name' property, and they'll
+    // be moved to their fieldset during pre_render.
     $form['#pre_render'][] = [static::class, 'preRenderAddFieldsetMarkup'];
   }
 
@@ -344,17 +344,15 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   }
 
   /**
-   * Replaces Views' tokens in a given string.
+   * Replaces Views' tokens in a given string. The resulting string will be
+   * sanitized with Xss::filterAdmin.
    *
-   * The resulting string will be sanitized with Xss::filterAdmin.
-   *
-   * @param string $text
+   * @param $text
    *   Unsanitized string with possible tokens.
-   * @param array $tokens
+   * @param $tokens
    *   Array of token => replacement_value items.
    *
    * @return string
-   *   The sanitized string with tokens replaced.
    */
   protected function viewsTokenReplace($text, $tokens) {
     if (!strlen($text)) {
@@ -369,8 +367,8 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     foreach ($tokens as $token => $replacement) {
       // Twig wants a token replacement array stripped of curly-brackets.
       // Some Views tokens come with curly-braces, others do not.
-      // @todo https://www.drupal.org/node/2544392
-      if (str_contains($token, '{{')) {
+      // @todo: https://www.drupal.org/node/2544392
+      if (strpos($token, '{{') !== FALSE) {
         // Twig wants a token replacement array stripped of curly-brackets.
         $token = trim(str_replace(['{{', '}}'], '', $token));
       }
@@ -378,7 +376,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // Check for arrays in Twig tokens. Internally these are passed as
       // dot-delimited strings, but need to be turned into associative arrays
       // for parsing.
-      if (!str_contains($token, '.')) {
+      if (strpos($token, '.') === FALSE) {
         // We need to validate tokens are valid Twig variables. Twig uses the
         // same variable naming rules as PHP.
         // @see http://php.net/manual/language.variables.basics.php
@@ -419,10 +417,10 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       ];
 
       // Currently you cannot attach assets to tokens with
-      // Renderer::renderInIsolation(). This may be unnecessarily limiting.
-      // Consider using Renderer::executeInRenderContext() instead.
-      // @todo https://www.drupal.org/node/2566621
-      return (string) $this->getRenderer()->renderInIsolation($build);
+      // Renderer::renderPlain(). This may be unnecessarily limiting. Consider
+      // using Renderer::executeInRenderContext() instead.
+      // @todo: https://www.drupal.org/node/2566621
+      return (string) $this->getRenderer()->renderPlain($build);
     }
     else {
       return Xss::filterAdmin($text);
@@ -561,7 +559,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *   Only configurable languages and languages that are in $current_values are
    *   included in the list.
    */
-  protected function listLanguages($flags = LanguageInterface::STATE_ALL, ?array $current_values = NULL) {
+  protected function listLanguages($flags = LanguageInterface::STATE_ALL, array $current_values = NULL) {
     $manager = \Drupal::languageManager();
     $languages = $manager->getLanguages($flags);
     $list = [];
@@ -582,7 +580,6 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // translate it again.
       // @see Drupal\Core\Language::filterLanguages().
       if (!$name instanceof TranslatableMarkup) {
-        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
         $name = $this->t($name);
       }
       $list[PluginBase::VIEWS_QUERY_LANGUAGE_SITE_DEFAULT] = $name;
@@ -660,7 +657,6 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * Returns the render API renderer.
    *
    * @return \Drupal\Core\Render\RendererInterface
-   *   The renderer service.
    */
   protected function getRenderer() {
     if (!isset($this->renderer)) {

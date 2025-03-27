@@ -17,8 +17,8 @@ trait TestSetupTrait {
   protected static $configSchemaCheckerExclusions = [
     // Following are used to test lack of or partial schema. Where partial
     // schema is provided, that is explicitly tested in specific tests.
-    'config_schema_test.no_schema',
-    'config_schema_test.some_schema',
+    'config_schema_test.noschema',
+    'config_schema_test.someschema',
     'config_schema_test.schema_data_types',
     'config_schema_test.no_schema_data_types',
     // Used to test application of schema to filtering of configuration.
@@ -42,9 +42,9 @@ trait TestSetupTrait {
   /**
    * The public file directory for the test environment.
    *
-   * @var string
-   *
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
+   *
+   * @var string
    */
   protected $publicFilesDirectory;
 
@@ -58,18 +58,18 @@ trait TestSetupTrait {
   /**
    * The private file directory for the test environment.
    *
-   * @var string
-   *
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
+   *
+   * @var string
    */
   protected $privateFilesDirectory;
 
   /**
    * Set to TRUE to strict check all configuration saved.
    *
-   * @var bool
-   *
    * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
+   *
+   * @var bool
    */
   protected $strictConfigSchema = TRUE;
 
@@ -100,10 +100,10 @@ trait TestSetupTrait {
    * This value has to match the temporary directory created in
    * install_base_system() for test installs.
    *
-   * @var string
-   *
    * @see \Drupal\Tests\BrowserTestBase::prepareEnvironment()
    * @see install_base_system()
+   *
+   * @var string
    */
   protected $tempFilesDirectory;
 
@@ -113,6 +113,16 @@ trait TestSetupTrait {
    * @var string
    */
   protected $testId;
+
+  /**
+   * Returns the database connection to the site under test.
+   *
+   * @return \Drupal\Core\Database\Connection
+   *   The database connection to use for inserting assertions.
+   */
+  public static function getDatabaseConnection() {
+    return TestDatabase::getConnection();
+  }
 
   /**
    * Generates a database prefix for running tests.
@@ -170,7 +180,6 @@ trait TestSetupTrait {
         // prefixes of the test runner leak into the test.
         $connection_info[$target]['prefix'] = $value['prefix'] . $this->databasePrefix;
       }
-      Database::removeConnection('default');
       Database::addConnectionInfo('default', 'default', $connection_info['default']);
     }
   }

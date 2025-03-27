@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_translation\Unit\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
@@ -48,14 +46,14 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider providerTestBlockAdminDisplay
    */
-  public function testBlockAdminDisplay($route, $expected): void {
+  public function testBlockAdminDisplay($route, $expected) {
     $this->assertLocalTasks($route, $expected);
   }
 
   /**
    * Provides a list of routes to test.
    */
-  public static function providerTestBlockAdminDisplay() {
+  public function providerTestBlockAdminDisplay() {
     return [
       [
         'entity.node.canonical',

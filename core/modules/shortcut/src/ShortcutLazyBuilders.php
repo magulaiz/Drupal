@@ -2,19 +2,14 @@
 
 namespace Drupal\shortcut;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 
 /**
  * Lazy builders for the shortcut module.
  */
 class ShortcutLazyBuilders implements TrustedCallbackInterface {
-
-  use StringTranslationTrait;
 
   /**
    * The renderer service.
@@ -28,12 +23,8 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user.
    */
-  public function __construct(RendererInterface $renderer, protected EntityTypeManagerInterface $entityTypeManager, protected AccountInterface $currentUser) {
+  public function __construct(RendererInterface $renderer) {
     $this->renderer = $renderer;
   }
 
@@ -45,27 +36,21 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
   }
 
   /**
-   * Render API callback: Builds shortcut toolbar links.
-   *
-   * This function is assigned as a #lazy_builder callback.
-   *
-   * @param bool $show_configure_link
-   *   Boolean to indicate whether to include the configure link or not.
+   * #lazy_builder callback; builds shortcut toolbar links.
    *
    * @return array
    *   A renderable array of shortcut links.
    */
-  public function lazyLinks(bool $show_configure_link = TRUE) {
-    $shortcut_set = $this->entityTypeManager->getStorage('shortcut_set')
-      ->getDisplayedToUser($this->currentUser);
+  public function lazyLinks() {
+    $shortcut_set = shortcut_current_displayed_set();
 
     $links = shortcut_renderable_links();
 
     $configure_link = NULL;
-    if ($show_configure_link && shortcut_set_edit_access($shortcut_set)->isAllowed()) {
+    if (shortcut_set_edit_access($shortcut_set)->isAllowed()) {
       $configure_link = [
         '#type' => 'link',
-        '#title' => $this->t('Edit shortcuts'),
+        '#title' => t('Edit shortcuts'),
         '#url' => Url::fromRoute('entity.shortcut_set.customize_form', ['shortcut_set' => $shortcut_set->id()]),
         '#options' => ['attributes' => ['class' => ['edit-shortcuts']]],
       ];
@@ -75,7 +60,6 @@ class ShortcutLazyBuilders implements TrustedCallbackInterface {
       'shortcuts' => $links,
       'configure' => $configure_link,
     ];
-
     $this->renderer->addCacheableDependency($build, $shortcut_set);
 
     return $build;

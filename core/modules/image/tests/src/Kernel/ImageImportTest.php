@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\image\Entity\ImageStyle;
@@ -22,14 +20,13 @@ class ImageImportTest extends KernelTestBase {
   /**
    * Tests importing image styles.
    */
-  public function testImport(): void {
+  public function testImport() {
     $style = ImageStyle::create([
       'name' => 'test',
-      'label' => 'Test',
     ]);
 
-    $style->addImageEffect(['id' => 'image_module_test_null', 'weight' => 0]);
-    $style->addImageEffect(['id' => 'image_module_test_null', 'weight' => 1]);
+    $style->addImageEffect(['id' => 'image_module_test_null']);
+    $style->addImageEffect(['id' => 'image_module_test_null']);
     $style->save();
 
     $this->assertCount(2, $style->getEffects());
@@ -38,7 +35,6 @@ class ImageImportTest extends KernelTestBase {
     $style->set('effects', [
       $uuid => [
         'id' => 'image_module_test_null',
-        'weight' => 0,
       ],
     ]);
     $style->save();

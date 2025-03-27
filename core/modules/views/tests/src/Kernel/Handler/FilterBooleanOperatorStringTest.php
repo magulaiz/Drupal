@@ -1,14 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests core's BooleanOperatorString views filter handler.
+ * Tests the core Drupal\views\Plugin\views\filter\BooleanOperatorString
+ * handler.
  *
  * @group views
  * @see \Drupal\views\Plugin\views\filter\BooleanOperatorString
@@ -16,7 +15,9 @@ use Drupal\views\Views;
 class FilterBooleanOperatorStringTest extends ViewsKernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * The modules to enable for this test.
+   *
+   * @var array
    */
   protected static $modules = ['system'];
 
@@ -85,7 +86,7 @@ class FilterBooleanOperatorStringTest extends ViewsKernelTestBase {
   /**
    * Tests the BooleanOperatorString filter.
    */
-  public function testFilterBooleanOperatorString(): void {
+  public function testFilterBooleanOperatorString() {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -135,7 +136,7 @@ class FilterBooleanOperatorStringTest extends ViewsKernelTestBase {
   /**
    * Tests the Boolean filter with grouped exposed form enabled.
    */
-  public function testFilterGroupedExposed(): void {
+  public function testFilterGroupedExposed() {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
 
@@ -176,7 +177,7 @@ class FilterBooleanOperatorStringTest extends ViewsKernelTestBase {
    * @return array
    *   Returns the filter configuration for exposed filters.
    */
-  protected function getGroupedExposedFilters(): array {
+  protected function getGroupedExposedFilters() {
     $filters = [
       'status' => [
         'id' => 'status',

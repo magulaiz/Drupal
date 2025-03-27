@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Theme;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
@@ -56,11 +54,9 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
    * @covers ::applies
    * @dataProvider providerTestApplies
    */
-  public function testApplies($request_data, $expected): void {
-    $request = new Request();
-    foreach ($request_data as $key => $data) {
-      $request->query->set($key, $data);
-    }
+  public function testApplies($request_data, $expected) {
+    $request = new Request([], $request_data);
+    $request->request = new InputBag($request->request->all());
     $route_match = RouteMatch::createFromRequest($request);
     $this->requestStack->push($request);
 
@@ -68,7 +64,7 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
     $this->assertSame($expected, $result);
   }
 
-  public static function providerTestApplies() {
+  public function providerTestApplies() {
     $data = [];
     $data['empty'] = [[], FALSE];
     $data['no_theme'] = [['ajax_page_state' => ['theme' => '', 'theme_token' => '']], FALSE];
@@ -80,12 +76,12 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   /**
    * @covers ::determineActiveTheme
    */
-  public function testDetermineActiveThemeValidToken(): void {
+  public function testDetermineActiveThemeValidToken() {
     $theme = 'claro';
     $theme_token = 'valid_theme_token';
 
-    $request = new Request();
-    $request->query->set('ajax_page_state', ['theme' => $theme, 'theme_token' => $theme_token]);
+    $request = new Request([], ['ajax_page_state' => ['theme' => $theme, 'theme_token' => $theme_token]]);
+    $request->request = new InputBag($request->request->all());
     $this->requestStack->push($request);
     $route_match = RouteMatch::createFromRequest($request);
 
@@ -98,11 +94,11 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
   /**
    * @covers ::determineActiveTheme
    */
-  public function testDetermineActiveThemeInvalidToken(): void {
+  public function testDetermineActiveThemeInvalidToken() {
     $theme = 'claro';
     $theme_token = 'invalid_theme_token';
-    $request = new Request();
-    $request->query->set('ajax_page_state', ['theme' => $theme, 'theme_token' => $theme_token]);
+
+    $request = new Request([], ['ajax_page_state' => ['theme' => $theme, 'theme_token' => $theme_token]]);
     $request->request = new InputBag($request->request->all());
     $this->requestStack->push($request);
     $route_match = RouteMatch::createFromRequest($request);
@@ -110,20 +106,19 @@ class AjaxBasePageNegotiatorTest extends UnitTestCase {
     $this->tokenGenerator->validate($theme_token, $theme)->willReturn(FALSE);
 
     $result = $this->negotiator->determineActiveTheme($route_match);
-    $this->assertNull($result);
+    $this->assertSame(NULL, $result);
   }
 
   /**
    * @covers ::determineActiveTheme
    */
-  public function testDetermineActiveThemeDefaultTheme(): void {
+  public function testDetermineActiveThemeDefaultTheme() {
     $theme = 'stark';
     // When the theme is the system default, an empty string is provided as the
     // theme token. See system_js_settings_alter().
     $theme_token = '';
 
-    $request = new Request([]);
-    $request->query->set('ajax_page_state', ['theme' => $theme, 'theme_token' => $theme_token]);
+    $request = new Request([], ['ajax_page_state' => ['theme' => $theme, 'theme_token' => $theme_token]]);
     $request->request = new InputBag($request->request->all());
     $this->requestStack->push($request);
     $route_match = RouteMatch::createFromRequest($request);

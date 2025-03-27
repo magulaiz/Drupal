@@ -64,7 +64,7 @@ abstract class LinkBase extends FieldPluginBase {
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
+   *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
@@ -102,7 +102,7 @@ abstract class LinkBase extends FieldPluginBase {
   /**
    * Gets the current active user.
    *
-   * @todo https://www.drupal.org/node/2105123 put this method in
+   * @todo: https://www.drupal.org/node/2105123 put this method in
    *   \Drupal\Core\Plugin\PluginBase instead.
    *
    * @return \Drupal\Core\Session\AccountInterface
@@ -164,12 +164,9 @@ abstract class LinkBase extends FieldPluginBase {
    */
   public function render(ResultRow $row) {
     $access = $this->checkUrlAccess($row);
-    if ($access) {
-      $build = ['#markup' => $access->isAllowed() ? $this->renderLink($row) : ''];
-      BubbleableMetadata::createFromObject($access)->applyTo($build);
-      return $build;
-    }
-    return '';
+    $build = ['#markup' => $access->isAllowed() ? $this->renderLink($row) : ''];
+    BubbleableMetadata::createFromObject($access)->applyTo($build);
+    return $build;
   }
 
   /**
@@ -178,13 +175,12 @@ abstract class LinkBase extends FieldPluginBase {
    * @param \Drupal\views\ResultRow $row
    *   A view result row.
    *
-   * @return \Drupal\Core\Access\AccessResultInterface|null
-   *   The access result, or NULL if the URI elements of the link doesn't exist.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   protected function checkUrlAccess(ResultRow $row) {
-    if ($url = $this->getUrlInfo($row)) {
-      return $this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), $this->currentUser(), TRUE);
-    }
+    $url = $this->getUrlInfo($row);
+    return $this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), $this->currentUser(), TRUE);
   }
 
   /**
@@ -193,7 +189,7 @@ abstract class LinkBase extends FieldPluginBase {
    * @param \Drupal\views\ResultRow $row
    *   A view result row.
    *
-   * @return \Drupal\Core\Url|null
+   * @return \Drupal\Core\Url
    *   The URI elements of the link.
    */
   abstract protected function getUrlInfo(ResultRow $row);
@@ -223,7 +219,7 @@ abstract class LinkBase extends FieldPluginBase {
    */
   protected function addLangcode(ResultRow $row) {
     $entity = $this->getEntity($row);
-    if ($entity && $this->languageManager->isMultilingual()) {
+    if ($this->languageManager->isMultilingual()) {
       $this->options['alter']['language'] = $this->getEntityTranslationByRelationship($entity, $row)->language();
     }
   }

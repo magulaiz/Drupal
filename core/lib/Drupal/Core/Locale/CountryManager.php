@@ -18,8 +18,6 @@ class CountryManager implements CountryManagerInterface {
 
   /**
    * An array of country code => country name pairs.
-   *
-   * @var string[][]
    */
   protected $countries;
 
@@ -94,7 +92,6 @@ class CountryManager implements CountryManagerInterface {
       'CN' => t('China'),
       'CO' => t('Colombia'),
       'CP' => t('Clipperton Island'),
-      'CQ' => t('Sark'),
       'CR' => t('Costa Rica'),
       'CU' => t('Cuba'),
       'CV' => t('Cape Verde'),
@@ -275,7 +272,7 @@ class CountryManager implements CountryManagerInterface {
       'TM' => t('Turkmenistan'),
       'TN' => t('Tunisia'),
       'TO' => t('Tonga'),
-      'TR' => t('Türkiye'),
+      'TR' => t('Turkey'),
       'TT' => t('Trinidad & Tobago'),
       'TV' => t('Tuvalu'),
       'TW' => t('Taiwan'),

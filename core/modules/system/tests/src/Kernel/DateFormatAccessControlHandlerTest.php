@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Kernel;
 
 use Drupal\Core\Access\AccessResult;
@@ -10,7 +8,6 @@ use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
-use Prophecy\Prophet;
 
 /**
  * @coversDefaultClass \Drupal\system\DateFormatAccessControlHandler
@@ -23,7 +20,9 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'system',
@@ -43,23 +42,33 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
+    $this->installSchema('system', 'sequences');
     $this->accessControlHandler = $this->container->get('entity_type.manager')->getAccessControlHandler('date_format');
   }
 
   /**
    * @covers ::checkAccess
    * @covers ::checkCreateAccess
-   * @dataProvider providerTestAccess
+   * @dataProvider testAccessProvider
    */
-  public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result): void {
+  public function testAccess($which_user, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result) {
+    // We must always create user 1, so that a "normal" user has an ID >1.
+    $root_user = $this->drupalCreateUser();
 
-    $user = $this->drupalCreateUser($permissions);
+    if ($which_user === 'user1') {
+      $user = $root_user;
+    }
+    else {
+      $permissions = ($which_user === 'admin')
+        ? ['administer site configuration']
+        : [];
+      $user = $this->drupalCreateUser($permissions);
+    }
 
     $entity_values = ($which_entity === 'unlocked')
       ? ['locked' => FALSE]
       : ['locked' => TRUE];
-    $entity_values['id'] = $entity_values['label'] = $this->randomMachineName();
-    $entity_values['pattern'] = 'Y-m-d';
+    $entity_values['id'] = $this->randomMachineName();
     $entity = DateFormat::create($entity_values);
     $entity->save();
 
@@ -70,23 +79,17 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
     static::assertEquals($create_access_result, $this->accessControlHandler->createAccess(NULL, $user, [], TRUE));
   }
 
-  /**
-   * Provides test cases for access control based on user permissions and entity lock status.
-   *
-   * @return array
-   *   An array of test cases.
-   */
-  public static function providerTestAccess(): array {
+  public function testAccessProvider() {
     $c = new ContainerBuilder();
-    $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
+    $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
     $cache_contexts_manager->reveal();
     $c->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($c);
 
     return [
-      'No permission + unlocked' => [
-        [],
+      'permissionless + unlocked' => [
+        'permissionless',
         'unlocked',
         AccessResult::allowed(),
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer site configuration' permission is required."),
@@ -94,8 +97,8 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer site configuration' permission is required.")->addCacheTags(['rendered']),
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer site configuration' permission is required."),
       ],
-      'no permission + locked' => [
-        [],
+      'permissionless + locked' => [
+        'permissionless',
         'locked',
         AccessResult::allowed(),
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer site configuration' permission is required."),
@@ -104,7 +107,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
         AccessResult::neutral()->addCacheContexts(['user.permissions'])->setReason("The 'administer site configuration' permission is required."),
       ],
       'admin + unlocked' => [
-        ['administer site configuration'],
+        'admin',
         'unlocked',
         AccessResult::allowed(),
         AccessResult::allowed()->addCacheContexts(['user.permissions']),
@@ -113,7 +116,25 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
         AccessResult::allowed()->addCacheContexts(['user.permissions']),
       ],
       'admin + locked' => [
-        ['administer site configuration'],
+        'admin',
+        'locked',
+        AccessResult::allowed(),
+        AccessResult::allowed()->addCacheContexts(['user.permissions']),
+        AccessResult::forbidden()->addCacheTags(['rendered'])->setReason("The DateFormat config entity is locked."),
+        AccessResult::forbidden()->addCacheTags(['rendered'])->setReason("The DateFormat config entity is locked."),
+        AccessResult::allowed()->addCacheContexts(['user.permissions']),
+      ],
+      'user1 + unlocked' => [
+        'user1',
+        'unlocked',
+        AccessResult::allowed(),
+        AccessResult::allowed()->addCacheContexts(['user.permissions']),
+        AccessResult::allowed()->addCacheContexts(['user.permissions'])->addCacheTags(['rendered']),
+        AccessResult::allowed()->addCacheContexts(['user.permissions'])->addCacheTags(['rendered']),
+        AccessResult::allowed()->addCacheContexts(['user.permissions']),
+      ],
+      'user1 + locked' => [
+        'user1',
         'locked',
         AccessResult::allowed(),
         AccessResult::allowed()->addCacheContexts(['user.permissions']),

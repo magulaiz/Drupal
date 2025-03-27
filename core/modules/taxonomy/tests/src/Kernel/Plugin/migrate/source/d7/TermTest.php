@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
@@ -22,7 +20,7 @@ class TermTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public function providerSource() {
     $tests = [];
 
     // The source data.
@@ -33,6 +31,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 1',
         'description' => 'description value 1',
         'weight' => 0,
+        'is_container' => FALSE,
       ],
       [
         'tid' => 2,
@@ -40,6 +39,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 2',
         'description' => 'description value 2',
         'weight' => 0,
+        'is_container' => TRUE,
       ],
       [
         'tid' => 3,
@@ -47,6 +47,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 3',
         'description' => 'description value 3',
         'weight' => 0,
+        'is_container' => FALSE,
       ],
       [
         'tid' => 4,
@@ -54,6 +55,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 4',
         'description' => 'description value 4',
         'weight' => 1,
+        'is_container' => FALSE,
       ],
       [
         'tid' => 5,
@@ -61,6 +63,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 5',
         'description' => 'description value 5',
         'weight' => 1,
+        'is_container' => FALSE,
       ],
       [
         'tid' => 6,
@@ -68,6 +71,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 6',
         'description' => 'description value 6',
         'weight' => 0,
+        'is_container' => TRUE,
       ],
       [
         'tid' => 7,
@@ -75,6 +79,7 @@ class TermTest extends MigrateSqlSourceTestBase {
         'name' => 'name value 7',
         'description' => 'description value 7',
         'weight' => 0,
+        'is_container' => TRUE,
       ],
     ];
     $tests[0]['source_data']['taxonomy_term_hierarchy'] = [

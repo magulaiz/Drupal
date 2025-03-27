@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
@@ -22,7 +20,7 @@ class ProfileFieldValuesTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public function providerSource() {
     $tests = [];
 
     // The source data.
@@ -35,7 +33,7 @@ class ProfileFieldValuesTest extends MigrateSqlSourceTestBase {
       [
         'fid' => '9',
         'uid' => '2',
-        'value' => 'The quick brown fox ...',
+        'value' => 'Lorem ipsum dolor sit amet...',
       ],
     ];
 
@@ -76,7 +74,7 @@ class ProfileFieldValuesTest extends MigrateSqlSourceTestBase {
     $tests[0]['expected_data'] = [
       [
         'profile_color' => ['red'],
-        'profile_biography' => ['The quick brown fox ...'],
+        'profile_biography' => ['Lorem ipsum dolor sit amet...'],
         'uid' => '2',
       ],
     ];

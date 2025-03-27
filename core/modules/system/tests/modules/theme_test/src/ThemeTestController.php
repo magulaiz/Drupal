@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\theme_test;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -49,7 +47,7 @@ class ThemeTestController extends ControllerBase {
     $element['test'] = [
       '#type' => 'inline_template',
       '#template' => 'test-with-context {{ llama }}',
-      '#context' => ['llama' => 'social'],
+      '#context' => ['llama' => 'muuh'],
     ];
     return $element;
   }

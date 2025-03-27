@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Unit;
 
 use Drupal\Tests\UnitTestCase;
@@ -39,7 +37,7 @@ class FieldUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoStorages(): void {
+  public function testValidateNoStorages() {
     $this->fieldUninstallValidator->expects($this->once())
       ->method('getFieldStoragesByModule')
       ->willReturn([]);
@@ -53,7 +51,7 @@ class FieldUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateDeleted(): void {
+  public function testValidateDeleted() {
     $field_storage = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
       ->disableOriginalConstructor()
       ->getMock();
@@ -73,7 +71,7 @@ class FieldUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoDeleted(): void {
+  public function testValidateNoDeleted() {
     $field_storage = $this->getMockBuilder('Drupal\field\Entity\FieldStorageConfig')
       ->disableOriginalConstructor()
       ->getMock();

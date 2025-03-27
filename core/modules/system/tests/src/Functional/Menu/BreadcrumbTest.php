@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\block\Entity\Block;
@@ -21,16 +19,11 @@ class BreadcrumbTest extends BrowserTestBase {
   use AssertBreadcrumbTrait;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
-  protected static $modules = [
-    'block',
-    'dblog',
-    'field_ui',
-    'filter_test',
-    'menu_test',
-    'olivero_test',
-  ];
+  protected static $modules = ['menu_test', 'block'];
 
   /**
    * An administrative user.
@@ -47,9 +40,11 @@ class BreadcrumbTest extends BrowserTestBase {
   protected $webUser;
 
   /**
-   * {@inheritdoc}
+   * Test paths in the Standard profile.
+   *
+   * @var string
    */
-  protected $defaultTheme = 'olivero';
+  protected $profile = 'standard';
 
   /**
    * {@inheritdoc}
@@ -57,11 +52,6 @@ class BreadcrumbTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Install 'claro' and configure it as administrative theme.
-    $this->container->get('theme_installer')->install(['claro']);
-    $this->config('system.theme')->set('admin', 'claro')->save();
-
-    $this->config('system.site')->set('page.front', '/node')->save();
     $perms = array_keys(\Drupal::service('user.permissions')->getPermissions());
     $this->adminUser = $this->drupalCreateUser($perms);
     $this->drupalLogin($this->adminUser);
@@ -82,7 +72,7 @@ class BreadcrumbTest extends BrowserTestBase {
   /**
    * Tests breadcrumbs on node and administrative paths.
    */
-  public function testBreadCrumbs(): void {
+  public function testBreadCrumbs() {
     // Prepare common base breadcrumb elements.
     $home = ['' => 'Home'];
     $admin = $home + ['admin' => 'Administration'];
@@ -166,10 +156,12 @@ class BreadcrumbTest extends BrowserTestBase {
     $this->assertBreadcrumb("admin/config/content/formats/manage/$format_id/disable", $trail);
 
     // Verify node breadcrumbs (without menu link).
-    $node1 = $this->drupalCreateNode(['type' => $type]);
+    $node1 = $this->drupalCreateNode();
     $nid1 = $node1->id();
     $trail = $home;
     $this->assertBreadcrumb("node/$nid1", $trail);
+    // Also verify that the node does not appear elsewhere (e.g., menu trees).
+    $this->assertSession()->linkNotExists($node1->getTitle());
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
     $this->assertSession()->linkNotExists($node1->getTitle());
 
@@ -261,13 +253,13 @@ class BreadcrumbTest extends BrowserTestBase {
       }
       $parent_tid = $term->id();
     }
-    $parent_menu_link_id = '';
+    $parent_mlid = '';
     foreach ($tags as $name => $data) {
       $term = $data['term'];
       $edit = [
         'title[0][value]' => "$name link",
         'link[0][uri]' => "/taxonomy/term/{$term->id()}",
-        'menu_parent' => "$menu:{$parent_menu_link_id}",
+        'menu_parent' => "$menu:{$parent_mlid}",
         'enabled[value]' => 1,
       ];
       $this->drupalGet("admin/structure/menu/manage/{$menu}/add");
@@ -277,7 +269,7 @@ class BreadcrumbTest extends BrowserTestBase {
         'link.uri' => 'internal:/taxonomy/term/' . $term->id(),
       ]);
       $tags[$name]['link'] = reset($menu_links);
-      $parent_menu_link_id = $tags[$name]['link']->getPluginId();
+      $parent_mlid = $tags[$name]['link']->getPluginId();
     }
 
     // Verify expected breadcrumbs for menu links.
@@ -388,21 +380,12 @@ class BreadcrumbTest extends BrowserTestBase {
     $this->drupalGet('menu-test/breadcrumb1/breadcrumb2/breadcrumb3');
     $this->assertSession()->responseContains('<script>alert(12);</script>');
     $this->assertSession()->assertEscaped('<script>alert(123);</script>');
-
-    // Assert that the breadcrumb cacheability is respected after not applying.
-    $this->assertBreadcrumb(Url::fromRoute('menu_test.skippable-breadcrumb', [], [
-      'query' => [
-        'menu_test_skip_breadcrumbs' => 'yes',
-      ],
-    ]), []);
-    $trail = $home + ['menu-test' => 'Menu test root'];
-    $this->assertBreadcrumb(Url::fromRoute('menu_test.skippable-breadcrumb'), $trail);
   }
 
   /**
    * Tests AssertBreadcrumbTrait works as expected.
    */
-  public function testAssertBreadcrumbTrait(): void {
+  public function testAssertBreadcrumbTrait() {
     // Ensure the test trait works as expected using menu_test routes.
     $home = ['' => 'Home'];
     $trail = $home + ['menu-test' => 'Menu test root'];
@@ -416,7 +399,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $this->assertBreadcrumb('menu-test/breadcrumb1', []);
       $this->fail($message);
     }
-    catch (ExpectationFailedException) {
+    catch (ExpectationFailedException $e) {
       $this->assertTrue(TRUE, $message);
     }
 
@@ -426,7 +409,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $this->assertBreadcrumb('menu-test/breadcrumb1', $home);
       $this->fail($message);
     }
-    catch (ExpectationFailedException) {
+    catch (ExpectationFailedException $e) {
       $this->assertTrue(TRUE, $message);
     }
 
@@ -443,7 +426,7 @@ class BreadcrumbTest extends BrowserTestBase {
       $this->assertBreadcrumb('menu-test/breadcrumb1', $trail);
       $this->fail($message);
     }
-    catch (ExpectationFailedException) {
+    catch (ExpectationFailedException $e) {
       $this->assertTrue(TRUE, $message);
     }
   }

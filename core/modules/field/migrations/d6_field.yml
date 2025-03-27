@@ -1,5 +1,4 @@
-# cspell:ignore filefield imagefield optionwidgets nodereference onoff
-# cspell:ignore userreference
+# cspell:ignore filefield imagefield optionwidgets
 id: d6_field
 label: Field configuration
 migration_tags:
@@ -29,7 +28,6 @@ process:
         userreference_autocomplete: entity_reference
       nodereference:
         nodereference_select: entity_reference
-        nodereference_url: entity_reference
       number_integer:
         number: integer
         optionwidgets_select: list_integer

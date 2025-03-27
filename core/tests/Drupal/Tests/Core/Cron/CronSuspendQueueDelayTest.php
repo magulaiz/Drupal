@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Cron;
 
 use Drupal\Component\Datetime\TimeInterface;
@@ -61,18 +59,18 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       ->method('acquire')
       ->willReturn(TRUE);
     $this->cronConstructorArguments = [
-      'moduleHandler' => $this->createMock(ModuleHandlerInterface::class),
+      'module_handler' => $this->createMock(ModuleHandlerInterface::class),
       'lock' => $lock,
-      'queueFactory' => $this->createMock(QueueFactory::class),
+      'queue_factory' => $this->createMock(QueueFactory::class),
       'state' => $this->createMock(StateInterface::class),
-      'accountSwitcher' => $this->createMock(AccountSwitcherInterface::class),
+      'account_switcher' => $this->createMock(AccountSwitcherInterface::class),
       'logger' => $this->createMock(LoggerInterface::class),
-      'queueManager' => $this->createMock(QueueWorkerManagerInterface::class),
+      'queue_manager' => $this->createMock(QueueWorkerManagerInterface::class),
       'time' => $this->createMock(TimeInterface::class),
       'queue_config' => [],
     ];
 
-    // Capture error logs.
+    // Capture logs to watchdog_exception().
     $config = $this->createMock(ImmutableConfig::class);
     $config->expects($this->any())
       ->method('get')
@@ -125,8 +123,8 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
    */
   public function testSuspendQueue(): void {
     [
-      'queueFactory' => $queueFactory,
-      'queueManager' => $queueManager,
+      'queue_factory' => $queueFactory,
+      'queue_manager' => $queueManager,
       'time' => $time,
     ] = $this->cronConstructorArguments;
 
@@ -135,12 +133,12 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       ->setConstructorArgs($this->cronConstructorArguments)
       ->getMock();
 
-    $delays = [2000000, 3000000];
-    $cron->expects($this->exactly(count($delays)))
+    $cron->expects($this->exactly(2))
       ->method('usleep')
-      ->with($this->callback(function (int $delay) use (&$delays): bool {
-        return array_shift($delays) === $delay;
-      }));
+      ->withConsecutive(
+        [$this->equalTo(2000000)],
+        [$this->equalTo(3000000)],
+      );
 
     $queueManager->expects($this->once())
       ->method('getDefinitions')
@@ -230,8 +228,8 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
       'suspendMaximumWait' => $threshold,
     ];
     [
-      'queueFactory' => $queueFactory,
-      'queueManager' => $queueManager,
+      'queue_factory' => $queueFactory,
+      'queue_manager' => $queueManager,
     ] = $this->cronConstructorArguments;
 
     $cron = $this->getMockBuilder(Cron::class)
@@ -285,7 +283,7 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
    * @return array
    *   Scenarios for testing.
    */
-  public static function providerSuspendQueueThreshold(): array {
+  public function providerSuspendQueueThreshold(): array {
     $scenarios = [];
     $scenarios['cron will wait for the queue, and rerun'] = [
       15.0,
@@ -307,8 +305,8 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
    */
   public function testSuspendQueueOrder(): void {
     [
-      'queueFactory' => $queueFactory,
-      'queueManager' => $queueManager,
+      'queue_factory' => $queueFactory,
+      'queue_manager' => $queueManager,
       'time' => $time,
     ] = $this->cronConstructorArguments;
 
@@ -391,22 +389,19 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
         ['test_worker_d', [], $this->workerA],
       ]);
 
-    $queues = [
-      // All queues are executed in sequence of definition:
-      'test_data_from_queue_a',
-      'test_data_from_queue_b',
-      'test_data_from_queue_c',
-      'test_data_from_queue_d',
-      // Queue C is executed again, and before queue B.
-      'test_data_from_queue_c',
-      // Queue B is executed again, after queue C since its delay was longer.
-      'test_data_from_queue_b',
-    ];
-    $this->workerA->expects($this->exactly(count($queues)))
+    $this->workerA->expects($this->exactly(6))
       ->method('processItem')
-      ->with($this->callback(function ($queue) use (&$queues): bool {
-        return array_shift($queues) === $queue;
-      }))
+      ->withConsecutive(
+        // All queues are executed in sequence of definition:
+        [$this->equalTo('test_data_from_queue_a')],
+        [$this->equalTo('test_data_from_queue_b')],
+        [$this->equalTo('test_data_from_queue_c')],
+        [$this->equalTo('test_data_from_queue_d')],
+        // Queue C is executed again, and before queue B.
+        [$this->equalTo('test_data_from_queue_c')],
+        // Queue B is executed again, after queue C since its delay was longer.
+        [$this->equalTo('test_data_from_queue_b')],
+      )
       ->willReturnOnConsecutiveCalls(
         NULL,
         $this->throwException(new SuspendQueueException('', 0, NULL, 16.0)),
@@ -428,19 +423,21 @@ final class CronSuspendQueueDelayTest extends UnitTestCase {
         return (float) $currentTime;
       });
 
-    $delays = [
-      // Expect to wait for 8 seconds, then accelerate time by 4 seconds.
-      4, 8000000,
-      // SuspendQueueException requests to delay by 16 seconds, but 4 seconds
-      // have passed above, so there are just 12 seconds remaining:
-      0, 12000000,
-    ];
-    $cron->expects($this->exactly(count($delays) / 2))
+    $cron->expects($this->exactly(2))
       ->method('usleep')
-      ->with($this->callback(function (int $delay) use (&$currentTime, &$delays): bool {
-        $currentTime += array_shift($delays);
-        return array_shift($delays) === $delay;
-      }));
+      ->withConsecutive(
+        // Expect to wait for 8 seconds.
+        [
+          $this->callback(function (int $microseconds) use (&$currentTime) {
+            // Accelerate time by 4 seconds.
+            $currentTime += 4;
+            return $microseconds === 8000000;
+          }),
+        ],
+        // SuspendQueueException requests to delay by 16 seconds, but 4 seconds
+        // have passed above, so there are just 12 seconds remaining:
+        [$this->equalTo(12000000)],
+      );
 
     $cron->run();
   }

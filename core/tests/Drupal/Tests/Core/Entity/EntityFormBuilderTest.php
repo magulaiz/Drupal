@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityFormBuilder;
@@ -50,7 +48,7 @@ class EntityFormBuilderTest extends UnitTestCase {
    *
    * @covers ::getForm
    */
-  public function testGetForm(): void {
+  public function testGetForm() {
     $form_controller = $this->createMock('Drupal\Core\Entity\EntityFormInterface');
     $form_controller->expects($this->any())
       ->method('getFormId')

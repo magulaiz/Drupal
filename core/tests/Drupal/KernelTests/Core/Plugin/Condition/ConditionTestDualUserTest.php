@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Plugin\Condition;
 
 use Drupal\Core\Plugin\Context\EntityContext;
@@ -40,6 +38,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('user');
 
     $this->anonymous = User::create(['uid' => 0]);
@@ -49,7 +48,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
   /**
    * Tests the dual user condition.
    */
-  public function testConditions(): void {
+  public function testConditions() {
     $this->doTestIdenticalUser();
     $this->doTestDifferentUser();
   }
@@ -57,7 +56,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
   /**
    * Tests with both contexts mapped to the same user.
    */
-  protected function doTestIdenticalUser(): void {
+  protected function doTestIdenticalUser() {
     /** @var \Drupal\Core\Condition\ConditionPluginBase $condition */
     $condition = \Drupal::service('plugin.manager.condition')
       ->createInstance('condition_test_dual_user')
@@ -74,7 +73,7 @@ class ConditionTestDualUserTest extends KernelTestBase {
   /**
    * Tests with each context mapped to different users.
    */
-  protected function doTestDifferentUser(): void {
+  protected function doTestDifferentUser() {
     /** @var \Drupal\Core\Condition\ConditionPluginBase $condition */
     $condition = \Drupal::service('plugin.manager.condition')
       ->createInstance('condition_test_dual_user')

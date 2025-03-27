@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Render\Attribute\RenderElement;
-
 /**
  * Provides a render element for a pager.
  *
@@ -15,7 +13,6 @@ use Drupal\Core\Render\Attribute\RenderElement;
  * Properties:
  * - #element: (optional, int) The pager ID, to distinguish between multiple
  *   pagers on the same page (defaults to 0).
- * - #pagination_heading_level: (optional) A heading level for the pager.
  * - #parameters: (optional) An associative array of query string parameters to
  *   append to the pager.
  * - #quantity: The maximum number of numbered page links to create (defaults
@@ -30,9 +27,10 @@ use Drupal\Core\Render\Attribute\RenderElement;
  *   '#type' => 'pager',
  * ];
  * @endcode
+ *
+ * @RenderElement("pager")
  */
-#[RenderElement('pager')]
-class Pager extends RenderElementBase {
+class Pager extends RenderElement {
 
   /**
    * {@inheritdoc}
@@ -45,8 +43,6 @@ class Pager extends RenderElementBase {
       '#theme' => 'pager',
       // The pager ID, to distinguish between multiple pagers on the same page.
       '#element' => 0,
-      // The heading level to use for the pager.
-      '#pagination_heading_level' => 'h4',
       // An associative array of query string parameters to append to the pager
       // links.
       '#parameters' => [],
@@ -62,15 +58,13 @@ class Pager extends RenderElementBase {
   }
 
   /**
-   * Render API callback: Associates the appropriate cache context.
+   * #pre_render callback to associate the appropriate cache context.
    *
-   * This function is assigned as a #pre_render callback.
    *
    * @param array $pager
    *   A renderable array of #type => pager.
    *
    * @return array
-   *   The render array with cache contexts added.
    */
   public static function preRenderPager(array $pager) {
     // Note: the default pager theme process function

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\settings_tray\Functional;
 
 use Drupal\block\Entity\Block;
@@ -36,7 +34,7 @@ class SettingsTrayTest extends BrowserTestBase {
    * @return string
    *   The CSS selector.
    */
-  protected function getBlockSelector(Block $block): string {
+  protected function getBlockSelector(Block $block) {
     return '#block-' . $block->id();
   }
 
@@ -49,12 +47,11 @@ class SettingsTrayTest extends BrowserTestBase {
    *
    * @see SettingsTrayBlockFormTest::testBlocks()
    */
-  public function testPossibleAnnotations(): void {
+  public function testPossibleAnnotations() {
     $test_block_plugin_ids = [
       // Block that explicitly provides an "settings_tray" form class.
       'settings_tray_test_class',
-      // Block that explicitly provides no "settings_tray" form, thus opting
-      // out.
+      // Block that explicitly provides no "settings_tray" form, thus opting out.
       'settings_tray_test_false',
       // Block that does nothing explicit for Settings Tray.
       'settings_tray_test_none',
@@ -88,7 +85,7 @@ class SettingsTrayTest extends BrowserTestBase {
   /**
    * Tests that certain blocks opt out from Settings Tray.
    */
-  public function testOptOut(): void {
+  public function testOptOut() {
     $web_assert = $this->assertSession();
 
     $non_excluded_block = $this->placeBlock('system_powered_by_block');
@@ -103,8 +100,7 @@ class SettingsTrayTest extends BrowserTestBase {
     // Assert that block has been marked as "editable" and contextual that
     // should exist does.
     $web_assert->elementExists('css', $this->getBlockSelector($non_excluded_block) . "[data-drupal-settingstray=\"editable\"]");
-    // Assert that each block that has a "forms[settings_tray] = FALSE"
-    // annotation:
+    // Assert that each block that has a "forms[settings_tray] = FALSE" annotation:
     // - is still rendered on the page
     // - but is not marked as "editable" by settings_tray_preprocess_block()
     // - and does not have the Settings Tray contextual link.

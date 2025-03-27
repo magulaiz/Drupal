@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -19,7 +17,7 @@ class InstallerEmptySettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Create an empty settings.php file.
     $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory;
@@ -29,7 +27,7 @@ class InstallerEmptySettingsTest extends InstallerTestBase {
   /**
    * Verifies that installation succeeded.
    */
-  public function testInstaller(): void {
+  public function testInstaller() {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
   }

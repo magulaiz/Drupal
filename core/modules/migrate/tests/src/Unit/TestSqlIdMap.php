@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Database\Connection;
@@ -45,6 +43,13 @@ class TestSqlIdMap extends Sql implements \Iterator {
   public $message;
 
   /**
+   * {@inheritdoc}
+   */
+  public function getDatabase() {
+    return parent::getDatabase();
+  }
+
+  /**
    * Gets the field schema.
    *
    * @param array $id_definition
@@ -82,9 +87,15 @@ class TestSqlIdMap extends Sql implements \Iterator {
   /**
    * {@inheritdoc}
    */
-  // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod, Drupal.Commenting.FunctionComment.Missing
   public function ensureTables() {
     parent::ensureTables();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMigrationPluginManager() {
+    return parent::getMigrationPluginManager();
   }
 
 }

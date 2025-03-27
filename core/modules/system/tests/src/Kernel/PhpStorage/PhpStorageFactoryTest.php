@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Kernel\PhpStorage;
 
 use Drupal\Component\PhpStorage\MTimeProtectedFileStorage;
@@ -34,7 +32,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
   /**
    * Tests the get() method with no settings.
    */
-  public function testGetNoSettings(): void {
+  public function testGetNoSettings() {
     $php = PhpStorageFactory::get('test');
     // This should be the default class used.
     $this->assertInstanceOf(MTimeProtectedFileStorage::class, $php);
@@ -43,7 +41,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
   /**
    * Tests the get() method using the 'default' settings.
    */
-  public function testGetDefault(): void {
+  public function testGetDefault() {
     $this->setSettings();
     $php = PhpStorageFactory::get('test');
     $this->assertInstanceOf(MockPhpStorage::class, $php);
@@ -52,7 +50,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
   /**
    * Tests the get() method with overridden settings.
    */
-  public function testGetOverride(): void {
+  public function testGetOverride() {
     $this->setSettings('test');
     $php = PhpStorageFactory::get('test');
     // The FileReadOnlyStorage should be used from settings.
@@ -94,7 +92,7 @@ class PhpStorageFactoryTest extends KernelTestBase {
    * @param array $configuration
    *   An array of configuration to set. Will be merged with default values.
    */
-  protected function setSettings($name = 'default', array $configuration = []): void {
+  protected function setSettings($name = 'default', array $configuration = []) {
     $settings['php_storage'][$name] = $configuration + [
       'class' => 'Drupal\system\PhpStorage\MockPhpStorage',
       'directory' => 'tmp://',

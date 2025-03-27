@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -19,7 +17,7 @@ class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->settings['settings']['skip_permissions_hardening'] = (object) ['value' => TRUE, 'required' => TRUE];
   }
@@ -27,7 +25,7 @@ class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite(): void {
+  protected function setUpSite() {
     $site_directory = $this->container->getParameter('app.root') . '/' . $this->siteDirectory;
     $this->assertDirectoryIsWritable($site_directory);
     $this->assertFileIsWritable($site_directory . '/settings.php');
@@ -40,7 +38,7 @@ class InstallerSkipPermissionHardeningTest extends InstallerTestBase {
   /**
    * Verifies the expected behaviors of the installation result.
    */
-  public function testInstalled(): void {
+  public function testInstalled() {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
   }

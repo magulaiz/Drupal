@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\Core\Url;
 
@@ -18,7 +15,7 @@ class EntityViewModeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    *
-   * @todo Remove 'field_ui' when https://www.drupal.org/node/2867266.
+   * @todo: Remove 'field_ui' when https://www.drupal.org/node/2867266.
    */
   protected static $modules = ['user', 'field_ui'];
 
@@ -47,7 +44,7 @@ class EntityViewModeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     $this->grantPermissionsToTestedRole(['administer display modes']);
   }
 
@@ -58,7 +55,6 @@ class EntityViewModeTest extends ConfigEntityResourceTestBase {
     $entity_view_mode = EntityViewMode::create([
       'id' => 'user.test',
       'label' => 'Test',
-      'description' => '',
       'targetEntityType' => 'user',
     ]);
     $entity_view_mode->save();
@@ -68,16 +64,16 @@ class EntityViewModeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/entity_view_mode/entity_view_mode/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -97,7 +93,6 @@ class EntityViewModeTest extends ConfigEntityResourceTestBase {
           ],
           'label' => 'Test',
           'langcode' => 'en',
-          'description' => '',
           'status' => TRUE,
           'targetEntityType' => 'user',
           'drupal_internal__id' => 'user.test',
@@ -109,7 +104,7 @@ class EntityViewModeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }

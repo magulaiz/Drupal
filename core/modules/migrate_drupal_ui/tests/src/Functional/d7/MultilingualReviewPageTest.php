@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
 
-// cspell:ignore Filefield Flexslider Multiupload Imagefield rulesets
+// cspell:ignore Filefield Flexslider Multiupload Imagefield
 
 /**
  * Tests migrate upgrade review page for Drupal 7.
@@ -26,6 +24,8 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'language',
     'content_translation',
     'telephone',
+    'book',
+    'statistics',
     'syslog',
     'update',
     // Test migrations states.
@@ -44,17 +44,18 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSourceBasePath(): string {
+  protected function getSourceBasePath() {
     return __DIR__ . '/files';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths(): array {
+  protected function getAvailablePaths() {
     return [
       'Block languages',
       'Blog',
+      'Book',
       'Bulk Export',
       'Chaos tools',
       'Chaos Tools (CTools) AJAX Example',
@@ -111,6 +112,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Search',
       'Search embedded form',
       'Shortcut',
+      'Statistics',
       'String translation',
       'Stylizer',
       'Synchronize translations',
@@ -138,13 +140,12 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths(): array {
+  protected function getMissingPaths() {
     return [
       // Action is set not_finished in migrate_state_not_finished_test.
       'Aggregator',
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
-      'Book',
       'Breakpoints',
       'Color',
       'Contact translation',
@@ -165,7 +166,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'RDF',
       'References',
       'References UUID',
-      'Statistics',
+      // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
       'Tracker',
       'Translation redirect',
       'Translation sets',

@@ -3,7 +3,6 @@
 namespace Drupal\text;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Serialization\Attribute\JsonSchema;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedData;
@@ -28,7 +27,7 @@ class TextProcessed extends TypedData implements CacheableDependencyInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
 
     if ($definition->getSetting('text source') === NULL) {
@@ -39,7 +38,6 @@ class TextProcessed extends TypedData implements CacheableDependencyInterface {
   /**
    * {@inheritdoc}
    */
-  #[JsonSchema(['type' => 'string', 'description' => 'May contain HTML markup.'])]
   public function getValue() {
     if ($this->processed !== NULL) {
       return FilteredMarkup::create($this->processed->getProcessedText());
@@ -61,7 +59,7 @@ class TextProcessed extends TypedData implements CacheableDependencyInterface {
         '#langcode' => $item->getLangcode(),
       ];
       // Capture the cacheability metadata associated with the processed text.
-      $processed_text = $this->getRenderer()->renderInIsolation($build);
+      $processed_text = $this->getRenderer()->renderPlain($build);
       $this->processed = FilterProcessResult::createFromRenderArray($build)->setProcessedText((string) $processed_text);
     }
     return FilteredMarkup::create($this->processed->getProcessedText());
@@ -106,7 +104,6 @@ class TextProcessed extends TypedData implements CacheableDependencyInterface {
    * Returns the renderer service.
    *
    * @return \Drupal\Core\Render\RendererInterface
-   *   The renderer service.
    */
   protected function getRenderer() {
     return \Drupal::service('renderer');

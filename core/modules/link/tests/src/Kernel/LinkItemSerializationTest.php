@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\link\Kernel;
 
 use Drupal\field\Entity\FieldStorageConfig;
@@ -57,7 +55,7 @@ class LinkItemSerializationTest extends FieldKernelTestBase {
   /**
    * Tests the serialization.
    */
-  public function testLinkSerialization(): void {
+  public function testLinkSerialization() {
     // Create entity.
     $entity = EntityTest::create();
     $url = 'https://www.drupal.org?test_param=test_value';
@@ -85,7 +83,7 @@ class LinkItemSerializationTest extends FieldKernelTestBase {
   /**
    * Tests the deserialization.
    */
-  public function testLinkDeserialization(): void {
+  public function testLinkDeserialization() {
     // Create entity.
     $entity = EntityTest::create();
     $url = 'https://www.drupal.org?test_param=test_value';
@@ -98,7 +96,7 @@ class LinkItemSerializationTest extends FieldKernelTestBase {
       ->set('query', $parsed_url['query']);
     $json = json_decode($this->serializer->serialize($entity, 'json'), TRUE);
     $json['field_test'][0]['options'] = 'string data';
-    $serialized = json_encode($json);
+    $serialized = json_encode($json, TRUE);
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('The generic FieldItemNormalizer cannot denormalize string values for "options" properties of the "field_test" field (field item class: Drupal\link\Plugin\Field\FieldType\LinkItem).');
     $this->serializer->deserialize($serialized, EntityTest::class, 'json');

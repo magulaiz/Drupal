@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -44,7 +42,8 @@ class RelationshipRepresentativeNodeTest extends KernelTestBase {
   /**
    * Tests the relationship.
    */
-  public function testRelationship(): void {
+  public function testRelationship() {
+    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installConfig(['filter']);

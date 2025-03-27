@@ -2,7 +2,6 @@
 
 namespace Drupal\toolbar\Controller;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -18,21 +17,9 @@ use Drupal\toolbar\Ajax\SetSubtreesCommand;
 class ToolbarController extends ControllerBase implements TrustedCallbackInterface {
 
   /**
-   * Constructs a ToolbarController object.
-   *
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service.
-   */
-  public function __construct(
-    protected ?TimeInterface $time = NULL,
-  ) {
-  }
-
-  /**
    * Returns an AJAX response to render the toolbar subtrees.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
-   *   The AJAX response containing the rendered toolbar subtrees.
    */
   public function subtreesAjax() {
     [$subtrees] = toolbar_get_rendered_subtrees();
@@ -48,7 +35,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
     $response->setMaxAge($max_age);
 
     $expires = new \DateTime();
-    $expires->setTimestamp($this->time->getRequestTime() + $max_age);
+    $expires->setTimestamp(REQUEST_TIME + $max_age);
     $response->setExpires($expires);
 
     return $response;
@@ -99,9 +86,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
   }
 
   /**
-   * Render API callback: Prepares the subtrees.
-   *
-   * This function is assigned as a #pre_render callback.
+   * #pre_render callback for toolbar_get_rendered_subtrees().
    *
    * @internal
    */
@@ -123,7 +108,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
     $tree = $menu_tree->transform($tree, $manipulators);
     $subtrees = [];
     // Calculated the combined cacheability of all subtrees.
-    $cacheability = CacheableMetadata::createFromRenderArray($data);
+    $cacheability = new CacheableMetadata();
     foreach ($tree as $element) {
       /** @var \Drupal\Core\Menu\MenuLinkInterface $link */
       $link = $element->link;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\DrupalKernel;
 
 use Composer\Autoload\ClassLoader;
@@ -20,7 +18,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
    *
    * @covers ::discoverServiceProviders
    */
-  public function testDiscoverServiceCustom(): void {
+  public function testDiscoverServiceCustom() {
     new Settings([
       'container_yamls' => [
         __DIR__ . '/fixtures/custom.yml',
@@ -31,6 +29,7 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
     $kernel->discoverServiceProviders();
 
     $reflected_yamls = (new \ReflectionObject($kernel))->getProperty('serviceYamls');
+    $reflected_yamls->setAccessible(TRUE);
 
     $expect = [
       'app' => [
@@ -46,12 +45,13 @@ class DiscoverServiceProvidersTest extends UnitTestCase {
   /**
    * Tests the exception when container_yamls is not set.
    */
-  public function testDiscoverServiceNoContainerYamls(): void {
+  public function testDiscoverServiceNoContainerYamls() {
     new Settings([]);
     $kernel = new DrupalKernel('prod', new ClassLoader());
     $kernel->discoverServiceProviders();
 
     $reflected_yamls = (new \ReflectionObject($kernel))->getProperty('serviceYamls');
+    $reflected_yamls->setAccessible(TRUE);
 
     $expect = [
       'app' => [

@@ -2,7 +2,6 @@
 
 namespace Drupal\system\Plugin\Block;
 
-use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
@@ -10,23 +9,21 @@ use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\system\Form\SystemMenuOffCanvasForm;
-use Drupal\system\Plugin\Derivative\SystemMenuBlock as SystemMenuBlockDeriver;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a generic Menu block.
+ *
+ * @Block(
+ *   id = "system_menu_block",
+ *   admin_label = @Translation("Menu"),
+ *   category = @Translation("Menus"),
+ *   deriver = "Drupal\system\Plugin\Derivative\SystemMenuBlock",
+ *   forms = {
+ *     "settings_tray" = "\Drupal\system\Form\SystemMenuOffCanvasForm",
+ *   },
+ * )
  */
-#[Block(
-  id: "system_menu_block",
-  admin_label: new TranslatableMarkup("Menu"),
-  category: new TranslatableMarkup("Menus"),
-  deriver: SystemMenuBlockDeriver::class,
-  forms: [
-    'settings_tray' => SystemMenuOffCanvasForm::class,
-  ]
-)]
 class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -49,7 +46,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
+   *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree
@@ -88,7 +85,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
       '#title' => $this->t('Menu levels'),
       // Open if not set to defaults.
       '#open' => $defaults['level'] !== $config['level'] || $defaults['depth'] !== $config['depth'],
-      '#process' => [[self::class, 'processMenuLevelParents']],
+      '#process' => [[get_class(), 'processMenuLevelParents']],
     ];
 
     $options = range(0, $this->menuTree->maxDepth());
@@ -233,13 +230,6 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     // accessibility of a menu, will be bubbled automatically.
     $menu_name = $this->getDerivativeId();
     return Cache::mergeContexts(parent::getCacheContexts(), ['route.menu_active_trails:' . $menu_name]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function createPlaceholder(): bool {
-    return TRUE;
   }
 
 }

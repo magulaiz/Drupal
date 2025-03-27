@@ -1,21 +1,19 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\menu_link_content\Functional\Rest;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * Resource test base for MenuLinkContent entity.
+ * ResourceTestBase for MenuLinkContent entity.
  */
 abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['content_translation', 'menu_link_content'];
+  protected static $modules = ['menu_link_content'];
 
   /**
    * {@inheritdoc}
@@ -82,7 +80,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
     return [
       'title' => [
         [
-          'value' => 'Drama llama',
+          'value' => 'Dramallama',
         ],
       ],
       'link' => [
@@ -229,17 +227,6 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'languages:language_interface',
-      'url.site',
-      'user.permissions',
-    ];
   }
 
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
@@ -17,10 +15,12 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'book',
     'config_translation',
     'content_translation',
     'language',
     'migrate_drupal_ui',
+    'statistics',
     'telephone',
   ];
 
@@ -35,42 +35,42 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSourceBasePath(): string {
+  protected function getSourceBasePath() {
     return __DIR__ . '/files';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCounts(): array {
+  protected function getEntityCounts() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCountsIncremental(): array {
+  protected function getEntityCountsIncremental() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths(): array {
+  protected function getAvailablePaths() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths(): array {
+  protected function getMissingPaths() {
     return [];
   }
 
   /**
    * Tests ID Conflict form.
    */
-  public function testIdConflictForm(): void {
+  public function testIdConflictForm() {
     // Start the upgrade process.
     $this->submitCredentialForm();
 

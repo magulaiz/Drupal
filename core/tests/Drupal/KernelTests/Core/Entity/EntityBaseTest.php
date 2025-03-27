@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
@@ -31,8 +29,9 @@ class EntityBaseTest extends EntityKernelTestBase {
    * Tests that the correct entity adapter is returned.
    *
    * @covers ::getTypedData
+   * @covers ::getClass
    */
-  public function testGetTypedData(): void {
+  public function testGetTypedData() {
     $bundle = EntityTestBundle::create([
       'id' => $this->randomMachineName(),
     ]);

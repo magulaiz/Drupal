@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\path\Unit\Field;
 
 use Drupal\Tests\Core\Field\BaseFieldDefinitionTestBase;
@@ -15,14 +13,14 @@ class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPluginId(): string {
+  protected function getPluginId() {
     return 'path';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getModuleAndPath(): array {
+  protected function getModuleAndPath() {
     return ['path', dirname(__DIR__, 4)];
   }
 
@@ -30,7 +28,7 @@ class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
    * @covers ::getColumns
    * @covers ::getSchema
    */
-  public function testGetColumns(): void {
+  public function testGetColumns() {
     $this->assertSame([], $this->definition->getColumns());
   }
 

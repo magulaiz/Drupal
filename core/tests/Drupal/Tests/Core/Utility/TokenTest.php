@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Component\Utility\Html;
@@ -79,8 +77,6 @@ class TokenTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->cache = $this->createMock('\Drupal\Core\Cache\CacheBackendInterface');
 
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
@@ -107,7 +103,7 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::getInfo
    */
-  public function testGetInfo(): void {
+  public function testGetInfo() {
     $token_info = [
       'types' => [
         'foo' => [
@@ -153,7 +149,7 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::replace
    */
-  public function testReplaceWithBubbleableMetadataObject(): void {
+  public function testReplaceWithBubbleableMetadataObject() {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
       ->willReturn(['[node:title]' => 'hello world']);
@@ -182,7 +178,7 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::replace
    */
-  public function testReplaceWithHookTokensWithBubbleableMetadata(): void {
+  public function testReplaceWithHookTokensWithBubbleableMetadata() {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
       ->willReturnCallback(function ($hook_name, $args) {
@@ -218,7 +214,7 @@ class TokenTest extends UnitTestCase {
    * @covers ::replace
    * @covers ::replace
    */
-  public function testReplaceWithHookTokensAlterWithBubbleableMetadata(): void {
+  public function testReplaceWithHookTokensAlterWithBubbleableMetadata() {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
       ->willReturn([]);
@@ -255,7 +251,7 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::resetInfo
    */
-  public function testResetInfo(): void {
+  public function testResetInfo() {
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
       ->with(['token_info']);
@@ -267,7 +263,7 @@ class TokenTest extends UnitTestCase {
    * @covers ::replace
    * @dataProvider providerTestReplaceEscaping
    */
-  public function testReplaceEscaping($string, array $tokens, $expected): void {
+  public function testReplaceEscaping($string, array $tokens, $expected) {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
       ->willReturnCallback(function ($type, $args) {
@@ -279,7 +275,7 @@ class TokenTest extends UnitTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  public static function providerTestReplaceEscaping() {
+  public function providerTestReplaceEscaping() {
     $data = [];
 
     // No tokens. The first argument to Token::replace() should not be escaped.
@@ -301,7 +297,7 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::replacePlain
    */
-  public function testReplacePlain(): void {
+  public function testReplacePlain() {
     $this->setupSiteTokens();
     $base = 'Wow, great "[site:name]" has a slogan "[site:slogan]"';
     $plain = $this->token->replacePlain($base);
@@ -311,7 +307,7 @@ class TokenTest extends UnitTestCase {
   /**
    * Scans dummy text, then tests the output.
    */
-  public function testScan(): void {
+  public function testScan() {
     // Define text with valid and not valid, fake and existing token-like
     // strings.
     $text = 'First a [valid:simple], but dummy token, and a dummy [valid:token with: spaces].';
@@ -332,13 +328,23 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
+   * Tests passing a non-string value to Token::scan().
+   *
+   * @group legacy
+   */
+  public function testScanDeprecation() {
+    $this->expectDeprecation('Calling Drupal\Core\Utility\Token::scan() with a $text parameter of type other than string is deprecated in drupal:10.1.0, a typehint will be added in drupal:11.0.0. See https://www.drupal.org/node/3334317');
+    $this->assertSame([], $this->token->scan(NULL));
+  }
+
+  /**
    * Sets up the token library to return site tokens.
    */
-  protected function setupSiteTokens(): void {
+  protected function setupSiteTokens() {
     // The site name is plain text, but the slogan is markup.
     $tokens = [
       '[site:name]' => 'Your <best> buys',
-      '[site:slogan]' => Markup::create('We are <b>best</b>'),
+      '[site:slogan]' => Markup::Create('We are <b>best</b>'),
     ];
 
     $this->moduleHandler->expects($this->any())

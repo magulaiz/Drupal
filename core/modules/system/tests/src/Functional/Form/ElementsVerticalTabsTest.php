@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\Tests\BrowserTestBase;
 
@@ -15,7 +14,9 @@ use Drupal\Tests\BrowserTestBase;
 class ElementsVerticalTabsTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['form_test'];
 
@@ -54,7 +55,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
   /**
    * Ensures that vertical tab markup is not shown if user has no tab access.
    */
-  public function testWrapperNotShownWhenEmpty(): void {
+  public function testWrapperNotShownWhenEmpty() {
     // Test admin user can see vertical tabs and wrapper.
     $this->drupalGet('form_test/vertical-tabs');
     $this->assertSession()->elementExists('xpath', "//div[@data-vertical-tabs-panes]");
@@ -68,7 +69,7 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
   /**
    * Ensures that default vertical tab is correctly selected.
    */
-  public function testDefaultTab(): void {
+  public function testDefaultTab() {
     $this->drupalGet('form_test/vertical-tabs');
     $this->assertSession()->elementAttributeContains('css', 'input[name="vertical_tabs__active_tab"]', 'value', 'edit-tab3');
   }
@@ -76,11 +77,11 @@ class ElementsVerticalTabsTest extends BrowserTestBase {
   /**
    * Ensures that vertical tab form values are cleaned.
    */
-  public function testDefaultTabCleaned(): void {
+  public function testDefaultTabCleaned() {
     $this->drupalGet('form_test/form-state-values-clean');
     $this->submitForm([], 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
-    $this->assertFalse(isset($values['vertical_tabs__active_tab']), 'vertical_tabs__active_tab was removed.');
+    $this->assertFalse(isset($values['vertical_tabs__active_tab']), new FormattableMarkup('%element was removed.', ['%element' => 'vertical_tabs__active_tab']));
   }
 
 }

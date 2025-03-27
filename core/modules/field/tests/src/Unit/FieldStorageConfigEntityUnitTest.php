@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\field\Unit\FieldStorageConfigEntityUnitTest.
+ */
 
 namespace Drupal\Tests\field\Unit;
 
@@ -51,8 +54,6 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->uuid = $this->createMock('\Drupal\Component\Uuid\UuidInterface');
     $this->fieldTypeManager = $this->createMock(FieldTypePluginManagerInterface::class);
@@ -67,7 +68,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * @covers ::calculateDependencies
    */
-  public function testCalculateDependencies(): void {
+  public function testCalculateDependencies() {
     // Create a mock entity type for FieldStorageConfig.
     $fieldStorageConfigentityType = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $fieldStorageConfigentityType->expects($this->any())
@@ -116,7 +117,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    *
    * @covers ::getCardinality
    */
-  public function testStoredCardinality(): void {
+  public function testStoredCardinality() {
     $this->fieldTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with('test_field_type')
@@ -143,7 +144,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    *
    * @covers ::getCardinality
    */
-  public function testEnforcedCardinality(): void {
+  public function testEnforcedCardinality() {
     $this->fieldTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with('test_field_type')
@@ -169,13 +170,13 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests invalid enforced cardinality.
    *
-   * @param mixed $enforced_cardinality
-   *   Enforced cardinality.
-   *
    * @covers ::getCardinality
    * @dataProvider providerInvalidEnforcedCardinality
+   *
+   * @param mixed $enforced_cardinality
+   *   Enforced cardinality
    */
-  public function testInvalidEnforcedCardinality($enforced_cardinality): void {
+  public function testInvalidEnforcedCardinality($enforced_cardinality) {
     $this->fieldTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with('test_field_type')
@@ -202,7 +203,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
    * @return array
    *   Test cases.
    */
-  public static function providerInvalidEnforcedCardinality() {
+  public function providerInvalidEnforcedCardinality() {
     return [
       'zero' => [0],
       'negative_other_than_-1' => [-70],

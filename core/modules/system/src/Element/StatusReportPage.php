@@ -2,35 +2,34 @@
 
 namespace Drupal\system\Element;
 
-use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\RenderElementBase;
+use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Render\Element\StatusReport;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
  * Creates status report page element.
+ *
+ * @RenderElement("status_report_page")
  */
-#[RenderElement('status_report_page')]
-class StatusReportPage extends RenderElementBase {
+class StatusReportPage extends RenderElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#theme' => 'status_report_page',
       '#pre_render' => [
-        [static::class, 'preRenderCounters'],
-        [static::class, 'preRenderGeneralInfo'],
-        [static::class, 'preRenderRequirements'],
+        [$class, 'preRenderCounters'],
+        [$class, 'preRenderGeneralInfo'],
+        [$class, 'preRenderRequirements'],
       ],
     ];
   }
 
   /**
-   * Render API callback: Gets general info out of requirements.
-   *
-   * This function is assigned as a #pre_render callback.
+   * #pre_render callback to get general info out of requirements.
    */
   public static function preRenderGeneralInfo($element) {
     $element['#general_info'] = [
@@ -60,9 +59,7 @@ class StatusReportPage extends RenderElementBase {
         case 'php_memory_limit':
           $element['#general_info']['#' . $key] = $requirement;
           if (isset($requirement['severity']) && $requirement['severity'] < REQUIREMENT_WARNING) {
-            if (empty($requirement['severity']) || $requirement['severity'] == REQUIREMENT_OK) {
-              unset($element['#requirements'][$key]);
-            }
+            unset($element['#requirements'][$key]);
           }
           break;
       }
@@ -72,7 +69,7 @@ class StatusReportPage extends RenderElementBase {
   }
 
   /**
-   * The #pre_render callback to create counter elements.
+   * #pre_render callback to create counter elements.
    */
   public static function preRenderCounters($element) {
     // Count number of items with different severity for summary.
@@ -128,19 +125,12 @@ class StatusReportPage extends RenderElementBase {
   }
 
   /**
-   * Render API callback: Create status report requirements.
-   *
-   * This function is assigned as a #pre_render callback.
+   * #pre_render callback to create status report requirements.
    */
   public static function preRenderRequirements($element) {
     $element['#requirements'] = [
       '#type' => 'status_report',
       '#requirements' => $element['#requirements'],
-      '#attached' => [
-        'library' => [
-          'system/status.report',
-        ],
-      ],
     ];
 
     return $element;

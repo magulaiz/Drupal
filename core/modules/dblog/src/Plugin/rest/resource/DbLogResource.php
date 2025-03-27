@@ -3,8 +3,6 @@
 namespace Drupal\dblog\Plugin\rest\resource;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\rest\Attribute\RestResource;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -12,14 +10,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides a resource for database watchdog log entries.
+ *
+ * @RestResource(
+ *   id = "dblog",
+ *   label = @Translation("Watchdog database log"),
+ *   uri_paths = {
+ *     "canonical" = "/dblog/{id}"
+ *   }
+ * )
  */
-#[RestResource(
-  id: "dblog",
-  label: new TranslatableMarkup("Watchdog database log"),
-  uri_paths: [
-    "canonical" => "/dblog/{id}",
-  ]
-)]
 class DbLogResource extends ResourceBase {
 
   /**
@@ -40,10 +39,7 @@ class DbLogResource extends ResourceBase {
    */
   public function get($id = NULL) {
     if ($id) {
-      $record = Database::getConnection()->select('watchdog', 'w')
-        ->fields('w')
-        ->condition('wid', $id)
-        ->execute()
+      $record = Database::getConnection()->query("SELECT * FROM {watchdog} WHERE [wid] = :wid", [':wid' => $id])
         ->fetchAssoc();
       if (!empty($record)) {
         return new ResourceResponse($record);

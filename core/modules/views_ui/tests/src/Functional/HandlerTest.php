@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -96,7 +94,7 @@ class HandlerTest extends UITestBase {
   /**
    * Tests UI CRUD.
    */
-  public function testUiCrud(): void {
+  public function testUICRUD() {
     $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       // Test adding handlers.
@@ -139,8 +137,7 @@ class HandlerTest extends UITestBase {
       // Test that the  handler edit link has the right label.
       $this->assertSession()->elementExists('xpath', "//a[starts-with(normalize-space(text()), '{$random_label}')]");
 
-      // Save the view and have a look whether the handler was added as
-      // expected.
+      // Save the view and have a look whether the handler was added as expected.
       $this->submitForm([], 'Save');
       $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
       $display = $view->getDisplay('default');
@@ -188,7 +185,7 @@ class HandlerTest extends UITestBase {
   /**
    * Tests escaping of field labels in help text.
    */
-  public function testHandlerHelpEscaping(): void {
+  public function testHandlerHelpEscaping() {
     // Setup a field with two instances using a different label.
     // Ensure that the label is escaped properly.
 
@@ -223,7 +220,7 @@ class HandlerTest extends UITestBase {
   /**
    * Tests broken handlers.
    */
-  public function testBrokenHandlers(): void {
+  public function testBrokenHandlers() {
     $handler_types = ViewExecutable::getHandlerTypes();
     foreach ($handler_types as $type => $type_info) {
       $this->drupalGet('admin/structure/views/view/test_view_broken/edit');
@@ -233,7 +230,7 @@ class HandlerTest extends UITestBase {
 
       // Test that the handler edit link is present.
       $this->assertSession()->elementsCount('xpath', "//a[contains(@href, '{$href}')]", 1);
-      $this->assertSession()->elementTextEquals('xpath', "//a[contains(@href, '{$href}')]", $text);
+      $result = $this->assertSession()->elementTextEquals('xpath', "//a[contains(@href, '{$href}')]", $text);
 
       $this->drupalGet($href);
       $this->assertSession()->elementTextContains('xpath', '//h1', $text);
@@ -257,7 +254,7 @@ class HandlerTest extends UITestBase {
    *
    * @see \Drupal\views\EntityViewsData
    */
-  public function testNoDuplicateFields(): void {
+  public function testNoDuplicateFields() {
     $handler_types = ['field', 'filter', 'sort', 'argument'];
 
     foreach ($handler_types as $handler_type) {
@@ -278,7 +275,7 @@ class HandlerTest extends UITestBase {
    *
    * @see \Drupal\views\EntityViewsData
    */
-  public function testErrorMissingHelp(): void {
+  public function testErrorMissingHelp() {
     // Test that the error message is not shown for entity fields but an empty
     // description field is shown instead.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_node_view/default/field');

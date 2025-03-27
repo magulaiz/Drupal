@@ -1,7 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:ignore drupalmediaediting drupalmediametadatarepository */
-/* cspell:ignore imagetextalternative insertdrupalmedia */
-/* cspell:ignore insertdrupalmediacommand mediaimagetextalternative */
+/* cspell:words insertdrupalmedia drupalmediaediting insertdrupalmediacommand drupalmediametadatarepository */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
@@ -60,7 +58,7 @@ export default class DrupalMediaEditing extends Plugin {
       themeError ||
       `
       <p>${Drupal.t(
-        'An error occurred while trying to preview the media. Save your work and reload this page.',
+        'An error occurred while trying to preview the media. Please save your work and reload this page.',
       )}<p>
     `;
 
@@ -209,7 +207,10 @@ export default class DrupalMediaEditing extends Plugin {
   _defineSchema() {
     const schema = this.editor.model.schema;
     schema.register('drupalMedia', {
-      inheritAllFrom: '$blockObject',
+      allowWhere: '$block',
+      isObject: true,
+      isContent: true,
+      isBlock: true,
       allowAttributes: Object.keys(this.attrs),
     });
     // Register `<drupal-media>` as a block element in the DOM converter. This
@@ -329,9 +330,8 @@ export default class DrupalMediaEditing extends Plugin {
 
             // Preview was ready meaning that a new preview can be loaded.
             // "Change the attribute to loading to prepare for the loading of
-            // the updated preview. Preview is kept intact so that it can still
-            // be interacted with via the UI until the new preview has been
-            // rendered.
+            // the updated preview. Preview is kept intact so that it remains
+            // interactable in the UI until the new preview has been rendered.
             viewWriter.setAttribute(
               'data-drupal-media-preview',
               'loading',

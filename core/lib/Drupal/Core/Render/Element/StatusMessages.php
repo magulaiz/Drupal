@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Render\Attribute\RenderElement;
-
 /**
  * Provides a messages element.
  *
@@ -15,9 +13,10 @@ use Drupal\Core\Render\Attribute\RenderElement;
  *   '#type' => 'status_messages',
  * ];
  * @endcode
+ *
+ * @RenderElement("status_messages")
  */
-#[RenderElement('status_messages')]
-class StatusMessages extends RenderElementBase {
+class StatusMessages extends RenderElement {
 
   /**
    * {@inheritdoc}
@@ -31,16 +30,14 @@ class StatusMessages extends RenderElementBase {
       // of that specific type.
       '#display' => NULL,
       '#pre_render' => [
-        static::class . '::generatePlaceholder',
+        get_class() . '::generatePlaceholder',
       ],
       '#include_fallback' => FALSE,
     ];
   }
 
   /**
-   * Render API callback: Generates a placeholder.
-   *
-   * This function is assigned as a #lazy_builder callback.
+   * #pre_render callback to generate a placeholder.
    *
    * @param array $element
    *   A renderable array.
@@ -50,7 +47,7 @@ class StatusMessages extends RenderElementBase {
    */
   public static function generatePlaceholder(array $element) {
     $build = [
-      '#lazy_builder' => [static::class . '::renderMessages', [$element['#display']]],
+      '#lazy_builder' => [get_class() . '::renderMessages', [$element['#display']]],
       '#create_placeholder' => TRUE,
     ];
 
@@ -71,18 +68,16 @@ class StatusMessages extends RenderElementBase {
   }
 
   /**
-   * Render API callback: Replaces placeholder with messages.
-   *
-   * This function is assigned as a #lazy_builder callback.
+   * #lazy_builder callback; replaces placeholder with messages.
    *
    * @param string|null $type
    *   Limit the messages returned by type. Defaults to NULL, meaning all types.
    *   Passed on to \Drupal\Core\Messenger\Messenger::deleteByType(). These
    *   values are supported:
-   *   - NULL.
-   *   - 'status'.
-   *   - 'warning'.
-   *   - 'error'.
+   *   - NULL
+   *   - 'status'
+   *   - 'warning'
+   *   - 'error'
    *
    * @return array
    *   A renderable array containing the messages.

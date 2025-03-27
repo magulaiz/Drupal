@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\join;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\views\Attribute\ViewsJoin;
 
 /**
  * Implementation for the "field OR language" join.
@@ -56,11 +55,12 @@ use Drupal\views\Attribute\ViewsJoin;
  *     )
  * @endcode
  *
- * @see FieldViewsDataProvider::defaultFieldImplementation()
+ * @see views_field_default_views_data()
  *
  * @ingroup views_join_handlers
+ *
+ * @ViewsJoin("field_or_language_join")
  */
-#[ViewsJoin("field_or_language_join")]
 class FieldOrLanguageJoin extends JoinPluginBase {
 
   /**
@@ -80,7 +80,7 @@ class FieldOrLanguageJoin extends JoinPluginBase {
       // Remove and store the langcode OR bundle join condition extra.
       $language_bundle_conditions = [];
       foreach ($extras as $key => $extra) {
-        if (str_contains($extra, '.langcode') || str_contains($extra, '.bundle')) {
+        if (strpos($extra, '.langcode') !== FALSE || strpos($extra, '.bundle') !== FALSE) {
           $language_bundle_conditions[] = $extra;
           unset($extras[$key]);
         }

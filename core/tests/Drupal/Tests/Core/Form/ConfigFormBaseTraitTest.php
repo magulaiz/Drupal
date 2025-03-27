@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\ConfigFormBaseTrait;
@@ -16,7 +14,7 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
   /**
    * @covers ::config
    */
-  public function testConfig(): void {
+  public function testConfig() {
 
     $trait = $this->createPartialMock(ConfiguredTrait::class, ['getEditableConfigNames']);
     // Set up some configuration in a mocked config factory.
@@ -30,6 +28,7 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
       ->willReturn(['editable.config']);
 
     $config_method = new \ReflectionMethod($trait, 'config');
+    $config_method->setAccessible(TRUE);
 
     // Ensure that configuration that is expected to be mutable is.
     $result = $config_method->invoke($trait, 'editable.config');
@@ -44,42 +43,35 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
   /**
    * @covers ::config
    */
-  public function testConfigFactoryException(): void {
-    $testObject = new ConfiguredTrait();
+  public function testConfigFactoryException() {
+    $trait = $this->getMockForTrait('Drupal\Core\Form\ConfigFormBaseTrait');
+    $config_method = new \ReflectionMethod($trait, 'config');
+    $config_method->setAccessible(TRUE);
 
     // There is no config factory available this should result in an exception.
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('No config factory available for ConfigFormBaseTrait');
-    $config_method = new \ReflectionMethod($testObject, 'config');
-    $config_method->invoke($testObject, 'editable.config');
+    $config_method->invoke($trait, 'editable.config');
   }
 
   /**
    * @covers ::config
    */
-  public function testConfigFactoryExceptionInvalidProperty(): void {
-    $testObject = new ConfiguredTrait();
+  public function testConfigFactoryExceptionInvalidProperty() {
+    $trait = $this->getMockForTrait('Drupal\Core\Form\ConfigFormBaseTrait');
+    $config_method = new \ReflectionMethod($trait, 'config');
+    $config_method->setAccessible(TRUE);
 
     // There is no config factory available this should result in an exception.
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('No config factory available for ConfigFormBaseTrait');
-    $config_method = new \ReflectionMethod($testObject, 'config');
-    $config_method->invoke($testObject, 'editable.config');
+    $config_method->invoke($trait, 'editable.config');
   }
 
 }
 
-/**
- * Test class for testing ConfigFormBaseTrait.
- */
 class ConfiguredTrait {
   use ConfigFormBaseTrait;
-
-  /**
-   * The configuration factory.
-   *
-   * @var null
-   */
   public $configFactory;
 
   protected function getEditableConfigNames() {}

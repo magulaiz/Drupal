@@ -2,11 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
-
-// cspell:ignore ltlanguage objectindex
 
 /**
  * Drupal 6 i18n vocabulary translations source from database.
@@ -15,11 +12,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_taxonomy_vocabulary_translation",
+ *   source_module = "i18ntaxonomy"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_taxonomy_vocabulary_translation',
-  source_module: 'i18ntaxonomy',
-)]
 class VocabularyTranslation extends DrupalSqlBase {
 
   /**

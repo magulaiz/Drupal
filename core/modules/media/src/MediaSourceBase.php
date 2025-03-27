@@ -6,7 +6,6 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -61,7 +60,7 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
+   *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -315,16 +314,10 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
 
     // Iterate at least once, until no field with the generated ID is found.
     do {
-      // Limit the base field name to the maximum allowed length.
-      $id = (strlen($base_id) > EntityTypeInterface::ID_MAX_LENGTH) ? substr($base_id, 0, EntityTypeInterface::ID_MAX_LENGTH) : $base_id;
+      $id = $base_id;
       // If we've tried before, increment and append the suffix.
       if ($tries) {
         $id .= '_' . $tries;
-
-        // Ensure the suffixed field name does not exceed the maximum allowed length.
-        if (strlen($id) > EntityTypeInterface::ID_MAX_LENGTH) {
-          $id = substr($base_id, 0, (EntityTypeInterface::ID_MAX_LENGTH - strlen('_' . $tries))) . '_' . $tries;
-        }
       }
       $field = $storage->load('media.' . $id);
       $tries++;
@@ -364,7 +357,7 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
    * {@inheritdoc}
    */
   public function prepareFormDisplay(MediaTypeInterface $type, EntityFormDisplayInterface $display) {
-    // Make sure the source field is placed just after the "name" base field.
+    // Make sure the source field is placed just after the "name" basefield.
     $name_component = $display->getComponent('name');
     $source_field_weight = ($name_component && isset($name_component['weight'])) ? $name_component['weight'] + 5 : -50;
     $display->setComponent($this->getSourceFieldDefinition($type)->getName(), [

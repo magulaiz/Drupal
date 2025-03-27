@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\entity_test;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -133,7 +131,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
   /**
    * {@inheritdoc}
    */
-  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, ?array &$sandbox = NULL) {
+  public function onFieldableEntityTypeUpdate(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
     $this->storeEvent(EntityTypeEvents::UPDATE);
   }
 

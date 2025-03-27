@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Kernel\Migrate;
 
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
@@ -27,12 +25,13 @@ class MigrateUserStubTest extends MigrateDrupalTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
+    $this->installSchema('system', ['sequences']);
   }
 
   /**
    * Tests creation of user stubs.
    */
-  public function testStub(): void {
+  public function testStub() {
     $this->performStubTest('user');
   }
 

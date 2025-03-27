@@ -1,14 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
-use Drupal\node\Entity\Node;
-use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
-
-// cspell:ignore Scarlett Johansson
 
 /**
  * Uploads files to translated nodes.
@@ -16,8 +10,6 @@ use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
  * @group file
  */
 class FileOnTranslatedEntityTest extends FileFieldTestBase {
-
-  use ContentTranslationTestTrait;
 
   /**
    * {@inheritdoc}
@@ -53,7 +45,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page', 'new_revision' => FALSE]);
 
     // Create a file field on the "Basic page" node type.
-    $this->fieldName = $this->randomMachineName();
+    $this->fieldName = strtolower($this->randomMachineName());
     $this->createFileField($this->fieldName, 'node', 'page');
 
     // Create and log in user.
@@ -72,18 +64,30 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->drupalLogin($admin_user);
 
     // Add a second and third language.
-    static::createLanguageFromLangcode('fr');
-    static::createLanguageFromLangcode('nl');
+    $edit = [];
+    $edit['predefined_langcode'] = 'fr';
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
+
+    $edit = [];
+    $edit['predefined_langcode'] = 'nl';
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
 
     // Enable translation for "Basic page" nodes.
-    static::enableContentTranslation('node', 'page');
-    static::setFieldTranslatable('node', 'page', $this->fieldName, TRUE);
+    $edit = [
+      'entity_types[node]' => 1,
+      'settings[node][page][translatable]' => 1,
+      "settings[node][page][fields][$this->fieldName]" => 1,
+    ];
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm($edit, 'Save configuration');
   }
 
   /**
    * Tests synced file fields on translated nodes.
    */
-  public function testSyncedFiles(): void {
+  public function testSyncedFiles() {
     // Verify that the file field on the "Basic page" node type is translatable.
     $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'page');
     $this->assertTrue($definitions[$this->fieldName]->isTranslatable(), 'Node file field is translatable.');
@@ -209,33 +213,6 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
 
     $file = File::load($replaced_second_fid);
     $this->assertTrue($file->isTemporary());
-  }
-
-  /**
-   * Tests if file field tracks file usages correctly on translated nodes.
-   */
-  public function testFileUsage(): void {
-    /** @var \Drupal\file\FileUsage\FileUsageInterface $file_usage */
-    $file_usage = \Drupal::service('file.usage');
-
-    // Create a node and upload a file.
-    $node = $this->drupalCreateNode(['type' => 'page']);
-    $edit = [
-      'files[' . $this->fieldName . '_0]' => \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[0]->uri),
-    ];
-    $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->submitForm($edit, 'Save');
-
-    // Check if the file usage is correct.
-    $file = File::load($this->getLastFileId());
-    $this->assertEquals($file_usage->listUsage($file), ['file' => ['node' => [$node->id() => '1']]]);
-
-    // Check if the file usage is tracked correctly when changing the original
-    // language of an entity.
-    $node = Node::load($node->id());
-    $node->set('langcode', 'fr');
-    $node->save();
-    $this->assertEquals($file_usage->listUsage($file), ['file' => ['node' => [$node->id() => '1']]]);
   }
 
 }

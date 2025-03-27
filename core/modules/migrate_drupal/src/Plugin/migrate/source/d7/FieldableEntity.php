@@ -10,7 +10,6 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * Field values are collected from the Field API.
  *
  * Refer to the existing implementations for examples:
- *
  * @see \Drupal\node\Plugin\migrate\source\d7\Node
  * @see \Drupal\user\Plugin\migrate\source\d7\User
  *
@@ -20,13 +19,6 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
 abstract class FieldableEntity extends DrupalSqlBase {
-
-  /**
-   * Cached field and field instance definitions.
-   *
-   * @var array
-   */
-  protected $fieldInfo;
 
   /**
    * Returns all non-deleted field instances attached to a specific entity type.
@@ -46,23 +38,18 @@ abstract class FieldableEntity extends DrupalSqlBase {
    *   The field instances, keyed by field name.
    */
   protected function getFields($entity_type, $bundle = NULL) {
-    $cid = $entity_type . ':' . ($bundle ?? '');
-    if (!isset($this->fieldInfo[$cid])) {
-      $query = $this->select('field_config_instance', 'fci')
-        ->fields('fci')
-        ->condition('fci.entity_type', $entity_type)
-        ->condition('fci.bundle', $bundle ?? $entity_type)
-        ->condition('fci.deleted', 0);
+    $query = $this->select('field_config_instance', 'fci')
+      ->fields('fci')
+      ->condition('fci.entity_type', $entity_type)
+      ->condition('fci.bundle', $bundle ?? $entity_type)
+      ->condition('fci.deleted', 0);
 
-      // Join the 'field_config' table and add the 'translatable' setting to the
-      // query.
-      $query->leftJoin('field_config', 'fc', '[fci].[field_id] = [fc].[id]');
-      $query->addField('fc', 'translatable');
+    // Join the 'field_config' table and add the 'translatable' setting to the
+    // query.
+    $query->leftJoin('field_config', 'fc', '[fci].[field_id] = [fc].[id]');
+    $query->addField('fc', 'translatable');
 
-      $this->fieldInfo[$cid] = $query->execute()->fetchAllAssoc('field_name');
-    }
-
-    return $this->fieldInfo[$cid];
+    return $query->execute()->fetchAllAssoc('field_name');
   }
 
   /**
@@ -149,7 +136,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
         ->fetchField();
     }
     // The table might not exist.
-    catch (\Exception) {
+    catch (\Exception $e) {
       return FALSE;
     }
   }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalJavascriptTests\Theme;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -51,7 +49,7 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
   /**
    * Tests the dynamic Bulk Operations form.
    */
-  public function testBulkOperationsUi(): void {
+  public function testBulkOperationsUi() {
     $this->drupalGet('admin/content');
 
     $page = $this->getSession()->getPage();

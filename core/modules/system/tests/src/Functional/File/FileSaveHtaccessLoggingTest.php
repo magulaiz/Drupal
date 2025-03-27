@@ -1,22 +1,17 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\File;
 
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the log message added by the HtaccessWriter service.
+ * Tests the log message added by file_save_htaccess().
  *
  * @group File
  */
 class FileSaveHtaccessLoggingTest extends BrowserTestBase {
 
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = ['dblog'];
 
   /**
@@ -25,22 +20,21 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests the HtaccessWriter service write functionality.
+   * Tests file_save_htaccess().
    */
-  public function testHtaccessSave(): void {
+  public function testHtaccessSave() {
     // Prepare test directories.
     $private = $this->publicFilesDirectory . '/test/private';
 
-    // Verify that HtaccessWriter service returns FALSE if .htaccess cannot be
-    // written and writes a correctly formatted message to the error log.
-    // Set $private to TRUE so all possible .htaccess lines are written.
+    // Verify that file_save_htaccess() returns FALSE if .htaccess cannot be
+    // written and writes a correctly formatted message to the error log. Set
+    // $private to TRUE so all possible .htaccess lines are written.
     /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccess */
     $htaccess = \Drupal::service('file.htaccess_writer');
     $this->assertFalse($htaccess->write($private, TRUE));
-    $this->drupalLogin($this->drupalCreateUser(['access site reports']));
-
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/reports/dblog');
-    $this->clickLink("Security warning: Couldn't write .htaccess file.");
+    $this->clickLink("Security warning: Couldn't write .htaccess file. Please…");
 
     $lines = FileSecurity::htaccessLines(TRUE);
     foreach (array_filter(explode("\n", $lines)) as $line) {

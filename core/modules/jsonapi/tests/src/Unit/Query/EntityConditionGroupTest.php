@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Unit\Query;
 
 use Drupal\jsonapi\Query\EntityConditionGroup;
@@ -19,7 +17,7 @@ class EntityConditionGroupTest extends UnitTestCase {
    * @covers ::__construct
    * @dataProvider constructProvider
    */
-  public function testConstruct($case): void {
+  public function testConstruct($case) {
     $group = new EntityConditionGroup($case['conjunction'], $case['members']);
 
     $this->assertEquals($case['conjunction'], $group->conjunction());
@@ -33,7 +31,7 @@ class EntityConditionGroupTest extends UnitTestCase {
   /**
    * @covers ::__construct
    */
-  public function testConstructException(): void {
+  public function testConstructException() {
     $this->expectException(\InvalidArgumentException::class);
     new EntityConditionGroup('NOT_ALLOWED', []);
   }
@@ -41,7 +39,7 @@ class EntityConditionGroupTest extends UnitTestCase {
   /**
    * Data provider for testConstruct.
    */
-  public static function constructProvider() {
+  public function constructProvider() {
     return [
       [['conjunction' => 'AND', 'members' => []]],
       [['conjunction' => 'OR', 'members' => []]],

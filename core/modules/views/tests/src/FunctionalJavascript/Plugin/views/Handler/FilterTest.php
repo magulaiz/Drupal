@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
 use Drupal\field\Entity\FieldConfig;
@@ -46,7 +44,6 @@ class FilterTest extends WebDriverTestBase {
 
     NodeType::create([
       'type' => 'page',
-      'name' => 'Page',
     ])->save();
 
     FieldConfig::create([
@@ -59,7 +56,7 @@ class FilterTest extends WebDriverTestBase {
   /**
    * Tests adding a filter handler.
    */
-  public function testAddingFilter(): void {
+  public function testAddingFilter() {
     $web_assert = $this->assertSession();
 
     $url = '/admin/structure/views/view/content';
@@ -103,7 +100,7 @@ class FilterTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement[]
    *   The filtered elements.
    */
-  protected function filterVisibleElements($elements): array {
+  protected function filterVisibleElements($elements) {
     $elements = array_filter($elements, function ($element) {
       return $element->isVisible();
     });
@@ -123,7 +120,7 @@ class FilterTest extends WebDriverTestBase {
    * @return bool
    *   TRUE if the required number was matched, FALSE otherwise.
    */
-  protected function waitForVisibleElementCount($count, $locator, $timeout = 10000): bool {
+  protected function waitForVisibleElementCount($count, $locator, $timeout = 10000) {
     $page = $this->getSession()->getPage();
 
     return $page->waitFor($timeout / 1000, function () use ($count, $page, $locator) {
@@ -145,7 +142,7 @@ class FilterTest extends WebDriverTestBase {
    * @return bool
    *   TRUE if the required number was matched, FALSE otherwise.
    */
-  protected function waitForOnlyContentRows($timeout = 10000): bool {
+  protected function waitForOnlyContentRows($timeout = 10000) {
     $page = $this->getSession()->getPage();
 
     return $page->waitFor($timeout / 1000, function () use ($page) {
@@ -154,7 +151,7 @@ class FilterTest extends WebDriverTestBase {
 
       foreach ($handler_rows as $handler_row) {
         // Test that all the visible rows are of the 'content' type.
-        if (!str_contains($handler_row->getAttribute('class'), 'content')) {
+        if (strpos($handler_row->getAttribute('class'), 'content') === FALSE) {
           return FALSE;
         }
       }

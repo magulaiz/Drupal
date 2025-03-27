@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -49,7 +47,6 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
 
     $node_type = NodeType::create([
       'type' => 'example',
-      'name' => 'Example',
     ]);
     $node_type->save();
 
@@ -65,7 +62,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
   /**
    * Tests sorting with a standard data base table.
    */
-  public function testSortBaseTable(): void {
+  public function testSortBaseTable() {
     $this->enableModules(['content_moderation_test_views']);
     $this->installConfig(['content_moderation_test_views']);
 
@@ -104,7 +101,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
   /**
    * Tests sorting with the revision base table.
    */
-  public function testSortRevisionBaseTable(): void {
+  public function testSortRevisionBaseTable() {
     $this->enableModules(['content_moderation_test_views']);
     $this->installConfig(['content_moderation_test_views']);
 

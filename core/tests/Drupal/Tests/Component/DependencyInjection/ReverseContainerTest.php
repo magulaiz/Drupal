@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\DependencyInjection;
 
 use Drupal\Component\DependencyInjection\ReverseContainer;
@@ -9,12 +7,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Tests the ReverseContainer class.
- *
- * The reverse container uses a static to maintain information across
- * container rebuilds.
- *
  * @runTestsInSeparateProcesses
+ *   The reverse container uses a static to maintain information across
+ *   container rebuilds.
+ *
  * @coversDefaultClass \Drupal\Component\DependencyInjection\ReverseContainer
  * @group DependencyInjection
  */

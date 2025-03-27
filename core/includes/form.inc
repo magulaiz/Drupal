@@ -6,9 +6,8 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\RenderElementBase;
+use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,17 +21,17 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * the #options property to an associative array in which the keys are group
  * labels, and the values are associative arrays in the normal #options format.
  *
- * @param array $variables
+ * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #title, #value, #options, #description, #extra,
  *     #multiple, #required, #name, #attributes, #size, #sort_options,
  *     #sort_start.
  */
-function template_preprocess_select(&$variables): void {
+function template_preprocess_select(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, ['id', 'name', 'size']);
-  RenderElementBase::setAttributes($element, ['form-select']);
+  RenderElement::setAttributes($element, ['form-select']);
 
   $variables['attributes'] = $element['#attributes'];
   $variables['options'] = form_select_options($element);
@@ -67,7 +66,7 @@ function template_preprocess_select(&$variables): void {
  *     or 'optgroup'.
  *   - value: A string that contains the value attribute for the option.
  */
-function form_select_options($element, $choices = NULL): array {
+function form_select_options($element, $choices = NULL) {
   if (!isset($choices)) {
     if (empty($element['#options'])) {
       return [];
@@ -84,9 +83,9 @@ function form_select_options($element, $choices = NULL): array {
     unset($choices['#sort_start']);
   }
 
-  // array_key_exists() accommodates the rare event where $element['#value'] is
-  // NULL. isset() fails in this situation.
-  $value_valid = \array_key_exists('#value', $element);
+  // array_key_exists() accommodates the rare event where $element['#value'] is NULL.
+  // isset() fails in this situation.
+  $value_valid = isset($element['#value']) || array_key_exists('#value', $element);
   $value_is_array = $value_valid && is_array($element['#value']);
   // Check if the element is multiple select and no value has been selected.
   $empty_value = (empty($element['#value']) && !empty($element['#multiple']));
@@ -149,12 +148,12 @@ function form_select_options($element, $choices = NULL): array {
  * index is not sufficient, and supporting this would make the
  * "helper" too complicated and cumbersome to be of any help.
  *
- * As usual with functions that can return [] or FALSE, do not
+ * As usual with functions that can return array() or FALSE, do not
  * forget to use === and !== if needed.
  *
- * @param array $element
+ * @param $element
  *   The select element to search.
- * @param string $key
+ * @param $key
  *   The key to look for.
  *
  * @return array|bool
@@ -190,10 +189,10 @@ function form_get_options($element, $key) {
  *     Properties used: #attributes, #children, #description, #id, #title,
  *     #value.
  */
-function template_preprocess_fieldset(&$variables): void {
+function template_preprocess_fieldset(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, ['id']);
-  RenderElementBase::setAttributes($element);
+  RenderElement::setAttributes($element);
   $variables['attributes'] = $element['#attributes'] ?? [];
   $variables['prefix'] = $element['#field_prefix'] ?? NULL;
   $variables['suffix'] = $element['#field_suffix'] ?? NULL;
@@ -244,7 +243,7 @@ function template_preprocess_fieldset(&$variables): void {
  *     Properties used: #attributes, #children, #description, #required,
  *     #summary_attributes, #title, #value.
  */
-function template_preprocess_details(&$variables): void {
+function template_preprocess_details(&$variables) {
   $element = $variables['element'];
   $variables['attributes'] = $element['#attributes'];
   $variables['summary_attributes'] = new Attribute($element['#summary_attributes']);
@@ -254,6 +253,7 @@ function template_preprocess_details(&$variables): void {
       $variables['summary_attributes']['aria-controls'] = $element['#attributes']['id'];
     }
     $variables['summary_attributes']['aria-expanded'] = !empty($element['#attributes']['open']) ? 'true' : 'false';
+    $variables['summary_attributes']['aria-pressed'] = $variables['summary_attributes']['aria-expanded'];
   }
   $variables['title'] = (!empty($element['#title'])) ? $element['#title'] : '';
   // If the element title is a string, wrap it a render array so that markup
@@ -281,7 +281,7 @@ function template_preprocess_details(&$variables): void {
  *     Properties used: #title, #value, #options, #description, #required,
  *     #attributes, #children.
  */
-function template_preprocess_radios(&$variables): void {
+function template_preprocess_radios(&$variables) {
   $element = $variables['element'];
   $variables['attributes'] = [];
   if (isset($element['#id'])) {
@@ -303,7 +303,7 @@ function template_preprocess_radios(&$variables): void {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #children, #attributes.
  */
-function template_preprocess_checkboxes(&$variables): void {
+function template_preprocess_checkboxes(&$variables) {
   $element = $variables['element'];
   $variables['attributes'] = [];
   if (isset($element['#id'])) {
@@ -325,7 +325,7 @@ function template_preprocess_checkboxes(&$variables): void {
  *   - element: An associative array containing the properties and children of
  *     the details element. Properties used: #children.
  */
-function template_preprocess_vertical_tabs(&$variables): void {
+function template_preprocess_vertical_tabs(&$variables) {
   $element = $variables['element'];
   $variables['children'] = (!empty($element['#children'])) ? $element['#children'] : '';
 }
@@ -340,7 +340,7 @@ function template_preprocess_vertical_tabs(&$variables): void {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #attributes.
  */
-function template_preprocess_input(&$variables): void {
+function template_preprocess_input(&$variables) {
   $element = $variables['element'];
   // Remove name attribute if empty, for W3C compliance.
   if (isset($variables['attributes']['name']) && empty((string) $variables['attributes']['name'])) {
@@ -354,12 +354,12 @@ function template_preprocess_input(&$variables): void {
  *
  * Default template: form.html.twig.
  *
- * @param array $variables
+ * @param $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #action, #method, #attributes, #children.
+ *     Properties used: #action, #method, #attributes, #children
  */
-function template_preprocess_form(&$variables): void {
+function template_preprocess_form(&$variables) {
   $element = $variables['element'];
   if (isset($element['#action'])) {
     $element['#attributes']['action'] = UrlHelper::stripDangerousProtocols($element['#action']);
@@ -383,19 +383,15 @@ function template_preprocess_form(&$variables): void {
  *     Properties used: #title, #value, #description, #rows, #cols, #maxlength,
  *     #placeholder, #required, #attributes, #resizable.
  */
-function template_preprocess_textarea(&$variables): void {
+function template_preprocess_textarea(&$variables) {
   $element = $variables['element'];
   $attributes = ['id', 'name', 'rows', 'cols', 'maxlength', 'placeholder'];
   Element::setAttributes($element, $attributes);
-  RenderElementBase::setAttributes($element, ['form-textarea']);
+  RenderElement::setAttributes($element, ['form-textarea']);
   $variables['wrapper_attributes'] = new Attribute();
   $variables['attributes'] = new Attribute($element['#attributes']);
   $variables['value'] = $element['#value'];
-  $resizable = !empty($element['#resizable']) ? $element['#resizable'] : NULL;
-  $variables['resizable'] = $resizable;
-  if ($resizable) {
-    $variables['attributes']->addClass('resize-' . $resizable);
-  }
+  $variables['resizable'] = !empty($element['#resizable']) ? $element['#resizable'] : NULL;
   $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 }
 
@@ -442,7 +438,7 @@ function template_preprocess_textarea(&$variables): void {
  *     Properties used: #title, #title_display, #description, #id, #required,
  *     #children, #type, #name, #label_for.
  */
-function template_preprocess_form_element(&$variables): void {
+function template_preprocess_form_element(&$variables) {
   $element = &$variables['element'];
 
   // This function is invoked as theme wrapper, but the rendered form element
@@ -535,7 +531,7 @@ function template_preprocess_form_element(&$variables): void {
  *   - element: An associative array containing the properties of the element.
  *     Properties used: #required, #title, #id, #value, #description, #for.
  */
-function template_preprocess_form_element_label(&$variables): void {
+function template_preprocess_form_element_label(&$variables) {
   $element = $variables['element'];
   // If title and required marker are both empty, output no label.
   if (isset($element['#title']) && $element['#title'] !== '') {
@@ -579,15 +575,15 @@ function template_preprocess_form_element_label(&$variables): void {
  *
  * Example:
  * @code
- * $batch = [
+ * $batch = array(
  *   'title' => t('Exporting'),
- *   'operations' => [
- *     ['my_function_1', [$account->id(), 'story']],
- *     ['my_function_2', []],
- *   ],
+ *   'operations' => array(
+ *     array('my_function_1', array($account->id(), 'story')),
+ *     array('my_function_2', array()),
+ *   ),
  *   'finished' => 'my_finished_callback',
  *   'file' => 'path_to_file_containing_my_functions',
- * ];
+ * );
  * batch_set($batch);
  * // Only needed if not inside a form _submit handler.
  * // Setting redirect in batch_process.
@@ -615,7 +611,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *   // The following keys allow for multi-step operations :
  *   // 'sandbox' (read / write): An array that can be freely used to
  *   //   store persistent data between iterations. It is recommended to
- *   //   use this instead of the session, which is unsafe if the user
+ *   //   use this instead of $_SESSION, which is unsafe if the user
  *   //   continues browsing in a separate window while the batch is processing.
  *   // 'finished' (write): A float number between 0 and 1 informing
  *   //   the processing engine of the completion level for the operation.
@@ -641,7 +637,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *   }
  *   $limit = 5;
  *   $result = \Drupal::database()->select('example')
- *     ->fields('example', ['id'])
+ *     ->fields('example', array('id'))
  *     ->condition('id', $context['sandbox']['current_id'], '>')
  *     ->orderBy('id')
  *     ->range(0, $limit)
@@ -666,18 +662,17 @@ function template_preprocess_form_element_label(&$variables): void {
  *   // The 'success' parameter means no fatal PHP errors were detected. All
  *   // other error management should be handled using 'results'.
  *   if ($success) {
- *     $message = \Drupal::translation()->formatPlural(count($results), 'One item processed.', '@count items processed.');
+ *     $message = \Drupal::translation()->formatPlural(count($results), 'One post processed.', '@count posts processed.');
  *   }
  *   else {
  *     $message = t('Finished with an error.');
  *   }
  *   \Drupal::messenger()->addMessage($message);
- *   // Providing data for the redirected page is done through the session.
+ *   // Providing data for the redirected page is done through $_SESSION.
  *   foreach ($results as $result) {
- *     $items[] = t('Loaded node %title.', ['%title' => $result]);
+ *     $items[] = t('Loaded node %title.', array('%title' => $result));
  *   }
- *   $session = \Drupal::request()->getSession();
- *   $session->set('my_batch_results', $items);
+ *   $_SESSION['my_batch_results'] = $items;
  * }
  * @endcode
  */
@@ -697,7 +692,7 @@ function template_preprocess_form_element_label(&$variables): void {
  * 'finished' callback. Batch sets are processed sequentially, with the progress
  * bar starting afresh for each new set.
  *
- * @param array $batch_definition
+ * @param $batch_definition
  *   An associative array defining the batch, with the following elements (all
  *   are optional except as noted):
  *   - operations: (required) Array of operations to be performed, where each
@@ -705,26 +700,24 @@ function template_preprocess_form_element_label(&$variables): void {
  *     callback_batch_operation() and an array of parameter.
  *     Example:
  *     @code
- *     [
- *       ['callback_batch_operation_1', [$arg1]],
- *       ['callback_batch_operation_2', [$arg2_1, $arg2_2]],
- *     ]
+ *     array(
+ *       array('callback_batch_operation_1', array($arg1)),
+ *       array('callback_batch_operation_2', array($arg2_1, $arg2_2)),
+ *     )
  *     @endcode
  *   - title: A safe, translated string to use as the title for the progress
  *     page. Defaults to t('Processing').
  *   - init_message: Message displayed while the processing is initialized.
  *     Defaults to t('Initializing.').
  *   - progress_message: Message displayed while processing the batch. Available
- *     placeholders are "@current", "@remaining", "@total", "@percentage",
- *     phpcs:ignore Drupal.Commenting.FunctionComment.ParamCommentFullStop
- *     "@estimate" and "@elapsed". Defaults to "t('Completed @current of
- *     @total.')".
+ *     placeholders are @current, @remaining, @total, @percentage, @estimate and
+ *     @elapsed. Defaults to t('Completed @current of @total.').
  *   - error_message: Message displayed if an error occurred while processing
  *     the batch. Defaults to t('An error has occurred.').
  *   - finished: Name of an implementation of callback_batch_finished(). This is
  *     executed after the batch has completed. This should be used to perform
  *     any result massaging that may be needed, and possibly save data in
- *     the session for display after final page redirection.
+ *     $_SESSION for display after final page redirection.
  *   - file: Path to the file containing the definitions of the 'operations' and
  *     'finished' functions, for instance if they don't reside in the main
  *     .module file. The path should be relative to base_path(), and thus should
@@ -747,7 +740,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *       \Drupal\Core\Queue\BatchMemory. Defaults to Batch if progressive is
  *       TRUE, or to BatchMemory if progressive is FALSE.
  */
-function batch_set($batch_definition): void {
+function batch_set($batch_definition) {
   if ($batch_definition) {
     $batch =& batch_get();
 
@@ -804,12 +797,12 @@ function batch_set($batch_definition): void {
  * inserted a new set, additional sets will be inserted after the last inserted
  * set.
  *
- * @param array &$batch
+ * @param &$batch
  *   The batch array.
- * @param array $batch_set
+ * @param $batch_set
  *   The batch set.
  */
-function _batch_append_set(&$batch, $batch_set): void {
+function _batch_append_set(&$batch, $batch_set) {
   $append_after_index = $batch['current_set'];
   $reached_current_set = FALSE;
   foreach ($batch['sets'] as $index => $set) {
@@ -873,17 +866,17 @@ function _batch_append_set(&$batch, $batch_set): void {
  *   redirect response was returned by the 'finished' callback, the user will
  *   be redirected to the page that started the batch. Any query arguments will
  *   be automatically persisted.
- * @param \Drupal\Core\Url|null $url
+ * @param \Drupal\Core\Url $url
  *   (optional) URL of the batch processing page. Should only be used for
  *   separate scripts like update.php.
- * @param string|null $redirect_callback
+ * @param $redirect_callback
  *   (optional) Specify a function to be called to redirect to the progressive
  *   processing page.
  *
  * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
  *   A redirect response if the batch is progressive. No return value otherwise.
  */
-function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = NULL) {
+function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL) {
   $batch =& batch_get();
 
   if (isset($batch)) {
@@ -904,9 +897,9 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
     // environments.
     \Drupal::moduleHandler()->alter('batch', $batch);
 
-    // Assign an id to progressive batches. Non-progressive batches skip
-    // database storage completely.
-    $batch['id'] = $batch['progressive'] ? \Drupal::service(BatchStorageInterface::class)->getId() : 'non-progressive';
+    // Assign an arbitrary id: don't rely on a serial column in the 'batch'
+    // table, since non-progressive batches skip database storage completely.
+    $batch['id'] = \Drupal::database()->nextId();
 
     // Move operations to a job queue. Non-progressive batches will use a
     // memory-based queue.
@@ -927,7 +920,7 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
       $query_options['op'] = 'finished';
       $error_url->setOption('query', $query_options);
 
-      $batch['error_message'] = t('Continue to <a href=":error_url">the error page</a>', [':error_url' => $error_url->toString(TRUE)->getGeneratedUrl()]);
+      $batch['error_message'] = t('Please continue to <a href=":error_url">the error page</a>', [':error_url' => $error_url->toString(TRUE)->getGeneratedUrl()]);
 
       // Clear the way for the redirection to the batch processing page, by
       // saving and unsetting the 'destination', if there is any.
@@ -938,14 +931,10 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
       }
 
       // Store the batch.
-      \Drupal::service(BatchStorageInterface::class)->create($batch);
+      \Drupal::service('batch.storage')->create($batch);
 
-      // Set the batch number in the session to guarantee that it will stay
-      // alive.
-      $session = \Drupal::request()->getSession();
-      $batches = $session->get('batches', []);
-      $batches[$batch['id']] = TRUE;
-      $session->set('batches', $batches);
+      // Set the batch number in the session to guarantee that it will stay alive.
+      $_SESSION['batches'][$batch['id']] = TRUE;
 
       // Redirect for processing.
       $query_options = $error_url->getOption('query');
@@ -990,12 +979,12 @@ function &batch_get() {
  * be used. The name and class of the queue are added by reference to the
  * batch set.
  *
- * @param array $batch
+ * @param $batch
  *   The batch array.
- * @param string $set_id
+ * @param $set_id
  *   The id of the set to process.
  */
-function _batch_populate_queue(&$batch, $set_id): void {
+function _batch_populate_queue(&$batch, $set_id) {
   $batch_set = &$batch['sets'][$set_id];
 
   if (isset($batch_set['operations'])) {
@@ -1019,7 +1008,7 @@ function _batch_populate_queue(&$batch, $set_id): void {
 /**
  * Returns a queue object for a batch set.
  *
- * @param string[][] $batch_set
+ * @param $batch_set
  *   The batch set.
  *
  * @return \Drupal\Core\Queue\QueueInterface|null

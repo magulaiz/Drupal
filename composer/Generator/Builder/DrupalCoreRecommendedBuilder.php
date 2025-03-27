@@ -30,15 +30,7 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
     }
 
     // Make a list of packages we do not want to put in the 'require' section.
-    $remove_list = [
-      'drupal/core',
-      'wikimedia/composer-merge-plugin',
-      'composer/installers',
-      // This package contains no code other than interfaces, so allow sites
-      // to use any compatible version without needing to switch off of
-      // drupal/core-recommended.
-      'psr/http-message',
-    ];
+    $remove_list = ['drupal/core', 'wikimedia/composer-merge-plugin', 'composer/installers'];
 
     // Copy the 'packages' section from the Composer lock into our 'require'
     // section. There is also a 'packages-dev' section, but we do not need
@@ -59,7 +51,6 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
    * Returns the initial package metadata that describes the metapackage.
    *
    * @return array
-   *   The initial package metadata.
    */
   protected function initialPackageMetadata() {
     return [

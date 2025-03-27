@@ -44,10 +44,8 @@ use Drupal\Core\Render\RendererInterface;
  * $user = User::load(1);
  *
  * // [date:...] tokens use the current date automatically.
- * $token_service = \Drupal::token();
- * $data = ['node' => $node, 'user' => $user];
- * $result = $token_service->replace($text, $data);
- * return $result
+ * $data = array('node' => $node, 'user' => $user);
+ * return Token::replace($text, $data);
  * @endcode
  *
  * Some tokens may be chained in the form of [$type:$pointer:$name], where $type
@@ -144,9 +142,9 @@ class Token {
    * @param array $data
    *   (optional) An array of keyed objects. For simple replacement scenarios
    *   'node', 'user', and others are common keys, with an accompanying node or
-   *   user object being the value. Some token types, like 'site', do not
-   *   require any explicit information from $data and can be replaced even if
-   *   it is empty.
+   *   user object being the value. Some token types, like 'site', do not require
+   *   any explicit information from $data and can be replaced even if it is
+   *   empty.
    * @param array $options
    *   (optional) A keyed array of settings and flags to control the token
    *   replacement process. Supported options are:
@@ -187,7 +185,7 @@ class Token {
    *
    * @see static::replacePlain()
    */
-  public function replace($markup, array $data = [], array $options = [], ?BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function replace($markup, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
     return $this->doReplace(TRUE, (string) $markup, $data, $options, $bubbleable_metadata);
   }
 
@@ -206,7 +204,7 @@ class Token {
    * @return string
    *   The entered plain text with tokens replaced.
    */
-  public function replacePlain(string $plain, array $data = [], array $options = [], ?BubbleableMetadata $bubbleable_metadata = NULL): string {
+  public function replacePlain(string $plain, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL): string {
     return $this->doReplace(FALSE, $plain, $data, $options, $bubbleable_metadata);
   }
 
@@ -227,7 +225,7 @@ class Token {
    * @return string
    *   The token result is the entered string with tokens replaced.
    */
-  protected function doReplace(bool $markup, string $text, array $data, array $options, ?BubbleableMetadata $bubbleable_metadata = NULL): string {
+  protected function doReplace(bool $markup, string $text, array $data, array $options, BubbleableMetadata $bubbleable_metadata = NULL): string {
     $text_tokens = $this->scan($text);
     if (empty($text_tokens)) {
       return $text;
@@ -288,7 +286,12 @@ class Token {
    * @return array
    *   An associative array of discovered tokens, grouped by type.
    */
-  public function scan(string $text) {
+  public function scan($text) {
+    if (!is_string($text)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a $text parameter of type other than string is deprecated in drupal:10.1.0, a typehint will be added in drupal:11.0.0. See https://www.drupal.org/node/3334317', E_USER_DEPRECATED);
+      $text = (string) $text;
+    }
+
     // Matches tokens with the following pattern: [$type:$name]
     // $type and $name may not contain [ ] characters.
     // $type may not contain : or whitespace characters, but $name may.
@@ -376,13 +379,13 @@ class Token {
    * Used to extract a group of 'chained' tokens (such as [node:author:name])
    * from the full list of tokens found in text. For example:
    * @code
-   *   $data = [
+   *   $data = array(
    *     'author:name' => '[node:author:name]',
    *     'title'       => '[node:title]',
    *     'created'     => '[node:created]',
-   *   ];
+   *   );
    *   $results = Token::findWithPrefix($data, 'author');
-   *   $results == ['name' => '[node:author:name]'];
+   *   $results == array('name' => '[node:author:name]');
    * @endcode
    *
    * @param array $tokens
@@ -390,8 +393,8 @@ class Token {
    * @param string $prefix
    *   A textual string to be matched at the beginning of the token.
    * @param string $delimiter
-   *   (optional) A string containing the character that separates the prefix
-   *   from the rest of the token. Defaults to ':'.
+   *   (optional) A string containing the character that separates the prefix from
+   *   the rest of the token. Defaults to ':'.
    *
    * @return array
    *   An associative array of discovered tokens, with the prefix and delimiter

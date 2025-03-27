@@ -24,9 +24,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Field handlers handle both querying and display of fields in views.
  *
  * Field handler plugins extend
- * \Drupal\views\Plugin\views\field\FieldPluginBase. They must be attributed
- * with \Drupal\views\Attribute\ViewsField attribute, and they must be in
- * namespace directory Plugin\views\field.
+ * \Drupal\views\Plugin\views\field\FieldPluginBase. They must be
+ * annotated with \Drupal\views\Annotation\ViewsField annotation, and they
+ * must be in namespace directory Plugin\views\field.
  *
  * The following items can go into a hook_views_data() implementation in a
  * field section to affect how the field handler will behave:
@@ -34,9 +34,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   The array is in one of these forms:
  *   @code
  *   // Simple form, for fields within the same table.
- *   ['identifier' => fieldname]
+ *   array('identifier' => fieldname)
  *   // Form for fields in a different table.
- *   ['identifier' => ['table' => tablename, 'field' => fieldname]]
+ *   array('identifier' => array('table' => tablename, 'field' => fieldname))
  *   @endcode
  *   As many fields as are necessary may be in this array.
  * - click sortable: If TRUE (default), this field may be click sorted.
@@ -72,18 +72,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   const RENDER_TEXT_PHASE_EMPTY = 2;
 
   /**
-   * The alias for the field plugin.
-   *
    * @var string
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $field_alias = 'unknown';
-
-  /**
-   * An array of aliases.
-   *
-   * @var string[]
-   */
   public $aliases = [];
 
   /**
@@ -91,7 +82,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    *
    * @var mixed
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $original_value = NULL;
 
   /**
@@ -101,7 +91,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    *
    * @var array
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $additional_fields = [];
 
   /**
@@ -121,19 +110,16 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   /**
    * The last rendered value.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public string|MarkupInterface|NULL $last_render;
 
   /**
    * The last rendered text.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public string|MarkupInterface|NULL $last_render_text;
 
   /**
    * The last rendered tokens.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public array $last_tokens;
 
   /**
@@ -146,7 +132,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $this->additional_fields = [];
@@ -184,16 +170,16 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   /**
    * Add 'additional' fields to the query.
    *
-   * @param array $fields
+   * @param $fields
    *   An array of fields. The key is an identifier used to later find the
    *   field alias used. The value is either a string in which case it's
    *   assumed to be a field on this handler's table; or it's an array in the
    *   form of
-   *   @code ['table' => $tablename, 'field' => $fieldname] @endcode
+   *   @code array('table' => $tablename, 'field' => $fieldname) @endcode
    */
   protected function addAdditionalFields($fields = NULL) {
     if (!isset($fields)) {
-      // Notice check
+      // notice check
       if (empty($this->additional_fields)) {
         return;
       }
@@ -374,7 +360,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * {@inheritdoc}
    */
   public function tokenizeValue($value, $row_index = NULL) {
-    if (str_contains($value, '{{')) {
+    if (strpos($value, '{{') !== FALSE) {
       $fake_item = [
         'alter_text' => TRUE,
         'text' => $value,
@@ -434,35 +420,12 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   public function getEntity(ResultRow $values) {
     $relationship_id = $this->options['relationship'];
-    $entity = NULL;
     if ($relationship_id == 'none') {
-      $entity = $values->_entity;
+      return $values->_entity;
     }
     elseif (isset($values->_relationship_entities[$relationship_id])) {
-      $entity = $values->_relationship_entities[$relationship_id];
+      return $values->_relationship_entities[$relationship_id];
     }
-
-    if ($entity === NULL) {
-      // Don't log an error if we're getting an entity for an optional
-      // relationship.
-      if ($relationship_id !== 'none') {
-        $relationship = $this->view->relationship[$relationship_id] ?? NULL;
-        if ($relationship && !$relationship->options['required']) {
-          return NULL;
-        }
-      }
-      \Drupal::logger('views')->error(
-        'The view %id failed to load an entity of type %entity_type at row %index for field %field',
-        [
-          '%id' => $this->view->id(),
-          '%entity_type' => $this->configuration['entity_type'],
-          '%index' => $values->index,
-          '%field' => $this->label() ?: $this->realField,
-        ]
-      );
-      return NULL;
-    }
-    return $entity;
   }
 
   /**
@@ -482,9 +445,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     return TRUE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -531,7 +491,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $options['element_label_type'] = ['default' => ''];
     $options['element_label_class'] = ['default' => ''];
-    $options['element_label_colon'] = ['default' => FALSE];
+    $options['element_label_colon'] = ['default' => TRUE];
 
     $options['element_wrapper_type'] = ['default' => ''];
     $options['element_wrapper_class'] = ['default' => ''];
@@ -573,7 +533,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   }
 
   /**
-   * Default option form that provides label widget that all fields should have.
+   * Default options form that provides the label widget that all fields
+   * should have.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -1319,10 +1280,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     // Check if there should be no further rewrite for empty values.
     $no_rewrite_for_empty = $this->options['hide_alter_empty'] && $this->isValueEmpty($this->original_value, $this->options['empty_zero']);
 
-    // Check whether the value is empty and return nothing, so the field isn't
-    // rendered. First check whether the field should be hidden if the
-    // value(hide_alter_empty = TRUE) /the rewrite is empty (hide_alter_empty =
-    // FALSE). For numeric values you can specify whether "0"/0 should be empty.
+    // Check whether the value is empty and return nothing, so the field isn't rendered.
+    // First check whether the field should be hidden if the value(hide_alter_empty = TRUE) /the rewrite is empty (hide_alter_empty = FALSE).
+    // For numeric values you can specify whether "0"/0 should be empty.
     if ((($this->options['hide_empty'] && empty($value))
         || ($alter['phase'] != static::RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty))
       && $this->isValueEmpty($value, $this->options['empty_zero'], FALSE)) {
@@ -1345,7 +1305,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $value = $this->renderTrimText($alter, $value);
       if ($this->options['alter']['more_link'] && strlen($value) < $length) {
         $tokens = $this->getRenderTokens($alter);
-        $more_link_text = $this->options['alter']['more_link_text'] ?: $this->t('more');
+        $more_link_text = $this->options['alter']['more_link_text'] ? $this->options['alter']['more_link_text'] : $this->t('more');
         $more_link_text = strtr(Xss::filterAdmin($more_link_text), $tokens);
         $more_link_path = $this->options['alter']['more_link_path'];
         $more_link_path = strip_tags(Html::decodeEntities($this->viewsTokenReplace($more_link_path, $tokens)));
@@ -1439,7 +1399,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   }
 
   /**
-   * Render this field as a link, with the info from a fieldset set by the user.
+   * Render this field as a link, with the info from a fieldset set by
+   * the user.
    */
   protected function renderAsLink($alter, $text, $tokens) {
     $options = [
@@ -1527,8 +1488,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     // If the path is empty do not build a link around the given text and return
     // it as is.
-    // http://www.example.com URLs will not have a $url['path'], so check host
-    // as well.
+    // http://www.example.com URLs will not have a $url['path'], so check host as well.
     if (empty($url['path']) && empty($url['host']) && empty($url['fragment']) && empty($url['url'])) {
       return $text;
     }
@@ -1584,9 +1544,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $options['attributes']['target'] = $target;
     }
 
-    // Allow the addition of arbitrary attributes to links. Additional
-    // attributes currently can only be altered in preprocessors and not within
-    // the UI.
+    // Allow the addition of arbitrary attributes to links. Additional attributes
+    // currently can only be altered in preprocessors and not within the UI.
     if (isset($alter['link_attributes']) && is_array($alter['link_attributes'])) {
       foreach ($alter['link_attributes'] as $key => $attribute) {
         if (!isset($options['attributes'][$key])) {
@@ -1716,46 +1675,39 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Recursive function to add replacements for nested query string parameters.
    *
    * E.g. if you pass in the following array:
-   *   [
-   *     'foo' => [
+   *   array(
+   *     'foo' => array(
    *       'a' => 'value',
    *       'b' => 'value',
-   *       'c.d' => 'invalid value',
-   *       '&invalid' => 'invalid value',
-   *   ],
-   *     'bar' => [
+   *     ),
+   *     'bar' => array(
    *       'a' => 'value',
-   *       'b' => [
+   *       'b' => array(
    *         'c' => value,
-   *       ],
-   *     ],
-   *   ];
+   *       ),
+   *     ),
+   *   );
    *
    * Would yield the following array of tokens:
-   *   [
-   *     '{{ arguments.foo.a }}' => 'value',
-   *     '{{ arguments.foo.b }}' => 'value',
-   *     '{{ arguments.bar.a }}' => 'value',
-   *     '{{ arguments.bar.b.c }}' => 'value',
-   *   ];
+   *   array(
+   *     '%foo_a' => 'value'
+   *     '%foo_b' => 'value'
+   *     '%bar_a' => 'value'
+   *     '%bar_b_c' => 'value'
+   *   );
    *
-   * @param array $array
+   * @param $array
    *   An array of values.
-   * @param array $parent_keys
+   * @param $parent_keys
    *   An array of parent keys. This will represent the array depth.
    *
    * @return array
-   *   An array of available tokens, with nested keys representative of the
-   *   array structure.
+   *   An array of available tokens, with nested keys representative of the array structure.
    */
   protected function getTokenValuesRecursive(array $array, array $parent_keys = []) {
     $tokens = [];
 
     foreach ($array as $param => $val) {
-      if (!is_numeric($param) && preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $param) === 0) {
-        // Skip as the parameter is not a valid Twig variable name.
-        continue;
-      }
       if (is_array($val)) {
         // Copy parent_keys array, so we don't affect other elements of this
         // iteration.
@@ -1818,9 +1770,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     return $output;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function themeFunctions() {
     $themes = [];
     $hook = 'views_view_field';
@@ -1847,9 +1796,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     return $themes;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function adminLabel($short = FALSE) {
     return $this->getField(parent::adminLabel($short));
   }
@@ -1903,7 +1849,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Gets the link generator.
    *
    * @return \Drupal\Core\Utility\LinkGeneratorInterface
-   *   The link generator service.
    */
   protected function linkGenerator() {
     if (!isset($this->linkGenerator)) {
@@ -1916,7 +1861,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Returns the render API renderer.
    *
    * @return \Drupal\Core\Render\RendererInterface
-   *   The render API renderer service.
    */
   protected function getRenderer() {
     if (!isset($this->renderer)) {

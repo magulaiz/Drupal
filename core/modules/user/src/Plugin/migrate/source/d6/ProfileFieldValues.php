@@ -2,7 +2,6 @@
 
 namespace Drupal\user\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
@@ -13,11 +12,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_profile_field_values",
+ *   source_module = "profile"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_profile_field_values',
-  source_module: 'profile',
-)]
 class ProfileFieldValues extends DrupalSqlBase {
 
   /**
@@ -78,7 +78,6 @@ class ProfileFieldValues extends DrupalSqlBase {
     $query->fields('pf', ['name', 'title']);
     $results = $query->execute();
     foreach ($results as $profile) {
-      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $fields[$profile['name']] = $this->t($profile['title']);
     }
 

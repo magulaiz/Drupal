@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\rest\Functional\EntityResource;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -17,7 +15,6 @@ use Drupal\options\Plugin\Field\FieldType\ListIntegerItem;
 use Drupal\path\Plugin\Field\FieldType\PathItem;
 use Drupal\Tests\rest\Functional\XmlNormalizationQuirksTrait;
 use Drupal\user\StatusItem;
-use PHPUnit\Framework\Attributes\Before;
 
 /**
  * Trait for EntityResourceTestBase subclasses testing $format='xml'.
@@ -25,16 +22,6 @@ use PHPUnit\Framework\Attributes\Before;
 trait XmlEntityNormalizationQuirksTrait {
 
   use XmlNormalizationQuirksTrait;
-
-  /**
-   * Marks some tests as skipped because XML cannot be deserialized.
-   */
-  #[Before]
-  public function xmlEntityNormalizationQuirksTraitSkipTests(): void {
-    if (in_array($this->name(), ['testPatch', 'testPost'], TRUE)) {
-      $this->markTestSkipped('Deserialization of the XML format is not supported.');
-    }
-  }
 
   /**
    * {@inheritdoc}
@@ -67,7 +54,7 @@ trait XmlEntityNormalizationQuirksTrait {
    *
    * @see \Symfony\Component\Serializer\Encoder\XmlEncoder
    */
-  protected function applyXmlFieldDecodingQuirks(array $normalization): array {
+  protected function applyXmlFieldDecodingQuirks(array $normalization) {
     foreach ($this->entity->getFields(TRUE) as $field_name => $field) {
       // Not every field is accessible.
       if (!isset($normalization[$field_name])) {
@@ -157,6 +144,22 @@ trait XmlEntityNormalizationQuirksTrait {
     }
 
     return $normalization;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testPost() {
+    // Deserialization of the XML format is not supported.
+    $this->markTestSkipped();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testPatch() {
+    // Deserialization of the XML format is not supported.
+    $this->markTestSkipped();
   }
 
 }

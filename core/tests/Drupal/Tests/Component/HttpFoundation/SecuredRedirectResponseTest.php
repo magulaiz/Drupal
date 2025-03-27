@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Component\HttpFoundation\SecuredRedirectResponseTest.
+ */
 
 namespace Drupal\Tests\Component\HttpFoundation;
 
@@ -23,7 +26,7 @@ class SecuredRedirectResponseTest extends TestCase {
    * @covers ::createFromRedirectResponse
    * @covers ::fromResponse
    */
-  public function testRedirectCopy(): void {
+  public function testRedirectCopy() {
     $redirect = new RedirectResponse('/magic_redirect_url', 301, ['x-cache-foobar' => 123]);
     $redirect->setProtocolVersion('2.0');
     $redirect->setCharset('ibm-943_P14A-2000');
@@ -33,10 +36,12 @@ class SecuredRedirectResponseTest extends TestCase {
     $secureRedirect = SecuredRedirectStub::createFromRedirectResponse($redirect);
     $this->assertEquals('/magic_redirect_url', $secureRedirect->getTargetUrl());
     $this->assertEquals(301, $secureRedirect->getStatusCode());
-    // We pull the headers from the original redirect because there are default
-    // headers applied.
-    $headers1 = $redirect->headers->all();
-    $headers2 = $secureRedirect->headers->all();
+    // We pull the headers from the original redirect because there are default headers applied.
+    $headers1 = $redirect->headers->allPreserveCase();
+    $headers2 = $secureRedirect->headers->allPreserveCase();
+    // We unset cache headers so we don't test arcane Symfony weirdness.
+    // https://github.com/symfony/symfony/issues/16171
+    unset($headers1['Cache-Control'], $headers2['Cache-Control']);
     $this->assertEquals($headers1, $headers2);
     $this->assertEquals('2.0', $secureRedirect->getProtocolVersion());
     $this->assertEquals('ibm-943_P14A-2000', $secureRedirect->getCharset());
@@ -45,15 +50,12 @@ class SecuredRedirectResponseTest extends TestCase {
 
 }
 
-/**
- * Test class for safe redirects.
- */
 class SecuredRedirectStub extends SecuredRedirectResponse {
 
   /**
    * {@inheritdoc}
    */
-  protected function isSafe($url): bool {
+  protected function isSafe($url) {
     // Empty implementation for testing.
     return TRUE;
   }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
@@ -9,7 +7,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests node translation redirects.
+ * Tests node translation redirections.
  *
  * @group migrate_drupal
  * @group node
@@ -54,7 +52,7 @@ class NodeTranslationRedirectTest extends MigrateDrupal7TestBase {
   /**
    * Tests that not found node translations are redirected.
    */
-  public function testNodeTranslationRedirect(): void {
+  public function testNodeTranslationRedirect() {
     $kernel = $this->container->get('http_kernel');
     $request = Request::create('/node/3');
     $response = $kernel->handle($request);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -92,7 +90,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   /**
    * Tests the contextual links on revisions.
    */
-  public function testRevisionContextualLinks(): void {
+  public function testRevisionContextualLinks() {
     // Confirm that the "Edit" and "Delete" contextual links appear for the
     // default revision.
     $this->drupalGet('node/' . $this->nodes[0]->id());

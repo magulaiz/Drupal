@@ -1,13 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Common;
 
 use Drupal\Component\Utility\Tags;
 use Drupal\Tests\UnitTestCase;
-
-// cspell:ignore sloopal troopal
 
 /**
  * Tests explosion and implosion of autocomplete tags.
@@ -16,11 +12,6 @@ use Drupal\Tests\UnitTestCase;
  */
 class TagsTest extends UnitTestCase {
 
-  /**
-   * A list of valid tags.
-   *
-   * @var string[][]
-   */
   protected $validTags = [
     'Drupal' => 'Drupal',
     'Drupal with some spaces' => 'Drupal with some spaces',
@@ -31,7 +22,7 @@ class TagsTest extends UnitTestCase {
   /**
    * Explodes a series of tags.
    */
-  public function testExplodeTags(): void {
+  public function testExplodeTags() {
     $string = implode(', ', array_keys($this->validTags));
     $tags = Tags::explode($string);
     $this->assertEquals(array_values($this->validTags), $tags);
@@ -40,7 +31,7 @@ class TagsTest extends UnitTestCase {
   /**
    * Implodes a series of tags.
    */
-  public function testImplodeTags(): void {
+  public function testImplodeTags() {
     $tags = array_values($this->validTags);
     // Let's explode and implode to our heart's content.
     for ($i = 0; $i < 10; $i++) {

@@ -25,19 +25,18 @@ class PluralFormula implements PluralFormulaInterface {
   /**
    * The plural formula and count keyed by langcode.
    *
-   * @var array
-   *
    * For example the structure looks like this:
    * @code
    * [
    *   'de' => [
    *     'plurals' => 2,
    *     'formula' => [
-   *       // @todo Provide the formula.
+   *       // @todo
    *     ]
    *   ],
    * ]
    * @endcode
+   * @var array
    */
   protected $formulae;
 
@@ -94,6 +93,8 @@ class PluralFormula implements PluralFormulaInterface {
 
   /**
    * Loads the formulae and stores them on the PluralFormula object if not set.
+   *
+   * @return array
    */
   protected function loadFormulae() {
     if (!isset($this->formulae)) {

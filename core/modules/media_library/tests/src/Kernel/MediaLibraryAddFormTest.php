@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\media_library\Kernel;
 
 use Drupal\Core\Form\FormState;
@@ -31,7 +29,6 @@ class MediaLibraryAddFormTest extends KernelTestBase {
     'media_library',
     'file',
     'field',
-    'filter',
     'image',
     'system',
     'views',
@@ -47,6 +44,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installSchema('file', 'file_usage');
+    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('media');
     $this->installConfig([
       'field',
@@ -67,7 +65,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
   /**
    * Tests the media library add form.
    */
-  public function testMediaTypeAddForm(): void {
+  public function testMediaTypeAddForm() {
     $entity_type_manager = \Drupal::entityTypeManager();
     $image = $entity_type_manager->getStorage('media_type')->load('image');
     $remote_video = $entity_type_manager->getStorage('media_type')->load('remote_video');
@@ -121,7 +119,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
   /**
    * Tests the validation of the library state in the media library add form.
    */
-  public function testFormStateValidation(): void {
+  public function testFormStateValidation() {
     $form_state = new FormState();
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('The media library state is not present in the form state.');
@@ -131,7 +129,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
   /**
    * Tests the validation of the selected type in the media library add form.
    */
-  public function testSelectedTypeValidation(): void {
+  public function testSelectedTypeValidation() {
     $state = MediaLibraryState::create('test', ['image', 'remote_video', 'header_image'], 'header_image', -1);
     $form_state = new FormState();
     $form_state->set('media_library_state', $state);
@@ -143,7 +141,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
   /**
    * Tests overwriting of the add form.
    */
-  public function testDifferentAddForm(): void {
+  public function testDifferentAddForm() {
     $this->enableModules(['media_library_form_overwrite_test']);
 
     $entity_type_manager = \Drupal::entityTypeManager();

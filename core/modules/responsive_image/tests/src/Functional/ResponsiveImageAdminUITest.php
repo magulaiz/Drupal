@@ -1,13 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\responsive_image\Functional;
 
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\Tests\BrowserTestBase;
-
-// cspell:ignore modulenarrow
 
 /**
  * Thoroughly test the administrative interface of the Responsive Image module.
@@ -17,7 +13,9 @@ use Drupal\Tests\BrowserTestBase;
 class ResponsiveImageAdminUITest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'responsive_image',
@@ -43,7 +41,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   /**
    * Tests responsive image administration functionality.
    */
-  public function testResponsiveImageAdmin(): void {
+  public function testResponsiveImageAdmin() {
     // We start without any default styles.
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertSession()->pageTextContains('There are no responsive image styles yet.');
@@ -57,7 +55,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     $edit = [
       'label' => 'Style One',
       'id' => 'style_one',
-      'breakpoint_group' => 'responsive_image',
+      'breakpoint_group' => 'responsive_image_test_module',
       'fallback_image_style' => 'thumbnail',
     ];
     $this->drupalGet('admin/config/media/responsive-image-style/add');
@@ -68,15 +66,6 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertSession()->pageTextNotContains('There are no responsive image styles yet.');
     $this->assertSession()->pageTextContains('Style One');
-
-    // Edit the breakpoint_group.
-    $this->drupalGet('admin/config/media/responsive-image-style/style_one');
-    $this->assertSession()->fieldValueEquals('label', 'Style One');
-    $this->assertSession()->fieldValueEquals('breakpoint_group', 'responsive_image');
-    $edit = [
-      'breakpoint_group' => 'responsive_image_test_module',
-    ];
-    $this->submitForm($edit, 'Save');
 
     // Edit the group.
     $this->drupalGet('admin/config/media/responsive-image-style/style_one');

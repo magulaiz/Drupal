@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Component\FileSecurity\FileSecurity;
@@ -61,8 +59,13 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
 
   /**
    * Tests basic load/save/delete operations.
+   *
+   * @covers ::load
+   * @covers ::save
+   * @covers ::delete
+   * @covers ::exists
    */
-  public function testCRUD(): void {
+  public function testCRUD() {
     $php = new $this->storageClass($this->settings);
     $this->assertCRUD($php);
   }
@@ -74,15 +77,14 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
    * mtime too.
    *
    * We need to delay over 1 second for mtime test.
-   *
    * @medium
    */
-  public function testSecurity(): void {
+  public function testSecurity() {
     $php = new $this->storageClass($this->settings);
     $name = 'test.php';
     $php->save($name, '<?php');
     $expected_root_directory = $this->directory . '/test';
-    if (str_ends_with($name, '.php')) {
+    if (substr($name, -4) === '.php') {
       $expected_directory = $expected_root_directory . '/' . substr($name, 0, -4);
     }
     else {

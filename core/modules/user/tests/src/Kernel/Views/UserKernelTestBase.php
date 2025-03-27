@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -13,7 +11,9 @@ use Drupal\views\Tests\ViewTestData;
 abstract class UserKernelTestBase extends ViewsKernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['user_test_views', 'user', 'system', 'field'];
 
@@ -69,13 +69,7 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
     // Setup a role with multiple permissions.
     $this->roleStorage->create(['id' => 'multiple_permissions', 'label' => 'Multiple permissions'])
       ->save();
-    user_role_grant_permissions(
-      'multiple_permissions',
-      [
-        'administer permissions',
-        'administer users',
-        'access user profiles',
-      ]);
+    user_role_grant_permissions('multiple_permissions', ['administer permissions', 'administer users', 'access user profiles']);
 
     // Setup a user without an extra role.
     $this->users[] = $account = $this->userStorage->create(['name' => $this->randomString()]);
@@ -83,14 +77,17 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
     // Setup a user with just the first role (so no permission beside the
     // ones from the authenticated role).
     $this->users[] = $account = $this->userStorage->create(['name' => 'first_role']);
-    $account->addRole('no_permission')->save();
+    $account->addRole('no_permission');
+    $account->save();
     // Setup a user with just the second role (so one additional permission).
     $this->users[] = $account = $this->userStorage->create(['name' => 'second_role']);
-    $account->addRole('one_permission')->save();
+    $account->addRole('one_permission');
+    $account->save();
     // Setup a user with both the second and the third role.
     $this->users[] = $account = $this->userStorage->create(['name' => 'second_third_role']);
-    $account->addRole('one_permission')->addRole('multiple_permissions')
-      ->save();
+    $account->addRole('one_permission');
+    $account->addRole('multiple_permissions');
+    $account->save();
   }
 
 }

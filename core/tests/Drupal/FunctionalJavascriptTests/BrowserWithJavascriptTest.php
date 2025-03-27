@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalJavascriptTests;
 
 use PHPUnit\Framework\AssertionFailedError;
@@ -14,7 +12,9 @@ use PHPUnit\Framework\AssertionFailedError;
 class BrowserWithJavascriptTest extends WebDriverTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['test_page_test'];
 
@@ -23,7 +23,7 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testJavascript(): void {
+  public function testJavascript() {
     $this->drupalGet('<front>');
     $session = $this->getSession();
 
@@ -46,7 +46,7 @@ JS;
     $this->assertFalse($this->isTestUsingGuzzleClient());
   }
 
-  public function testAssertJsCondition(): void {
+  public function testAssertJsCondition() {
     $this->drupalGet('<front>');
     $session = $this->getSession();
 
@@ -72,7 +72,7 @@ JS;
   /**
    * Tests creating screenshots.
    */
-  public function testCreateScreenshot(): void {
+  public function testCreateScreenshot() {
     $this->drupalGet('<front>');
     $this->createScreenshot('public://screenshot.jpg');
     $this->assertFileExists('public://screenshot.jpg');
@@ -84,7 +84,7 @@ JS;
    * @see \Drupal\Tests\WebAssert::assertNoEscaped()
    * @see \Drupal\Tests\WebAssert::assertEscaped()
    */
-  public function testEscapingAssertions(): void {
+  public function testEscapingAssertions() {
     $assert = $this->assertSession();
 
     $this->drupalGet('test-escaped-characters');
@@ -139,8 +139,8 @@ JS;
     $session->visit($url);
 
     // There are 2 alerts to accept before we can get the content of the page.
-    $session->getDriver()->getWebdriverSession()->alert()->accept();
-    $session->getDriver()->getWebdriverSession()->alert()->accept();
+    $session->getDriver()->getWebdriverSession()->accept_alert();
+    $session->getDriver()->getWebdriverSession()->accept_alert();
 
     $out = $session->getPage()->getContent();
 

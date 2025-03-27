@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -14,7 +12,6 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\Plugin\DataType\Timestamp;
 use Drupal\serialization\Normalizer\TimestampItemNormalizer;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Serializer\Serializer;
 
 /**
@@ -50,7 +47,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsNormalization
    */
-  public function testSupportsNormalization(): void {
+  public function testSupportsNormalization() {
     $timestamp_item = $this->createTimestampItemProphecy();
     $this->assertTrue($this->normalizer->supportsNormalization($timestamp_item->reveal()));
 
@@ -61,7 +58,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsDenormalization
    */
-  public function testSupportsDenormalization(): void {
+  public function testSupportsDenormalization() {
     $timestamp_item = $this->createTimestampItemProphecy();
     $this->assertTrue($this->normalizer->supportsDenormalization($timestamp_item->reveal(), TimestampItem::class));
 
@@ -77,7 +74,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
    * @covers ::normalize
    * @see \Drupal\Tests\serialization\Unit\Normalizer\TimestampNormalizerTest
    */
-  public function testNormalize(): void {
+  public function testNormalize() {
     // Mock TimestampItem @FieldType, which contains a Timestamp @DataType,
     // which has a DataDefinition.
     $data_definition = $this->prophesize(DataDefinitionInterface::class);
@@ -113,7 +110,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   /**
    * @covers ::denormalize
    */
-  public function testDenormalize(): void {
+  public function testDenormalize() {
     $timestamp_item_normalization = [
       'value' => $this->randomMachineName(),
       'format' => \DateTime::RFC3339,
@@ -172,10 +169,9 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   /**
    * Creates a TimestampItem prophecy.
    *
-   * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem>
-   *   The TimestampItem prophecy.
+   * @return \Prophecy\Prophecy\ObjectProphecy|\Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem
    */
-  protected function createTimestampItemProphecy(): ObjectProphecy {
+  protected function createTimestampItemProphecy() {
     $timestamp_item = $this->prophesize(TimestampItem::class);
     $timestamp_item->getParent()
       ->willReturn(TRUE);

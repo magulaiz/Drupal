@@ -2,24 +2,18 @@
 
 namespace Drupal\path\Plugin\Validation\Constraint;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Validation\Attribute\Constraint;
-use Symfony\Component\Validator\Constraint as SymfonyConstraint;
+use Symfony\Component\Validator\Constraint;
 
 /**
  * Validation constraint for changing path aliases in pending revisions.
+ *
+ * @Constraint(
+ *   id = "PathAlias",
+ *   label = @Translation("Path alias.", context = "Validation"),
+ * )
  */
-#[Constraint(
-  id: 'PathAlias',
-  label: new TranslatableMarkup('Path alias.', [], ['context' => 'Validation'])
-)]
-class PathAliasConstraint extends SymfonyConstraint {
+class PathAliasConstraint extends Constraint {
 
-  /**
-   * The default violation message.
-   *
-   * @var string
-   */
   public $message = 'You can only change the URL alias for the <em>published</em> version of this content.';
 
 }

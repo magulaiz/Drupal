@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -20,10 +18,11 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class TaxonomyFieldVidTest extends ViewsKernelTestBase {
 
   use TaxonomyTestTrait;
-  use UserCreationTrait;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'taxonomy',
@@ -40,11 +39,11 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
   public static $testViews = ['test_taxonomy_vid_field'];
 
   /**
-   * An array of taxonomy term used in this test.
+   * A taxonomy term to use in this test.
    *
-   * @var \Drupal\taxonomy\Entity\Term[]
+   * @var \Drupal\taxonomy\Entity\Term
    */
-  protected $terms;
+  protected $term1;
 
   /**
    * An admin user.
@@ -64,15 +63,13 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $this->installConfig(['filter']);
 
     /** @var \Drupal\taxonomy\Entity\Vocabulary $vocabulary */
-    $vocabulary = $this->createVocabulary(['vid' => 'aaa']);
-    $term = $this->createTerm($vocabulary);
-    $this->terms[$term->id()] = $term;
+    $vocabulary = $this->createVocabulary();
+    $this->term1 = $this->createTerm($vocabulary);
 
-    /** @var \Drupal\taxonomy\Entity\Vocabulary $vocabulary2 */
-    $vocabulary2 = $this->createVocabulary(['vid' => 'bbb']);
-    $term = $this->createTerm($vocabulary2);
-    $this->terms[$term->id()] = $term;
-    $this->adminUser = $this->createUser(['administer taxonomy']);
+    // Create user 1 and set is as the logged in user, so that the logged in
+    // user has the correct permissions to view the vocabulary name.
+    $this->adminUser = User::create(['name' => $this->randomString()]);
+    $this->adminUser->save();
     $this->container->get('current_user')->setAccount($this->adminUser);
 
     ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
@@ -81,7 +78,7 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
   /**
    * Tests the field handling for the Vocabulary ID.
    */
-  public function testViewsHandlerVidField(): void {
+  public function testViewsHandlerVidField() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -91,55 +88,9 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['vid']->advancedRender($view->result[0]);
     });
-    $tid = $view->result[0]->_entity->id();
-    $vocabulary = Vocabulary::load($this->terms[$tid]->bundle());
+    $vocabulary = Vocabulary::load($this->term1->bundle());
     $expected = $vocabulary->get('name');
 
-    $this->assertEquals($expected, $actual, 'Displayed vocabulary name should match that loaded from the term.');
-    $this->assertEquals('aaa', $vocabulary->id(), 'First result should be vocabulary "aaa", due to ASC sorting.');
-
-    // Reverse sorting.
-
-    $view = Views::getView('test_taxonomy_vid_field');
-    $view->setHandlerOption('default', 'sort', 'vid', 'order', 'DESC');
-    $this->executeView($view);
-
-    $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
-      return $view->field['vid']->advancedRender($view->result[0]);
-    });
-    $tid = $view->result[0]->_entity->id();
-    $vocabulary = Vocabulary::load($this->terms[$tid]->bundle());
-    $expected = $vocabulary->get('name');
-
-    $this->assertEquals($expected, $actual, 'Displayed vocabulary name should match that loaded from the term.');
-    $this->assertEquals('bbb', $vocabulary->id(), 'First result should be vocabulary "bbb", due to DESC sorting.');
-
-    // Test with user without 'view vocabulary labels' permission.
-    $this->setUpCurrentUser();
-    $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
-      return $view->field['vid']->advancedRender($view->result[0]);
-    });
-    $expected = '';
-    $this->assertEquals($expected, $actual);
-
-    // Test with user with 'view vocabulary labels' permissions.
-    $this->setUpCurrentUser([], ['view vocabulary labels']);
-    $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
-      return $view->field['vid']->advancedRender($view->result[0]);
-    });
-    $expected = $vocabulary->label();
-    $this->assertEquals($expected, $actual);
-
-    // Test with user with 'administer taxonomy' and 'access taxonomy overview'
-    // permissions. Label should be displayed for either permission.
-    $this->setUpCurrentUser([], [
-      'administer taxonomy',
-      'access taxonomy overview',
-    ]);
-    $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
-      return $view->field['vid']->advancedRender($view->result[0]);
-    });
-    $expected = $vocabulary->label();
     $this->assertEquals($expected, $actual);
   }
 

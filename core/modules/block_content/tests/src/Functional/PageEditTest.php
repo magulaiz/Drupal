@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -34,14 +32,14 @@ class PageEditTest extends BlockContentTestBase {
   /**
    * Checks block edit functionality.
    */
-  public function testPageEdit(): void {
+  public function testPageEdit() {
     $this->drupalLogin($this->adminUser);
 
     $title_key = 'info[0][value]';
     $body_key = 'body[0][value]';
     // Create block to edit.
     $edit = [];
-    $edit['info[0][value]'] = $this->randomMachineName(8);
+    $edit['info[0][value]'] = mb_strtolower($this->randomMachineName(8));
     $edit[$body_key] = $this->randomMachineName(16);
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit, 'Save');
@@ -52,10 +50,10 @@ class PageEditTest extends BlockContentTestBase {
       ->condition('info', $edit['info[0][value]'])
       ->execute();
     $block = BlockContent::load(reset($blocks));
-    $this->assertNotEmpty($block, 'Content block found in database.');
+    $this->assertNotEmpty($block, 'Custom block found in database.');
 
     // Load the edit page.
-    $this->drupalGet('admin/content/block/' . $block->id());
+    $this->drupalGet('block/' . $block->id());
     $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
     $this->assertSession()->fieldValueEquals($body_key, $edit[$body_key]);
 
@@ -67,7 +65,7 @@ class PageEditTest extends BlockContentTestBase {
     $this->submitForm($edit, 'Save');
 
     // Edit the same block, creating a new revision.
-    $this->drupalGet("admin/content/block/" . $block->id());
+    $this->drupalGet("block/" . $block->id());
     $edit = [];
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
@@ -75,22 +73,22 @@ class PageEditTest extends BlockContentTestBase {
     $this->submitForm($edit, 'Save');
 
     // Ensure that the block revision has been created.
+    \Drupal::entityTypeManager()->getStorage('block_content')->resetCache([$block->id()]);
     $revised_block = BlockContent::load($block->id());
     $this->assertNotSame($block->getRevisionId(), $revised_block->getRevisionId(), 'A new revision has been created.');
 
     // Test deleting the block.
-    $this->drupalGet("admin/content/block/" . $revised_block->id());
+    $this->drupalGet("block/" . $revised_block->id());
     $this->clickLink('Delete');
-    $this->assertSession()->pageTextContains('Are you sure you want to delete the content block ' . $revised_block->label() . '?');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete the custom block ' . $revised_block->label() . '?');
 
     // Test breadcrumb.
     $trail = [
       '' => 'Home',
-      'admin/content/block' => 'Content blocks',
-      'admin/content/block/' . $revised_block->id() => $revised_block->label(),
+      'block/' . $revised_block->id() => $revised_block->label(),
     ];
     $this->assertBreadcrumb(
-      'admin/content/block/' . $revised_block->id() . '/delete', $trail
+      'block/' . $revised_block->id() . '/delete', $trail
     );
   }
 

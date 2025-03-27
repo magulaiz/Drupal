@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -19,7 +17,7 @@ class TextareaTest extends UnitTestCase {
    *
    * @dataProvider providerTestValueCallback
    */
-  public function testValueCallback($expected, $input): void {
+  public function testValueCallback($expected, $input) {
     $element = [];
     $form_state = $this->prophesize(FormStateInterface::class)->reveal();
     $this->assertSame($expected, Textarea::valueCallback($element, $input, $form_state));
@@ -28,7 +26,7 @@ class TextareaTest extends UnitTestCase {
   /**
    * Data provider for testValueCallback().
    */
-  public static function providerTestValueCallback() {
+  public function providerTestValueCallback() {
     $data = [];
     $data[] = [NULL, FALSE];
     $data[] = [NULL, NULL];

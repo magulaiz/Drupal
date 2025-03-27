@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -19,7 +17,7 @@ class WorkspaceViewTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['workspaces', 'workspaces_ui'];
+  protected static $modules = ['workspaces'];
 
   /**
    * {@inheritdoc}
@@ -29,7 +27,7 @@ class WorkspaceViewTest extends BrowserTestBase {
   /**
    * Verifies that a user can view their own workspace.
    */
-  public function testViewOwnWorkspace(): void {
+  public function testViewOwnWorkspace() {
     $permissions = [
       'access administration pages',
       'administer site configuration',
@@ -67,7 +65,7 @@ class WorkspaceViewTest extends BrowserTestBase {
   /**
    * Verifies that a user can view any workspace.
    */
-  public function testViewAnyWorkspace(): void {
+  public function testViewAnyWorkspace() {
     $permissions = [
       'access administration pages',
       'administer site configuration',

@@ -1,13 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-
-// cspell:ignore ditka
 
 /**
  * Tests access bypass permission controls on workspaces.
@@ -22,7 +18,7 @@ class WorkspaceBypassTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'user', 'block', 'workspaces', 'workspaces_ui'];
+  protected static $modules = ['node', 'user', 'block', 'workspaces'];
 
   /**
    * {@inheritdoc}
@@ -32,7 +28,7 @@ class WorkspaceBypassTest extends BrowserTestBase {
   /**
    * Verifies that a user can edit anything in a workspace they own.
    */
-  public function testBypassOwnWorkspace(): void {
+  public function testBypassOwnWorkspace() {
     $permissions = [
       'create workspace',
       'edit own workspace',
@@ -43,30 +39,30 @@ class WorkspaceBypassTest extends BrowserTestBase {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
     $this->setupWorkspaceSwitcherBlock();
 
-    $coach = $this->drupalCreateUser(array_merge($permissions, ['create test content']));
+    $ditka = $this->drupalCreateUser(array_merge($permissions, ['create test content']));
 
     // Login as a limited-access user and create a workspace.
-    $this->drupalLogin($coach);
-    $bears = $this->createAndActivateWorkspaceThroughUi('Bears', 'bears');
+    $this->drupalLogin($ditka);
+    $bears = $this->createWorkspaceThroughUi('Bears', 'bears');
+    $this->switchToWorkspace($bears);
 
     // Now create a node in the Bears workspace, as the owner of that workspace.
-    $coach_bears_node = $this->createNodeThroughUi('Ditka Bears node', 'test');
-    $coach_bears_node_id = $coach_bears_node->id();
+    $ditka_bears_node = $this->createNodeThroughUi('Ditka Bears node', 'test');
+    $ditka_bears_node_id = $ditka_bears_node->id();
 
     // Editing both nodes should be possible.
-    $this->drupalGet('/node/' . $coach_bears_node_id . '/edit');
+    $this->drupalGet('/node/' . $ditka_bears_node_id . '/edit');
     $this->assertSession()->statusCodeEquals(200);
 
     // Create a new user that should be able to edit anything in the Bears
     // workspace.
-    $this->switchToLive();
     $lombardi = $this->drupalCreateUser(array_merge($permissions, ['view any workspace']));
     $this->drupalLogin($lombardi);
     $this->switchToWorkspace($bears);
 
     // Editor 2 has the bypass permission but does not own the workspace and so,
     // should not be able to create and edit any node.
-    $this->drupalGet('/node/' . $coach_bears_node_id . '/edit');
+    $this->drupalGet('/node/' . $ditka_bears_node_id . '/edit');
     $this->assertSession()->statusCodeEquals(403);
   }
 

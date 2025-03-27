@@ -1,4 +1,3 @@
-{% extends "block.html.twig" %}
 {#
 /**
  * @file
@@ -27,19 +26,29 @@
  * @see template_preprocess_block()
  */
 #}
-{% block content %}
-  {% embed 'umami:banner' with {
-    attributes: create_attribute(),
-  } %}
-    {% block image %}
-      {{ content.field_media_image }}
-    {% endblock %}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+    'cover-image',
+  ]
+%}
+
+{% set background_image = file_url(content.field_media_image[0]['#media'].field_media_image.entity.uri.value) %}
+
+<div{{ attributes.addClass(classes) }} style="background-image: url({{ background_image }})">
+  <div class="block-inner">
+    {{ title_prefix }}
+    {% if label %}
+      <h2{{ title_attributes }}>{{ label }}</h2>
+    {% endif %}
+    {{ title_suffix }}
     {% block content %}
-      {% include "umami:title" with {
-        attributes: create_attribute({'class': ['banner__title']}),
-        label: content.field_title,
-      } only %}
-      {{ content|without(['field_media_image', 'field_title']) }}
+      {{ content.field_media_image }}
+      <div class="summary">
+        {{ content|without('field_media_image') }}
+      </div>
     {% endblock %}
-  {% endembed %}
-{% endblock %}
+  </div>
+</div>

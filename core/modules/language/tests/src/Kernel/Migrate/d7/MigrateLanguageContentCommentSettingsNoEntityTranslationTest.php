@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\language\Kernel\Migrate\d7;
 
 use Drupal\Core\Database\Database;
@@ -44,7 +42,7 @@ class MigrateLanguageContentCommentSettingsNoEntityTranslationTest extends Migra
   /**
    * {@inheritdoc}
    */
-  public static function migrateDumpAlter(KernelTestBase $test): void {
+  public static function migrateDumpAlter(KernelTestBase $test) {
     // Disable comment entity translation.
     $db = Database::getConnection('default', 'migrate');
 
@@ -59,7 +57,7 @@ class MigrateLanguageContentCommentSettingsNoEntityTranslationTest extends Migra
   /**
    * Tests migration of content language settings.
    */
-  public function testLanguageCommentSettings(): void {
+  public function testLanguageCommentSettings() {
     // Confirm there is no message about a missing bundle.
     $this->assertEmpty($this->migrateMessages, $this->migrateMessages['error'][0] ?? '');
 

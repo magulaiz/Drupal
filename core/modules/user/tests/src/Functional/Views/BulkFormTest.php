@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Functional\Views;
 
-use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 use Drupal\views\Views;
@@ -18,7 +15,9 @@ use Drupal\views\Views;
 class BulkFormTest extends UserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['views_ui'];
 
@@ -37,7 +36,7 @@ class BulkFormTest extends UserTestBase {
   /**
    * Tests the user bulk form.
    */
-  public function testBulkForm(): void {
+  public function testBulkForm() {
     // Log in as a user without 'administer users'.
     $this->drupalLogin($this->drupalCreateUser(['administer permissions']));
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
@@ -57,8 +56,7 @@ class BulkFormTest extends UserTestBase {
 
     // Assign a role to a user.
     $account = $user_storage->load($this->users[0]->id());
-    $roles = Role::loadMultiple();
-    unset($roles[RoleInterface::ANONYMOUS_ID]);
+    $roles = user_role_names(TRUE);
     unset($roles[RoleInterface::AUTHENTICATED_ID]);
     $role = key($roles);
 
@@ -69,6 +67,7 @@ class BulkFormTest extends UserTestBase {
     ];
     $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their roles.
+    $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->hasRole($role), 'The user now has the custom role.');
 
@@ -78,6 +77,7 @@ class BulkFormTest extends UserTestBase {
     ];
     $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their roles.
+    $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertFalse($account->hasRole($role), 'The user no longer has the custom role.');
 
@@ -90,6 +90,7 @@ class BulkFormTest extends UserTestBase {
     ];
     $this->submitForm($edit, 'Apply to selected items');
     // Re-load the user and check their status.
+    $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
     $this->assertTrue($account->isBlocked(), 'The user is blocked.');
     $this->assertSession()->pageTextNotContains($account->label());
@@ -139,12 +140,12 @@ class BulkFormTest extends UserTestBase {
   /**
    * Tests the user bulk form with a combined field filter on the bulk column.
    */
-  public function testBulkFormCombineFilter(): void {
+  public function testBulkFormCombineFilter() {
     // Add a user.
     User::load($this->users[0]->id());
     $view = Views::getView('test_user_bulk_form_combine_filter');
     $errors = $view->validate();
-    $this->assertEquals(sprintf('Field User: Bulk update set in Global: Combine fields filter is not usable for this filter type. Combined field filter only works for simple fields.'), reset($errors['default']));
+    $this->assertEquals(t('Field %field set in %filter is not usable for this filter type. Combined field filter only works for simple fields.', ['%field' => 'User: Bulk update', '%filter' => 'Global: Combine fields filter']), reset($errors['default']));
   }
 
 }

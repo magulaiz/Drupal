@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d7;
 
 use Drupal\field\Plugin\migrate\process\d7\FieldSettings;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
@@ -20,7 +19,8 @@ class FieldSettingsTest extends MigrateTestCase {
    *
    * @covers ::transform
    */
-  public function testTransformImageSettings(): void {
+  public function testTransformImageSettings() {
+    $migration = $this->createMock(MigrationInterface::class);
     $plugin = new FieldSettings([], 'd7_field_settings', []);
 
     $executable = $this->createMock(MigrateExecutableInterface::class);

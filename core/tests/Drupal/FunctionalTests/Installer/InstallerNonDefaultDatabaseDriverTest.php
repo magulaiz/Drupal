@@ -1,15 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
-
-// cspell:ignore drupaldriver testdriverdatabasedrivertestmysql
-// cspell:ignore testdriverdatabasedrivertestpgsql
 
 /**
  * Tests the interactive installer.
@@ -25,7 +20,6 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
   /**
    * The name of the test database driver in use.
-   *
    * @var string
    */
   protected $testDriverName;
@@ -33,25 +27,22 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings(): void {
+  protected function setUpSettings() {
     $driver = Database::getConnection()->driver();
     if (!in_array($driver, ['mysql', 'pgsql'])) {
       $this->markTestSkipped("This test does not support the {$driver} database driver.");
     }
-    $driverNamespace = Database::getConnection()->getConnectionOptions()['namespace'];
-    $this->testDriverName = 'DriverTest' . ucfirst($driver);
-    $testDriverNamespace = "Drupal\\driver_test\\Driver\\Database\\{$this->testDriverName}";
+    $this->testDriverName = 'Drivertest' . ucfirst($driver);
 
-    // Assert that we are using the database drivers from the driver_test
-    // module.
-    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-drupaldriver-testdriverdatabasedrivertestmysql"]', 'MySQL by the driver_test module');
-    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-drupaldriver-testdriverdatabasedrivertestpgsql"]', 'PostgreSQL by the driver_test module');
+    // Assert that we are using the database drivers from the driver_test module.
+    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-drivertestmysql"]', 'MySQL by the driver_test module');
+    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-drivertestpgsql"]', 'PostgreSQL by the driver_test module');
 
     $settings = $this->parameters['forms']['install_settings_form'];
 
-    $settings['driver'] = $testDriverNamespace;
-    $settings[$testDriverNamespace] = $settings[$driverNamespace];
-    unset($settings[$driverNamespace]);
+    $settings['driver'] = $this->testDriverName;
+    $settings[$this->testDriverName] = $settings[$driver];
+    unset($settings[$driver]);
     $edit = $this->translatePostValues($settings);
     $this->submitForm($edit, $this->translations['Save and continue']);
   }
@@ -59,7 +50,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled(): void {
+  public function testInstalled() {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -69,21 +60,6 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
     $this->assertStringContainsString("'namespace' => 'Drupal\\\\driver_test\\\\Driver\\\\Database\\\\{$this->testDriverName}',", $contents);
     $this->assertStringContainsString("'driver' => '{$this->testDriverName}',", $contents);
     $this->assertStringContainsString("'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/',", $contents);
-
-    $dependencies = "'dependencies' => " . PHP_EOL .
-      "  array (" . PHP_EOL .
-      "    'mysql' => " . PHP_EOL .
-      "    array (" . PHP_EOL .
-      "      'namespace' => 'Drupal\\\\mysql'," . PHP_EOL .
-      "      'autoload' => 'core/modules/mysql/src/'," . PHP_EOL .
-      "    )," . PHP_EOL .
-      "    'pgsql' => " . PHP_EOL .
-      "    array (" . PHP_EOL .
-      "      'namespace' => 'Drupal\\\\pgsql'," . PHP_EOL .
-      "      'autoload' => 'core/modules/pgsql/src/'," . PHP_EOL .
-      "    )," . PHP_EOL .
-      "  )," . PHP_EOL;
-    $this->assertStringContainsString($dependencies, $contents);
 
     // Assert that the module "driver_test" has been installed.
     $this->assertEquals(\Drupal::service('module_handler')->getModule('driver_test'), new Extension($this->root, 'module', 'core/modules/system/tests/modules/driver_test/driver_test.info.yml'));

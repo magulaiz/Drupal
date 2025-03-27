@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -75,7 +73,6 @@ class DisplayModeUpdateTest extends FieldKernelTestBase {
     // Create a view-mode 'foobar', create view-display that uses it.
     EntityViewMode::create([
       'id' => 'entity_test.foobar',
-      'label' => 'Foobar',
       'targetEntityType' => 'entity_test',
       'status' => TRUE,
       'enabled' => TRUE,
@@ -92,7 +89,6 @@ class DisplayModeUpdateTest extends FieldKernelTestBase {
     // Create a new form-mode 'foobar', create form-display that uses it.
     EntityFormMode::create([
       'id' => 'entity_test.foobar',
-      'label' => 'Foobar',
       'targetEntityType' => 'entity_test',
       'status' => TRUE,
       'enabled' => TRUE,
@@ -110,10 +106,9 @@ class DisplayModeUpdateTest extends FieldKernelTestBase {
   /**
    * Ensure display modes are updated when fields are created.
    */
-  public function testDisplayModeUpdateAfterFieldCreation(): void {
+  public function testDisplayModeUpdateAfterFieldCreation() {
 
-    // Sanity test: field has not been created yet, so should not exist in
-    // display.
+    // Sanity test: field has not been created yet, so should not exist in display.
     $this->assertArrayNotHasKey('field_test', \Drupal::config($this->defaultViewDisplayName)->get('hidden'));
     $this->assertArrayNotHasKey('field_test', \Drupal::config($this->defaultFormDisplayName)->get('hidden'));
     $this->assertArrayNotHasKey('field_test', \Drupal::config($this->foobarViewDisplayName)->get('hidden'));

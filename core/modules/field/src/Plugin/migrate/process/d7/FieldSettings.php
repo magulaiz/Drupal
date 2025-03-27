@@ -2,15 +2,15 @@
 
 namespace Drupal\field\Plugin\migrate\process\d7;
 
-use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
- * Determines the field settings values for a field.
+ * @MigrateProcessPlugin(
+ *   id = "d7_field_settings"
+ * )
  */
-#[MigrateProcess('d7_field_settings')]
 class FieldSettings extends ProcessPluginBase {
 
   /**

@@ -19,7 +19,6 @@ class EntityRevisionRouteEnhancer implements EnhancerInterface {
    *   The current route.
    *
    * @return bool
-   *   TRUE if the enhancer runs on the current route, FALSE otherwise.
    */
   protected function applies(Route $route) {
     // Check whether there is any entity revision parameter.
@@ -45,7 +44,7 @@ class EntityRevisionRouteEnhancer implements EnhancerInterface {
     $options = $route->getOptions();
     if (isset($options['parameters'])) {
       foreach ($options['parameters'] as $name => $details) {
-        if (!empty($details['type']) && str_contains($details['type'], 'entity_revision:')) {
+        if (!empty($details['type']) && strpos($details['type'], 'entity_revision:') !== FALSE) {
           $defaults['_entity_revision'] = $defaults[$name];
           break;
         }

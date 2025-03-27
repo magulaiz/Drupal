@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\search\Kernel;
 
 use Drupal\Core\Database\Database;
@@ -9,8 +7,6 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchIndexInterface;
 use Drupal\search\SearchQuery;
-
-// cspell:ignore cillum dolore enim veniam
 
 /**
  * Indexes content and queries it.
@@ -26,7 +22,9 @@ class SearchMatchTest extends KernelTestBase {
   const SEARCH_TYPE_JPN = '_test3_';
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['search'];
 
@@ -42,7 +40,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * Tests search indexing.
    */
-  public function testMatching(): void {
+  public function testMatching() {
     $this->_setup();
     $this->_testQueries();
   }
@@ -50,7 +48,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * Set up a small index of items to test against.
    */
-  public function _setup(): void {
+  public function _setup() {
     $this->config('search.settings')->set('index.minimum_word_size', 3)->save();
 
     $search_index = \Drupal::service('search.index');
@@ -72,7 +70,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * Helper to generate lorem ipsum snippets of content.
+   * _test_: Helper method for generating snippets of content.
    *
    * Generated items to test against:
    *   1  ipsum
@@ -89,7 +87,7 @@ class SearchMatchTest extends KernelTestBase {
   }
 
   /**
-   * Helper to generate English language snippets of content.
+   * _test2_: Helper method for generating snippets of content.
    *
    * Generated items to test against:
    *   8  dear
@@ -106,7 +104,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * Run predefine queries looking for indexed terms.
    */
-  public function _testQueries(): void {
+  public function _testQueries() {
     // Note: OR queries that include short words in OR groups are only accepted
     // if the ORed terms are ANDed with at least one long word in the rest of
     // the query. Examples:
@@ -225,7 +223,7 @@ class SearchMatchTest extends KernelTestBase {
    *
    * Verify if a query produces the correct results.
    */
-  public function _testQueryMatching($query, $set, $results): void {
+  public function _testQueryMatching($query, $set, $results) {
     // Get result IDs.
     $found = [];
     foreach ($set as $item) {
@@ -243,7 +241,7 @@ class SearchMatchTest extends KernelTestBase {
    *
    * Verify if a query produces normalized, monotonous scores.
    */
-  public function _testQueryScores($query, $set, $results): void {
+  public function _testQueryScores($query, $set, $results) {
     // Get result scores.
     $scores = [];
     foreach ($set as $item) {

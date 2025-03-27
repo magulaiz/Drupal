@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\error_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -58,29 +56,21 @@ class ErrorTestController extends ControllerBase {
   }
 
   /**
-   * Generate fatal errors to test the error handler.
+   * Generate fatals to test the error handler.
    */
-  public function generateFatalErrors() {
+  public function generateFatals() {
     $function = function (array $test) {
     };
-    // Use an incorrect parameter type, string, for testing a fatal error.
+
     $function("test-string");
     return [];
   }
 
   /**
    * Trigger an exception to test the exception handler.
-   *
-   * @param string $argument
-   *   A function argument which will be included in the exception backtrace.
-   *
-   * @throws \Exception
    */
-  public function triggerException(string $argument = "<script>alert('xss')</script>"): void {
+  public function triggerException() {
     define('SIMPLETEST_COLLECT_ERRORS', FALSE);
-    // Add function arguments to the exception backtrace.
-    ini_set('zend.exception_ignore_args', FALSE);
-    ini_set('zend.exception_string_param_max_len', 1024);
     throw new \Exception("Drupal & awesome");
   }
 

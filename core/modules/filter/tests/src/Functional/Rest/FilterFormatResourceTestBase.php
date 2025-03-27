@@ -1,15 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\filter\Functional\Rest;
 
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
-/**
- * Resource test base for the FilterFormat entity.
- */
 abstract class FilterFormatResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**

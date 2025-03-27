@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal\Unit;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -28,7 +26,7 @@ class MigrateFieldPluginManagerTest extends UnitTestCase {
    * @covers ::findDefinitions
    * @dataProvider weightsData
    */
-  public function testWeights($field_type, $core, $expected_plugin_id): void {
+  public function testWeights($field_type, $core, $expected_plugin_id) {
     /** @var \Drupal\Core\Cache\CacheBackendInterface $cache */
     $cache = $this->prophesize(CacheBackendInterface::class)->reveal();
     /** @var \Drupal\Core\Extension\ModuleHandlerInterfaceModuleHandlerInterface $module_handler */
@@ -51,7 +49,7 @@ class MigrateFieldPluginManagerTest extends UnitTestCase {
    * @return array
    *   The data.
    */
-  public static function weightsData() {
+  public function weightsData() {
     return [
       'Field 1, D6' => [
         'field_type' => 'field_1',
@@ -112,7 +110,7 @@ class MigrateFieldPluginManagerTest extends UnitTestCase {
    * @return array
    *   The test plugin data.
    */
-  protected function pluginFixtureData(): array {
+  protected function pluginFixtureData() {
     return [
       // Represents a deprecated core field plugin that applied to field_1
       // and field_2 for Drupal 6.

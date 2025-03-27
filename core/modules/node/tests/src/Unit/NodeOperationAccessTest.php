@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Unit;
 
 use Drupal\Core\Access\AccessResult;
@@ -57,7 +55,7 @@ class NodeOperationAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestRevisionOperations
    */
-  public function testRevisionOperations($operation, array $hasPermissionMap, $assertAccess, $isDefaultRevision = NULL): void {
+  public function testRevisionOperations($operation, array $hasPermissionMap, $assertAccess, $isDefaultRevision = NULL) {
     $account = $this->createMock(AccountInterface::class);
     $account->method('hasPermission')
       ->willReturnMap($hasPermissionMap);
@@ -129,7 +127,7 @@ class NodeOperationAccessTest extends UnitTestCase {
    * @return array
    *   Data for testing.
    */
-  public static function providerTestRevisionOperations() {
+  public function providerTestRevisionOperations() {
     $data = [];
 
     // Tests 'bypass node access' never works on revision operations.

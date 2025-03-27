@@ -6,15 +6,13 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Site\Settings;
 
-// cspell:ignore officedocument openxmlformats wordprocessingml
-
 /**
  * Defines a class containing utility methods for formatting mail messages.
  */
 class MailFormatHelper {
 
   /**
-   * Internal array of URLs replaced with tokens.
+   * Internal array of urls replaced with tokens.
    *
    * @var array
    */
@@ -56,18 +54,15 @@ class MailFormatHelper {
     $text = str_replace("\r", '', $text);
     // See if soft-wrapping is allowed.
     $clean_indent = static::htmlToTextClean($indent);
-    $soft = !str_contains($clean_indent, ' ');
+    $soft = strpos($clean_indent, ' ') === FALSE;
     // Check if the string has line breaks.
-    if (str_contains($text, "\n")) {
+    if (strpos($text, "\n") !== FALSE) {
       // Remove trailing spaces to make existing breaks hard, but leave
       // signature marker untouched (RFC 3676, Section 4.3).
       $text = preg_replace('/(?(?<!^--) +\n|  +\n)/m', "\n", $text);
       // Wrap each line at the needed width.
       $lines = explode("\n", $text);
-      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', [
-        'soft' => $soft,
-        'length' => strlen($indent),
-      ]);
+      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', ['soft' => $soft, 'length' => strlen($indent)]);
       $text = implode("\n", $lines);
     }
     else {
@@ -87,9 +82,8 @@ class MailFormatHelper {
   /**
    * Transforms an HTML string into plain text, preserving its structure.
    *
-   * The output will be suitable for use as 'format=flowed; delsp=yes' text (RFC
-   * 3676) and can be passed directly to MailManagerInterface::mail() for
-   * sending.
+   * The output will be suitable for use as 'format=flowed; delsp=yes' text
+   * (RFC 3676) and can be passed directly to MailManagerInterface::mail() for sending.
    *
    * We deliberately use LF rather than CRLF, see MailManagerInterface::mail().
    *
@@ -130,7 +124,7 @@ class MailFormatHelper {
     // 'See <a href="https://www.drupal.org">the Drupal site</a>' becomes
     // 'See the Drupal site [1]' with the URL included as a footnote.
     static::htmlToMailUrls(NULL, TRUE);
-    $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>([^<]*)</a>)@i';
+    $pattern = '@(<a[^>]+?href="([^"]*)"[^>]*?>(.+?)</a>)@i';
     $string = preg_replace_callback($pattern, [static::class, 'htmlToMailUrls'], $string);
     $urls = static::htmlToMailUrls();
     $footnotes = '';
@@ -314,8 +308,8 @@ class MailFormatHelper {
       }
     }
     if (!$line_is_mime_header) {
-      // Use soft-breaks only for purely quoted or un-indented text.
-      $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? "  \n" : "\n");
+      // Use soft-breaks only for purely quoted or unindented text.
+      $line = wordwrap($line, 77 - $values['length'], $values['soft'] ? " \n" : "\n");
     }
     // Break really long words at the maximum width allowed.
     $line = wordwrap($line, 996 - $values['length'], $values['soft'] ? " \n" : "\n", TRUE);
@@ -343,8 +337,7 @@ class MailFormatHelper {
         [, , $url, $label] = $match;
         // Ensure all URLs are absolute.
         static::$urls[] = strpos($url, '://') ? $url : preg_replace(static::$regexp, $base_url . '/', $url);
-        // Strip newlines and carriage returns from anchor text.
-        return preg_replace('/\r?\n|\r/', '', $label) . ' [' . count(static::$urls) . ']';
+        return $label . ' [' . count(static::$urls) . ']';
       }
     }
     return static::$urls;

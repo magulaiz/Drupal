@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\NodeInterface;
@@ -55,10 +54,12 @@ abstract class NodeAccessTestBase extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installSchema('system', 'sequences');
     $this->installSchema('node', 'node_access');
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
-    $this->installConfig(['filter', 'node', 'user']);
+    $this->installConfig('filter');
+    $this->installConfig('node');
 
     $this->accessHandler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
 
@@ -137,11 +138,13 @@ abstract class NodeAccessTestBase extends KernelTestBase {
    *   about the node access permission test that was performed.
    */
   public function nodeAccessAssertMessage($operation, $result, $langcode = NULL) {
-    return sprintf(
-     'Node access returns %s with operation %s, language code %s.',
-     $result ? 'true' : 'false',
-     $operation,
-     !empty($langcode) ? $langcode : 'empty',
+    return new FormattableMarkup(
+      'Node access returns @result with operation %op, language code %langcode.',
+      [
+        '@result' => $result ? 'true' : 'false',
+        '%op' => $operation,
+        '%langcode' => !empty($langcode) ? $langcode : 'empty',
+      ]
     );
   }
 

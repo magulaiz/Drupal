@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\Unit;
 
+use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockManagerInterface;
@@ -23,7 +22,6 @@ use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\Section
@@ -62,7 +60,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcher
+   * @var \Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
    */
   protected $eventDispatcher;
 
@@ -77,7 +75,7 @@ class SectionRenderTest extends UnitTestCase {
     $this->contextHandler = $this->prophesize(ContextHandlerInterface::class);
     $this->contextRepository = $this->prophesize(ContextRepositoryInterface::class);
     // @todo Refactor this into some better tests in https://www.drupal.org/node/2942605.
-    $this->eventDispatcher = (new \ReflectionClass(EventDispatcher::class))->newInstanceWithoutConstructor();
+    $this->eventDispatcher = (new \ReflectionClass(ContainerAwareEventDispatcher::class))->newInstanceWithoutConstructor();
 
     $this->account = $this->prophesize(AccountInterface::class);
     $subscriber = new BlockComponentRenderArray($this->account->reveal());
@@ -101,7 +99,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArray(): void {
+  public function testToRenderArray() {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
     $render_array = [
@@ -150,7 +148,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArrayAccessDenied(): void {
+  public function testToRenderArrayAccessDenied() {
     $block = $this->prophesize(BlockPluginInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
 
@@ -182,7 +180,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArrayPreview(): void {
+  public function testToRenderArrayPreview() {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
     $render_array = [
@@ -232,7 +230,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArrayEmpty(): void {
+  public function testToRenderArrayEmpty() {
     $section = [];
     $expected = [];
     $result = (new Section('layout_onecol', [], $section))->toRenderArray();
@@ -242,7 +240,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testContextAwareBlock(): void {
+  public function testContextAwareBlock() {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
     $render_array = [
@@ -294,7 +292,7 @@ class SectionRenderTest extends UnitTestCase {
   /**
    * @covers ::toRenderArray
    */
-  public function testToRenderArrayMissingPluginId(): void {
+  public function testToRenderArrayMissingPluginId() {
     $this->expectException(PluginException::class);
     $this->expectExceptionMessage('No plugin ID specified for component with "some_uuid" UUID');
     (new Section('layout_onecol', [], [new SectionComponent('some_uuid', 'content')]))->toRenderArray();

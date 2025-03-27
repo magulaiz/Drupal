@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\user\UserInterface;
 
 /**
@@ -23,7 +21,7 @@ class EntityApiTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    foreach (EntityTestHelper::getEntityTypes() as $entity_type_id) {
+    foreach (entity_test_entity_types() as $entity_type_id) {
       // The entity_test schema is installed by the parent.
       if ($entity_type_id != 'entity_test') {
         $this->installEntitySchema($entity_type_id);
@@ -34,9 +32,9 @@ class EntityApiTest extends EntityKernelTestBase {
   /**
    * Tests basic CRUD functionality of the Entity API.
    */
-  public function testCRUD(): void {
+  public function testCRUD() {
     // All entity variations have to have the same results.
-    foreach (EntityTestHelper::getEntityTypes() as $entity_type) {
+    foreach (entity_test_entity_types() as $entity_type) {
       $this->assertCRUD($entity_type, $this->createUser());
     }
   }
@@ -71,25 +69,25 @@ class EntityApiTest extends EntityKernelTestBase {
       ->getStorage($entity_type);
 
     $entities = array_values($storage->loadByProperties(['name' => 'test']));
-    $this->assertEquals('test', $entities[0]->name->value, "$entity_type: Created and loaded entity");
-    $this->assertEquals('test', $entities[1]->name->value, "$entity_type: Created and loaded entity");
+    $this->assertEquals('test', $entities[0]->name->value, new FormattableMarkup('%entity_type: Created and loaded entity', ['%entity_type' => $entity_type]));
+    $this->assertEquals('test', $entities[1]->name->value, new FormattableMarkup('%entity_type: Created and loaded entity', ['%entity_type' => $entity_type]));
 
     // Test loading a single entity.
     $loaded_entity = $storage->load($entity->id());
-    $this->assertEquals($entity->id(), $loaded_entity->id(), "$entity_type: Loaded a single entity by id.");
+    $this->assertEquals($entity->id(), $loaded_entity->id(), new FormattableMarkup('%entity_type: Loaded a single entity by id.', ['%entity_type' => $entity_type]));
 
     // Test deleting an entity.
     $entities = array_values($storage->loadByProperties(['name' => 'test2']));
     $entities[0]->delete();
     $entities = array_values($storage->loadByProperties(['name' => 'test2']));
-    $this->assertEquals([], $entities, "$entity_type: Entity deleted.");
+    $this->assertEquals([], $entities, new FormattableMarkup('%entity_type: Entity deleted.', ['%entity_type' => $entity_type]));
 
     // Test updating an entity.
     $entities = array_values($storage->loadByProperties(['name' => 'test']));
     $entities[0]->name->value = 'test3';
     $entities[0]->save();
     $entity = $storage->load($entities[0]->id());
-    $this->assertEquals('test3', $entity->name->value, "$entity_type: Entity updated.");
+    $this->assertEquals('test3', $entity->name->value, new FormattableMarkup('%entity_type: Entity updated.', ['%entity_type' => $entity_type]));
 
     // Try deleting multiple test entities by deleting all.
     $entities = $storage->loadMultiple();
@@ -148,7 +146,7 @@ class EntityApiTest extends EntityKernelTestBase {
    *
    * Entities should be returned in the same order as the passed IDs.
    */
-  public function testLoadMultiple(): void {
+  public function testLoadMultiple() {
     // Entity load.
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
 
@@ -205,7 +203,7 @@ class EntityApiTest extends EntityKernelTestBase {
   /**
    * Tests that exceptions are thrown when saving or deleting an entity.
    */
-  public function testEntityStorageExceptionHandling(): void {
+  public function testEntityStorageExceptionHandling() {
     $entity = EntityTest::create(['name' => 'test']);
     try {
       $GLOBALS['entity_test_throw_exception'] = TRUE;
@@ -250,7 +248,7 @@ class EntityApiTest extends EntityKernelTestBase {
   /**
    * Tests that resaving a revision with a different revision ID throws an exception.
    */
-  public function testUpdateWithRevisionId(): void {
+  public function testUpdateWithRevisionId() {
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev');
 
     // Create a new entity.
@@ -268,7 +266,7 @@ class EntityApiTest extends EntityKernelTestBase {
   /**
    * Tests that resaving an entity with a different entity ID throws an exception.
    */
-  public function testUpdateWithId(): void {
+  public function testUpdateWithId() {
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev');
 
     // Create a new entity.

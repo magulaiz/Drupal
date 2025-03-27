@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\router_test;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -46,7 +44,7 @@ class TestContent extends ControllerBase {
   /**
    * Provides example content for route specific authentication.
    *
-   * @return string
+   * @returns string
    *   The user name of the current logged in user.
    */
   public function test11() {

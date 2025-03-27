@@ -67,7 +67,7 @@ tr.selected td {
       box-shadow: none;
     }
   }
-  & .button--primary:not(:disabled, .is-disabled) {
+  & .button--primary {
     background: var(--color-blue-400);
     &:hover {
       background: var(--color-blue-500);
@@ -76,14 +76,13 @@ tr.selected td {
   & .form-item__label {
     display: inline;
     padding-inline-end: var(--space-xs);
-    &::after {
+    &:after {
       content: ":";
     }
   }
   & .form-element--type-select {
     min-height: 2rem;
-    padding-block: calc(0.5rem - 1px);
-    padding-inline: calc(1rem - 1px) calc(2.25rem - 1px);
+    padding: calc(0.5rem - 1px) calc(2.25rem - 1px) calc(0.5rem - 1px) calc(1rem - 1px);
     font-size: var(--font-size-xs);
     line-height: 1rem;
   }
@@ -115,8 +114,4 @@ tr.selected td {
   .views-bulk-actions__item--status {
     width: auto;
   }
-}
-
-.ui-autocomplete {
-  z-index: 501;
 }

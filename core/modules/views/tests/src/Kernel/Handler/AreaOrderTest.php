@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\block\Traits\BlockCreationTrait;
@@ -19,7 +17,9 @@ class AreaOrderTest extends ViewsKernelTestBase {
   use BlockCreationTrait;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['user', 'block'];
 
@@ -33,7 +33,7 @@ class AreaOrderTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpFixtures(): void {
+  protected function setUpFixtures() {
     // Install the themes used for this test.
     $this->container->get('theme_installer')->install(['olivero']);
 
@@ -56,7 +56,7 @@ class AreaOrderTest extends ViewsKernelTestBase {
   /**
    * Tests the order of the handlers.
    */
-  public function testAreaOrder(): void {
+  public function testAreaOrder() {
     $view = Views::getView('test_area_order');
     $renderable = $view->buildRenderable();
     $output = $this->render($renderable);

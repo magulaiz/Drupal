@@ -4,7 +4,6 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -12,23 +11,22 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
  * Field handler to provide simple renderer that allows linking to a node.
- *
  * Definition terms:
- * - link_to_node default: Should this field have the checkbox "link to node"
- *   enabled by default.
+ * - link_to_node default: Should this field have the checkbox "link to node" enabled by default.
  *
  * @ingroup views_field_handlers
+ *
+ * @ViewsField("node")
  */
-#[ViewsField("node")]
 class Node extends FieldPluginBase {
 
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    // Don't add the additional fields to group by.
+    // Don't add the additional fields to groupby
     if (!empty($this->options['link_to_node'])) {
       $this->additional_fields['nid'] = ['table' => 'node_field_data', 'field' => 'nid'];
     }

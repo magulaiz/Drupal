@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -38,7 +36,7 @@ class ModuleUninstallFilterTest extends WebDriverTestBase {
   /**
    * Tests that correct module count is returned when list filtered.
    */
-  public function testModuleUninstallFilter(): void {
+  public function testModuleUninstallFilter() {
 
     // Find the module filter field.
     $this->drupalGet('admin/modules/uninstall');
@@ -89,7 +87,6 @@ class ModuleUninstallFilterTest extends WebDriverTestBase {
    *   An array of node elements.
    *
    * @return \Behat\Mink\Element\NodeElement[]
-   *   An array of node elements that are visible.
    */
   protected function filterVisibleElements($elements) {
     $elements = array_filter($elements, function ($element) {

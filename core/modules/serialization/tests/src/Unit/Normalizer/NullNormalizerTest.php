@@ -1,12 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\serialization\Normalizer\NullNormalizer;
-use Drupal\Tests\serialization\Traits\JsonSchemaTestTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -14,8 +10,6 @@ use Drupal\Tests\UnitTestCase;
  * @group serialization
  */
 class NullNormalizerTest extends UnitTestCase {
-
-  use JsonSchemaTestTrait;
 
   /**
    * The NullNormalizer instance.
@@ -35,8 +29,6 @@ class NullNormalizerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->normalizer = new NullNormalizer($this->interface);
   }
 
@@ -44,7 +36,7 @@ class NullNormalizerTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::supportsNormalization
    */
-  public function testSupportsNormalization(): void {
+  public function testSupportsNormalization() {
     $mock = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
     $this->assertTrue($this->normalizer->supportsNormalization($mock));
     // Also test that an object not implementing TypedDataInterface fails.
@@ -54,18 +46,9 @@ class NullNormalizerTest extends UnitTestCase {
   /**
    * @covers ::normalize
    */
-  public function testNormalize(): void {
+  public function testNormalize() {
     $mock = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
     $this->assertNull($this->normalizer->normalize($mock));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function jsonSchemaDataProvider(): array {
-    return [
-      'null' => [TypedDataInterface::class],
-    ];
   }
 
 }

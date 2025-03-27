@@ -3,7 +3,6 @@
 namespace Drupal\node\Plugin\migrate\source\d7;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 use Drupal\Core\Database\Query\SelectInterface;
@@ -11,8 +10,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-// cspell:ignore tnid
 
 /**
  * Drupal 7 node source from database.
@@ -44,11 +41,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d7_node",
+ *   source_module = "node"
+ * )
  */
-#[MigrateSource(
-  id: 'd7_node',
-  source_module: 'node',
-)]
 class Node extends FieldableEntity {
   /**
    * The module handler.
@@ -68,7 +66,7 @@ class Node extends FieldableEntity {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
       $configuration,
       $plugin_id,
@@ -81,7 +79,7 @@ class Node extends FieldableEntity {
   }
 
   /**
-   * The join options between the node and the node_revision table.
+   * The join options between the node and the node_revisions table.
    */
   const JOIN = '[n].[vid] = [nr].[vid]';
 

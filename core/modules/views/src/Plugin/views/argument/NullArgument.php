@@ -3,21 +3,16 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Attribute\ViewsArgument;
 
 /**
  * Argument handler that ignores the argument.
  *
  * @ingroup views_argument_handlers
-  */
-#[ViewsArgument(
-  id: 'null',
-)]
+ *
+ * @ViewsArgument("null")
+ */
 class NullArgument extends ArgumentPluginBase {
 
-  /**
-   * {@inheritdoc}
-   */
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['must_not_be'] = ['default' => FALSE];
@@ -25,7 +20,8 @@ class NullArgument extends ArgumentPluginBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Override buildOptionsForm() so that only the relevant options
+   * are displayed to the user.
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
@@ -41,7 +37,8 @@ class NullArgument extends ArgumentPluginBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Override defaultActions() to remove actions that don't
+   * make sense for a null argument.
    */
   protected function defaultActions($which = NULL) {
     if ($which) {
@@ -57,7 +54,8 @@ class NullArgument extends ArgumentPluginBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Override the behavior of query() to prevent the query
+   * from being changed in any way.
    */
   public function query($group_by = FALSE) {}
 

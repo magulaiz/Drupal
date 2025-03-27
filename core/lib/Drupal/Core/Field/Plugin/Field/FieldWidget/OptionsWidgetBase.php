@@ -45,7 +45,6 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Tracks whether the field has a value.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected bool $has_value;
 
   /**
@@ -91,12 +90,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    */
   public static function validateElement(array $element, FormStateInterface $form_state) {
     if ($element['#required'] && $element['#value'] == '_none') {
-      if (isset($element['#required_error'])) {
-        $form_state->setError($element, $element['#required_error']);
-      }
-      else {
-        $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
-      }
+      $form_state->setError($element, new TranslatableMarkup('@name field is required.', ['@name' => $element['#title']]));
     }
 
     // Massage submitted form values.
@@ -222,8 +216,6 @@ abstract class OptionsWidgetBase extends WidgetBase {
    * @return string|null
    *   Either a label of the empty option, or NULL.
    */
-  protected function getEmptyLabel() {
-    return NULL;
-  }
+  protected function getEmptyLabel() {}
 
 }

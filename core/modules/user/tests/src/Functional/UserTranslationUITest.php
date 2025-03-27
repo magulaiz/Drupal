@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
@@ -32,7 +30,9 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'language',
@@ -54,7 +54,6 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
     $this->testLanguageSelector = FALSE;
     $this->name = $this->randomMachineName();
     parent::setUp();
-    $this->doSetup();
 
     \Drupal::entityTypeManager()->getStorage('user')->resetCache();
   }
@@ -62,7 +61,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions(): array {
+  protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), ['administer users']);
   }
 
@@ -77,9 +76,10 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doTestTranslationEdit(): void {
+  protected function doTestTranslationEdit() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
+    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
 
@@ -97,7 +97,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests translated user deletion.
    */
-  public function testTranslatedUserDeletion(): void {
+  public function testTranslatedUserDeletion() {
     $this->drupalLogin($this->administrator);
     $entity_id = $this->createEntity($this->getNewEntityValues('en'), 'en');
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\dialog_renderer_test\Render\MainContent;
 
 use Drupal\Core\Ajax\AjaxResponse;
@@ -57,8 +55,8 @@ class WideModalRenderer extends ModalRenderer {
     $main_content['#attached']['library'][] = 'core/drupal.dialog.ajax';
     $response->setAttachments($main_content['#attached']);
 
-    // Determine the title.
-    $title = $this->getTitleAsStringable($main_content, $request, $route_match);
+    // If the main content doesn't provide a title, use the title resolver.
+    $title = $main_content['#title'] ?? $this->titleResolver->getTitle($request, $route_match->getRouteObject());
 
     // Determine the title: use the title provided by the main content if any,
     // otherwise get it from the routing information.

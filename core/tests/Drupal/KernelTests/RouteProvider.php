@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests;
 
 use Drupal\Core\Routing\PreloadableRouteProviderInterface;
@@ -97,13 +95,6 @@ class RouteProvider implements PreloadableRouteProviderInterface {
    */
   public function reset() {
     return $this->lazyLoadItself()->reset();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRouteAliases(string $route_name): iterable {
-    return $this->lazyLoadItself()->getRouteAliases($route_name);
   }
 
 }

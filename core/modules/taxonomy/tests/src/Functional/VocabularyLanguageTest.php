@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -14,9 +12,6 @@ use Drupal\language\Entity\ContentLanguageSettings;
  */
 class VocabularyLanguageTest extends TaxonomyTestBase {
 
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = ['language'];
 
   /**
@@ -48,14 +43,14 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
   /**
    * Tests language settings for vocabularies.
    */
-  public function testVocabularyLanguage(): void {
+  public function testVocabularyLanguage() {
     $this->drupalGet('admin/structure/taxonomy/add');
 
     // Check that we have the language selector available.
     $this->assertSession()->fieldExists('edit-langcode');
 
     // Create the vocabulary.
-    $vid = $this->randomMachineName();
+    $vid = mb_strtolower($this->randomMachineName());
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
     $edit['langcode'] = 'aa';
@@ -79,12 +74,12 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
   /**
    * Tests term language settings for vocabulary terms are saved and updated.
    */
-  public function testVocabularyDefaultLanguageForTerms(): void {
+  public function testVocabularyDefaultLanguageForTerms() {
     // Add a new vocabulary and check that the default language settings are for
     // the terms are saved.
     $edit = [
       'name' => $this->randomMachineName(),
-      'vid' => $this->randomMachineName(),
+      'vid' => mb_strtolower($this->randomMachineName()),
       'default_language[langcode]' => 'bb',
       'default_language[language_alterable]' => TRUE,
     ];

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -35,11 +33,7 @@ class BlockContextualLinksTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer blocks',
-      'access administration pages',
-      'access contextual links',
-    ]));
+
     $this->blockId = $this->defaultTheme . '_powered';
     $this->placeBlock('system_powered_by_block', [
       'id' => $this->blockId,
@@ -48,9 +42,11 @@ class BlockContextualLinksTest extends WebDriverTestBase {
   }
 
   /**
-   * Test that remove/configure contextual links are present in the block.
+   * Test to ensure that remove contextual link is present in the block.
    */
-  public function testBlockContextualRemoveLinks(): void {
+  public function testBlockContextualRemoveLinks() {
+    // Ensure that contextual filter links are visible on the page.
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('<front>');
     $contextual_id = "[data-contextual-id^='block:block=$this->blockId:langcode=en']";
     $this->assertSession()->waitForElement('css', "$contextual_id .contextual-links");

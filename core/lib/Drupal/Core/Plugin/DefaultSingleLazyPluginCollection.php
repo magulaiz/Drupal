@@ -78,7 +78,7 @@ class DefaultSingleLazyPluginCollection extends LazyPluginCollection {
   /**
    * {@inheritdoc}
    */
-  public function setConfiguration(array $configuration) {
+  public function setConfiguration($configuration) {
     $this->configuration = $configuration;
     $plugin = $this->get($this->instanceId);
     if ($plugin instanceof ConfigurableInterface) {

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal\Unit\source;
 
 use Drupal\Core\Database\Connection;
@@ -17,8 +15,6 @@ class DrupalSqlBaseTest extends MigrateTestCase {
 
   /**
    * Define bare minimum migration configuration.
-   *
-   * @var string[]
    */
   protected $migrationConfiguration = [
     'id' => 'DrupalSqlBase',
@@ -52,8 +48,6 @@ class DrupalSqlBaseTest extends MigrateTestCase {
 
   /**
    * Minimum database contents needed to test DrupalSqlBase.
-   *
-   * @var string[]
    */
   protected $databaseContents = [
     'system' => [
@@ -81,7 +75,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   /**
    * @covers ::checkRequirements
    */
-  public function testSourceProviderNotActive(): void {
+  public function testSourceProviderNotActive() {
     $plugin = new TestDrupalSqlBase([], 'placeholder_id', $this->pluginDefinition, $this->getMigration(), $this->state, $this->entityTypeManager);
     $plugin->setDatabase($this->getDatabase($this->databaseContents));
     $this->expectException(RequirementsException::class);
@@ -100,7 +94,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   /**
    * @covers ::checkRequirements
    */
-  public function testSourceDatabaseError(): void {
+  public function testSourceDatabaseError() {
     $plugin = new TestDrupalSqlBase([], 'test', $this->pluginDefinition, $this->getMigration(), $this->state, $this->entityTypeManager);
     $this->expectException(RequirementsException::class);
     $this->expectExceptionMessage('No database connection configured for source plugin test');
@@ -119,13 +113,12 @@ class DrupalSqlBaseTest extends MigrateTestCase {
    *
    * @dataProvider providerMinimumVersion
    */
-  public function testMinimumVersion($success, $minimum_version, $schema_version): void {
+  public function testMinimumVersion($success, $minimum_version, $schema_version) {
     $this->pluginDefinition['minimum_version'] = $minimum_version;
     $this->databaseContents['system'][0]['status'] = 1;
     $this->databaseContents['system'][0]['schema_version'] = $schema_version;
     $plugin = new TestDrupalSqlBase([], 'test', $this->pluginDefinition, $this->getMigration(), $this->state, $this->entityTypeManager);
     $plugin->setDatabase($this->getDatabase($this->databaseContents));
-    $this->assertSame([], $plugin->fields());
 
     if (!$success) {
       $this->expectException(RequirementsException::class);
@@ -138,7 +131,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   /**
    * Provides data for testMinimumVersion.
    */
-  public static function providerMinimumVersion() {
+  public function providerMinimumVersion() {
     return [
       'minimum less than schema' => [
         TRUE,
@@ -202,7 +195,7 @@ class TestDrupalSqlBase extends DrupalSqlBase {
    *
    * @see \Drupal\Tests\migrate\Unit\MigrateSourceSqlTestCase
    */
-  public function setDatabase(Connection $database): void {
+  public function setDatabase(Connection $database) {
     $this->database = $database;
   }
 

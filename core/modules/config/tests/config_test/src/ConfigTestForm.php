@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\config_test;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -81,7 +79,7 @@ class ConfigTestForm extends EntityForm {
     ];
     $form['size_wrapper']['size_submit'] = [
       '#type' => 'submit',
-      '#value' => 'Change size',
+      '#value' => t('Change size'),
       '#attributes' => [
         'class' => ['js-hide'],
       ],
@@ -101,7 +99,7 @@ class ConfigTestForm extends EntityForm {
 
     $form['langcode'] = [
       '#type' => 'language_select',
-      '#title' => 'Language',
+      '#title' => t('Language'),
       '#languages' => LanguageInterface::STATE_ALL,
       '#default_value' => $entity->language()->getId(),
     ];
@@ -167,9 +165,7 @@ class ConfigTestForm extends EntityForm {
   public function exists($entity_id, array $element, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
-    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */
-    $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-    return (bool) $storage
+    return (bool) $this->entityTypeManager->getStorage($entity->getEntityTypeId())
       ->getQuery()
       ->condition($entity->getEntityType()->getKey('id'), $entity_id)
       ->execute();

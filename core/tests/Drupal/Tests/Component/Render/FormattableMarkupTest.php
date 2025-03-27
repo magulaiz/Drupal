@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests the TranslatableMarkup class.
@@ -36,22 +34,45 @@ class FormattableMarkupTest extends TestCase {
    * @covers ::__toString
    * @covers ::jsonSerialize
    */
-  public function testToString(): void {
-    $string = 'Can I have a @replacement';
+  public function testToString() {
+    $string = 'Can I please have a @replacement';
     $formattable_string = new FormattableMarkup($string, ['@replacement' => 'kitten']);
     $text = (string) $formattable_string;
-    $this->assertEquals('Can I have a kitten', $text);
+    $this->assertEquals('Can I please have a kitten', $text);
     $text = $formattable_string->jsonSerialize();
-    $this->assertEquals('Can I have a kitten', $text);
+    $this->assertEquals('Can I please have a kitten', $text);
   }
 
   /**
    * @covers ::count
    */
-  public function testCount(): void {
-    $string = 'Can I have a @replacement';
+  public function testCount() {
+    $string = 'Can I please have a @replacement';
     $formattable_string = new FormattableMarkup($string, ['@replacement' => 'kitten']);
     $this->assertEquals(strlen($string), $formattable_string->count());
+  }
+
+  /**
+   * @covers ::__toString
+   * @dataProvider providerTestNullPlaceholder
+   * @group legacy
+   */
+  public function testNullPlaceholder(string $expected, string $string, array $arguments, string $expected_deprecation): void {
+    $this->expectDeprecation($expected_deprecation);
+    $this->assertEquals($expected, (string) new FormattableMarkup($string, $arguments));
+  }
+
+  /**
+   * Data provider for FormattableMarkupTest::testNullPlaceholder().
+   *
+   * @return array
+   */
+  public function providerTestNullPlaceholder() {
+    return [
+      ['', '@empty', ['@empty' => NULL], 'Deprecated NULL placeholder value for key (@empty) in: "@empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
+      ['', ':empty', [':empty' => NULL], 'Deprecated NULL placeholder value for key (:empty) in: ":empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
+      ['<em class="placeholder"></em>', '%empty', ['%empty' => NULL], 'Deprecated NULL placeholder value for key (%%empty) in: "%%empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
+    ];
   }
 
   /**
@@ -66,7 +87,7 @@ class FormattableMarkupTest extends TestCase {
    * @param string $error_message
    *   The error message.
    */
-  public function errorHandler($error_number, $error_message): void {
+  public function errorHandler($error_number, $error_message) {
     $this->lastErrorNumber = $error_number;
     $this->lastErrorMessage = $error_message;
   }
@@ -75,9 +96,8 @@ class FormattableMarkupTest extends TestCase {
    * @covers ::__toString
    * @dataProvider providerTestUnexpectedPlaceholder
    */
-  public function testUnexpectedPlaceholder($string, $arguments, $error_number, $error_message): void {
-    // We set a custom error handler because of
-    // https://github.com/sebastianbergmann/phpunit/issues/487
+  public function testUnexpectedPlaceholder($string, $arguments, $error_number, $error_message) {
+    // We set a custom error handler because of https://github.com/sebastianbergmann/phpunit/issues/487
     set_error_handler([$this, 'errorHandler']);
     // We want this to trigger an error.
     $markup = new FormattableMarkup($string, $arguments);
@@ -94,16 +114,15 @@ class FormattableMarkupTest extends TestCase {
    * Data provider for FormattableMarkupTest::testUnexpectedPlaceholder().
    *
    * @return array
-   *   An array of test cases.
    */
-  public static function providerTestUnexpectedPlaceholder() {
+  public function providerTestUnexpectedPlaceholder() {
     return [
-      ['Non alpha, non-allowed starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Placeholders must begin with one of the following "@", ":" or "%", invalid placeholder (~placeholder) with string: "Non alpha, non-allowed starting character: ~placeholder"'],
-      ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], NULL, ''],
+      ['Non alpha starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (~placeholder) with string: "Non alpha starting character: ~placeholder"'],
+      ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (placeholder) with string: "Alpha starting character: placeholder"'],
       // Ensure that where the placeholder is located in the string is
       // irrelevant.
-      ['placeholder', ['placeholder' => 'replaced'], NULL, ''],
-      ['No replacements', ['foo' => 'bar'], NULL, ''],
+      ['placeholder', ['placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (placeholder) with string: "placeholder"'],
+      ['No replacements', ['foo' => 'bar'], E_USER_WARNING, 'Invalid placeholder (foo) with string: "No replacements"'],
     ];
   }
 

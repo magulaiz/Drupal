@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\comment\Tests\CommentTestTrait;
@@ -30,7 +28,9 @@ class HandlerTest extends ViewTestBase {
   public static $testViews = ['test_view', 'test_view_handler_weight', 'test_handler_relationships', 'test_handler_test_access', 'test_filter_in_operator_ui'];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['views_ui', 'comment', 'node'];
 
@@ -76,7 +76,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the breakString method.
    */
-  public function testBreakString(): void {
+  public function testBreakString() {
     // Check defaults.
     $this->assertEquals((object) ['value' => [], 'operator' => NULL], HandlerBase::breakString(''));
 
@@ -203,7 +203,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the order of handlers is the same before and after saving.
    */
-  public function testHandlerWeights(): void {
+  public function testHandlerWeights() {
     $handler_types = ['fields', 'filters', 'sorts'];
 
     $view = Views::getView('test_view_handler_weight');
@@ -229,7 +229,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the relationship ui for field/filter/argument/relationship.
    */
-  public function testRelationshipUI(): void {
+  public function testRelationshipUI() {
     $views_admin = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($views_admin);
 
@@ -271,11 +271,7 @@ class HandlerTest extends ViewTestBase {
     $this->assertSession()->fieldNotExists($relationship_name);
 
     // Create a view of comments with node relationship.
-    View::create([
-      'base_table' => 'comment_field_data',
-      'id' => 'test_get_entity_type',
-      'label' => 'Test',
-    ])->save();
+    View::create(['base_table' => 'comment_field_data', 'id' => 'test_get_entity_type'])->save();
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_get_entity_type/default/relationship');
     $this->submitForm(['name[comment_field_data.node]' => 'comment_field_data.node'], 'Add and configure relationships');
     $this->submitForm([], 'Apply');
@@ -293,7 +289,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the relationship method on the base class.
    */
-  public function testSetRelationship(): void {
+  public function testSetRelationship() {
     $view = Views::getView('test_handler_relationships');
     $view->setDisplay();
     // Setup a broken relationship.
@@ -332,7 +328,7 @@ class HandlerTest extends ViewTestBase {
    *
    * @see \Drupal\views\Plugin\views\HandlerBase::placeholder()
    */
-  public function testPlaceholder(): void {
+  public function testPlaceholder() {
     $view = Views::getView('test_view');
     $view->initHandlers();
     $view->initQuery();
@@ -364,7 +360,7 @@ class HandlerTest extends ViewTestBase {
    *
    * @see views_test_data_handler_test_access_callback
    */
-  public function testAccess(): void {
+  public function testAccess() {
     $view = Views::getView('test_handler_test_access');
     $views_data = $this->viewsData();
     $views_data = $views_data['views_test_data'];

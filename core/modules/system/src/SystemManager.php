@@ -7,15 +7,12 @@ use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * System Manager Service.
  */
 class SystemManager {
-
-  use StringTranslationTrait;
 
   /**
    * Module handler service.
@@ -110,10 +107,7 @@ class SystemManager {
 
     // Check run-time requirements and status information.
     $requirements = $this->moduleHandler->invokeAll('requirements', ['runtime']);
-    $runtime_requirements = $this->moduleHandler->invokeAll('runtime_requirements');
-    $requirements = array_merge($requirements, $runtime_requirements);
     $this->moduleHandler->alter('requirements', $requirements);
-    $this->moduleHandler->alter('runtime_requirements', $requirements);
     uasort($requirements, function ($a, $b) {
       if (!isset($a['weight'])) {
         if (!isset($b['weight'])) {
@@ -130,7 +124,7 @@ class SystemManager {
   /**
    * Extracts the highest severity from the requirements array.
    *
-   * @param array $requirements
+   * @param $requirements
    *   An array of requirements, in the same format as is returned by
    *   hook_requirements().
    *
@@ -171,7 +165,7 @@ class SystemManager {
     }
     else {
       $output = [
-        '#markup' => $this->t('You do not have any administrative items.'),
+        '#markup' => t('You do not have any administrative items.'),
       ];
     }
     return $output;

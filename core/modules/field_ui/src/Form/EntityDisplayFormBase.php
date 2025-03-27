@@ -4,10 +4,6 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Utility\Html;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\Ajax\TabledragWarningCommand;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
@@ -102,8 +98,8 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @return array
    *   Example usage:
    *   @code
-   *     return [
-   *       'content' => [
+   *     return array(
+   *       'content' => array(
    *         // label for the region.
    *         'title' => $this->t('Content'),
    *         // Indicates if the region is visible in the UI.
@@ -111,8 +107,8 @@ abstract class EntityDisplayFormBase extends EntityForm {
    *         // A message to indicate that there is nothing to be displayed in
    *         // the region.
    *         'message' => $this->t('No field is displayed.'),
-   *       ],
-   *     ];
+   *       ),
+   *     );
    *   @endcode
    */
   public function getRegions() {
@@ -268,11 +264,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         // spinners will be added manually by the client-side script.
         'progress' => 'none',
       ],
-      '#attributes' => [
-        'class' => ['visually-hidden'],
-        // Ensure the button is not focusable via keyboard navigation.
-        'tabindex' => '-1',
-      ],
+      '#attributes' => ['class' => ['visually-hidden']],
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -307,7 +299,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
 
     // Disable fields without any applicable plugins.
     if (empty($this->getApplicablePluginOptions($field_definition))) {
-      $this->entity->removeComponent($field_name);
+      $this->entity->removeComponent($field_name)->save();
       $display_options = $this->entity->getComponent($field_name);
     }
 
@@ -322,10 +314,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
       ],
       'human_name' => [
         '#plain_text' => $label,
-      ],
-      'machine_name' => [
-        '#markup' => $field_name,
-        '#attributes' => ['class' => ['machine-name']],
       ],
       'weight' => [
         '#type' => 'textfield',
@@ -500,10 +488,6 @@ abstract class EntityDisplayFormBase extends EntityForm {
       'human_name' => [
         '#markup' => $extra_field['label'],
       ],
-      'machine_name' => [
-        '#markup' => $field_id,
-        '#attributes' => ['class' => ['machine-name']],
-      ],
       'weight' => [
         '#type' => 'textfield',
         '#title' => $this->t('Weight for @title', ['@title' => $extra_field['label']]),
@@ -591,12 +575,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
       $this->saveDisplayStatuses($statuses);
     }
 
-    // The saved message may not be needed in some cases. An example of
-    // this is in LayoutBuilderEntityViewDisplayForm which can redirect
-    // the user to a confirmation form before the settings are saved.
-    if (!$form_state->getRedirect()) {
-      $this->messenger()->addStatus($this->t('Your settings have been saved.'));
-    }
+    $this->messenger()->addStatus($this->t('Your settings have been saved.'));
   }
 
   /**
@@ -700,21 +679,27 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * Ajax handler for multistep buttons.
    */
   public function multistepAjax($form, FormStateInterface $form_state) {
-    $response = new AjaxResponse();
     $trigger = $form_state->getTriggeringElement();
     $op = $trigger['#op'];
 
     // Pick the elements that need to receive the ajax-new-content effect.
-    $updated_rows = match ($op) {
-      'edit' => [$trigger['#field_name']],
-      'update', 'cancel' => [$trigger['#field_name']],
-      'refresh_table' => array_values(explode(' ', $form_state->getValue('refresh_rows')))
-    };
-    $updated_columns = match ($op) {
-      'edit' => ['plugin'],
-      'update', 'cancel' => ['plugin', 'settings_summary', 'settings_edit'],
-      'refresh_table' => ['settings_summary', 'settings_edit'],
-    };
+    switch ($op) {
+      case 'edit':
+        $updated_rows = [$trigger['#field_name']];
+        $updated_columns = ['plugin'];
+        break;
+
+      case 'update':
+      case 'cancel':
+        $updated_rows = [$trigger['#field_name']];
+        $updated_columns = ['plugin', 'settings_summary', 'settings_edit'];
+        break;
+
+      case 'refresh_table':
+        $updated_rows = array_values(explode(' ', $form_state->getValue('refresh_rows')));
+        $updated_columns = ['settings_summary', 'settings_edit'];
+        break;
+    }
 
     foreach ($updated_rows as $name) {
       foreach ($updated_columns as $key) {
@@ -724,19 +709,8 @@ abstract class EntityDisplayFormBase extends EntityForm {
       }
     }
 
-    // Replace the whole table.
-    $response->addCommand(new ReplaceCommand('#field-display-overview-wrapper', $form['fields']));
-
-    // Add "row updated" warning after the table has been replaced.
-    if (!in_array($op, ['cancel', 'edit'])) {
-      foreach ($updated_rows as $name) {
-        // The ID of the rendered table row is `$name` processed by getClass().
-        // @see \Drupal\field_ui\Element\FieldUiTable::tablePreRender
-        $response->addCommand(new TabledragWarningCommand(Html::getClass($name), 'field-display-overview'));
-      }
-    }
-
-    return $response;
+    // Return the whole table.
+    return $form['fields'];
   }
 
   /**

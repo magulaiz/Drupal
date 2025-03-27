@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Unit\Normalizer;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -47,8 +45,6 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $target_resource_type = new ResourceType('lorem', 'dummy_bundle', NULL);
     $relationship_fields = [
       'field_dummy' => new ResourceTypeRelationship('field_dummy'),
@@ -111,7 +107,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider denormalizeProvider
    */
-  public function testDenormalize($input, $field_name, $expected): void {
+  public function testDenormalize($input, $field_name, $expected) {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $context = [
       'resource_type' => $this->resourceType,
@@ -128,7 +124,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @return array
    *   The data for the test method.
    */
-  public static function denormalizeProvider() {
+  public function denormalizeProvider() {
     return [
       [
         ['data' => [['type' => 'lorem--dummy_bundle', 'id' => '4e6cb61d-4f04-437f-99fe-42c002393658']]],
@@ -152,7 +148,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider denormalizeInvalidResourceProvider
    */
-  public function testDenormalizeInvalidResource($data, $field_name): void {
+  public function testDenormalizeInvalidResource($data, $field_name) {
     $context = [
       'resource_type' => $this->resourceType,
       'related' => $field_name,
@@ -168,7 +164,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @return array
    *   The input data for the test method.
    */
-  public static function denormalizeInvalidResourceProvider() {
+  public function denormalizeInvalidResourceProvider() {
     return [
       [
         [

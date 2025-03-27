@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\FileSystem;
 
 use Drupal\Component\FileSystem\RegexDirectoryIterator;
@@ -18,7 +16,7 @@ class RegexDirectoryIteratorTest extends TestCase {
    * @covers ::accept
    * @dataProvider providerTestRegexDirectoryIterator
    */
-  public function testRegexDirectoryIterator(array $directory, $regex, array $expected): void {
+  public function testRegexDirectoryIterator(array $directory, $regex, array $expected) {
     vfsStream::setup('root', NULL, $directory);
     $iterator = new RegexDirectoryIterator(vfsStream::url('root'), $regex);
 
@@ -33,7 +31,7 @@ class RegexDirectoryIteratorTest extends TestCase {
   /**
    * Provider for self::testRegexDirectoryIterator().
    */
-  public static function providerTestRegexDirectoryIterator() {
+  public function providerTestRegexDirectoryIterator() {
     return [
       [
         [

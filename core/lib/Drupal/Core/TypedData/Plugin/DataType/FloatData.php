@@ -2,9 +2,6 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
-use Drupal\Core\Serialization\Attribute\JsonSchema;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\PrimitiveBase;
 use Drupal\Core\TypedData\Type\FloatInterface;
 
@@ -13,17 +10,17 @@ use Drupal\Core\TypedData\Type\FloatInterface;
  *
  * The plain value of a float is a regular PHP float. For setting the value
  * any PHP variable that casts to a float may be passed.
+ *
+ * @DataType(
+ *   id = "float",
+ *   label = @Translation("Float")
+ * )
  */
-#[DataType(
-  id: "float",
-  label: new TranslatableMarkup("Float")
-)]
 class FloatData extends PrimitiveBase implements FloatInterface {
 
   /**
    * {@inheritdoc}
    */
-  #[JsonSchema(['type' => 'number'])]
   public function getCastedValue() {
     return (float) $this->value;
   }

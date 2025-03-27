@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -47,7 +45,7 @@ class PasswordConfirmWidgetTest extends WebDriverTestBase {
   /**
    * Tests the components added to the password confirm widget.
    */
-  public function testPasswordConfirmWidgetJsComponents(): void {
+  public function testPasswordConfirmWidgetJsComponents() {
     $this->drupalGet($this->testUser->toUrl('edit-form'));
 
     $password_confirm_widget_selector = '.js-form-type-password-confirm.js-form-item-pass';
@@ -129,7 +127,7 @@ class PasswordConfirmWidgetTest extends WebDriverTestBase {
   /**
    * Ensures that password match message is visible when widget is initialized.
    */
-  public function testPasswordConfirmMessage(): void {
+  public function testPasswordConfirmMessage() {
     $this->drupalGet($this->testUser->toUrl('edit-form'));
     $password_confirm_widget_selector = '.js-form-type-password-confirm.js-form-item-pass';
     $password_confirm_selector = '.js-form-item-pass-pass2';
@@ -145,7 +143,7 @@ class PasswordConfirmWidgetTest extends WebDriverTestBase {
   /**
    * Tests the password confirm widget so that only confirm input is filled.
    */
-  public function testFillConfirmOnly(): void {
+  public function testFillConfirmOnly() {
     $this->drupalGet($this->testUser->toUrl('edit-form'));
     $password_confirm_widget_selector = '.js-form-type-password-confirm.js-form-item-pass';
     $password_parent_selector = '.js-form-item-pass-pass1';

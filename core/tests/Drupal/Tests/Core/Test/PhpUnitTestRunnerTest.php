@@ -1,12 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\PhpUnitTestRunner;
-use Drupal\Core\Test\SimpletestTestRunResultsStorage;
-use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestStatus;
 use Drupal\Tests\UnitTestCase;
 
@@ -21,22 +17,11 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
   /**
    * Tests an error in the test running phase.
    *
-   * @covers ::execute
+   * @covers ::runTests
    */
-  public function testRunTestsError(): void {
+  public function testRunTestsError() {
     $test_id = 23;
     $log_path = 'test_log_path';
-
-    // Create a mock test run storage.
-    $storage = $this->getMockBuilder(SimpletestTestRunResultsStorage::class)
-      ->disableOriginalConstructor()
-      ->onlyMethods(['createNew'])
-      ->getMock();
-
-    // Set some expectations for createNew().
-    $storage->expects($this->once())
-      ->method('createNew')
-      ->willReturn($test_id);
 
     // Create a mock runner.
     $runner = $this->getMockBuilder(PhpUnitTestRunner::class)
@@ -53,17 +38,15 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $runner->expects($this->once())
       ->method('runCommand')
       ->willReturnCallback(
-        function (string $test_class_name, string $log_junit_file_path, int &$status): string {
+        function ($unescaped_test_classnames, $phpunit_file, &$status) {
           $status = TestStatus::EXCEPTION;
-          return ' ';
         }
       );
 
-    // The execute() method expects $status by reference, so we initialize it
+    // The runTests() method expects $status by reference, so we initialize it
     // to some value we don't expect back.
     $status = -1;
-    $test_run = TestRun::createNew($storage);
-    $results = $runner->execute($test_run, 'SomeTest', $status);
+    $results = $runner->runTests($test_id, ['SomeTest'], $status);
 
     // Make sure our status code made the round trip.
     $this->assertEquals(TestStatus::EXCEPTION, $status);
@@ -86,7 +69,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
   /**
    * @covers ::phpUnitCommand
    */
-  public function testPhpUnitCommand(): void {
+  public function testPhpUnitCommand() {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $this->assertMatchesRegularExpression('/phpunit/', $runner->phpUnitCommand());
   }
@@ -94,12 +77,12 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
   /**
    * @covers ::xmlLogFilePath
    */
-  public function testXmlLogFilePath(): void {
+  public function testXmlLogFilePath() {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
-  public static function providerTestSummarizeResults() {
+  public function providerTestSummarizeResults() {
     return [
       [
         [
@@ -144,7 +127,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * @dataProvider providerTestSummarizeResults
    * @covers ::summarizeResults
    */
-  public function testSummarizeResults($results, $has_status): void {
+  public function testSummarizeResults($results, $has_status) {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $summary = $runner->summarizeResults($results);
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\filter\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -15,7 +13,9 @@ use Drupal\user\RoleInterface;
 class FilterHooksTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['node', 'filter_test'];
 
@@ -30,9 +30,9 @@ class FilterHooksTest extends BrowserTestBase {
    * Tests that hooks run correctly on creating, editing, and deleting a text
    * format.
    */
-  public function testFilterHooks(): void {
+  public function testFilterHooks() {
     // Create content type, with underscores.
-    $type_name = 'test_' . $this->randomMachineName();
+    $type_name = 'test_' . strtolower($this->randomMachineName());
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $node_permission = "create $type_name content";
 
@@ -46,7 +46,7 @@ class FilterHooksTest extends BrowserTestBase {
     // Add a text format.
     $name = $this->randomMachineName();
     $edit = [];
-    $edit['format'] = $this->randomMachineName();
+    $edit['format'] = mb_strtolower($this->randomMachineName());
     $edit['name'] = $name;
     $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 1;
     $this->drupalGet('admin/config/content/formats/add');

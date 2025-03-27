@@ -3,24 +3,24 @@
 namespace Drupal\contextual\Element;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\SortArray;
-use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\RenderElementBase;
+use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Url;
 
 /**
  * Provides a contextual_links element.
+ *
+ * @RenderElement("contextual_links")
  */
-#[RenderElement('contextual_links')]
-class ContextualLinks extends RenderElementBase {
+class ContextualLinks extends RenderElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#pre_render' => [
-        [static::class, 'preRenderLinks'],
+        [$class, 'preRenderLinks'],
       ],
       '#theme' => 'links__contextual',
       '#links' => [],
@@ -45,14 +45,14 @@ class ContextualLinks extends RenderElementBase {
    *   - route_parameters: The route parameters passed to the URL generator.
    *   - metadata: Any additional data needed in order to alter the link.
    *   @code
-   *     ['#contextual_links' => [
-   *       'block' => [
-   *         'route_parameters' => ['block' => 'system.menu-tools'],
-   *       ],
-   *       'menu' => [
-   *         'route_parameters' => ['menu' => 'tools'],
-   *       ],
-   *     ]]
+   *     array('#contextual_links' => array(
+   *       'block' => array(
+   *         'route_parameters' => array('block' => 'system.menu-tools'),
+   *       ),
+   *       'menu' => array(
+   *         'route_parameters' => array('menu' => 'tools'),
+   *       ),
+   *     ))
    *   @endcode
    *
    * @return array
@@ -71,8 +71,6 @@ class ContextualLinks extends RenderElementBase {
       ];
       $items += $contextual_links_manager->getContextualLinksArrayByGroup($group, $args['route_parameters'], $args['metadata']);
     }
-
-    uasort($items, [SortArray::class, 'sortByWeightElement']);
 
     // Transform contextual links into parameters suitable for links.html.twig.
     $links = [];
@@ -101,7 +99,6 @@ class ContextualLinks extends RenderElementBase {
    * Wraps the contextual link manager.
    *
    * @return \Drupal\Core\Menu\ContextualLinkManager
-   *   The contextual link manager service.
    */
   protected static function contextualLinkManager() {
     return \Drupal::service('plugin.manager.menu.contextual_link');
@@ -111,7 +108,6 @@ class ContextualLinks extends RenderElementBase {
    * Wraps the module handler.
    *
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    */
   protected static function moduleHandler() {
     return \Drupal::moduleHandler();

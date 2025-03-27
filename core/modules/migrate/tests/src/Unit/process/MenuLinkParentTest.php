@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -16,8 +14,6 @@ use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MenuLinkParent;
-
-// cspell:ignore plid
 
 /**
  * Tests the menu link parent process plugin.
@@ -91,7 +87,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerTransformException
    */
-  public function testTransformException(array $source_value): void {
+  public function testTransformException(array $source_value) {
     [$parent_id, $menu_name] = $source_value;
     $this->migrateLookup->lookup(NULL, [1])->willReturn([]);
     $plugin = new MenuLinkParent([], 'map', [], $this->migrateLookup->reveal(), $this->menuLinkManager->reveal(), $this->menuLinkStorage->reveal(), $this->migration->reveal());
@@ -103,11 +99,11 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
   /**
    * Provides data for testTransformException().
    */
-  public static function providerTransformException() {
+  public function providerTransformException() {
     // The parent ID does not for the following tests.
     return [
       'parent link external and could not be loaded' => [
-        'source_value' => [1, 'admin', 'http://example.com'],
+        'source_value' => [1, 'admin', 'http://drupal.org'],
       ],
       'parent link path/menu name not passed' => [
         'source_value' => [1, NULL, NULL],
@@ -138,7 +134,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerMenuLinkParent
    */
-  public function testMenuLinkParent(array $source_value, $lookup_result, $plugin_id, $route_name, $expected_result): void {
+  public function testMenuLinkParent(array $source_value, $lookup_result, $plugin_id, $route_name, $expected_result) {
     [$parent_id, $menu_name, $parent_link_path] = $source_value;
     $this->migrateLookup->lookup(NULL, [$parent_id])
       ->willReturn([['id' => $lookup_result]]);
@@ -161,7 +157,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
   /**
    * Provides data for testMenuLinkParent().
    */
-  public static function providerMenuLinkParent() {
+  public function providerMenuLinkParent() {
     return [
       'menu link is route item' => [
         'source_value' => [0, NULL, NULL],

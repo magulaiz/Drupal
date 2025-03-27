@@ -18,9 +18,8 @@ interface ThemeManagerInterface {
    * See the @link themeable Default theme implementations topic @endlink for
    * details.
    *
-   * @param string|string[] $hook
-   *   The name of the theme hook to call or an array of names of theme hooks to
-   *   call.
+   * @param string $hook
+   *   The name of the theme hook to call.
    * @param array $variables
    *   An associative array of theme variables.
    *
@@ -36,15 +35,13 @@ interface ThemeManagerInterface {
    *   The route match.
    *
    * @return \Drupal\Core\Theme\ActiveTheme
-   *   The active theme object.
    */
-  public function getActiveTheme(?RouteMatchInterface $route_match = NULL);
+  public function getActiveTheme(RouteMatchInterface $route_match = NULL);
 
   /**
    * Determines whether there is an active theme.
    *
    * @return bool
-   *   TRUE if there is an active theme, FALSE otherwise.
    */
   public function hasActiveTheme();
 
@@ -88,22 +85,22 @@ interface ThemeManagerInterface {
    * need to be passed and alterable, modules provide additional variables
    * assigned by reference in the last $context argument:
    * @code
-   *   $context = [
+   *   $context = array(
    *     'alterable' => &$alterable,
    *     'unalterable' => $unalterable,
    *     'foo' => 'bar',
    *   );
-   *   $this->alter('my_module_data', $alterable1, $alterable2, $context);
+   *   $this->alter('mymodule_data', $alterable1, $alterable2, $context);
    * @endcode
    *
    * Note that objects are always passed by reference. If it is absolutely
    * required that no implementation alters a passed object in $context, then an
    * object needs to be cloned:
    * @code
-   *   $context = [
+   *   $context = array(
    *     'unalterable_object' => clone $object,
-   *   ];
-   *   $this->alter('my_module_data', $data, $context);
+   *   );
+   *   $this->alter('mymodule_data', $data, $context);
    * @endcode
    *
    * @param string|array $type
@@ -112,7 +109,7 @@ interface ThemeManagerInterface {
    *   array, in which case $theme_TYPE_alter() is invoked for each value in the
    *   array. When Form API is using $this->alter() to
    *   execute both $theme_form_alter() and $theme_form_FORM_ID_alter()
-   *   implementations, it passes ['form', 'form_' . $form_id] for $type.
+   *   implementations, it passes array('form', 'form_' . $form_id) for $type.
    * @param mixed $data
    *   The variable that will be passed to $theme_TYPE_alter() implementations
    *   to be altered. The type of this variable depends on the value of the
@@ -139,7 +136,7 @@ interface ThemeManagerInterface {
    * @param string|array $type
    *   A string describing the type of the alterable $data.
    * @param mixed $data
-   *   The variable that will be passed to $theme_TYPE_alter() implementations.
+   *   The variable that will be passed to $theme_TYPE_alter() implementations
    * @param mixed $context1
    *   (optional) An additional variable that is passed by reference.
    * @param mixed $context2

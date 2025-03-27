@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\Core\Cache\Cache;
@@ -9,11 +7,8 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
-// cspell:ignore cádiz
-
 /**
  * @group rest
- * @group #slow
  */
 class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
 
@@ -58,7 +53,7 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
       [
         'value' => 'Cádiz is the oldest continuously inhabited city in Spain and a nice place to spend a Sunday with friends.',
         'format' => 'my_text_format',
-        'processed' => '<p>Cádiz is the oldest continuously inhabited city in Spain and a nice place to spend a Sunday with friends.</p>' . "\n" . '<p>This is a dynamic llama.</p><p>This is a static llama.</p>',
+        'processed' => '<p>Cádiz is the oldest continuously inhabited city in Spain and a nice place to spend a Sunday with friends.</p>' . "\n" . '<p>This is a dynamic llama.</p>',
       ],
     ];
     return $expected;
@@ -157,7 +152,7 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
    *
    * @dataProvider providerTestGetWithFormat
    */
-  public function testGetWithFormat($text_format_id, array $expected_cache_tags): void {
+  public function testGetWithFormat($text_format_id, array $expected_cache_tags) {
     FilterFormat::create([
       'name' => 'Pablo Picasso',
       'format' => 'pablo',
@@ -185,10 +180,7 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
     $this->assertEqualsCanonicalizing($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
   }
 
-  /**
-   * Provides test cases for text format retrieval with expected cache tags.
-   */
-  public static function providerTestGetWithFormat() {
+  public function providerTestGetWithFormat() {
     return [
       'format specified (different from fallback format)' => [
         'pablo',

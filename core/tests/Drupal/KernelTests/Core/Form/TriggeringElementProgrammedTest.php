@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Form;
 
 use Drupal\Core\Form\FormInterface;
@@ -54,7 +52,7 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state): void {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Verify that the only submit button was recognized as triggering_element.
     $this->assertEquals($form['actions']['submit']['#array_parents'], $form_state->getTriggeringElement()['#array_parents']);
   }
@@ -68,7 +66,7 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
   /**
    * Tests that #limit_validation_errors of the only submit button takes effect.
    */
-  public function testLimitValidationErrors(): void {
+  public function testLimitValidationErrors() {
     // Programmatically submit the form.
     $form_state = new FormState();
     $form_state->setValue('section', 'one');

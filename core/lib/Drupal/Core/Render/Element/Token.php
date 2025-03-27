@@ -3,7 +3,6 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 
 /**
  * Stores token data in a hidden form field.
@@ -12,18 +11,20 @@ use Drupal\Core\Render\Attribute\FormElement;
  * element is automatically added to each Drupal form by an implementation of
  * \Drupal\Core\Form\FormBuilderInterface::prepareForm() so you don't generally
  * have to add one yourself.
+ *
+ * @FormElement("token")
  */
-#[FormElement('token')]
 class Token extends Hidden {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#pre_render' => [
-        [static::class, 'preRenderHidden'],
+        [$class, 'preRenderHidden'],
       ],
       '#theme' => 'input__hidden',
     ];

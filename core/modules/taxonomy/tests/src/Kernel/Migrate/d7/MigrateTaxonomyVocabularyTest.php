@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d7;
 
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -33,11 +31,11 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
    *
    * @param string $id
    *   Entity ID to load and check.
-   * @param string $expected_label
+   * @param $expected_label
    *   The label the migrated entity should have.
-   * @param string $expected_description
+   * @param $expected_description
    *   The description the migrated entity should have.
-   * @param string $expected_weight
+   * @param $expected_weight
    *   The weight the migrated entity should have.
    *
    * @internal
@@ -54,9 +52,9 @@ class MigrateTaxonomyVocabularyTest extends MigrateDrupal7TestBase {
   /**
    * Tests the Drupal 7 taxonomy vocabularies to Drupal 8 migration.
    */
-  public function testTaxonomyVocabulary(): void {
+  public function testTaxonomyVocabulary() {
     $this->assertEntity('tags', 'Tags', 'Use tags to group articles on similar topics into categories.', 0);
-    $this->assertEntity('sujet_de_discussion', 'Sujet de discussion', 'Forum navigation vocabulary', -10);
+    $this->assertEntity('forums', 'Sujet de discussion', 'Forum navigation vocabulary', -10);
     $this->assertEntity('test_vocabulary', 'Test Vocabulary', 'This is the vocabulary description', 0);
     $this->assertEntity('vocabulary_name_much_longer_th', 'vocabulary name clearly different than machine name and much longer than thirty two characters', 'description of vocabulary name much longer than thirty two characters', 0);
   }

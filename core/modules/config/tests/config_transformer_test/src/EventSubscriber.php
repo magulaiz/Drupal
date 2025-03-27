@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\config_transformer_test;
 
 use Drupal\Core\Config\ConfigEvents;
@@ -9,8 +7,6 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\StorageTransformEvent;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
-// cspell:ignore arrr
 
 /**
  * Class EventSubscriber.

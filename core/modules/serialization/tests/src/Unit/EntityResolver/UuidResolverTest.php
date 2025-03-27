@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\serialization\Unit\EntityResolver;
 
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -32,8 +30,6 @@ class UuidResolverTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->entityRepository = $this->createMock(EntityRepositoryInterface::class);
 
     $this->resolver = new UuidResolver($this->entityRepository);
@@ -42,7 +38,7 @@ class UuidResolverTest extends UnitTestCase {
   /**
    * Tests resolve() with a class using the incorrect interface.
    */
-  public function testResolveNotInInterface(): void {
+  public function testResolveNotInInterface() {
     $this->entityRepository->expects($this->never())
       ->method('loadEntityByUuid');
 
@@ -53,7 +49,7 @@ class UuidResolverTest extends UnitTestCase {
   /**
    * Tests resolve() with a class using the correct interface but no UUID.
    */
-  public function testResolveNoUuid(): void {
+  public function testResolveNoUuid() {
     $this->entityRepository->expects($this->never())
       ->method('loadEntityByUuid');
 
@@ -68,7 +64,7 @@ class UuidResolverTest extends UnitTestCase {
   /**
    * Tests resolve() with correct interface but no matching entity for the UUID.
    */
-  public function testResolveNoEntity(): void {
+  public function testResolveNoEntity() {
     $uuid = '392eab92-35c2-4625-872d-a9dab4da008e';
 
     $this->entityRepository->expects($this->once())
@@ -88,7 +84,7 @@ class UuidResolverTest extends UnitTestCase {
   /**
    * Tests resolve() when a UUID corresponds to an entity.
    */
-  public function testResolveWithEntity(): void {
+  public function testResolveWithEntity() {
     $uuid = '392eab92-35c2-4625-872d-a9dab4da008e';
 
     $entity = $this->createMock('Drupal\Core\Entity\EntityInterface');

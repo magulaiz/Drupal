@@ -18,8 +18,9 @@ use Drupal\views\Plugin\views\PluginBase;
  *
  * Display extender plugins extend
  * \Drupal\views\Plugin\views\display_extender\DisplayExtenderPluginBase.
- * They must have \Drupal\views\Attribute\ViewsDisplayExtender attributes, and
- * they must be in namespace directory Plugin\views\display_extender.
+ * They must be annotated with
+ * \Drupal\views\Annotation\ViewsDisplayExtender annotation, and they
+ * must be in namespace directory Plugin\views\display_extender.
  *
  * @ingroup views_plugins
  *
@@ -70,7 +71,8 @@ abstract class DisplayExtenderPluginBase extends PluginBase {
   public function optionsSummary(&$categories, &$options) {}
 
   /**
-   * Gets a list of defaultable sections and the items they contain.
+   * Static member function to list which sections are defaultable
+   * and what items each section contains.
    */
   public function defaultableSections(&$sections, $section = NULL) {}
 

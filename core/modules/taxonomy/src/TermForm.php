@@ -23,7 +23,12 @@ class TermForm extends ContentEntityForm {
     $taxonomy_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $vocabulary = $vocab_storage->load($term->bundle());
 
-    $parent = $this->getParentIds($term);
+    $parent = [];
+    // Get the parent directly from the term as
+    // \Drupal\taxonomy\TermStorageInterface::loadParents() excludes the root.
+    foreach ($term->get('parent') as $item) {
+      $parent[] = (int) $item->target_id;
+    }
     $form_state->set(['taxonomy', 'parent'], $parent);
     $form_state->set(['taxonomy', 'vocabulary'], $vocabulary);
 
@@ -68,12 +73,6 @@ class TermForm extends ContentEntityForm {
       $parent = [0];
     }
 
-    if ($this->getRequest()->query->has('parent')) {
-      $parent = array_values(array_intersect(
-        array_keys($options),
-        (array) $this->getRequest()->query->all()['parent'],
-      ));
-    }
     $form['relations']['parent'] = [
       '#type' => 'select',
       '#title' => $this->t('Parent terms'),
@@ -115,7 +114,6 @@ class TermForm extends ContentEntityForm {
         '#value' => $this->t('Save and go to list'),
         '#weight' => 20,
         '#submit' => array_merge($element['submit']['#submit'], ['::overview']),
-        '#access' => $this->currentUser()->hasPermission('access taxonomy overview'),
       ];
     }
 
@@ -201,19 +199,13 @@ class TermForm extends ContentEntityForm {
     switch ($result) {
       case SAVED_NEW:
         $this->messenger()->addStatus($this->t('Created new term %term.', ['%term' => $view_link]));
-        $this->logger('taxonomy')->info('Created new term %term.', ['%term' => $term->getName(), 'link' => $edit_link]);
+        $this->logger('taxonomy')->notice('Created new term %term.', ['%term' => $term->getName(), 'link' => $edit_link]);
         break;
 
       case SAVED_UPDATED:
         $this->messenger()->addStatus($this->t('Updated term %term.', ['%term' => $view_link]));
-        $this->logger('taxonomy')->info('Updated term %term.', ['%term' => $term->getName(), 'link' => $edit_link]);
-
-        // Redirect to term view page if user has access, otherwise the form
-        // will be displayed again.
-        $canonicalUrl = $term->toUrl();
-        if ($canonicalUrl->access()) {
-          $form_state->setRedirectUrl($canonicalUrl);
-        }
+        $this->logger('taxonomy')->notice('Updated term %term.', ['%term' => $term->getName(), 'link' => $edit_link]);
+        $form_state->setRedirect('entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()]);
         break;
     }
 
@@ -225,25 +217,6 @@ class TermForm extends ContentEntityForm {
 
     $form_state->setValue('tid', $term->id());
     $form_state->set('tid', $term->id());
-  }
-
-  /**
-   * Returns term parent IDs, including the root.
-   *
-   * @param \Drupal\taxonomy\TermInterface $term
-   *   The taxonomy term entity.
-   *
-   * @return array
-   *   A list if parent term IDs.
-   */
-  protected function getParentIds(TermInterface $term): array {
-    $parent = [];
-    // Get the parent directly from the term as
-    // \Drupal\taxonomy\TermStorageInterface::loadParents() excludes the root.
-    foreach ($term->get('parent') as $item) {
-      $parent[] = (int) $item->target_id;
-    }
-    return $parent;
   }
 
 }

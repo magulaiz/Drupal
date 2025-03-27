@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\FunctionalTests\Installer\InstallerTestBase;
-use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Installs the config translation module on a site installed in non english.
@@ -13,8 +10,6 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * @group config_translation
  */
 class ConfigTranslationInstallTest extends InstallerTestBase {
-
-  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -24,12 +19,12 @@ class ConfigTranslationInstallTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
+  protected $profile = 'standard';
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // Place custom local translations in the translations directory.
     mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
     file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.eo.po', $this->getPo('eo'));
@@ -48,8 +43,8 @@ class ConfigTranslationInstallTest extends InstallerTestBase {
    * @return string
    *   Contents for the test .po file.
    */
-  protected function getPo($langcode): string {
-    return <<<PO
+  protected function getPo($langcode) {
+    return <<<ENDPO
 msgid ""
 msgstr ""
 
@@ -61,16 +56,10 @@ msgstr "Anonymous $langcode"
 
 msgid "Language"
 msgstr "Language $langcode"
-PO;
+ENDPO;
   }
 
-  /**
-   * Tests install of Configuration Translation module.
-   */
-  public function testConfigTranslation(): void {
-    \Drupal::service('module_installer')->install(['node', 'field_ui']);
-    $this->createContentType(['type' => 'article']);
-
+  public function testConfigTranslation() {
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm(['predefined_langcode' => 'en'], 'Add custom language');
     $this->drupalGet('admin/config/regional/language/add');

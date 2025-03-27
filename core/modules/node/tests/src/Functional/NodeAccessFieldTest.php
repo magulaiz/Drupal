@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -15,7 +13,9 @@ use Drupal\field\Entity\FieldStorageConfig;
 class NodeAccessFieldTest extends NodeTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['node_access_test', 'field_ui'];
 
@@ -65,7 +65,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     ]);
 
     // Add a custom field to the page content type.
-    $this->fieldName = $this->randomMachineName() . '_field_name';
+    $this->fieldName = mb_strtolower($this->randomMachineName() . '_field_name');
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
@@ -89,7 +89,7 @@ class NodeAccessFieldTest extends NodeTestBase {
   /**
    * Tests administering fields when node access is restricted.
    */
-  public function testNodeAccessAdministerField(): void {
+  public function testNodeAccessAdministerField() {
     // Create a page node.
     $fieldData = [];
     $value = $fieldData[0]['value'] = $this->randomMachineName();
@@ -106,9 +106,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     $this->assertSession()->pageTextContains('Access denied');
 
     // Modify the field default as the content admin.
-    $edit = [
-      'set_default_value' => '1',
-    ];
+    $edit = [];
     $default = 'Sometimes words have two meanings';
     $edit["default_value_input[{$this->fieldName}][0][value]"] = $default;
     $this->drupalGet("admin/structure/types/manage/page/fields/node.page.{$this->fieldName}");

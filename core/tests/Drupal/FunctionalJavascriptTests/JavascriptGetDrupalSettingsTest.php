@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalJavascriptTests;
 
 /**
@@ -26,7 +24,7 @@ class JavascriptGetDrupalSettingsTest extends WebDriverTestBase {
    *
    * @see \Drupal\FunctionalJavascriptTests\WebDriverTestBase::getDrupalSettings()
    */
-  public function testGetDrupalSettings(): void {
+  public function testGetDrupalSettings() {
     $this->drupalLogin($this->drupalCreateUser());
     $this->drupalGet('test-page');
 

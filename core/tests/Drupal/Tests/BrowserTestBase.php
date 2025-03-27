@@ -1,43 +1,36 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\Element;
-use Behat\Mink\Exception\Exception as MinkException;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
-use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
-use Drupal\TestTools\Extension\Dump\DebugDump;
+use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
-use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Provides a test case for functional Drupal tests.
  *
- * Module tests extending BrowserTestBase must exist in the
- * Drupal\Tests\your_module\Functional namespace and live in the
- * modules/your_module/tests/src/Functional directory.
- *
- * Tests for core/lib/Drupal classes extending BrowserTestBase must exist in the
- * \Drupal\FunctionalTests\Core namespace and live in the
- * core/tests/Drupal/FunctionalTests directory.
+ * Tests extending BrowserTestBase must exist in the
+ * Drupal\Tests\yourmodule\Functional namespace and live in the
+ * modules/yourmodule/tests/src/Functional directory.
  *
  * Tests extending this base class should only translate text when testing
  * translation functionality. For example, avoid wrapping test text with t()
@@ -75,6 +68,7 @@ abstract class BrowserTestBase extends TestCase {
     createUser as drupalCreateUser;
   }
   use XdebugRequestTrait;
+  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ExpectDeprecationTrait;
   use ExtensionListTestTrait;
@@ -86,6 +80,14 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected $timeLimit = 500;
 
+  /**
+   * The translation file directory for the test environment.
+   *
+   * This is set in BrowserTestBase::prepareEnvironment().
+   *
+   * @var string
+   */
+  protected $translationFilesDirectory;
 
   /**
    * The config importer that can be used in a test.
@@ -95,7 +97,7 @@ abstract class BrowserTestBase extends TestCase {
   protected $configImporter;
 
   /**
-   * Modules to install.
+   * Modules to enable.
    *
    * The test runner will merge the $modules lists from this class, the class
    * it extends, and so on up the class hierarchy. It is not necessary to
@@ -122,6 +124,15 @@ abstract class BrowserTestBase extends TestCase {
    * @var string
    */
   protected $defaultTheme;
+
+  /**
+   * An array of custom translations suitable for SettingsEditor::rewrite().
+   *
+   * @var array
+   *
+   * @see \Drupal\Core\Site\SettingsEditor::rewrite()
+   */
+  protected $customTranslations;
 
   /**
    * Mink class for the default driver to use.
@@ -159,6 +170,19 @@ abstract class BrowserTestBase extends TestCase {
   protected $mink;
 
   /**
+   * {@inheritdoc}
+   *
+   * Browser tests are run in separate processes to prevent collisions between
+   * code that may be loaded by tests.
+   */
+  protected $runTestInSeparateProcess = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $preserveGlobalState = FALSE;
+
+  /**
    * The base URL.
    *
    * @var string
@@ -185,19 +209,9 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(string $name) {
-    parent::__construct($name);
-    $this->setRunTestInSeparateProcess(TRUE);
-  }
-
-  /**
-   * Registers the dumper CLI handler when the DebugDump extension is enabled.
-   */
-  #[BeforeClass]
-  public static function setDebugDumpHandler(): void {
-    if (DebugDump::isEnabled()) {
-      VarDumper::setHandler(DebugDump::class . '::cliHandler');
-    }
+  public static function setUpBeforeClass(): void {
+    parent::setUpBeforeClass();
+    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
   }
 
   /**
@@ -269,7 +283,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * Gets an instance of the default Mink driver.
    *
-   * @return \Behat\Mink\Driver\DriverInterface
+   * @return Behat\Mink\Driver\DriverInterface
    *   Instance of default Mink driver.
    *
    * @throws \InvalidArgumentException
@@ -306,11 +320,9 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Gets the Mink driver args from an environment variable.
-   *
-   * The environment variable can be overridden in a derived class so it is
-   * possible to use a different value for a subset of tests, e.g. the
-   * JavaScript tests.
+   * Get the Mink driver args from an environment variable, if it is set. Can
+   * be overridden in a derived class so it is possible to use a different
+   * value for a subset of tests, e.g. the JavaScript tests.
    *
    * @return string|false
    *   The JSON-encoded argument string. False if it is not set.
@@ -341,7 +353,6 @@ abstract class BrowserTestBase extends TestCase {
     parent::setUp();
 
     $this->setUpAppRoot();
-    chdir($this->root);
 
     // Allow tests to compare MarkupInterface objects via assertEquals().
     $this->registerComparator(new MarkupInterfaceComparator());
@@ -352,14 +363,16 @@ abstract class BrowserTestBase extends TestCase {
     $this->prepareEnvironment();
     $this->installDrupal();
 
-    // Setup Mink. Register Mink exceptions to cause test failures instead of
-    // errors.
-    $this->registerFailureType(MinkException::class);
+    // Setup Mink.
     $this->initMink();
 
     // Set up the browser test output file.
     $this->initBrowserOutputFile();
 
+    // Ensure that the test is not marked as risky because of no assertions. In
+    // PHPUnit 6 tests that only make assertions using $this->assertSession()
+    // can be marked as risky.
+    $this->addToAssertionCount(1);
   }
 
   /**
@@ -417,20 +430,7 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    // Close any mink sessions as early as possible to free a new browser
-    // session up for the next test method or test.
-    if ($this->mink) {
-      $this->mink->stopSessions();
-    }
     parent::tearDown();
-
-    if ($this->container) {
-      // Cleanup mock session started in DrupalKernel::preHandle().
-      /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-      $session = $this->container->get('request_stack')->getSession();
-      $session->clear();
-      $session->save();
-    }
 
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
@@ -440,6 +440,10 @@ abstract class BrowserTestBase extends TestCase {
 
     // Ensure that internal logged in variable is reset.
     $this->loggedInUser = FALSE;
+
+    if ($this->mink) {
+      $this->mink->stopSessions();
+    }
 
     // Restore original shutdown callbacks.
     if (function_exists('drupal_register_shutdown_function')) {
@@ -513,7 +517,7 @@ abstract class BrowserTestBase extends TestCase {
    * @return array
    *   Associative array of option keys and values.
    */
-  protected function getOptions($select, ?Element $container = NULL) {
+  protected function getOptions($select, Element $container = NULL) {
     if (is_string($select)) {
       $select = $this->assertSession()->selectExists($select, $container);
     }
@@ -544,6 +548,10 @@ abstract class BrowserTestBase extends TestCase {
     // as expected.
     $this->container->get('cache_tags.invalidator')->resetChecksums();
 
+    // Generate a route to prime the url generator with the correct base url.
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
+    Url::fromRoute('<front>')->setAbsolute()->toString();
+
     // Explicitly call register() again on the container registered in \Drupal.
     // @todo This should already be called through
     //   DrupalKernel::prepareLegacyRequest() -> DrupalKernel::boot() but that
@@ -565,7 +573,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @see vendor/phpunit/phpunit/src/Util/PHP/Template/TestCaseMethod.tpl.dist
    */
-  public function __sleep(): array {
+  public function __sleep() {
     return [];
   }
 
@@ -611,11 +619,7 @@ abstract class BrowserTestBase extends TestCase {
   protected function getDrupalSettings() {
     $html = $this->getSession()->getPage()->getContent();
     if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
-      $settings = Json::decode($matches[1]);
-      if (isset($settings['ajaxPageState']['libraries'])) {
-        $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
-      }
-      return $settings;
+      return Json::decode($matches[1]);
     }
     return [];
   }

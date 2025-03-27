@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Test;
 
 use Composer\Autoload\ClassLoader;
@@ -24,12 +22,12 @@ class TestDiscoveryTest extends UnitTestCase {
    * @covers ::getTestInfo
    * @dataProvider infoParserProvider
    */
-  public function testTestInfoParser($expected, $classname, $doc_comment = NULL): void {
+  public function testTestInfoParser($expected, $classname, $doc_comment = NULL) {
     $info = TestDiscovery::getTestInfo($classname, $doc_comment);
     $this->assertEquals($expected, $info);
   }
 
-  public static function infoParserProvider() {
+  public function infoParserProvider() {
     // A module provided unit test.
     $tests[] = [
       // Expected result.
@@ -72,7 +70,7 @@ class TestDiscoveryTest extends UnitTestCase {
       'Drupal\FunctionalTests\BrowserTestBaseTest',
     ];
 
-    // Kernel PHPUnit test.
+    // kernel PHPUnit test.
     $tests['phpunit-kernel'] = [
       // Expected result.
       [
@@ -205,7 +203,7 @@ class TestDiscoveryTest extends UnitTestCase {
   /**
    * @covers ::getTestInfo
    */
-  public function testTestInfoParserMissingGroup(): void {
+  public function testTestInfoParserMissingGroup() {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
 /**
@@ -220,7 +218,7 @@ EOT;
   /**
    * @covers ::getTestInfo
    */
-  public function testTestInfoParserMissingSummary(): void {
+  public function testTestInfoParserMissingSummary() {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
 /**
@@ -231,7 +229,7 @@ EOT;
     $this->assertEmpty($info['description']);
   }
 
-  protected function setupVfsWithTestClasses(): void {
+  protected function setupVfsWithTestClasses() {
     vfsStream::setup('drupal');
 
     $test_file = <<<EOF
@@ -299,7 +297,7 @@ EOF;
   /**
    * @covers ::getTestClasses
    */
-  public function testGetTestClasses(): void {
+  public function testGetTestClasses() {
     $this->setupVfsWithTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
@@ -368,7 +366,7 @@ EOF;
   /**
    * @covers ::getTestClasses
    */
-  public function testGetTestClassesWithSelectedTypes(): void {
+  public function testGetTestClassesWithSelectedTypes() {
     $this->setupVfsWithTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
@@ -413,7 +411,7 @@ EOF;
   /**
    * @covers ::getTestClasses
    */
-  public function testGetTestsInProfiles(): void {
+  public function testGetTestsInProfiles() {
     $this->setupVfsWithTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
 
@@ -443,24 +441,24 @@ EOF;
    * @covers ::getPhpunitTestSuite
    * @dataProvider providerTestGetPhpunitTestSuite
    */
-  public function testGetPhpunitTestSuite($classname, $expected): void {
+  public function testGetPhpunitTestSuite($classname, $expected) {
     $this->assertEquals($expected, TestDiscovery::getPhpunitTestSuite($classname));
   }
 
-  public static function providerTestGetPhpunitTestSuite() {
+  public function providerTestGetPhpunitTestSuite() {
     $data = [];
-    $data['simpletest-web test'] = ['\Drupal\rest\Tests\NodeTest', FALSE];
+    $data['simpletest-webtest'] = ['\Drupal\rest\Tests\NodeTest', FALSE];
     $data['module-unittest'] = [static::class, 'Unit'];
-    $data['module-kernel test'] = ['\Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest', 'Kernel'];
-    $data['module-functional test'] = ['\Drupal\FunctionalTests\BrowserTestBaseTest', 'Functional'];
-    $data['module-functional javascript test'] = ['\Drupal\Tests\toolbar\FunctionalJavascript\ToolbarIntegrationTest', 'FunctionalJavascript'];
+    $data['module-kerneltest'] = ['\Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest', 'Kernel'];
+    $data['module-functionaltest'] = ['\Drupal\FunctionalTests\BrowserTestBaseTest', 'Functional'];
+    $data['module-functionaljavascripttest'] = ['\Drupal\Tests\toolbar\FunctionalJavascript\ToolbarIntegrationTest', 'FunctionalJavascript'];
     $data['core-unittest'] = ['\Drupal\Tests\ComposerIntegrationTest', 'Unit'];
     $data['core-unittest2'] = ['Drupal\Tests\Core\DrupalTest', 'Unit'];
-    $data['core-script-test'] = ['Drupal\KernelTests\Scripts\TestSiteApplicationTest', 'Kernel'];
-    $data['core-kernel test'] = ['\Drupal\KernelTests\KernelTestBaseTest', 'Kernel'];
-    $data['core-functional test'] = ['\Drupal\FunctionalTests\ExampleTest', 'Functional'];
-    $data['core-functional javascript test'] = ['\Drupal\FunctionalJavascriptTests\ExampleTest', 'FunctionalJavascript'];
-    $data['core-build test'] = ['\Drupal\BuildTests\Framework\Tests\BuildTestTest', 'Build'];
+    $data['core-unittest3'] = ['Drupal\Tests\Scripts\TestSiteApplicationTest', 'Unit'];
+    $data['core-kerneltest'] = ['\Drupal\KernelTests\KernelTestBaseTest', 'Kernel'];
+    $data['core-functionaltest'] = ['\Drupal\FunctionalTests\ExampleTest', 'Functional'];
+    $data['core-functionaljavascripttest'] = ['\Drupal\FunctionalJavascriptTests\ExampleTest', 'FunctionalJavascript'];
+    $data['core-buildtest'] = ['\Drupal\BuildTests\Framework\Tests\BuildTestTest', 'Build'];
 
     return $data;
   }
@@ -470,7 +468,7 @@ EOF;
    *
    * @covers ::getTestInfo
    */
-  public function testGetTestInfoEmptyDocblock(): void {
+  public function testGetTestInfoEmptyDocblock() {
     // If getTestInfo() performed reflection, it won't be able to find the
     // class we asked it to analyze, so it will throw a ReflectionException.
     // We want to make sure it didn't do that, because we already did some
@@ -485,7 +483,7 @@ EOF;
    *
    * @covers ::scanDirectory
    */
-  public function testScanDirectoryNoAbstract(): void {
+  public function testScanDirectoryNoAbstract() {
     $this->setupVfsWithTestClasses();
     $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));
     $this->assertNotEmpty($files);

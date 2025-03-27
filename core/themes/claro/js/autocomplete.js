@@ -3,14 +3,14 @@
  * Claro's enhancement for autocomplete form element.
  */
 
-// cspell:ignore is-autocompleting
-
 (($, Drupal, once) => {
   Drupal.behaviors.claroAutoCompete = {
     attach(context) {
       once('claroAutoComplete', 'input.form-autocomplete', context).forEach(
         (value) => {
           const $input = $(value);
+          const timeout = 400;
+          let classRemoveTimeout;
           const classRemove = ($autoCompleteElem) => {
             $autoCompleteElem.removeClass('is-autocompleting');
             $autoCompleteElem
@@ -18,22 +18,23 @@
               .addClass('hidden');
           };
 
-          $input.autocomplete({
-            search(event) {
-              const result = Drupal.autocomplete.options.search(event);
-              if (result) {
+          $input.on(
+            'input autocompletesearch autocompleteresponses',
+            (event) => {
+              if (event && event.type && event.type === 'autocompletesearch') {
                 $(event.target).addClass('is-autocompleting');
                 $(event.target)
                   .siblings('[data-drupal-selector="autocomplete-message"]')
                   .removeClass('hidden');
               }
-
-              return result;
+              clearTimeout(classRemoveTimeout);
+              classRemoveTimeout = setTimeout(
+                classRemove,
+                timeout,
+                $(event.target),
+              );
             },
-            response(event) {
-              classRemove($(event.target));
-            },
-          });
+          );
         },
       );
     },

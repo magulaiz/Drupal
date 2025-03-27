@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 /**
@@ -58,7 +56,7 @@ class MediaOverviewTest extends MediaLibraryTestBase {
   /**
    * Tests that the Media Library's administration page works as expected.
    */
-  public function testAdministrationPage(): void {
+  public function testAdministrationPage() {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();

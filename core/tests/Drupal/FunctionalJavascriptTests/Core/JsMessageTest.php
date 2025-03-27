@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalJavascriptTests\Core;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -40,7 +38,7 @@ class JsMessageTest extends WebDriverTestBase {
   /**
    * Tests click on links to show messages and remove messages.
    */
-  public function testAddRemoveMessages(): void {
+  public function testAddRemoveMessages() {
     $web_assert = $this->assertSession();
     $this->drupalGet('js_message_test_link');
 

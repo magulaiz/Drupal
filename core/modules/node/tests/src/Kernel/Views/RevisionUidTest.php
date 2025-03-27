@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\node\Entity\Node;
@@ -70,13 +68,12 @@ class RevisionUidTest extends ViewsKernelTestBase {
   /**
    * Tests the node_revision_uid relationship.
    */
-  public function testRevisionUid(): void {
+  public function testRevisionUid() {
     $primary_author = $this->createUser();
     $secondary_author = $this->createUser();
 
     $node_type = NodeType::create([
       'type' => 'page',
-      'name' => 'Page',
     ]);
     $node_type->save();
     $node = Node::create([

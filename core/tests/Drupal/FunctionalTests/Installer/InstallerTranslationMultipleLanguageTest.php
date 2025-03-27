@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -26,7 +24,7 @@ class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // Place custom local translations in the translations directory.
     mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
     file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
@@ -44,8 +42,8 @@ class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
    * @return string
    *   Contents for the test .po file.
    */
-  protected function getPo($langcode): string {
-    return <<<PO
+  protected function getPo($langcode) {
+    return <<<ENDPO
 msgid ""
 msgstr ""
 
@@ -61,7 +59,7 @@ msgstr "Language $langcode"
 #: Testing site name configuration during the installer.
 msgid "Drupal"
 msgstr "Drupal"
-PO;
+ENDPO;
   }
 
   /**
@@ -76,7 +74,7 @@ PO;
   /**
    * Tests that translations ended up at the expected places.
    */
-  public function testTranslationsLoaded(): void {
+  public function testTranslationsLoaded() {
     // Ensure the title is correct.
     $this->assertEquals('SITE_NAME_' . $this->langcode, \Drupal::config('system.site')->get('name'));
 
@@ -167,7 +165,7 @@ PO;
   /**
    * Helper function to verify that the expected strings are translated.
    */
-  protected function verifyImportedStringsTranslated(): void {
+  protected function verifyImportedStringsTranslated() {
     $test_samples = ['Save and continue', 'Anonymous', 'Language'];
     $langcodes = ['de', 'es'];
 

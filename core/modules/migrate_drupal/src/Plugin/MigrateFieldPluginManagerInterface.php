@@ -5,9 +5,6 @@ namespace Drupal\migrate_drupal\Plugin;
 use Drupal\migrate\Plugin\MigratePluginManagerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 
-/**
- * Interface implemented by plugin manager for migrate field plugins.
- */
 interface MigrateFieldPluginManagerInterface extends MigratePluginManagerInterface {
 
   /**
@@ -26,6 +23,6 @@ interface MigrateFieldPluginManagerInterface extends MigratePluginManagerInterfa
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *   If the plugin cannot be determined, such as if the field type is invalid.
    */
-  public function getPluginIdFromFieldType($field_type, array $configuration = [], ?MigrationInterface $migration = NULL);
+  public function getPluginIdFromFieldType($field_type, array $configuration = [], MigrationInterface $migration = NULL);
 
 }

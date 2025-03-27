@@ -20,9 +20,14 @@ class ComplexDataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
+  protected $supportedInterfaceOrClass = ComplexDataInterface::class;
+
+  /**
+   * {@inheritdoc}
+   */
   public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $attributes = [];
-    // $object will not always match getSupportedTypes().
+    // $object will not always match $supportedInterfaceOrClass.
     // @see \Drupal\serialization\Normalizer\EntityNormalizer
     // Other normalizers that extend this class may only provide $object that
     // implements \Traversable.
@@ -42,10 +47,8 @@ class ComplexDataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function getSupportedTypes(?string $format): array {
-    return [
-      ComplexDataInterface::class => TRUE,
-    ];
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -26,7 +24,7 @@ class AjaxFormImageButtonTest extends WebDriverTestBase {
   /**
    * Tests image buttons can be operated with the keyboard ENTER key.
    */
-  public function testAjaxImageButtonKeypressEnter(): void {
+  public function testAjaxImageButtonKeypressEnter() {
     // Get a Field UI manage-display page.
     $this->drupalGet('ajax_forms_image_button_form');
     $assertSession = $this->assertSession();
@@ -41,7 +39,7 @@ class AjaxFormImageButtonTest extends WebDriverTestBase {
   /**
    * Tests image buttons can be operated with the keyboard SPACE key.
    */
-  public function testAjaxImageButtonKeypressSpace(): void {
+  public function testAjaxImageButtonKeypressSpace() {
     // Get a Field UI manage-display page.
     $this->drupalGet('ajax_forms_image_button_form');
     $assertSession = $this->assertSession();

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\mysql\Unit;
 
 use Drupal\mysql\Driver\Database\mysql\Connection;
@@ -27,8 +25,6 @@ class InstallTasksTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->connection = $this->prophesize(Connection::class);
   }
 
@@ -36,7 +32,6 @@ class InstallTasksTest extends UnitTestCase {
    * Creates a Tasks object for testing.
    *
    * @return \Drupal\mysql\Driver\Database\mysql\Install\Tasks
-   *   A Tasks object.
    */
   private function createTasks(): Tasks {
     /** @var \Drupal\mysql\Driver\Database\mysql\Connection $connection */
@@ -44,34 +39,20 @@ class InstallTasksTest extends UnitTestCase {
 
     return new class($connection) extends Tasks {
 
-      /**
-       * The database connection.
-       *
-       * @var \Drupal\Core\Database\Connection
-       */
       private $connection;
 
       public function __construct(Connection $connection) {
         $this->connection = $connection;
       }
 
-      /**
-       * {@inheritdoc}
-       */
       protected function isConnectionActive() {
         return TRUE;
       }
 
-      /**
-       * {@inheritdoc}
-       */
       protected function getConnection() {
         return $this->connection;
       }
 
-      /**
-       * {@inheritdoc}
-       */
       protected function t($string, array $args = [], array $options = []) {
         return $string;
       }
@@ -83,28 +64,18 @@ class InstallTasksTest extends UnitTestCase {
    * Creates a Tasks object for testing, without connection.
    *
    * @return \Drupal\mysql\Driver\Database\mysql\Install\Tasks
-   *   A Tasks object.
    */
   private function createTasksNoConnection(): Tasks {
     return new class() extends Tasks {
 
-      /**
-       * {@inheritdoc}
-       */
       protected function isConnectionActive() {
         return FALSE;
       }
 
-      /**
-       * {@inheritdoc}
-       */
       protected function getConnection() {
         return NULL;
       }
 
-      /**
-       * {@inheritdoc}
-       */
       protected function t($string, array $args = [], array $options = []) {
         return $string;
       }
@@ -136,9 +107,8 @@ class InstallTasksTest extends UnitTestCase {
    * Provides test data.
    *
    * @return array
-   *   An array of test data.
    */
-  public static function providerNameAndMinimumVersion(): array {
+  public function providerNameAndMinimumVersion(): array {
     return [
       [
         TRUE,
@@ -156,7 +126,7 @@ class InstallTasksTest extends UnitTestCase {
   /**
    * @covers ::name
    */
-  public function testNameWithNoConnection(): void {
+  public function testNameWithNoConnection() {
     $tasks = $this->createTasksNoConnection();
     $this->assertSame('MySQL, MariaDB, Percona Server, or equivalent', $tasks->name());
   }

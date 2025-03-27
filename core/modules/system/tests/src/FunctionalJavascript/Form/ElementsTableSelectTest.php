@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\FunctionalJavascript\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -26,7 +24,7 @@ class ElementsTableSelectTest extends WebDriverTestBase {
   /**
    * Tests the presence of ajax functionality for all options.
    */
-  public function testAjax(): void {
+  public function testAjax() {
     // Test checkboxes (#multiple == TRUE).
     $this->drupalGet('form_test/tableselect/multiple-true');
     $session = $this->getSession();
@@ -65,7 +63,7 @@ class ElementsTableSelectTest extends WebDriverTestBase {
   /**
    * Tests table select with disabled rows.
    */
-  public function testDisabledRows(): void {
+  public function testDisabledRows() {
     // Asserts that a row number (1 based) is enabled.
     $assert_row_enabled = function ($delta) {
       $row = $this->assertSession()->elementExists('xpath', "//table/tbody/tr[$delta]");

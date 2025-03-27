@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
@@ -18,7 +16,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * {@inheritdoc}
    */
-  protected function setupPluginCollection(?InvocationOrder $create_count = NULL): void {
+  protected function setupPluginCollection(InvocationOrder $create_count = NULL) {
     $definitions = $this->getPluginDefinitions();
     $this->pluginInstances['apple'] = new ConfigurablePlugin(['id' => 'apple', 'key' => 'value'], 'apple', $definitions['apple']);
     $this->pluginInstances['banana'] = new ConfigurablePlugin(['id' => 'banana', 'key' => 'other_value'], 'banana', $definitions['banana']);
@@ -36,7 +34,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * Tests the get() method.
    */
-  public function testGet(): void {
+  public function testGet() {
     $this->setupPluginCollection($this->once());
     $apple = $this->pluginInstances['apple'];
 
@@ -48,7 +46,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
    * @covers ::getConfiguration
    * @covers ::setConfiguration
    */
-  public function testAddInstanceId(): void {
+  public function testAddInstanceId() {
     $this->setupPluginCollection($this->any());
 
     $this->assertEquals(['id' => 'apple', 'key' => 'value'], $this->defaultPluginCollection->get('apple')->getConfiguration());
@@ -64,7 +62,7 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
   /**
    * @covers ::getInstanceIds
    */
-  public function testGetInstanceIds(): void {
+  public function testGetInstanceIds() {
     $this->setupPluginCollection($this->any());
     $this->assertEquals(['apple' => 'apple'], $this->defaultPluginCollection->getInstanceIds());
 
@@ -72,32 +70,8 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
     $this->assertEquals(['banana' => 'banana'], $this->defaultPluginCollection->getInstanceIds());
   }
 
-  /**
-   * @covers ::setConfiguration
-   */
-  public function testConfigurableSetConfiguration(): void {
-    $this->setupPluginCollection($this->any());
-
-    $this->defaultPluginCollection->setConfiguration(['apple' => ['value' => 'pineapple', 'id' => 'apple']]);
-    $config = $this->defaultPluginCollection->getConfiguration();
-    $this->assertSame(['apple' => ['value' => 'pineapple', 'id' => 'apple']], $config);
-    $plugin = $this->pluginInstances['apple'];
-    $this->assertSame(['apple' => ['value' => 'pineapple', 'id' => 'apple']], $plugin->getConfiguration());
-
-    $this->defaultPluginCollection->setConfiguration([]);
-    $this->assertSame([], $this->defaultPluginCollection->getConfiguration());
-
-    $this->defaultPluginCollection->setConfiguration(['cherry' => ['value' => 'kiwi', 'id' => 'cherry']]);
-    $expected['cherry'] = ['value' => 'kiwi', 'id' => 'cherry'];
-    $config = $this->defaultPluginCollection->getConfiguration();
-    $this->assertSame($expected, $config);
-  }
-
 }
 
-/**
- * Stub configurable plugin class for testing.
- */
 class ConfigurablePlugin extends PluginBase implements ConfigurableInterface {
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
@@ -114,7 +88,7 @@ class ConfigurablePlugin extends PluginBase implements ConfigurableInterface {
     return $this->configuration;
   }
 
-  public function setConfiguration(array $configuration): void {
+  public function setConfiguration(array $configuration) {
     $this->configuration = $configuration;
   }
 

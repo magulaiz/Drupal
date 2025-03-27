@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Bootstrap;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -30,7 +28,7 @@ class ShutdownFunctionTest extends KernelTestBase {
   /**
    * Tests that shutdown functions can be added by other shutdown functions.
    */
-  public function testShutdownFunctionInShutdownFunction(): void {
+  public function testShutdownFunctionInShutdownFunction() {
     // Ensure there are no shutdown functions registered before starting the
     // test.
     $this->assertEmpty(drupal_register_shutdown_function());
@@ -51,7 +49,7 @@ class ShutdownFunctionTest extends KernelTestBase {
   /**
    * Tests shutdown functions by registering another shutdown function.
    */
-  public function shutdownOne(): void {
+  public function shutdownOne() {
     drupal_register_shutdown_function([$this, 'shutdownTwo']);
     $this->shutDownOneCalled = TRUE;
   }
@@ -59,7 +57,7 @@ class ShutdownFunctionTest extends KernelTestBase {
   /**
    * Tests shutdown functions by being registered during shutdown.
    */
-  public function shutdownTwo(): void {
+  public function shutdownTwo() {
     $this->shutDownTwoCalled = TRUE;
   }
 

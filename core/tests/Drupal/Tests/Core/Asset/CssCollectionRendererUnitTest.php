@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Asset;
 
-use Drupal\Core\Asset\AssetQueryStringInterface;
 use Drupal\Core\Asset\CssCollectionRenderer;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Core\State\StateInterface;
 
 /**
  * Tests the CSS asset collection renderer.
@@ -35,7 +33,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $assetQueryString = $this->prophesize(AssetQueryStringInterface::class);
+    $state = $this->prophesize(StateInterface::class);
     $file_url_generator = $this->createMock(FileUrlGeneratorInterface::class);
     $file_url_generator->expects($this->any())
       ->method('generateString')
@@ -43,8 +41,8 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       ->willReturnCallback(function ($uri) {
          return 'generated-relative-url:' . $uri;
       });
-    $assetQueryString->get()->shouldBeCalledOnce()->willReturn('');
-    $this->renderer = new CssCollectionRenderer($assetQueryString->reveal(), $file_url_generator);
+    $state->get('system.css_js_query_string', '0')->shouldBeCalledOnce()->willReturn(NULL);
+    $this->renderer = new CssCollectionRenderer($state->reveal(), $file_url_generator);
     $this->fileCssGroup = [
       'group' => -100,
       'type' => 'file',
@@ -78,7 +76,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    *
    * @see testRender
    */
-  public static function providerTestRender() {
+  public function providerTestRender() {
     $create_link_element = function ($href, $media = 'all', $custom_attributes = []) {
       $attributes = [
         'rel' => 'stylesheet',
@@ -96,7 +94,6 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       return ['group' => 0, 'type' => 'file', 'media' => $media, 'preprocess' => $preprocess, 'data' => $data];
     };
 
-    // cspell:disable-next-line
     $custom_attributes = ['integrity' => 'sha384-psK1OYPAYjYUhtDYW+Pj2yc', 'crossorigin' => 'anonymous', 'random-attribute' => 'test'];
 
     return [
@@ -278,14 +275,14 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    *
    * @dataProvider providerTestRender
    */
-  public function testRender(array $css_assets, array $render_elements): void {
+  public function testRender(array $css_assets, array $render_elements) {
     $this->assertSame($render_elements, $this->renderer->render($css_assets));
   }
 
   /**
    * Tests a CSS asset group with the invalid 'type' => 'internal'.
    */
-  public function testRenderInvalidType(): void {
+  public function testRenderInvalidType() {
     $this->expectException('Exception');
     $this->expectExceptionMessage('Invalid CSS asset type.');
 

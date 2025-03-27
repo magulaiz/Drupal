@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Ajax\AjaxResponse;
@@ -47,7 +45,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseNoTriggeringElement(): void {
+  public function testBuildResponseNoTriggeringElement() {
     $this->renderer->expects($this->never())
       ->method('renderResponse');
 
@@ -63,7 +61,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseNoCallable(): void {
+  public function testBuildResponseNoCallable() {
     $this->renderer->expects($this->never())
       ->method('renderResponse');
 
@@ -81,7 +79,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseRenderArray(): void {
+  public function testBuildResponseRenderArray() {
     $triggering_element = [
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
@@ -112,7 +110,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseResponse(): void {
+  public function testBuildResponseResponse() {
     $triggering_element = [
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
@@ -137,7 +135,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseWithCommands(): void {
+  public function testBuildResponseWithCommands() {
     $triggering_element = [
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {
@@ -170,7 +168,7 @@ class FormAjaxResponseBuilderTest extends UnitTestCase {
   /**
    * @covers ::buildResponse
    */
-  public function testBuildResponseWithUpdateCommand(): void {
+  public function testBuildResponseWithUpdateCommand() {
     $triggering_element = [
       '#ajax' => [
         'callback' => function (array $form, FormStateInterface $form_state) {

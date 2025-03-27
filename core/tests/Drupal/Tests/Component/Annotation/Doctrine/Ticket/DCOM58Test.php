@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Annotation\Doctrine\Ticket;
 
 use Drupal\Component\Annotation\Doctrine\DocParser;
@@ -14,10 +12,10 @@ use PHPUnit\Framework\TestCase;
  * Doctrine project: <http://www.doctrine-project.org>.  It was copied from
  * version 1.2.7.
  *
+ * @group DCOM58
+ *
  * Run this test in a separate process as it includes code that might have side
  * effects.
- *
- * @group DCOM58
  * @runTestsInSeparateProcesses
  */
 class DCOM58Test extends TestCase
@@ -28,7 +26,7 @@ class DCOM58Test extends TestCase
         include __DIR__ .'/DCOM58Entity.php';
     }
 
-    public function testIssueGlobalNamespace(): void
+    public function testIssueGlobalNamespace()
     {
         $docblock   = "@Entity";
         $parser     = new DocParser();
@@ -42,7 +40,7 @@ class DCOM58Test extends TestCase
         $this->assertInstanceOf("Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
     }
 
-    public function testIssueNamespaces(): void
+    public function testIssueNamespaces()
     {
         $docblock   = "@Entity";
         $parser     = new DocParser();
@@ -54,7 +52,7 @@ class DCOM58Test extends TestCase
         $this->assertInstanceOf("Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Entity", $annots[0]);
     }
 
-    public function testIssueMultipleNamespaces(): void
+    public function testIssueMultipleNamespaces()
     {
         $docblock   = "@Entity";
         $parser     = new DocParser();
@@ -67,7 +65,7 @@ class DCOM58Test extends TestCase
         $this->assertInstanceOf("Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
     }
 
-    public function testIssueWithNamespacesOrImports(): void
+    public function testIssueWithNamespacesOrImports()
     {
         $docblock   = "@Entity";
         $parser     = new DocParser();
@@ -79,7 +77,7 @@ class DCOM58Test extends TestCase
     }
 
 
-    public function testIssueSimpleAnnotationReader(): void
+    public function testIssueSimpleAnnotationReader()
     {
         $reader     = new SimpleAnnotationReader();
         $reader->addNamespace('Drupal\Tests\Component\Annotation\Doctrine\Ticket\Doctrine\ORM\Mapping');

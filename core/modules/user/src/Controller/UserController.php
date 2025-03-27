@@ -2,7 +2,6 @@
 
 namespace Drupal\user\Controller;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
@@ -72,17 +71,8 @@ class UserController extends ControllerBase {
    *   A logger instance.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
-   *   The time service.
    */
-  public function __construct(
-    DateFormatterInterface $date_formatter,
-    UserStorageInterface $user_storage,
-    UserDataInterface $user_data,
-    LoggerInterface $logger,
-    FloodInterface $flood,
-    protected TimeInterface $time,
-  ) {
+  public function __construct(DateFormatterInterface $date_formatter, UserStorageInterface $user_storage, UserDataInterface $user_data, LoggerInterface $logger, FloodInterface $flood) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
     $this->userData = $user_data;
@@ -99,8 +89,7 @@ class UserController extends ControllerBase {
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('user.data'),
       $container->get('logger.factory')->get('user'),
-      $container->get('flood'),
-      $container->get('datetime.time'),
+      $container->get('flood')
     );
   }
 
@@ -144,10 +133,9 @@ class UserController extends ControllerBase {
       // A different user is already logged in on the computer.
       else {
         /** @var \Drupal\user\UserInterface $reset_link_user */
-        $reset_link_user = $this->userStorage->load($uid);
-        if ($reset_link_user && $this->validatePathParameters($reset_link_user, $timestamp, $hash)) {
+        if ($reset_link_user = $this->userStorage->load($uid)) {
           $this->messenger()
-            ->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. <a href=":logout">Log out</a> and try using the link again.',
+            ->addWarning($this->t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href=":logout">log out</a> and try using the link again.',
               [
                 '%other_user' => $account->getAccountName(),
                 '%resetting_user' => $reset_link_user->getAccountName(),
@@ -260,7 +248,7 @@ class UserController extends ControllerBase {
 
     user_login_finalize($user);
     $this->logger->info('User %name used one-time login link at time %timestamp.', ['%name' => $user->getDisplayName(), '%timestamp' => $timestamp]);
-    $this->messenger()->addStatus($this->t('You have used a one-time login link. You can set your new password now.'));
+    $this->messenger()->addStatus($this->t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please set your password.'));
     // Let the user's password be changed without the current password
     // check.
     $token = Crypt::randomBytesBase64(55);
@@ -299,8 +287,7 @@ class UserController extends ControllerBase {
    *   If $uid is for a blocked user or invalid user ID.
    */
   protected function determineErrorRedirect(?UserInterface $user, int $timestamp, string $hash): ?RedirectResponse {
-    // The current user is not logged in, so check the parameters.
-    $current = $this->time->getRequestTime();
+    $current = REQUEST_TIME;
     // Verify that the user exists and is active.
     if ($user === NULL || !$user->isActive()) {
       // Blocked or invalid user ID, so deny access. The parameters will be in
@@ -312,37 +299,16 @@ class UserController extends ControllerBase {
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
     // No time out for first time login.
     if ($user->getLastLoginTime() && $current - $timestamp > $timeout) {
-      $this->messenger()->addError($this->t('You have tried to use a one-time login link that has expired. Request a new one using the form below.'));
+      $this->messenger()->addError($this->t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'));
       return $this->redirect('user.pass');
     }
-    elseif ($user->isAuthenticated() && $this->validatePathParameters($user, $timestamp, $hash, $timeout)) {
+    elseif ($user->isAuthenticated() && ($timestamp >= $user->getLastLoginTime()) && ($timestamp <= $current) && hash_equals($hash, user_pass_rehash($user, $timestamp))) {
       // The information provided is valid.
       return NULL;
     }
 
-    $this->messenger()->addError($this->t('You have tried to use a one-time login link that has either been used or is no longer valid. Request a new one using the form below.'));
+    $this->messenger()->addError($this->t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'));
     return $this->redirect('user.pass');
-  }
-
-  /**
-   * Validates hash and timestamp.
-   *
-   * @param \Drupal\user\UserInterface $user
-   *   User requesting reset.
-   * @param int $timestamp
-   *   The timestamp.
-   * @param string $hash
-   *   Login link hash.
-   * @param int $timeout
-   *   Link expiration timeout.
-   *
-   * @return bool
-   *   Whether the provided data are valid.
-   */
-  protected function validatePathParameters(UserInterface $user, int $timestamp, string $hash, int $timeout = 0): bool {
-    $current = \Drupal::time()->getRequestTime();
-    $timeout_valid = ((!empty($timeout) && $current - $timestamp < $timeout) || empty($timeout));
-    return ($timestamp >= $user->getLastLoginTime()) && $timestamp <= $current && $timeout_valid && hash_equals($hash, user_pass_rehash($user, $timestamp));
   }
 
   /**
@@ -370,7 +336,7 @@ class UserController extends ControllerBase {
    *   user.
    */
   public function userEditPage() {
-    return $this->redirect('entity.user.edit_form', ['user' => $this->currentUser()->id()], [], 302);
+    return $this->redirect('entity.user.edit_form', ['user' => $this->currentUser()->id()], [], 301);
   }
 
   /**
@@ -383,7 +349,7 @@ class UserController extends ControllerBase {
    *   The user account name as a render array or an empty string if $user is
    *   NULL.
    */
-  public function userTitle(?UserInterface $user = NULL) {
+  public function userTitle(UserInterface $user = NULL) {
     return $user ? ['#markup' => $user->getDisplayName(), '#allowed_tags' => Xss::getHtmlTagList()] : '';
   }
 
@@ -416,12 +382,13 @@ class UserController extends ControllerBase {
   public function confirmCancel(UserInterface $user, $timestamp = 0, $hashed_pass = '') {
     // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.
     $timeout = 86400;
+    $current = REQUEST_TIME;
 
     // Basic validation of arguments.
     $account_data = $this->userData->get('user', $user->id());
     if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
       // Validate expiration and hashed password/login.
-      if ($user->id() && $this->validatePathParameters($user, $timestamp, $hashed_pass, $timeout)) {
+      if ($timestamp <= $current && $current - $timestamp < $timeout && $user->id() && $timestamp >= $user->getLastLoginTime() && hash_equals($hashed_pass, user_pass_rehash($user, $timestamp))) {
         $edit = [
           'user_cancel_notify' => $account_data['cancel_notify'] ?? $this->config('user.settings')->get('notify.status_canceled'),
         ];
@@ -432,7 +399,7 @@ class UserController extends ControllerBase {
         return batch_process('<front>');
       }
       else {
-        $this->messenger()->addError($this->t('You have tried to use an account cancellation link that has expired. Request a new one using the form below.'));
+        $this->messenger()->addError($this->t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'));
         return $this->redirect('entity.user.cancel_form', ['user' => $user->id()], ['absolute' => TRUE]);
       }
     }

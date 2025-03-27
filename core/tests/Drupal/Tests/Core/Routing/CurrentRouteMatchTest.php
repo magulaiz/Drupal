@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\CurrentRouteMatch;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -22,7 +19,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static function getRouteMatch(string $name, Route $route, array $parameters, array $raw_parameters): RouteMatchInterface {
+  protected function getRouteMatch($name, Route $route, array $parameters, array $raw_parameters) {
     $request_stack = new RequestStack();
     $request = new Request();
     $request_stack->push($request);
@@ -41,7 +38,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
    * @covers ::getCurrentRouteMatch
    * @covers ::getRouteMatch
    */
-  public function testGetCurrentRouteObject(): void {
+  public function testGetCurrentRouteObject() {
 
     $request_stack = new RequestStack();
     $request = new Request();
@@ -78,7 +75,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
   /**
    * @covers ::getRouteMatchFromRequest
    */
-  public function testGetRouteMatchFromRequestWithRouting(): void {
+  public function testGetRouteMatchFromRequestWithRouting() {
     $request_stack = new RequestStack();
     $request = new Request();
     $request_stack->push($request);
@@ -93,7 +90,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
   /**
    * @covers ::getRouteMatchFromRequest
    */
-  public function testGetRouteMatchFromRequest(): void {
+  public function testGetRouteMatchFromRequest() {
     $request_stack = new RequestStack();
     $request = new Request();
     $request_stack->push($request);
@@ -112,7 +109,7 @@ class CurrentRouteMatchTest extends RouteMatchTestBase {
   /**
    * @covers ::resetRouteMatch
    */
-  public function testResetRouteMatch(): void {
+  public function testResetRouteMatch() {
     $route = new Route('/test-route/{foo}');
     $request = new Request();
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, 'test_route');

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -29,13 +27,13 @@ class ElementValidationTest extends WebDriverTestBase {
    * Drupal AJAX commands update the DOM echoing back the validated values in
    * the form of messages that appear on the page.
    */
-  public function testAjaxElementValidation(): void {
+  public function testAjaxElementValidation() {
     $this->drupalGet('ajax_validation_test');
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();
 
     // Partially complete the form with a string.
-    $page->fillField('driver_text', 'some dumb text');
+    $page->fillField('drivertext', 'some dumb text');
     // Move focus away from this field to trigger AJAX.
     $page->findField('spare_required_field')->focus();
 
@@ -47,7 +45,7 @@ class ElementValidationTest extends WebDriverTestBase {
 
     $this->drupalGet('ajax_validation_test');
     // Partially complete the form with a number.
-    $page->fillField('driver_number', '12345');
+    $page->fillField('drivernumber', '12345');
     $page->findField('spare_required_field')->focus();
 
     // The AJAX request/response will complete successfully when an

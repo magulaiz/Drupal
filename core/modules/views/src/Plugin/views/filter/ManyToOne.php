@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ManyToOneHelper;
@@ -18,8 +17,9 @@ use Drupal\views\ManyToOneHelper;
  * to provide something that isn't just a select list.
  *
  * @ingroup views_filter_handlers
+ *
+ * @ViewsFilter("many_to_one")
  */
-#[ViewsFilter("many_to_one")]
 class ManyToOne extends InOperator {
 
   /**
@@ -32,15 +32,12 @@ class ManyToOne extends InOperator {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $this->helper = new ManyToOneHelper($this);
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -58,9 +55,6 @@ class ManyToOne extends InOperator {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function operators() {
     $operators = [
       'or' => [
@@ -88,7 +82,7 @@ class ManyToOne extends InOperator {
         'ensure_my_table' => 'helper',
       ],
     ];
-    // If the definition allows for the empty operator, add it.
+    // if the definition allows for the empty operator, add it.
     if (!empty($this->definition['allow empty'])) {
       $operators += [
         'empty' => [
@@ -109,16 +103,8 @@ class ManyToOne extends InOperator {
     return $operators;
   }
 
-  /**
-   * The default form type.
-   *
-   * @var string
-   */
   protected $valueFormType = 'select';
 
-  /**
-   * {@inheritdoc}
-   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     parent::valueForm($form, $form_state);
 
@@ -128,7 +114,8 @@ class ManyToOne extends InOperator {
   }
 
   /**
-   * {@inheritdoc}
+   * Override ensureMyTable so we can control how this joins in.
+   * The operator actually has influence over joining.
    */
   public function ensureMyTable() {
     // Defer to helper if the operator specifies it.
@@ -140,9 +127,6 @@ class ManyToOne extends InOperator {
     return parent::ensureMyTable();
   }
 
-  /**
-   * Adds a filter.
-   */
   protected function opHelper() {
     if (empty($this->value)) {
       return;

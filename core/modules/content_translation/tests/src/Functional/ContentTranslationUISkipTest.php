@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -9,14 +7,14 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests the content translation UI check skip.
  *
- * @covers \Drupal\language\Form\ContentLanguageSettingsForm
- * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationUISkipTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['content_translation_test', 'user', 'node'];
 
@@ -28,7 +26,7 @@ class ContentTranslationUISkipTest extends BrowserTestBase {
   /**
    * Tests the content_translation_ui_skip key functionality.
    */
-  public function testUICheckSkip(): void {
+  public function testUICheckSkip() {
     $admin_user = $this->drupalCreateUser([
       'translate any entity',
       'administer content translation',

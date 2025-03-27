@@ -2,7 +2,6 @@
 
 namespace Drupal\user\Plugin\Validation\Constraint;
 
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -15,19 +14,19 @@ class UserNameConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($items, Constraint $constraint): void {
-    if (empty($items) || ($items instanceof FieldItemListInterface && $items->isEmpty())) {
+  public function validate($items, Constraint $constraint) {
+    if (!isset($items) || !$items->value) {
       $this->context->addViolation($constraint->emptyMessage);
       return;
     }
-    $name = $items instanceof FieldItemListInterface ? $items->first()->value : $items;
-    if (str_starts_with($name, ' ')) {
+    $name = $items->first()->value;
+    if (substr($name, 0, 1) == ' ') {
       $this->context->addViolation($constraint->spaceBeginMessage);
     }
-    if (str_ends_with($name, ' ')) {
+    if (substr($name, -1) == ' ') {
       $this->context->addViolation($constraint->spaceEndMessage);
     }
-    if (str_contains($name, '  ')) {
+    if (strpos($name, '  ') !== FALSE) {
       $this->context->addViolation($constraint->multipleSpacesMessage);
     }
     if (preg_match('/[^\x{80}-\x{F7} a-z0-9@+_.\'-]/i', $name)

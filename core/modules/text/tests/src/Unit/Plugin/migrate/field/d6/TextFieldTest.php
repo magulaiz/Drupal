@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\text\Unit\Plugin\migrate\field\d6;
 
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -32,8 +30,6 @@ class TextFieldTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->plugin = new TextField([], 'text', []);
 
     $migration = $this->prophesize(MigrationInterface::class);
@@ -53,7 +49,7 @@ class TextFieldTest extends UnitTestCase {
   /**
    * @covers ::defineValueProcessPipeline
    */
-  public function testFilteredTextValueProcessPipeline(): void {
+  public function testFilteredTextValueProcessPipeline() {
     $field_info = [
       'widget_type' => 'text_textfield',
     ];
@@ -76,7 +72,7 @@ class TextFieldTest extends UnitTestCase {
   /**
    * @covers ::defineValueProcessPipeline
    */
-  public function testBooleanTextImplicitValueProcessPipeline(): void {
+  public function testBooleanTextImplicitValueProcessPipeline() {
     $info = [
       'widget_type' => 'optionwidgets_onoff',
       'global_settings' => [
@@ -101,11 +97,11 @@ class TextFieldTest extends UnitTestCase {
   /**
    * @covers ::defineValueProcessPipeline
    */
-  public function testBooleanTextExplicitValueProcessPipeline(): void {
+  public function testBooleanTextExplicitValueProcessPipeline() {
     $info = [
       'widget_type' => 'optionwidgets_onoff',
       'global_settings' => [
-        'allowed_values' => "foo|Foo\nBaz|Baz",
+        'allowed_values' => "foo|Foo\nbaz|Baz",
       ],
     ];
     $this->plugin->defineValueProcessPipeline($this->migration, 'field', $info);
@@ -116,7 +112,7 @@ class TextFieldTest extends UnitTestCase {
         'source' => 'value',
         'default_value' => 0,
         'map' => [
-          'Baz' => 1,
+          'baz' => 1,
         ],
       ],
     ];
@@ -126,7 +122,7 @@ class TextFieldTest extends UnitTestCase {
   /**
    * Data provider for testGetFieldType().
    */
-  public static function getFieldTypeProvider() {
+  public function getFieldTypeProvider() {
     return [
       ['string_long', 'text_textfield', ['text_processing' => FALSE]],
       ['string', 'text_textfield', [
@@ -163,7 +159,7 @@ class TextFieldTest extends UnitTestCase {
    * @covers ::getFieldType
    * @dataProvider getFieldTypeProvider
    */
-  public function testGetFieldType($expected_type, $widget_type, array $settings = []): void {
+  public function testGetFieldType($expected_type, $widget_type, array $settings = []) {
     $row = new Row();
     $row->setSourceProperty('widget_type', $widget_type);
     $row->setSourceProperty('global_settings', $settings);

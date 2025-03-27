@@ -1,12 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
-
-// cspell:ignore objectid objectindex plid textgroup
 
 /**
  * Tests the field option translation source plugin.
@@ -24,7 +20,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public function providerSource() {
     $test = [];
 
     // The source data.
@@ -144,7 +140,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
       ],
       [
         'lid' => '1',
-        'translation' => 'fr - high',
+        'translation' => 'Haute',
         'language' => 'fr',
         'plid' => '0',
         'plural' => '0',
@@ -152,7 +148,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
       ],
       [
         'lid' => '2',
-        'translation' => 'fr - average',
+        'translation' => 'Moyenne',
         'language' => 'fr',
         'plid' => '0',
         'plural' => '0',
@@ -160,7 +156,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
       ],
       [
         'lid' => '3',
-        'translation' => 'fr - low',
+        'translation' => 'Faible',
         'language' => 'fr',
         'plid' => '0',
         'plural' => '0',
@@ -175,7 +171,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'i18n_status' => '0',
       ],
     ];
-    $test[0]['expected_data'] = [
+    $test[0]['expected_results'] = [
       [
         'i18n_lid' => '1',
         'textgroup' => 'field',
@@ -186,7 +182,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'objectindex' => '0',
         'format' => '',
         'language' => 'fr',
-        'translation' => 'fr - high',
+        'translation' => 'Haute',
         'plid' => 0,
         'plural' => 0,
         'i18n_status' => 0,
@@ -206,7 +202,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'objectindex' => '0',
         'format' => '',
         'language' => 'fr',
-        'translation' => 'fr - average',
+        'translation' => 'Moyenne',
         'plid' => 0,
         'plural' => 0,
         'i18n_status' => 0,
@@ -226,7 +222,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
         'objectindex' => '0',
         'format' => '',
         'language' => 'fr',
-        'translation' => 'fr - low',
+        'translation' => 'Faible',
         'plid' => 0,
         'plural' => 0,
         'i18n_status' => 0,

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
@@ -14,7 +12,6 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @coversDefaultClass \Drupal\layout_builder\Plugin\Block\FieldBlock
  *
  * @group field
- * @group legacy
  */
 class FieldBlockTest extends WebDriverTestBase {
 
@@ -26,9 +23,8 @@ class FieldBlockTest extends WebDriverTestBase {
     'datetime',
     'layout_builder',
     'user',
-    // See \Drupal\layout_builder_field_block_test\Plugin\Block\FieldBlock.
-    'layout_builder_field_block_test',
-    'layout_builder_expose_all_field_blocks',
+    // See \Drupal\layout_builder_fieldblock_test\Plugin\Block\FieldBlock.
+    'layout_builder_fieldblock_test',
   ];
 
   /**
@@ -67,7 +63,7 @@ class FieldBlockTest extends WebDriverTestBase {
   /**
    * Tests configuring a field block for a user field.
    */
-  public function testUserFieldBlock(): void {
+  public function testUserFieldBlock() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -78,9 +74,6 @@ class FieldBlockTest extends WebDriverTestBase {
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
     $assert_session->assertWaitOnAjaxRequest();
-
-    // Ensure that focus is on the first focusable element on modal.
-    $this->assertJsCondition('document.activeElement === document.getElementsByClassName("block-filter-text")[0]');
 
     // Ensure that fields without any formatters are not available.
     $assert_session->pageTextNotContains('Password');
@@ -137,13 +130,13 @@ class FieldBlockTest extends WebDriverTestBase {
 
     // Assert that the block is displaying the user field.
     $this->drupalGet('admin');
-    $assert_session->pageTextContains('Sunday, 19 November 1978 - 16:00');
+    $assert_session->pageTextContains('Sunday, November 19, 1978 - 16:00');
   }
 
   /**
    * Tests configuring a field block that uses #states.
    */
-  public function testStatesFieldBlock(): void {
+  public function testStatesFieldBlock() {
     $page = $this->getSession()->getPage();
 
     $timestamp_field_storage = FieldStorageConfig::create([

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Plugin\Discovery;
 
 use Drupal\Component\Discovery\YamlDirectoryDiscovery as ComponentYamlDirectoryDiscovery;
@@ -20,7 +18,7 @@ class YamlDirectoryDiscoveryTest extends UnitTestCase {
   /**
    * @covers ::getDefinitions
    */
-  public function testGetDefinitions(): void {
+  public function testGetDefinitions() {
     vfsStream::setup('modules', NULL, [
       'module_a' => [
         'subdir1' => [
@@ -68,7 +66,7 @@ class YamlDirectoryDiscoveryTest extends UnitTestCase {
   /**
    * @covers ::getDefinitions
    */
-  public function testGetDefinitionsWithTranslatableDefinitions(): void {
+  public function testGetDefinitionsWithTranslatableDefinitions() {
     vfsStream::setup('modules', NULL, [
       'module_a' => [
         'subdir1' => [

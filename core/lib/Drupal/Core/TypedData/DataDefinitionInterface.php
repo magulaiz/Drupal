@@ -57,10 +57,9 @@ interface DataDefinitionInterface {
   /**
    * Returns a human readable label.
    *
-   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup|null
+   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *   The label. A string or an instance of TranslatableMarkup will be returned
-   *   based on the way the label translation is handled. NULL if no label is
-   *   available.
+   *   based on the way the label translation is handled.
    */
   public function getLabel();
 
@@ -70,10 +69,8 @@ interface DataDefinitionInterface {
    * Descriptions are usually used on user interfaces where the data is edited
    * or displayed.
    *
-   * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   The description. A string or an instance of TranslatableMarkup will be
-   *   returned based on the way the description translation is handled. NULL if
-   *   no description is available.
+   * @return string|null
+   *   The description, or NULL if no description is available.
    */
   public function getDescription();
 
@@ -143,7 +140,7 @@ interface DataDefinitionInterface {
    *   The setting name.
    *
    * @return mixed
-   *   The setting value or NULL if the setting name doesn't exist.
+   *   The setting value.
    */
   public function getSetting($setting_name);
 
@@ -158,19 +155,19 @@ interface DataDefinitionInterface {
    * Constraints are defined via an array, having constraint plugin IDs as key
    * and constraint options as values, e.g.
    * @code
-   * $constraints = [
-   *   'Range' => ['min' => 5, 'max' => 10],
-   *   'NotBlank' => [],
-   * ];
+   * $constraints = array(
+   *   'Range' => array('min' => 5, 'max' => 10),
+   *   'NotBlank' => array(),
+   * );
    * @endcode
    * Options have to be specified using another array if the constraint has more
    * than one or zero options. If it has exactly one option, the value should be
    * specified without nesting it into another array:
    * @code
-   * $constraints = [
+   * $constraints = array(
    *   'EntityType' => 'node',
    *   'Bundle' => 'article',
-   * ];
+   * );
    * @endcode
    *
    * Note that the specified constraints must be compatible with the data type,
@@ -229,8 +226,8 @@ interface DataDefinitionInterface {
    *
    * The implications of this method are left to the discretion of the caller.
    * For example, a module providing an HTTP API may not expose entities of
-   * this type or a custom entity reference field settings form may reduce the
-   * priority for entities of this type in a select list.
+   * this type, or a custom entity reference field settings form may
+   * deprioritize entities of this type in a select list.
    *
    * @return bool
    *   Whether the data value is internal.

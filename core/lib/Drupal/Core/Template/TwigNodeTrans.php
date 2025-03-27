@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Template;
 
-use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Error\SyntaxError;
 use Twig\Node\CheckToStringNode;
@@ -13,9 +12,7 @@ use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Expression\TempNameExpression;
-use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
-use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
 
 /**
@@ -28,13 +25,12 @@ use Twig\Node\PrintNode;
  * @see https://twig-extensions.readthedocs.io/en/latest/i18n.html
  * @see https://github.com/fabpot/Twig-extensions
  */
-#[YieldReady]
 class TwigNodeTrans extends Node {
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(Node $body, ?Node $plural = NULL, ?AbstractExpression $count = NULL, ?AbstractExpression $options = NULL, $lineno = 0) {
+  public function __construct(Node $body, Node $plural = NULL, AbstractExpression $count = NULL, AbstractExpression $options = NULL, $lineno, $tag = NULL) {
     $nodes['body'] = $body;
     if ($count !== NULL) {
       $nodes['count'] = $count;
@@ -45,7 +41,7 @@ class TwigNodeTrans extends Node {
     if ($options !== NULL) {
       $nodes['options'] = $options;
     }
-    parent::__construct($nodes, [], $lineno);
+    parent::__construct($nodes, [], $lineno, $tag);
   }
 
   /**
@@ -63,7 +59,7 @@ class TwigNodeTrans extends Node {
     }
 
     // Start writing with the function to be called.
-    $compiler->write('yield ' . (empty($plural) ? 't' : '\Drupal::translation()->formatPlural') . '(');
+    $compiler->write('echo ' . (empty($plural) ? 't' : '\Drupal::translation()->formatPlural') . '(');
 
     // Move the count to the beginning of the parameters list.
     if (!empty($plural)) {
@@ -80,11 +76,11 @@ class TwigNodeTrans extends Node {
 
     // Write any tokens found as an associative array parameter, otherwise just
     // leave as an empty array.
-    $compiler->raw(', [');
+    $compiler->raw(', array(');
     foreach ($tokens as $token) {
       $compiler->string($token->getAttribute('placeholder'))->raw(' => ')->subcompile($token)->raw(', ');
     }
-    $compiler->raw(']');
+    $compiler->raw(')');
 
     // Write any options passed.
     if ($this->hasNode('options')) {
@@ -147,7 +143,7 @@ class TwigNodeTrans extends Node {
           // @see TwigExtension::getFilters()
           $argPrefix = '@';
           while ($args instanceof FilterExpression) {
-            switch ($args->getAttribute('twig_callable')->getName()) {
+            switch ($args->getNode('filter')->getAttribute('value')) {
               case 'placeholder':
                 $argPrefix = '%';
                 break;
@@ -180,7 +176,7 @@ class TwigNodeTrans extends Node {
             if (!is_null($args)) {
               $argName = $args->getAttribute('name');
             }
-            $expr = new ContextVariable($argName, $n->getTemplateLine());
+            $expr = new NameExpression($argName, $n->getTemplateLine());
           }
           $placeholder = sprintf('%s%s', $argPrefix, $argName);
           $text .= $placeholder;
@@ -200,7 +196,7 @@ class TwigNodeTrans extends Node {
     }
 
     return [
-      new Nodes([new ConstantExpression(trim($text), $body->getTemplateLine())]),
+      new Node([new ConstantExpression(trim($text), $body->getTemplateLine())]),
       $tokens,
     ];
   }

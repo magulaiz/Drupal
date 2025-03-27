@@ -8,7 +8,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
-use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\ManyToOne;
@@ -18,8 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Filter by term id.
  *
  * @ingroup views_filter_handlers
+ *
+ * @ViewsFilter("taxonomy_index_tid")
  */
-#[ViewsFilter("taxonomy_index_tid")]
 class TaxonomyIndexTid extends ManyToOne {
 
   /**
@@ -27,7 +27,6 @@ class TaxonomyIndexTid extends ManyToOne {
    *
    * @var array|null
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public $validated_exposed_input = NULL;
 
   /**
@@ -57,7 +56,7 @@ class TaxonomyIndexTid extends ManyToOne {
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
+   *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\taxonomy\VocabularyStorageInterface $vocabulary_storage
@@ -91,7 +90,7 @@ class TaxonomyIndexTid extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
     if (!empty($this->definition['vocabulary'])) {
@@ -99,9 +98,6 @@ class TaxonomyIndexTid extends ManyToOne {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function hasExtraOptions() {
     return TRUE;
   }
@@ -113,9 +109,6 @@ class TaxonomyIndexTid extends ManyToOne {
     return $this->valueOptions;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -128,9 +121,6 @@ class TaxonomyIndexTid extends ManyToOne {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
     $vocabularies = $this->vocabularyStorage->loadMultiple();
     $options = [];
@@ -175,14 +165,11 @@ class TaxonomyIndexTid extends ManyToOne {
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $vocabulary = $this->vocabularyStorage->load($this->options['vid']);
     if (empty($vocabulary) && $this->options['limit']) {
       $form['markup'] = [
-        '#markup' => '<div class="js-form-item form-item">' . $this->t('An invalid vocabulary is selected. Change it in the options.') . '</div>',
+        '#markup' => '<div class="js-form-item form-item">' . $this->t('An invalid vocabulary is selected. Please change it in the options.') . '</div>',
       ];
       return;
     }
@@ -261,8 +248,8 @@ class TaxonomyIndexTid extends ManyToOne {
             $keys = array_keys($options);
             $default_value = array_shift($keys);
           }
-          // Due to #1464174 there is a chance that [''] was saved in the admin
-          // ui. Let's choose a safe default value.
+          // Due to #1464174 there is a chance that array('') was saved in the admin ui.
+          // Let's choose a safe default value.
           elseif ($default_value == ['']) {
             $default_value = 'All';
           }
@@ -297,9 +284,6 @@ class TaxonomyIndexTid extends ManyToOne {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function valueValidate($form, FormStateInterface $form_state) {
     // We only validate if they've chosen the text field style.
     if ($this->options['type'] != 'textfield') {
@@ -315,9 +299,6 @@ class TaxonomyIndexTid extends ManyToOne {
     $form_state->setValue(['options', 'value'], $tids);
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;
@@ -357,9 +338,6 @@ class TaxonomyIndexTid extends ManyToOne {
     return $rc;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function validateExposed(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
       return;
@@ -392,16 +370,10 @@ class TaxonomyIndexTid extends ManyToOne {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   protected function valueSubmit($form, FormStateInterface $form_state) {
-    // Prevent array_filter from messing up our arrays in parent submit.
+    // prevent array_filter from messing up our arrays in parent submit.
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
     parent::buildExposeForm($form, $form_state);
     if ($this->options['type'] != 'select') {
@@ -414,11 +386,8 @@ class TaxonomyIndexTid extends ManyToOne {
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function adminSummary() {
-    // Set up $this->valueOptions for the parent summary
+    // set up $this->valueOptions for the parent summary
     $this->valueOptions = [];
 
     if ($this->value) {
@@ -429,6 +398,19 @@ class TaxonomyIndexTid extends ManyToOne {
       }
     }
     return parent::adminSummary();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheContexts() {
+    $contexts = parent::getCacheContexts();
+    // The result potentially depends on term access and so is just cacheable
+    // per user.
+    // @todo See https://www.drupal.org/node/2352175.
+    $contexts[] = 'user';
+
+    return $contexts;
   }
 
   /**

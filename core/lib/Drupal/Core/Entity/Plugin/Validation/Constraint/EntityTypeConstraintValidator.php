@@ -13,7 +13,7 @@ class EntityTypeConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($entity, Constraint $constraint): void {
+  public function validate($entity, Constraint $constraint) {
     if (!isset($entity)) {
       return;
     }

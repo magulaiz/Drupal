@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Annotation;
 
 use Drupal\Component\Annotation\PluginID;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Annotation\PluginID
+ * @coversDefaultClass \Drupal\Component\Annotation\PluginId
  * @group Annotation
  */
 class PluginIdTest extends TestCase {
@@ -16,7 +14,7 @@ class PluginIdTest extends TestCase {
   /**
    * @covers ::get
    */
-  public function testGet(): void {
+  public function testGet() {
     // Assert plugin starts empty.
     $plugin = new PluginID();
     $this->assertEquals([
@@ -39,7 +37,7 @@ class PluginIdTest extends TestCase {
   /**
    * @covers ::getId
    */
-  public function testGetId(): void {
+  public function testGetId() {
     $plugin = new PluginID();
     $plugin->value = 'example';
     $this->assertEquals('example', $plugin->getId());

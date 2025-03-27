@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\field\Entity\FieldConfig;
@@ -47,10 +45,8 @@ class SortTranslationTest extends ViewsKernelTestBase {
     // $this->installConfig('node');
     $this->container->get('kernel')->rebuildContainer();
 
-    NodeType::create([
-      'type' => 'article',
-      'name' => 'Article',
-    ])->save();
+    $node_type = NodeType::create(['type' => 'article']);
+    $node_type->save();
 
     FieldStorageConfig::create([
       'field_name' => 'text',
@@ -99,7 +95,7 @@ class SortTranslationTest extends ViewsKernelTestBase {
   /**
    * Tests sorting on an untranslated field.
    */
-  public function testSortbyUntranslatedIntegerField(): void {
+  public function testSortbyUntranslatedIntegerField() {
     $map = [
       'nid' => 'nid',
       'node_field_data_langcode' => 'langcode',

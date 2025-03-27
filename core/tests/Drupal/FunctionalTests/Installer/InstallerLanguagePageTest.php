@@ -1,15 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Language\LanguageManager;
 
-// cspell:ignore xoxo
-
 /**
- * Verifies that the installer language list uses local and remote languages.
+ * Verifies that the installer language list combines local and remote languages.
  *
  * @group Installer
  */
@@ -23,7 +19,7 @@ class InstallerLanguagePageTest extends InstallerTestBase {
   /**
    * Installer step: Select language.
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // Place a custom local translation in the translations directory.
     mkdir($this->root . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
     touch($this->root . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.xoxo.po');
@@ -45,7 +41,7 @@ class InstallerLanguagePageTest extends InstallerTestBase {
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled(): void {
+  public function testInstalled() {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
   }

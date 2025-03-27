@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\render_attached_test\Controller;
 
 /**
@@ -48,7 +46,7 @@ class RenderAttachedTestController {
       [
         '#tag' => 'meta',
         '#attributes' => [
-          'test-attribute' => 'test_value',
+          'test-attribute' => 'testvalue',
         ],
       ],
       'test_head_attribute',

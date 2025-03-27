@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\migrate\Unit\destination\PerComponentEntityDisplayTest.
+ */
 
 namespace Drupal\Tests\migrate\Unit\destination;
 
@@ -18,7 +21,7 @@ class PerComponentEntityDisplayTest extends MigrateTestCase {
   /**
    * Tests the entity display import method.
    */
-  public function testImport(): void {
+  public function testImport() {
     $values = [
       'entity_type' => 'entity_type_test',
       'bundle' => 'bundle_test',
@@ -36,7 +39,7 @@ class PerComponentEntityDisplayTest extends MigrateTestCase {
     $entity->expects($this->once())
       ->method('setComponent')
       ->with('field_name_test', ['test setting'])
-      ->willReturnSelf();
+      ->will($this->returnSelf());
     $entity->expects($this->once())
       ->method('save')
       ->with();
@@ -47,41 +50,20 @@ class PerComponentEntityDisplayTest extends MigrateTestCase {
 
 }
 
-/**
- * Test class used for testing per component entity display.
- */
 class TestPerComponentEntityDisplay extends ComponentEntityDisplayBase {
   const MODE_NAME = 'view_mode';
-
-  /**
-   * The arguments of getEntity.
-   *
-   * @var string[]
-   */
   protected $testValues;
-
-  /**
-   * The test entity.
-   *
-   * @var \PHPUnit\Framework\MockObject\MockObject
-   */
   protected $entity;
 
   public function __construct($entity) {
     $this->entity = $entity;
   }
 
-  /**
-   * Gets the test entity.
-   */
   protected function getEntity($entity_type, $bundle, $view_mode) {
     $this->testValues = func_get_args();
     return $this->entity;
   }
 
-  /**
-   * Gets the test values.
-   */
   public function getTestValues() {
     return $this->testValues;
   }

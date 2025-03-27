@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\node\Entity\Node;
@@ -39,13 +37,9 @@ class SqlEntityLoadingTest extends ViewsKernelTestBase {
     $this->installSchema('node', 'node_access');
   }
 
-  /**
-   * Tests entity loading with a non-default pending revision in Views.
-   */
-  public function testViewWithNonDefaultPendingRevision(): void {
+  public function testViewWithNonDefaultPendingRevision() {
     $node_type = NodeType::create([
       'type' => 'page',
-      'name' => 'Page',
     ]);
     $node_type->save();
 

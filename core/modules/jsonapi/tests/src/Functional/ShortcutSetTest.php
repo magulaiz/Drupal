@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\ShortcutSet;
 
@@ -45,7 +42,7 @@ class ShortcutSetTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access shortcuts']);
@@ -80,7 +77,7 @@ class ShortcutSetTest extends ConfigEntityResourceTestBase {
    */
   protected function createEntity() {
     $set = ShortcutSet::create([
-      'id' => 'llama-set',
+      'id' => 'llama_set',
       'label' => 'Llama Set',
     ]);
     $set->save();
@@ -90,16 +87,16 @@ class ShortcutSetTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/shortcut_set/shortcut_set/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -115,7 +112,7 @@ class ShortcutSetTest extends ConfigEntityResourceTestBase {
           'status' => TRUE,
           'langcode' => 'en',
           'dependencies' => [],
-          'drupal_internal__id' => 'llama-set',
+          'drupal_internal__id' => 'llama_set',
         ],
       ],
     ];
@@ -124,7 +121,7 @@ class ShortcutSetTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }

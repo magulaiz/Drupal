@@ -62,7 +62,8 @@ final class LinkCollection implements \IteratorAggregate {
   /**
    * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     assert(!is_null($this->context), 'A LinkCollection is invalid unless a context has been established.');
     return new \ArrayIterator($this->links);
   }
@@ -194,7 +195,7 @@ final class LinkCollection implements \IteratorAggregate {
    *   TRUE if the key is valid, FALSE otherwise.
    */
   protected static function validKey($key) {
-    return is_string($key) && !is_numeric($key) && !str_contains($key, ':');
+    return is_string($key) && !is_numeric($key) && strpos($key, ':') === FALSE;
   }
 
 }

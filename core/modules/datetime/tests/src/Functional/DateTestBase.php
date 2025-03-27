@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\datetime\Functional;
 
 use Drupal\Component\Utility\Unicode;
@@ -19,7 +17,9 @@ use Drupal\Tests\BrowserTestBase;
 abstract class DateTestBase extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['node', 'entity_test', 'datetime', 'field_ui'];
 
@@ -82,7 +82,6 @@ abstract class DateTestBase extends BrowserTestBase {
    * Returns the type of field to be tested.
    *
    * @return string
-   *   The field type to be tested.
    */
   abstract protected function getTestFieldType();
 
@@ -115,8 +114,8 @@ abstract class DateTestBase extends BrowserTestBase {
    * Creates a date test field.
    */
   protected function createField() {
-    $field_name = $this->randomMachineName();
-    $field_label = Unicode::ucfirst($this->randomMachineName());
+    $field_name = mb_strtolower($this->randomMachineName());
+    $field_label = Unicode::ucfirst(mb_strtolower($this->randomMachineName()));
     $type = $this->getTestFieldType();
     $widget_type = $formatter_type = $type . '_default';
 
@@ -157,7 +156,7 @@ abstract class DateTestBase extends BrowserTestBase {
   /**
    * Renders an entity_test and sets the output in the internal browser.
    *
-   * @param string|int $id
+   * @param int $id
    *   The entity_test ID to render.
    * @param string $view_mode
    *   (optional) The view mode to use for rendering. Defaults to 'full'.

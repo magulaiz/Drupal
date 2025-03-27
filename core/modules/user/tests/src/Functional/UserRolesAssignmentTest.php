@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -31,9 +29,10 @@ class UserRolesAssignmentTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test that user can be assigned role and that the role can be removed again.
+   * Tests that a user can be assigned a role and that the role can be removed
+   * again.
    */
-  public function testAssignAndRemoveRole(): void {
+  public function testAssignAndRemoveRole() {
     $rid = $this->drupalCreateRole(['administer users']);
     $account = $this->drupalCreateUser();
 
@@ -53,9 +52,10 @@ class UserRolesAssignmentTest extends BrowserTestBase {
   }
 
   /**
-   * Tests assigning a role at user creation and removing the role.
+   * Tests that when creating a user the role can be assigned. And that it can
+   * be removed again.
    */
-  public function testCreateUserWithRole(): void {
+  public function testCreateUserWithRole() {
     $rid = $this->drupalCreateRole(['administer users']);
     // Create a new user and add the role at the same time.
     $edit = [
@@ -94,7 +94,7 @@ class UserRolesAssignmentTest extends BrowserTestBase {
    *   (optional) Whether to assert that $rid exists (TRUE) or not (FALSE).
    *   Defaults to TRUE.
    */
-  private function userLoadAndCheckRoleAssigned($account, $rid, $is_assigned = TRUE): void {
+  private function userLoadAndCheckRoleAssigned($account, $rid, $is_assigned = TRUE) {
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());

@@ -4,9 +4,6 @@ namespace Drupal\migrate;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 
-/**
- * Interface for the migration executable.
- */
 interface MigrateExecutableInterface {
 
   /**
@@ -44,7 +41,7 @@ interface MigrateExecutableInterface {
    *
    * @throws \Drupal\migrate\MigrateException
    */
-  public function processRow(Row $row, ?array $process = NULL, $value = NULL);
+  public function processRow(Row $row, array $process = NULL, $value = NULL);
 
   /**
    * Passes messages through to the map class.

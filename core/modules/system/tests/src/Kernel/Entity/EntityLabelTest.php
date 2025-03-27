@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Kernel\Entity;
 
-use Drupal\Core\Entity\Attribute\EntityType;
-use Drupal\Core\Plugin\Discovery\AttributeClassDiscovery;
+use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -18,15 +15,15 @@ class EntityLabelTest extends KernelTestBase {
   /**
    * Tests that entity type labels use sentence-case.
    */
-  public function testEntityLabelCasing(): void {
+  public function testEntityLabelCasing() {
     $base_directory = $this->root . '/core/modules/';
     $modules = scandir($base_directory);
     $paths = [];
     foreach ($modules as $module) {
-      $paths["Drupal\\{$module}"] = $base_directory . $module . '/src/';
+      $paths["\Drupal\\{$module}\Entity"] = $base_directory . $module . '/src/';
     }
     $namespaces = new \ArrayObject($paths);
-    $discovery = new AttributeClassDiscovery('Entity', $namespaces, EntityType::class);
+    $discovery = new AnnotatedClassDiscovery('Entity', $namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $definitions = $discovery->getDefinitions();
 
     foreach ($definitions as $definition) {
@@ -44,11 +41,11 @@ class EntityLabelTest extends KernelTestBase {
       // string. Special cases may need to be added to this test in the future
       // if an acronym is in a different position in the label.
       $first_word = strtok($label_string, " ");
-      $remaining_string = strtolower((string) strstr($label_string, " "));
+      $remaining_string = strtolower(strstr($label_string, " "));
       $this->assertEquals($first_word . $remaining_string, $label_string);
 
       $first_word = strtok($collection_label_string, " ");
-      $remaining_string = strtolower((string) strstr($collection_label_string, " "));
+      $remaining_string = strtolower(strstr($collection_label_string, " "));
       $this->assertEquals($first_word . $remaining_string, $collection_label_string);
     }
   }

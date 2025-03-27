@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
@@ -21,13 +22,10 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Update\EquivalentUpdate;
 use Drupal\Core\Url;
-use Drupal\Core\Utility\Error;
-use Psr\Http\Client\ClientExceptionInterface;
+use GuzzleHttp\Exception\TransferException;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore quickedit
@@ -36,18 +34,12 @@ use Symfony\Component\HttpFoundation\Request;
  * An array of machine names of modules that were removed from Drupal core.
  */
 const DRUPAL_CORE_REMOVED_MODULE_LIST = [
-  'action' => 'Action UI',
-  'book' => 'Book',
   'aggregator' => 'Aggregator',
   'ckeditor' => 'CKEditor',
   'color' => 'Color',
-  'forum' => 'Forum',
   'hal' => 'HAL',
   'quickedit' => 'Quick Edit',
   'rdf' => 'RDF',
-  'statistics' => 'Statistics',
-  'tour' => 'Tour',
-  'tracker' => 'Tracker',
 ];
 
 /**
@@ -63,7 +55,7 @@ const DRUPAL_CORE_REMOVED_THEME_LIST = [
 /**
  * Implements hook_requirements().
  */
-function system_requirements($phase): array {
+function system_requirements($phase) {
   global $install_state;
 
   // Get the current default PHP requirements for this version of Drupal.
@@ -90,7 +82,7 @@ function system_requirements($phase): array {
     // Display the currently active installation profile, if the site
     // is not running the default installation profile.
     $profile = \Drupal::installProfile();
-    if ($profile != 'standard' && !empty($profile)) {
+    if ($profile != 'standard') {
       $info = $module_extension_list->getExtensionInfo($profile);
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
@@ -127,7 +119,7 @@ function system_requirements($phase): array {
     // Warn if any experimental modules are installed.
     if (!empty($experimental_modules)) {
       $requirements['experimental_modules'] = [
-        'title' => t('Experimental modules installed'),
+        'title' => t('Experimental modules enabled'),
         'value' => t('Experimental modules found: %module_list. <a href=":url">Experimental modules</a> are provided for testing purposes only. Use at your own risk.', ['%module_list' => implode(', ', $experimental_modules), ':url' => 'https://www.drupal.org/core/experimental']),
         'severity' => REQUIREMENT_WARNING,
       ];
@@ -138,7 +130,7 @@ function system_requirements($phase): array {
         $deprecated_modules_link_list[] = (string) Link::fromTextAndUrl($deprecated_module['name'], Url::fromUri($deprecated_module['lifecycle_link']))->toString();
       }
       $requirements['deprecated_modules'] = [
-        'title' => t('Deprecated modules installed'),
+        'title' => t('Deprecated modules enabled'),
         'value' => t('Deprecated modules found: %module_list.', [
           '%module_list' => Markup::create(implode(', ', $deprecated_modules_link_list)),
         ]),
@@ -146,7 +138,7 @@ function system_requirements($phase): array {
       ];
     }
 
-    // Gather all obsolete and experimental themes being installed.
+    // Gather all obsolete and experimental themes being enabled.
     $experimental_themes = [];
     $deprecated_themes = [];
     $installed_themes = \Drupal::service('theme_handler')->listInfo();
@@ -163,25 +155,33 @@ function system_requirements($phase): array {
           $obsolete_extensions[$theme] = ['name' => $info['name'], 'lifecycle_link' => $info['lifecycle_link']];
         }
       }
+      // Currently, we check for both the key/value pairs 'experimental: true'
+      // and 'lifecycle: experimental' to determine if an extension is marked as
+      // experimental.
+      // @todo Remove the check for 'experimental: true' as part of
+      // https://www.drupal.org/node/3250342
+      if (isset($data->info['experimental']) && $data->info['experimental']) {
+        $experimental_themes[$theme] = $data->info['name'];
+      }
     }
 
-    // Warn if any experimental themes are installed.
+    // Warn if any experimental themes are enabled.
     if (!empty($experimental_themes)) {
       $requirements['experimental_themes'] = [
-        'title' => t('Experimental themes installed'),
+        'title' => t('Experimental themes enabled'),
         'value' => t('Experimental themes found: %theme_list. Experimental themes are provided for testing purposes only. Use at your own risk.', ['%theme_list' => implode(', ', $experimental_themes)]),
         'severity' => REQUIREMENT_WARNING,
       ];
     }
 
-    // Warn if any deprecated themes are installed.
+    // Warn if any deprecated themes are enabled.
     if (!empty($deprecated_themes)) {
       foreach ($deprecated_themes as $deprecated_theme) {
         $deprecated_themes_link_list[] = (string) Link::fromTextAndUrl($deprecated_theme['name'], Url::fromUri($deprecated_theme['lifecycle_link']))->toString();
 
       }
       $requirements['deprecated_themes'] = [
-        'title' => t('Deprecated themes installed'),
+        'title' => t('Deprecated themes enabled'),
         'value' => t('Deprecated themes found: %theme_list.', [
           '%theme_list' => Markup::create(implode(', ', $deprecated_themes_link_list)),
         ]),
@@ -189,16 +189,15 @@ function system_requirements($phase): array {
       ];
     }
 
-    // Warn if any obsolete extensions (themes or modules) are installed.
+    // Warn if any obsolete extensions (themes or modules) are enabled.
     if (!empty($obsolete_extensions)) {
       foreach ($obsolete_extensions as $obsolete_extension) {
         $obsolete_extensions_link_list[] = (string) Link::fromTextAndUrl($obsolete_extension['name'], Url::fromUri($obsolete_extension['lifecycle_link']))->toString();
       }
       $requirements['obsolete_extensions'] = [
-        'title' => t('Obsolete extensions installed'),
-        'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately <a href=":uninstall_url">uninstall these extensions</a> since they may be removed in a future release.', [
+        'title' => t('Obsolete extensions enabled'),
+        'value' => t('Obsolete extensions found: %extensions. Obsolete extensions are provided only so that they can be uninstalled cleanly. You should immediately uninstall these extensions since they may be removed in a future release.', [
           '%extensions' => Markup::create(implode(', ', $obsolete_extensions_link_list)),
-          ':uninstall_url' => Url::fromRoute('system.modules_uninstall')->toString(),
         ]),
         'severity' => REQUIREMENT_WARNING,
       ];
@@ -215,7 +214,7 @@ function system_requirements($phase): array {
   ];
 
   // Tests clean URL support.
-  if ($phase == 'install' && $install_state['interactive'] && !$request_object->query->has('rewrite') && str_contains($software, 'Apache')) {
+  if ($phase == 'install' && $install_state['interactive'] && !$request_object->query->has('rewrite') && strpos($software, 'Apache') !== FALSE) {
     // If the Apache rewrite module is not enabled, Apache version must be >=
     // 2.2.16 because of the FallbackResource directive in the root .htaccess
     // file. Since the Apache version reported by the server is dependent on the
@@ -332,6 +331,19 @@ function system_requirements($phase): array {
   elseif ($phase === 'runtime' && version_compare($phpversion, \Drupal::RECOMMENDED_PHP) < 0) {
     $requirements['php']['description'] = t('It is recommended to upgrade to PHP version %recommended or higher for the best ongoing support.  See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', ['%recommended' => \Drupal::RECOMMENDED_PHP, ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements']);
     $requirements['php']['severity'] = REQUIREMENT_INFO;
+
+    // PHP 8.1.0 through 8.1.5 have a known OPcache bug that can cause fatal
+    // errors, so warn about that when running Drupal on those versions.
+    // @todo Remove this when \Drupal::MINIMUM_PHP is at least 8.1.6 in
+    //   https://www.drupal.org/i/3305726.
+    if (version_compare(\Drupal::MINIMUM_PHP, '8.1.6') < 0) {
+      $requirements['php']['description'] = t('PHP %version has <a href=":bug_url">an OPcache bug that can cause fatal errors with class autoloading</a>. This can be fixed by upgrading to PHP 8.1.6 or later. See <a href="http://php.net/supported-versions.php">PHP\'s version support documentation</a> and the <a href=":php_requirements">Drupal PHP requirements</a> page for more information.', [
+        '%version' => $phpversion,
+        ':bug_url' => 'https://github.com/php/php-src/issues/8164',
+        ':php_requirements' => 'https://www.drupal.org/docs/system-requirements/php-requirements',
+      ]);
+      $requirements['php']['severity'] = REQUIREMENT_WARNING;
+    }
   }
 
   // Test for PHP extensions.
@@ -354,7 +366,6 @@ function system_requirements($phase): array {
     'SPL',
     'tokenizer',
     'xml',
-    'zlib',
   ];
   foreach ($required_extensions as $extension) {
     if (!extension_loaded($extension)) {
@@ -409,10 +420,10 @@ function system_requirements($phase): array {
     $requirements['php_apcu_available']['title'] = t('PHP APCu available caching');
     if (extension_loaded('apcu') && filter_var(ini_get('apc.enabled'), FILTER_VALIDATE_BOOLEAN)) {
       $memory_info = apcu_sma_info(TRUE);
-      $apcu_actual_size = ByteSizeMarkup::create($memory_info['seg_size'] * $memory_info['num_seg']);
+      $apcu_actual_size = format_size($memory_info['seg_size']);
       $apcu_recommended_size = '32 MB';
       $requirements['php_apcu_enabled']['value'] = t('Enabled (@size)', ['@size' => $apcu_actual_size]);
-      if (Bytes::toNumber(ini_get('apc.shm_size')) * ini_get('apc.shm_segments') < Bytes::toNumber($apcu_recommended_size)) {
+      if (Bytes::toNumber($apcu_actual_size) < Bytes::toNumber($apcu_recommended_size)) {
         $requirements['php_apcu_enabled']['severity'] = REQUIREMENT_WARNING;
         $requirements['php_apcu_enabled']['description'] = t('Depending on your configuration, Drupal can run with a @apcu_size APCu limit. However, a @apcu_default_size APCu limit (the default) or above is recommended, especially if your site uses additional custom or contributed modules.', [
           '@apcu_size' => $apcu_actual_size,
@@ -420,7 +431,7 @@ function system_requirements($phase): array {
         ]);
       }
       else {
-        $memory_available = $memory_info['avail_mem'] / ($memory_info['seg_size'] * $memory_info['num_seg']);
+        $memory_available = $memory_info['avail_mem'] / $memory_info['seg_size'];
         if ($memory_available < 0.1) {
           $requirements['php_apcu_available']['severity'] = REQUIREMENT_ERROR;
           $requirements['php_apcu_available']['description'] = t('APCu is using over 90% of its allotted memory (@apcu_actual_size). To improve APCu performance, consider increasing this limit.', [
@@ -437,7 +448,7 @@ function system_requirements($phase): array {
           $requirements['php_apcu_available']['severity'] = REQUIREMENT_OK;
         }
         $requirements['php_apcu_available']['value'] = t('Memory available: @available.', [
-          '@available' => ByteSizeMarkup::create($memory_info['avail_mem']),
+          '@available' => format_size($memory_info['avail_mem']),
         ]);
       }
     }
@@ -488,17 +499,6 @@ function system_requirements($phase): array {
     }
   }
 
-  if ($phase === 'runtime' && PHP_SAPI !== 'cli') {
-    if (!function_exists('fastcgi_finish_request') && !function_exists('litespeed_finish_request') && !ob_get_status()) {
-      $requirements['output_buffering'] = [
-        'title' => t('Output Buffering'),
-        'error_value' => t('Not enabled'),
-        'severity' => REQUIREMENT_WARNING,
-        'description' => t('<a href="https://www.php.net/manual/en/function.ob-start.php">Output buffering</a> is not enabled. This may degrade Drupal\'s performance. You can enable output buffering by default <a href="https://www.php.net/manual/en/outcontrol.configuration.php#ini.output-buffering">in your PHP settings</a>.'),
-      ];
-    }
-  }
-
   if ($phase == 'install' || $phase == 'update') {
     // Test for PDO (database).
     $requirements['database_extensions'] = [
@@ -514,7 +514,8 @@ function system_requirements($phase): array {
     }
     else {
       // Make sure at least one supported database driver exists.
-      if (empty(Database::getDriverList()->getInstallableList())) {
+      $drivers = drupal_detect_database_types();
+      if (empty($drivers)) {
         $database_ok = FALSE;
         $pdo_message = t('Your web server does not appear to support any common PDO database extensions. Check with your hosting provider to see if they support PDO (PHP Data Objects) and offer any databases that <a href=":drupal-databases">Drupal supports</a>.', [
           ':drupal-databases' => 'https://www.drupal.org/docs/system-requirements/database-server-requirements',
@@ -542,7 +543,7 @@ function system_requirements($phase): array {
 
   if ($phase === 'runtime' || $phase === 'update') {
     // Database information.
-    $class = Database::getConnection()->getConnectionOptions()['namespace'] . '\\Install\\Tasks';
+    $class = Database::getConnection()->getDriverClass('Install\\Tasks');
     /** @var \Drupal\Core\Database\Install\Tasks $tasks */
     $tasks = new $class();
     $requirements['database_system'] = [
@@ -574,7 +575,7 @@ function system_requirements($phase): array {
       'title' => t('Database support for JSON'),
       'severity' => REQUIREMENT_OK,
       'value' => t('Available'),
-      'description' => t('Drupal requires databases that support JSON storage.'),
+      'description' => t('Is required in Drupal 10.0.'),
     ];
 
     if (!Database::getConnection()->hasJson()) {
@@ -627,7 +628,7 @@ function system_requirements($phase): array {
     }
   }
 
-  // Test if configuration files and directory are writable.
+  // Test configuration files and directory for writability.
   if ($phase == 'runtime') {
     $conf_errors = [];
     // Find the site path. Kernel service is not always available at this point,
@@ -703,10 +704,9 @@ function system_requirements($phase): array {
       $htaccess_file = $protected_dir->getPath() . '/.htaccess';
       // Check for the string which was added to the recommended .htaccess file
       // in the latest security update.
-      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || !str_contains($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003')) {
+      if (!file_exists($htaccess_file) || !($contents = @file_get_contents($htaccess_file)) || strpos($contents, 'Drupal_Security_Do_Not_Remove_See_SA_2013_003') === FALSE) {
         $url = 'https://www.drupal.org/SA-CORE-2013-003';
         $requirements[$htaccess_file] = [
-          // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
           'title' => new TranslatableMarkup($protected_dir->getTitle()),
           'value' => t('Not fully protected'),
           'severity' => REQUIREMENT_ERROR,
@@ -870,8 +870,7 @@ function system_requirements($phase): array {
       else {
         $error = t('The directory %directory is not writable.', ['%directory' => $directory]);
       }
-      // The files directory requirement check is done only during install and
-      // runtime.
+      // The files directory requirement check is done only during install and runtime.
       if ($phase == 'runtime') {
         $description = t('You may need to set the correct directory at the <a href=":admin-file-system">file system settings page</a> or change the current directory\'s permissions so that it is writable.', [':admin-file-system' => Url::fromRoute('system.file_system_settings')->toString()]);
       }
@@ -958,21 +957,10 @@ function system_requirements($phase): array {
         ];
       }
 
-      $entity_update_issues = \Drupal::service('renderer')->renderInIsolation($build);
+      $entity_update_issues = \Drupal::service('renderer')->renderPlain($build);
       $requirements['entity_update']['severity'] = REQUIREMENT_ERROR;
       $requirements['entity_update']['value'] = t('Mismatched entity and/or field definitions');
       $requirements['entity_update']['description'] = t('The following changes were detected in the entity type and field definitions. @updates', ['@updates' => $entity_update_issues]);
-    }
-  }
-
-  // Display the deployment identifier if set.
-  if ($phase == 'runtime') {
-    if ($deployment_identifier = Settings::get('deployment_identifier')) {
-      $requirements['deployment identifier'] = [
-        'title' => t('Deployment identifier'),
-        'value' => $deployment_identifier,
-        'severity' => REQUIREMENT_INFO,
-      ];
     }
   }
 
@@ -993,8 +981,7 @@ function system_requirements($phase): array {
     $requirements['update access']['title'] = t('Access to update.php');
   }
 
-  // Display an error if a newly introduced dependency in a module is not
-  // resolved.
+  // Display an error if a newly introduced dependency in a module is not resolved.
   if ($phase === 'update' || $phase === 'runtime') {
     $create_extension_incompatibility_list = function (array $extension_names, PluralTranslatableMarkup $description, PluralTranslatableMarkup $title, TranslatableMarkup|string $message = '', TranslatableMarkup|string $additional_description = '') {
       if ($message === '') {
@@ -1065,8 +1052,7 @@ function system_requirements($phase): array {
         // Check for an incompatible version.
         $required_file = $files[$required_module];
         $required_name = $required_file->info['name'];
-        // Remove CORE_COMPATIBILITY- only from the start of the string.
-        $version = preg_replace('/^(' . \Drupal::CORE_COMPATIBILITY . '\-)/', '', $required_file->info['version'] ?? '');
+        $version = str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $required_file->info['version'] ?? '');
         if (!$requirement->isCompatible($version)) {
           $requirements["$extension_name-$required_module"] = [
             'title' => t('Unresolved dependency'),
@@ -1290,7 +1276,7 @@ function system_requirements($phase): array {
       break;
 
     case 'mbstring.encoding_translation':
-      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
+      $requirements['unicode']['description'] = t('Multibyte string input conversion in PHP is active and must be disabled. Check the php.ini <em>mbstring.encoding_translation</em> setting. Please refer to the <a href="http://php.net/mbstring">PHP mbstring documentation</a> for more information.');
       break;
   }
 
@@ -1300,7 +1286,7 @@ function system_requirements($phase): array {
       $requirements['update status'] = [
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you install the Update Manager module from the <a href=":module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href=":update">Update status handbook page</a>.', [
+        'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href=":module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href=":update">Update status handbook page</a>.', [
           ':update' => 'https://www.drupal.org/documentation/modules/update',
           ':module' => Url::fromRoute('system.modules_list')->toString(),
         ]),
@@ -1323,29 +1309,7 @@ function system_requirements($phase): array {
     }
   }
 
-  // Check if the SameSite cookie attribute is set to a valid value. Since this
-  // involves checking whether we are using a secure connection this only makes
-  // sense inside an HTTP request, not on the command line.
-  if ($phase === 'runtime' && PHP_SAPI !== 'cli') {
-    $samesite = ini_get('session.cookie_samesite') ?: t('Not set');
-    // Check if the SameSite attribute is set to a valid value. If it is set to
-    // 'None' the request needs to be done over HTTPS.
-    $valid = match ($samesite) {
-      'Lax', 'Strict' => TRUE,
-      'None' => $request_object->isSecure(),
-      default => FALSE,
-    };
-    $requirements['php_session_samesite'] = [
-      'title' => t('SameSite cookie attribute'),
-      'value' => $samesite,
-      'severity' => $valid ? REQUIREMENT_OK : REQUIREMENT_WARNING,
-      'description' => t('This attribute should be explicitly set to Lax, Strict or None. If set to None then the request must be made via HTTPS. See <a href=":url" target="_blank">PHP documentation</a>', [
-        ':url' => 'https://www.php.net/manual/en/session.configuration.php#ini.session.cookie-samesite',
-      ]),
-    ];
-  }
-
-  // See if trusted host names have been configured, and warn the user if they
+  // See if trusted hostnames have been configured, and warn the user if they
   // are not set.
   if ($phase == 'runtime') {
     $trusted_host_patterns = Settings::get('trusted_host_patterns');
@@ -1367,22 +1331,22 @@ function system_requirements($phase): array {
   }
 
   // When the database driver is provided by a module, then check that the
-  // providing module is installed.
+  // providing module is enabled.
   if ($phase === 'runtime' || $phase === 'update') {
     $connection = Database::getConnection();
     $provider = $connection->getProvider();
     if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
       $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
-      if (str_contains($autoload, 'src/Driver/Database/')) {
+      if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
         $post_update_registry = \Drupal::service('update.post_update_registry');
         $pending_updates = $post_update_registry->getPendingUpdateInformation();
         if (!in_array('enable_provider_database_driver', array_keys($pending_updates['system']['pending'] ?? []), TRUE)) {
           // Only show the warning when the post update function has run and
-          // the module that is providing the database driver is not installed.
+          // the module that is providing the database driver is not enabled.
           $requirements['database_driver_provided_by_module'] = [
             'title' => t('Database driver provided by module'),
-            'value' => t('Not installed'),
-            'description' => t('The current database driver is provided by the module: %module. The module is currently not installed. You should immediately <a href=":install">install</a> the module.', ['%module' => $provider, ':install' => Url::fromRoute('system.modules_list')->toString()]),
+            'value' => t('Not enabled'),
+            'description' => t('The current database driver is provided by the module: %module. The module is currently not enabled. You should immediately <a href=":enable">enable</a> the module.', ['%module' => $provider, ':enable' => Url::fromRoute('system.modules_list')->toString()]),
             'severity' => REQUIREMENT_ERROR,
           ];
         }
@@ -1414,7 +1378,7 @@ function system_requirements($phase): array {
   // file names. There is no definite root directory depth below which Drupal is
   // guaranteed to function correctly on Windows. Since problems are likely
   // with more than 100 characters in the Drupal root path, show an error.
-  if (str_starts_with(PHP_OS, 'WIN')) {
+  if (substr(PHP_OS, 0, 3) == 'WIN') {
     $depth = strlen(realpath(DRUPAL_ROOT . '/' . PublicStream::basePath()));
     if ($depth > 120) {
       $requirements['max_path_on_windows'] = [
@@ -1469,14 +1433,10 @@ function system_requirements($phase): array {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
     $module_list = [];
-    // hook_update_last_removed() is a procedural hook hook because we
-    // do not have classes loaded that would be needed.
-    // Simply inlining the old hook mechanism is better than making
-    // ModuleInstaller::invoke() public.
-    foreach ($module_handler->getModuleList() as $module => $extension) {
-      $function = $module . '_update_last_removed';
-      if (function_exists($function)) {
-        $last_removed = $function();
+    $module_handler->invokeAllWith(
+      'update_last_removed',
+      function (callable $hook, string $module) use (&$module_list, $update_registry, $module_extension_list) {
+        $last_removed = $hook();
         if ($last_removed && $last_removed > $update_registry->getInstalledVersion($module)) {
 
           /** @var \Drupal\Core\Extension\Extension $module_info */
@@ -1488,7 +1448,7 @@ function system_requirements($phase): array {
           ];
         }
       }
-    }
+    );
 
     // If user module is in the list then only show a specific message for
     // Drupal core.
@@ -1519,7 +1479,6 @@ function system_requirements($phase): array {
     }
     // Also check post-updates. Only do this if we're not already showing an
     // error for hook_update_N().
-    $missing_updates = [];
     if (empty($module_list)) {
       $existing_updates = \Drupal::service('keyvalue')->get('post_update')->get('existing_updates', []);
       $post_update_registry = \Drupal::service('update.post_update_registry');
@@ -1546,74 +1505,6 @@ function system_requirements($phase): array {
         }
       }
     }
-
-    if (empty($missing_updates)) {
-      foreach ($update_registry->getAllEquivalentUpdates() as $module => $equivalent_updates) {
-        $module_info = $module_extension_list->get($module);
-        foreach ($equivalent_updates as $future_update => $data) {
-          $future_update_function_name = $module . '_update_' . $future_update;
-          $ran_update_function_name = $module . '_update_' . $data['ran_update'];
-          // If an update was marked as an equivalent by a previous update, and
-          // both the previous update and the equivalent update are not found in
-          // the current code base, prevent updating. This indicates a site
-          // attempting to go 'backwards' in terms of database schema.
-          // @see \Drupal\Core\Update\UpdateHookRegistry::markFutureUpdateEquivalent()
-          if (!function_exists($ran_update_function_name) && !function_exists($future_update_function_name)) {
-            // If the module is provided by core prepend helpful text as the
-            // module does not exist in composer or Drupal.org.
-            if (str_starts_with($module_info->getPathname(), 'core/')) {
-              $future_version_string = 'Drupal Core ' . $data['future_version_string'];
-            }
-            else {
-              $future_version_string = $data['future_version_string'];
-            }
-            $requirements[$module . '_equivalent_update_missing'] = [
-              'title' => t('Missing updates for: @module', ['@module' => $module_info->info['name']]),
-              'description' => t('The version of the %module module that you are attempting to update to is missing update @future_update (which was marked as an equivalent by @ran_update). Update to at least @future_version_string.', [
-                '%module' => $module_info->info['name'],
-                '@ran_update' => $data['ran_update'],
-                '@future_update' => $future_update,
-                '@future_version_string' => $future_version_string,
-              ]),
-              'severity' => REQUIREMENT_ERROR,
-            ];
-            break;
-          }
-        }
-      }
-    }
-  }
-
-  // Add warning when twig debug option is enabled.
-  if ($phase === 'runtime') {
-    $development_settings = \Drupal::keyValue('development_settings');
-    $twig_debug = $development_settings->get('twig_debug', FALSE);
-    $twig_cache_disable = $development_settings->get('twig_cache_disable', FALSE);
-    if ($twig_debug || $twig_cache_disable) {
-      $requirements['twig_debug_enabled'] = [
-        'title' => t('Twig development mode'),
-        'value' => t('Twig development mode settings are turned on. Go to @link to disable them.', [
-          '@link' => Link::createFromRoute(
-            'development settings page',
-            'system.development_settings',
-          )->toString(),
-        ]),
-        'severity' => REQUIREMENT_WARNING,
-      ];
-    }
-    $render_cache_disabled = $development_settings->get('disable_rendered_output_cache_bins', FALSE);
-    if ($render_cache_disabled) {
-      $requirements['render_cache_disabled'] = [
-        'title' => t('Markup caching disabled'),
-        'value' => t('Render cache, dynamic page cache, and page cache are bypassed. Go to @link to enable them.', [
-          '@link' => Link::createFromRoute(
-            'development settings page',
-            'system.development_settings',
-          )->toString(),
-        ]),
-        'severity' => REQUIREMENT_WARNING,
-      ];
-    }
   }
 
   return $requirements;
@@ -1622,7 +1513,7 @@ function system_requirements($phase): array {
 /**
  * Implements hook_install().
  */
-function system_install(): void {
+function system_install() {
   // Populate the cron key state variable.
   $cron_key = Crypt::randomBytesBase64(55);
   \Drupal::state()->set('system.cron_key', $cron_key);
@@ -1636,16 +1527,13 @@ function system_install(): void {
   $site->save(TRUE);
 
   // Populate the dummy query string added to all CSS and JavaScript files.
-  \Drupal::service('asset.query_string')->reset();
+  _drupal_flush_css_js();
 }
 
 /**
  * Implements hook_schema().
  */
-function system_schema(): array {
-  // @deprecated The sequences table has been deprecated in drupal:10.2.0 and is
-  // removed from drupal:12.0.0. See https://www.drupal.org/node/3220378.
-  // @todo Remove sequences table in Drupal 12. See https://www.drupal.org/i/3335756
+function system_schema() {
   $schema['sequences'] = [
     'description' => 'Stores IDs.',
     'fields' => [
@@ -1659,14 +1547,65 @@ function system_schema(): array {
     'primary key' => ['value'],
   ];
 
+  $schema['sessions'] = [
+    'description' => "Drupal's session handlers read and write into the sessions table. Each record represents a user session, either anonymous or authenticated.",
+    'fields' => [
+      'uid' => [
+        'description' => 'The {users}.uid corresponding to a session, or 0 for anonymous user.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'sid' => [
+        'description' => "A session ID (hashed). The value is generated by Drupal's session handlers.",
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => TRUE,
+      ],
+      'hostname' => [
+        'description' => 'The IP address that last used this session ID (sid).',
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'timestamp' => [
+        'description' => 'The Unix timestamp when this session last requested a page. Old records are purged by PHP automatically.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'big',
+      ],
+      'session' => [
+        'description' => 'The serialized contents of the user\'s session, an array of name/value pairs that persists across page requests by this session ID. Drupal loads the user\'s session from here at the start of each request and saves it at the end.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+      ],
+    ],
+    'primary key' => [
+      'sid',
+    ],
+    'indexes' => [
+      'timestamp' => ['timestamp'],
+      'uid' => ['uid'],
+    ],
+    'foreign keys' => [
+      'session_user' => [
+        'table' => 'users',
+        'columns' => ['uid' => 'uid'],
+      ],
+    ],
+  ];
+
   return $schema;
 }
 
 /**
  * Implements hook_update_last_removed().
  */
-function system_update_last_removed(): int {
-  return 10201;
+function system_update_last_removed() {
+  return 8901;
 }
 
 /**
@@ -1685,11 +1624,11 @@ function _system_advisories_requirements(array &$requirements): void {
   try {
     $advisories = $fetcher->getSecurityAdvisories(TRUE, 5);
   }
-  catch (ClientExceptionInterface $exception) {
+  catch (TransferException $exception) {
     $requirements['system_advisories']['title'] = t('Critical security announcements');
     $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
     $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];
-    Error::logException(\Drupal::logger('system'), $exception, 'Failed to retrieve security advisory data.');
+    watchdog_exception('system', $exception, 'Failed to retrieve security advisory data.');
     return;
   }
 
@@ -1721,65 +1660,100 @@ function _system_advisories_requirements(array &$requirements): void {
 }
 
 /**
- * Invalidate container because the module handler has changed.
+ * Remove the year 2038 date limitation.
  */
-function system_update_11100(): void {
-  \Drupal::service('kernel')->invalidateContainer();
-}
+function system_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  $schema = $connection->schema();
 
-/**
- * Update length of menu_tree fields url and route_param_key from 255 to 2048.
- */
-function system_update_11001(): void {
-  $schema = \Drupal::database()->schema();
-  $spec = [
-    'description' => 'The external path this link points to (when not using a route).',
-    'type' => 'varchar',
-    'length' => 2048,
-    'not null' => TRUE,
-    'default' => '',
-  ];
-  $schema->changeField('menu_tree', 'url', 'url', $spec);
-
-  $spec = [
-    'description' => 'An encoded string of route parameters for loading by route.',
-    'type' => 'varchar',
-    'length' => 2048,
-  ];
-  $schema->changeField('menu_tree', 'route_param_key', 'route_param_key', $spec);
-}
-
-/**
- * Equivalent update to 10400.
- */
-function system_update_11102(): TranslatableMarkup|null {
-  // This is a no-op that exists to prevent an upgrade from 10.4+ to 11.0. That
-  // path is actually a downgrade.
-  $equivalent_update = \Drupal::service('update.update_hook_registry')
-    ->getEquivalentUpdate();
-  if ($equivalent_update instanceof EquivalentUpdate) {
-    return $equivalent_update->toSkipMessage();
+  // Update sessions table.
+  if ($schema->tableExists('sessions') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'description' => 'The Unix timestamp when this session last requested a page. Old records are purged by PHP automatically.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'size' => 'big',
+    ];
+    $schema->changeField('sessions', 'timestamp', 'timestamp', $new);
   }
-  return NULL;
-}
 
-/**
- * Add the [alias] field to the {router} table.
- */
-function system_update_11201(): void {
-  $schema = \Drupal::database()->schema();
+  // Update batch table.
+  if ($schema->tableExists('batch') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'description' => 'A Unix timestamp indicating when this batch was submitted for processing. Stale batches are purged at cron time.',
+      'type' => 'int',
+      'not null' => TRUE,
+      'size' => 'big',
+    ];
+    $schema->changeField('batch', 'timestamp', 'timestamp', $new);
+  }
 
-  if ($schema->tableExists('router') && !$schema->fieldExists('router', 'alias')) {
-    $spec = [
-      'fields' => [
-        'alias' => [
-          'description' => 'The alias of the route, if applicable.',
-          'type' => 'varchar_ascii',
-          'length' => 255,
-        ],
+  // Update flood table.
+  if ($schema->tableExists('flood') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'timestamp' => [
+        'description' => 'Timestamp of the event.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'big',
+      ],
+      'expiration' => [
+        'description' => 'Expiration timestamp. Expired events are purged on cron run.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'big',
       ],
     ];
-    $schema->addField('router', 'alias', $spec['fields']['alias']);
-    $schema->addIndex('router', 'alias', ['alias'], $spec);
+    foreach ($new as $column_name => $value) {
+      $schema->changeField('flood', $column_name, $column_name, $value);
+    }
   }
+  // Update queue table.
+  if ($schema->tableExists('queue') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'expire' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when the claim lease expires on the item.',
+        'size' => 'big',
+      ],
+      'created' => [
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'Timestamp when the item was created.',
+        'size' => 'big',
+      ],
+    ];
+    foreach ($new as $column_name => $value) {
+      $schema->changeField('queue', $column_name, $column_name, $value);
+    }
+  }
+
+  // Update cache tables.
+  $cache_tables = $schema->findTables('cache_%');
+  $cache_tables = array_filter($cache_tables, function ($cache_tables) {
+    return str_starts_with($cache_tables, 'cache_');
+  });
+  if ($connection->databaseType() != 'sqlite') {
+    foreach (array_keys($cache_tables) as $table) {
+      // Truncate cache tables. They will be flushed anyway at the end of
+      // database updates, but emptying the tables now will boost the schema
+      // changes.
+      $connection->truncate($table)->execute();
+      $new = [
+        'description' => 'A Unix timestamp indicating when the cache entry should expire, or ' . Cache::PERMANENT . ' for never.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'big',
+      ];
+      $schema->changeField($table, 'expire', 'expire', $new);
+    }
+  }
+
 }

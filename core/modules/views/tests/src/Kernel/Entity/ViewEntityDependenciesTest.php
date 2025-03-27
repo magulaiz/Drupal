@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\field\Entity\FieldConfig;
@@ -24,15 +22,12 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = [
-    'test_field_get_entity',
-    'test_relationship_dependency',
-    'test_plugin_dependencies',
-    'test_argument_dependency',
-  ];
+  public static $testViews = ['test_field_get_entity', 'test_relationship_dependency', 'test_plugin_dependencies', 'test_argument_dependency'];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'node',
@@ -67,7 +62,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     ]);
     $content_type->save();
     $field_storage = FieldStorageConfig::create([
-      'field_name' => $this->randomMachineName(),
+      'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'node',
       'type' => 'comment',
     ]);
@@ -97,7 +92,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
   /**
    * Tests the getDependencies method.
    */
-  public function testGetDependencies(): void {
+  public function testGetDependencies() {
     $expected = [];
     $expected['test_field_get_entity'] = [
       'module' => [

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -14,7 +12,9 @@ use Drupal\Tests\BrowserTestBase;
 class FieldHelpTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['field', 'help'];
 
@@ -25,8 +25,6 @@ class FieldHelpTest extends BrowserTestBase {
 
   /**
    * The admin user that will be created.
-   *
-   * @var \Drupal\user\Entity\User|false
    */
   protected $adminUser;
 
@@ -38,7 +36,7 @@ class FieldHelpTest extends BrowserTestBase {
 
     // Create the admin user.
     $this->adminUser = $this->drupalCreateUser([
-      'access help pages',
+      'access administration pages',
       'view the administration theme',
     ]);
   }
@@ -46,7 +44,7 @@ class FieldHelpTest extends BrowserTestBase {
   /**
    * Tests the Field module's help page.
    */
-  public function testFieldHelp(): void {
+  public function testFieldHelp() {
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
 

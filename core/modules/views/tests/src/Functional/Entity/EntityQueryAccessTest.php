@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Functional\Entity;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -35,7 +33,7 @@ class EntityQueryAccessTest extends ViewTestBase {
   /**
    * Tests that the 'media_access' query tag is respected by Views.
    */
-  public function testMediaEntityQueryAccess(): void {
+  public function testMediaEntityQueryAccess() {
     $this->container->get('module_installer')->install(['media']);
 
     $media_type = $this->createMediaType('test');
@@ -77,7 +75,7 @@ class EntityQueryAccessTest extends ViewTestBase {
   /**
    * Tests that the 'block_content_access' query tag is respected by Views.
    */
-  public function testBlockContentEntityQueryAccess(): void {
+  public function testBlockContentEntityQueryAccess() {
     $this->container->get('module_installer')->install(['block_content']);
 
     BlockContentType::create([
@@ -101,11 +99,11 @@ class EntityQueryAccessTest extends ViewTestBase {
     $accessible_block->save();
 
     $account = $this->drupalCreateUser([
-      'access block library',
+      'administer blocks',
     ]);
     $this->drupalLogin($account);
 
-    $this->drupalGet('/admin/content/block');
+    $this->drupalGet('/admin/content/block-content');
     $assert_session = $this->assertSession();
     $assert_session->statusCodeEquals(200);
     $assert_session->pageTextContains($accessible_block->label());

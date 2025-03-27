@@ -5,12 +5,10 @@
  * Install hooks for test module.
  */
 
-declare(strict_types=1);
-
 /**
  * Implements hook_requirements().
  */
-function requirements1_test_requirements($phase): array {
+function requirements1_test_requirements($phase) {
   $requirements = [];
 
   // Always fails requirements.

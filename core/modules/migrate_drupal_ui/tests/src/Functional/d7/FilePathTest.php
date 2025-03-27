@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
+
+// cspell:ignore terok
 
 /**
  * Tests the Drupal 7 public and private file migrations.
@@ -94,7 +93,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
    *
    * @dataProvider providerTestFilePath
    */
-  public function testFilePath(string $file_private_path, string $file_public_path, string $file_temporary_path, string $private, string $public, string $temporary): void {
+  public function testFilePath(string $file_private_path, string $file_public_path, string $file_temporary_path, string $private, string $public, string $temporary) {
     $this->sourceFileScheme['private'] = $file_private_path;
     $this->sourceFileScheme['public'] = $file_public_path;
     $this->sourceFileScheme['temporary'] = $file_temporary_path;
@@ -125,11 +124,9 @@ class FilePathTest extends MigrateUpgradeTestBase {
 
     // Use the driver connection form to get the correct options out of the
     // database settings. This supports all of the databases we test against.
-    $drivers = Database::getDriverList()->getInstallableList();
-    $form = $drivers[$driver]->getInstallTasks()->getFormOptions($connection_options);
+    $drivers = drupal_get_database_types();
+    $form = $drivers[$driver]->getFormOptions($connection_options);
     $connection_options = array_intersect_key($connection_options, $form + $form['advanced_options']);
-    // Remove isolation_level since that option is not configurable in the UI.
-    unset($connection_options['isolation_level']);
     $edit = [
       $driver => $connection_options,
       'version' => '7',
@@ -167,7 +164,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
    * @return string[][]
    *   An array of test data.
    */
-  public static function providerTestFilePath() {
+  public function providerTestFilePath() {
     return [
       'All source base paths are at temporary' => [
         'sites/default/private',
@@ -222,7 +219,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
    *
    * The resulting directory is /bar/sites/default/files/foo.txt.
    */
-  protected function makeFiles(): void {
+  protected function makeFiles() {
     // Get file information from the source database.
     foreach ($this->getManagedFiles() as $file) {
       $this->assertSame(1, preg_match('/^(private|public|temporary):/', $file['uri'], $matches));
@@ -260,7 +257,10 @@ class FilePathTest extends MigrateUpgradeTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the file data.
+   *
+   * @return string[][]
+   *   Data from the source file_managed table.
    */
   public function getManagedFiles() {
     return [
@@ -277,8 +277,8 @@ class FilePathTest extends MigrateUpgradeTestBase {
         'uri' => 'private://Babylon5.txt',
       ],
       [
-        'filename' => 'DeepSpaceNine.txt',
-        'uri' => 'temporary://DeepSpaceNine.txt',
+        'filename' => 'TerokNor.txt',
+        'uri' => 'temporary://TerokNor.txt',
       ],
     ];
   }
@@ -286,35 +286,35 @@ class FilePathTest extends MigrateUpgradeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCounts(): array {
+  protected function getEntityCounts() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEntityCountsIncremental(): array {
+  protected function getEntityCountsIncremental() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAvailablePaths(): array {
+  protected function getAvailablePaths() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getMissingPaths(): array {
+  protected function getMissingPaths() {
     return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getSourceBasePath(): string {
+  protected function getSourceBasePath() {
     return '';
   }
 

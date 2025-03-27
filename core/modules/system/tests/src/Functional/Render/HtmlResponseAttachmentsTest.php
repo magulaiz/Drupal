@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Tests\BrowserTestBase;
@@ -14,7 +12,9 @@ use Drupal\Tests\BrowserTestBase;
 class HtmlResponseAttachmentsTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['render_attached_test'];
 
@@ -26,7 +26,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   /**
    * Tests rendering of ['#attached'].
    */
-  public function testAttachments(): void {
+  public function testAttachments() {
     // Test ['#attached']['http_header] = ['Status', $code].
     $this->drupalGet('/render_attached_test/teapot');
     $this->assertSession()->statusCodeEquals(418);
@@ -63,7 +63,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
     // Test ['#attached']['html_head_link'] when outputted as HTTP header.
     $this->drupalGet('/render_attached_test/html_header_link');
     $expected_link_headers = [
-      '</foo?bar=<baz>&baz=false>; rel="alternate"',
+      '</foo?bar=&lt;baz&gt;&amp;baz=false>; rel="alternate"',
       '</foo/bar>; hreflang="nl"; rel="alternate"',
       '</foo/bar>; hreflang="de"; rel="alternate"',
     ];
@@ -77,7 +77,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   /**
    * Tests caching of ['#attached'].
    */
-  public function testRenderCachedBlock(): void {
+  public function testRenderCachedBlock() {
     // Make sure our test block is visible.
     $this->drupalPlaceBlock('attached_rendering_block', ['region' => 'content']);
 
@@ -144,7 +144,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
    */
   protected function assertHead(): void {
     // Discover the DOM element for the meta link.
-    $test_meta = $this->xpath('//head/meta[@test-attribute="test_value"]');
+    $test_meta = $this->xpath('//head/meta[@test-attribute="testvalue"]');
     $this->assertCount(1, $test_meta, 'There\'s only one test attribute.');
     // Grab the only DOM element.
     $test_meta = reset($test_meta);
@@ -152,7 +152,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
       $this->fail('Unable to find the head meta.');
     }
     else {
-      $this->assertEquals('test_value', $test_meta->getAttribute('test-attribute'));
+      $this->assertEquals('testvalue', $test_meta->getAttribute('test-attribute'));
     }
   }
 

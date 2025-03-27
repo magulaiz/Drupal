@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Authentication\AuthenticationCollectorTest.
+ */
 
 namespace Drupal\Tests\Core\Authentication;
 
@@ -23,7 +26,7 @@ class AuthenticationCollectorTest extends UnitTestCase {
    * @covers ::getProvider
    * @covers ::isGlobal
    */
-  public function testAuthenticationCollector(): void {
+  public function testAuthenticationCollector() {
     $providers = [];
     $global = [];
     $authentication_collector = new AuthenticationCollector();

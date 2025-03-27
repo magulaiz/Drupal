@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\layout_builder_element_test\EventSubscriber;
 
 use Drupal\Core\Messenger\MessengerInterface;
@@ -14,7 +12,8 @@ use Drupal\layout_builder\SectionComponent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Provides an event subscriber for testing section storage alteration.
+ * An event subscriber to test altering section storage via the
+ * \Drupal\layout_builder\Event\PrepareLayoutEvent.
  *
  * @see \Drupal\layout_builder\Event\PrepareLayoutEvent
  * @see \Drupal\layout_builder\Element\LayoutBuilder::prepareLayout()

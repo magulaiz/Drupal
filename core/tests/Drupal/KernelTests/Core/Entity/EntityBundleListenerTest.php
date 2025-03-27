@@ -1,10 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Entity;
-
-use Drupal\entity_test\EntityTestHelper;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\EntityBundleListener
@@ -14,22 +10,20 @@ use Drupal\entity_test\EntityTestHelper;
 class EntityBundleListenerTest extends EntityKernelTestBase {
 
   /**
-   * Test bundle creation.
+   * @covers ::onBundleCreate
    *
    * Note: Installing the entity_schema_test module will mask the bug this test
    * was written to cover, as the field map cache is cleared manually by
    * \Drupal\Core\Field\FieldDefinitionListener::onFieldDefinitionCreate().
-   *
-   * @covers ::onBundleCreate
    */
-  public function testOnBundleCreate(): void {
+  public function testOnBundleCreate() {
     $field_map = $this->container->get('entity_field.manager')->getFieldMap();
     $expected = [
       'entity_test' => 'entity_test',
     ];
     $this->assertEquals($expected, $field_map['entity_test']['id']['bundles']);
 
-    EntityTestHelper::createBundle('custom');
+    entity_test_create_bundle('custom');
     $field_map = $this->container->get('entity_field.manager')->getFieldMap();
     $expected = [
       'entity_test' => 'entity_test',

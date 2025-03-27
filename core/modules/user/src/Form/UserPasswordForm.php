@@ -4,15 +4,15 @@ namespace Drupal\user\Form;
 
 use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element\Email;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
-use Drupal\user\UserNameValidator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
+class UserPasswordForm extends FormBase {
 
   /**
    * The user storage.
@@ -46,6 +46,13 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
   protected $flood;
 
   /**
+   * The typed data manager.
+   *
+   * @var \Drupal\Core\TypedData\TypedDataManagerInterface
+   */
+  protected $typedDataManager;
+
+  /**
    * The email validator service.
    *
    * @var \Drupal\Component\Utility\EmailValidatorInterface
@@ -63,23 +70,17 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
    *   The config factory.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\user\UserNameValidator $userNameValidator
-   *   The user validator service.
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data_manager
+   *   The typed data manager.
    * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator service.
    */
-  public function __construct(
-    UserStorageInterface $user_storage,
-    LanguageManagerInterface $language_manager,
-    ConfigFactory $config_factory,
-    FloodInterface $flood,
-    protected UserNameValidator $userNameValidator,
-    EmailValidatorInterface $email_validator,
-  ) {
+  public function __construct(UserStorageInterface $user_storage, LanguageManagerInterface $language_manager, ConfigFactory $config_factory, FloodInterface $flood, TypedDataManagerInterface $typed_data_manager, EmailValidatorInterface $email_validator) {
     $this->userStorage = $user_storage;
     $this->languageManager = $language_manager;
     $this->configFactory = $config_factory;
     $this->flood = $flood;
+    $this->typedDataManager = $typed_data_manager;
     $this->emailValidator = $email_validator;
   }
 
@@ -92,8 +93,8 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
       $container->get('language_manager'),
       $container->get('config.factory'),
       $container->get('flood'),
-      $container->get('user.name_validator'),
-      $container->get('email.validator'),
+      $container->get('typed_data_manager'),
+      $container->get('email.validator')
     );
   }
 
@@ -119,7 +120,6 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
         'autocapitalize' => 'off',
         'spellcheck' => 'false',
         'autofocus' => 'autofocus',
-        'autocomplete' => 'username',
       ],
     ];
     // Allow logged in users to request this also.
@@ -160,7 +160,11 @@ class UserPasswordForm extends FormBase implements WorkspaceSafeFormInterface {
     $this->flood->register('user.password_request_ip', $flood_config->get('ip_window'));
     // First, see if the input is possibly valid as a username.
     $name = trim($form_state->getValue('name'));
-    $violations = $this->userNameValidator->validateName($name);
+    $definition = BaseFieldDefinition::create('string')
+      ->addConstraint('UserName', []);
+    $data = $this->typedDataManager->create($definition);
+    $data->setValue($name);
+    $violations = $data->validate();
     // Usernames have a maximum length shorter than email addresses. Only print
     // this error if the input is not valid as a username or email address.
     if ($violations->count() > 0 && !$this->emailValidator->isValid($name)) {

@@ -11,29 +11,8 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
 
   /**
    * Parsed elements.
-   *
-   * @var array
    */
   protected $elements;
-
-  /**
-   * Determines if there is a translatable value.
-   *
-   * @return bool
-   *   Returns true if a translatable element is found.
-   */
-  public function hasTranslatableElements(): bool {
-    foreach ($this as $element) {
-      // Early return if found.
-      if ($element->getDataDefinition()['translatable'] === TRUE) {
-        return TRUE;
-      }
-      if ($element instanceof ArrayElement && $element->hasTranslatableElements()) {
-        return TRUE;
-      }
-    }
-    return FALSE;
-  }
 
   /**
    * Gets valid configuration data keys.
@@ -68,7 +47,6 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   Property name or index of the element.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
-   *   The data definition object for the property.
    */
   abstract protected function getElementDefinition($key);
 
@@ -136,7 +114,8 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
   /**
    * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator($this->getElements());
   }
 
@@ -152,25 +131,24 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   The key of the contained element.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   A typed data object created from the given parameters.
    */
   protected function createElement($definition, $value, $key) {
     return $this->getTypedDataManager()->create($definition, $value, $key, $this);
   }
 
   /**
-   * Creates a new data definition object from an array and configuration.
+   * Creates a new data definition object from a type definition array and
+   * actual configuration data.
    *
    * @param array $definition
    *   The base type definition array, for which a data definition should be
    *   created.
-   * @param mixed $value
+   * @param $value
    *   The value of the configuration element.
    * @param string $key
    *   The key of the contained element.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
-   *   A data definition object for the given parameters.
    */
   protected function buildDataDefinition($definition, $value, $key) {
     return $this->getTypedDataManager()->buildDataDefinition($definition, $value, $key, $this);

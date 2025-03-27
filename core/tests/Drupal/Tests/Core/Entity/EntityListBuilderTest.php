@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Entity\EntityListBuilderTest.
+ */
 
 namespace Drupal\Tests\Core\Entity;
 
@@ -9,7 +12,6 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Routing\RedirectDestinationInterface;
-use Drupal\Core\Url;
 use Drupal\entity_test\EntityTestListBuilder;
 use Drupal\Tests\UnitTestCase;
 
@@ -95,7 +97,7 @@ class EntityListBuilderTest extends UnitTestCase {
   /**
    * @covers ::getOperations
    */
-  public function testGetOperations(): void {
+  public function testGetOperations() {
     $operation_name = $this->randomMachineName();
     $operations = [
       $operation_name => [
@@ -118,7 +120,12 @@ class EntityListBuilderTest extends UnitTestCase {
     $this->role->expects($this->any())
       ->method('hasLinkTemplate')
       ->willReturn(TRUE);
-    $url = Url::fromRoute('entity.user_role.collection');
+    $url = $this->getMockBuilder('\Drupal\Core\Url')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $url->expects($this->atLeastOnce())
+      ->method('mergeOptions')
+      ->with(['query' => ['destination' => '/foo/bar']]);
     $this->role->expects($this->any())
       ->method('toUrl')
       ->willReturn($url);
@@ -146,9 +153,6 @@ class EntityListBuilderTest extends UnitTestCase {
 
 }
 
-/**
- * Stub class for testing EntityListBuilder.
- */
 class TestEntityListBuilder extends EntityTestListBuilder {
 
   public function buildOperations(EntityInterface $entity) {

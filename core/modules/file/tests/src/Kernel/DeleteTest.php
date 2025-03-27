@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\file\Entity\File;
-use Drupal\file_test\FileTestHelper;
 
 /**
  * Tests the file delete function.
@@ -18,7 +15,7 @@ class DeleteTest extends FileManagedUnitTestBase {
   /**
    * Tries deleting a normal file (as opposed to a directory, symlink, etc).
    */
-  public function testUnused(): void {
+  public function testUnused() {
     $file = $this->createFile();
 
     // Check that deletion removes the file and database record.
@@ -32,7 +29,7 @@ class DeleteTest extends FileManagedUnitTestBase {
   /**
    * Tries deleting a file that is in use.
    */
-  public function testInUse(): void {
+  public function testInUse() {
     // This test expects unused managed files to be marked as a temporary file
     // and then deleted up by file_cron().
     $this->config('file.settings')
@@ -50,7 +47,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $this->assertNotEmpty(File::load($file->id()), 'File still exists in the database.');
 
     // Clear out the call to hook_file_load().
-    FileTestHelper::reset();
+    file_test_reset();
 
     $file_usage->delete($file, 'testing', 'test', 1);
     $usage = $file_usage->listUsage($file);
@@ -60,7 +57,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     $file = File::load($file->id());
     $this->assertNotEmpty($file, 'File still exists in the database.');
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
-    FileTestHelper::reset();
+    file_test_reset();
 
     // Call file_cron() to clean up the file. Make sure the changed timestamp
     // of the file is older than the system.file.temporary_maximum_age
@@ -68,7 +65,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     // would set the timestamp.
     Database::getConnection()->update('file_managed')
       ->fields([
-        'changed' => \Drupal::time()->getRequestTime() - ($this->config('system.file')->get('temporary_maximum_age') + 3),
+        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ])
       ->condition('fid', $file->id())
       ->execute();
@@ -83,7 +80,7 @@ class DeleteTest extends FileManagedUnitTestBase {
   /**
    * Tries to run cron deletion on file deleted from the file-system.
    */
-  public function testCronDeleteNonExistingTemporary(): void {
+  public function testCronDeleteNonExistingTemporary() {
     $file = $this->createFile();
     // Delete the file, but leave it in the file_managed table.
     \Drupal::service('file_system')->delete($file->getFileUri());
@@ -95,7 +92,7 @@ class DeleteTest extends FileManagedUnitTestBase {
     // configuration value.
     \Drupal::database()->update('file_managed')
       ->fields([
-        'changed' => \Drupal::time()->getRequestTime() - ($this->config('system.file')->get('temporary_maximum_age') + 3),
+        'changed' => REQUEST_TIME - ($this->config('system.file')->get('temporary_maximum_age') + 1),
       ])
       ->condition('fid', $file->id())
       ->execute();

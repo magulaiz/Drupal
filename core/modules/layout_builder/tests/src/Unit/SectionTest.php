@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -36,8 +34,8 @@ class SectionTest extends UnitTestCase {
       [],
       [
         new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']),
-        (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-        (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+        (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+        (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
       ],
       [
         'bad_judgement' => ['blink_speed' => 'fast', 'spin_direction' => 'clockwise'],
@@ -51,11 +49,11 @@ class SectionTest extends UnitTestCase {
    * @covers ::setComponent
    * @covers ::getComponents
    */
-  public function testGetComponents(): void {
+  public function testGetComponents() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
     ];
 
     $this->assertComponents($expected, $this->section);
@@ -64,7 +62,7 @@ class SectionTest extends UnitTestCase {
   /**
    * @covers ::getComponent
    */
-  public function testGetComponentInvalidUuid(): void {
+  public function testGetComponentInvalidUuid() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid UUID "invalid-uuid"');
     $this->section->getComponent('invalid-uuid');
@@ -73,7 +71,7 @@ class SectionTest extends UnitTestCase {
   /**
    * @covers ::getComponent
    */
-  public function testGetComponent(): void {
+  public function testGetComponent() {
     $expected = new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']);
 
     $this->assertEquals($expected, $this->section->getComponent('existing-uuid'));
@@ -83,13 +81,13 @@ class SectionTest extends UnitTestCase {
    * @covers ::removeComponent
    * @covers ::getComponentsByRegion
    */
-  public function testRemoveComponent(): void {
+  public function testRemoveComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
     ];
 
-    $this->section->removeComponent('10000000-0000-1000-a000-000000000000');
+    $this->section->removeComponent('first-uuid');
     $this->assertComponents($expected, $this->section);
   }
 
@@ -98,11 +96,11 @@ class SectionTest extends UnitTestCase {
    * @covers ::getNextHighestWeight
    * @covers ::getComponentsByRegion
    */
-  public function testAppendComponent(): void {
+  public function testAppendComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
       'new-uuid' => (new SectionComponent('new-uuid', 'some-region', []))->setWeight(1),
     ];
 
@@ -113,22 +111,22 @@ class SectionTest extends UnitTestCase {
   /**
    * @covers ::insertAfterComponent
    */
-  public function testInsertAfterComponent(): void {
+  public function testInsertAfterComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
-      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
       'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(3),
     ];
 
-    $this->section->insertAfterComponent('10000000-0000-1000-a000-000000000000', new SectionComponent('new-uuid', 'ordered-region'));
+    $this->section->insertAfterComponent('first-uuid', new SectionComponent('new-uuid', 'ordered-region'));
     $this->assertComponents($expected, $this->section);
   }
 
   /**
    * @covers ::insertAfterComponent
    */
-  public function testInsertAfterComponentValidUuidRegionMismatch(): void {
+  public function testInsertAfterComponentValidUuidRegionMismatch() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid preceding UUID "existing-uuid"');
     $this->section->insertAfterComponent('existing-uuid', new SectionComponent('new-uuid', 'ordered-region'));
@@ -137,7 +135,7 @@ class SectionTest extends UnitTestCase {
   /**
    * @covers ::insertAfterComponent
    */
-  public function testInsertAfterComponentInvalidUuid(): void {
+  public function testInsertAfterComponentInvalidUuid() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid preceding UUID "invalid-uuid"');
     $this->section->insertAfterComponent('invalid-uuid', new SectionComponent('new-uuid', 'ordered-region'));
@@ -147,11 +145,11 @@ class SectionTest extends UnitTestCase {
    * @covers ::insertComponent
    * @covers ::getComponentsByRegion
    */
-  public function testInsertComponent(): void {
+  public function testInsertComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
-      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(3),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(4),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(3),
       'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(2),
     ];
 
@@ -162,11 +160,11 @@ class SectionTest extends UnitTestCase {
   /**
    * @covers ::insertComponent
    */
-  public function testInsertComponentAppend(): void {
+  public function testInsertComponentAppend() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
-      '20000000-0000-1000-a000-000000000000' => (new SectionComponent('20000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
-      '10000000-0000-1000-a000-000000000000' => (new SectionComponent('10000000-0000-1000-a000-000000000000', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
+      'second-uuid' => (new SectionComponent('second-uuid', 'ordered-region', ['id' => 'second-block-id']))->setWeight(3),
+      'first-uuid' => (new SectionComponent('first-uuid', 'ordered-region', ['id' => 'first-block-id']))->setWeight(2),
       'new-uuid' => (new SectionComponent('new-uuid', 'ordered-region', []))->setWeight(4),
     ];
 
@@ -177,7 +175,7 @@ class SectionTest extends UnitTestCase {
   /**
    * @covers ::insertComponent
    */
-  public function testInsertComponentInvalidDelta(): void {
+  public function testInsertComponentInvalidDelta() {
     $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage('Invalid delta "7" for the "new-uuid" component');
     $this->section->insertComponent(7, new SectionComponent('new-uuid', 'ordered-region'));
@@ -203,14 +201,14 @@ class SectionTest extends UnitTestCase {
    * @covers ::getThirdPartySettings
    * @dataProvider providerTestGetThirdPartySettings
    */
-  public function testGetThirdPartySettings($provider, $expected): void {
+  public function testGetThirdPartySettings($provider, $expected) {
     $this->assertSame($expected, $this->section->getThirdPartySettings($provider));
   }
 
   /**
    * Provides test data for ::testGetThirdPartySettings().
    */
-  public static function providerTestGetThirdPartySettings() {
+  public function providerTestGetThirdPartySettings() {
     $data = [];
     $data[] = [
       'bad_judgement',
@@ -231,7 +229,7 @@ class SectionTest extends UnitTestCase {
    * @covers ::getThirdPartySetting
    * @dataProvider providerTestGetThirdPartySetting
    */
-  public function testGetThirdPartySetting(string $provider, string $key, ?string $expected, mixed $default = FALSE): void {
+  public function testGetThirdPartySetting($provider, $key, $expected, $default = FALSE) {
     if ($default) {
       $this->assertSame($expected, $this->section->getThirdPartySetting($provider, $key, $default));
     }
@@ -243,7 +241,7 @@ class SectionTest extends UnitTestCase {
   /**
    * Provides test data for ::testGetThirdPartySetting().
    */
-  public static function providerTestGetThirdPartySetting(): array {
+  public function providerTestGetThirdPartySetting() {
     $data = [];
     $data[] = [
       'bad_judgement',
@@ -278,7 +276,7 @@ class SectionTest extends UnitTestCase {
    * @covers ::setThirdPartySetting
    * @dataProvider providerTestSetThirdPartySetting
    */
-  public function testSetThirdPartySetting($provider, $key, $value, $expected): void {
+  public function testSetThirdPartySetting($provider, $key, $value, $expected) {
     $this->section->setThirdPartySetting($provider, $key, $value);
     $this->assertSame($expected, $this->section->getThirdPartySettings($provider));
   }
@@ -286,7 +284,7 @@ class SectionTest extends UnitTestCase {
   /**
    * Provides test data for ::testSetThirdPartySettings().
    */
-  public static function providerTestSetThirdPartySetting() {
+  public function providerTestSetThirdPartySetting() {
     $data = [];
     $data[] = [
       'bad_judgement',
@@ -322,7 +320,7 @@ class SectionTest extends UnitTestCase {
    * @covers ::unsetThirdPartySetting
    * @dataProvider providerTestUnsetThirdPartySetting
    */
-  public function testUnsetThirdPartySetting($provider, $key, $expected): void {
+  public function testUnsetThirdPartySetting($provider, $key, $expected) {
     $this->section->unsetThirdPartySetting($provider, $key);
     $this->assertSame($expected, $this->section->getThirdPartySettings($provider));
   }
@@ -330,7 +328,7 @@ class SectionTest extends UnitTestCase {
   /**
    * Provides test data for ::testUnsetThirdPartySetting().
    */
-  public static function providerTestUnsetThirdPartySetting() {
+  public function providerTestUnsetThirdPartySetting() {
     $data = [];
     $data['Key with values'] = [
       'bad_judgement',
@@ -364,7 +362,7 @@ class SectionTest extends UnitTestCase {
   /**
    * @covers ::getThirdPartyProviders
    */
-  public function testGetThirdPartyProviders(): void {
+  public function testGetThirdPartyProviders() {
     $this->assertSame(['bad_judgement', 'hunt_and_peck'], $this->section->getThirdPartyProviders());
     $this->section->unsetThirdPartySetting('hunt_and_peck', 'delay');
     $this->assertSame(['bad_judgement'], $this->section->getThirdPartyProviders());
@@ -374,7 +372,7 @@ class SectionTest extends UnitTestCase {
    * @covers ::getLayout
    * @dataProvider providerTestGetLayout
    */
-  public function testGetLayout(array $contexts, bool $should_context_apply): void {
+  public function testGetLayout(array $contexts, bool $should_context_apply) {
     $layout = $this->prophesize(LayoutInterface::class);
     $layout_plugin_manager = $this->prophesize(LayoutPluginManagerInterface::class);
     $layout_plugin_manager->createInstance('layout_onecol', [])->willReturn($layout->reveal());
@@ -399,7 +397,7 @@ class SectionTest extends UnitTestCase {
   /**
    * Provides test data for ::testGetLayout().
    */
-  public static function providerTestGetLayout() {
+  public function providerTestGetLayout() {
     $data = [];
     $data['contexts'] = [['foo' => 'bar'], TRUE];
     $data['no contexts'] = [[], FALSE];

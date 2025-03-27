@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Plugin;
 
 /**
@@ -17,9 +15,9 @@ class InspectionTest extends PluginTestBase {
   protected static $modules = ['node', 'user'];
 
   /**
-   * Tests getPluginId() and getPluginDefinition().
+   * Ensure the test plugins correctly implement getPluginId() and getPluginDefinition().
    */
-  public function testInspection(): void {
+  public function testInspection() {
     foreach (['user_login'] as $id) {
       $plugin = $this->testPluginManager->createInstance($id);
       $expected_definition = $this->testPluginExpectedDefinitions[$id];

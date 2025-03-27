@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -52,7 +50,7 @@ class RegistrationWithUserFieldsTest extends WebDriverTestBase {
   /**
    * Tests Field API fields on user registration forms.
    */
-  public function testRegistrationWithUserFields(): void {
+  public function testRegistrationWithUserFields() {
     // Create a field on 'user' entity type.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'test_user_field',

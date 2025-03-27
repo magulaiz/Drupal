@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\csrf_race_test\Controller;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
@@ -61,7 +59,7 @@ class TestController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\Response
    *   CSRF token.
    */
-  public function getCsrfToken(int $num) {
+  public function getCsrfToken($num) {
     sleep($num);
     return new JsonResponse($this->tokenGenerator->get());
   }

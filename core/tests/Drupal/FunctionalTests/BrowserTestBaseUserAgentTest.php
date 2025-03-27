@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests;
 
 use Drupal\Tests\BrowserTestBase;
@@ -28,7 +26,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
   /**
    * Tests validation of the User-Agent header we use to perform test requests.
    */
-  public function testUserAgentValidation(): void {
+  public function testUserAgentValidation() {
     $assert_session = $this->assertSession();
     $system_path = $this->buildUrl(\Drupal::service('extension.list.module')->getPath('system'));
     $http_path = $system_path . '/tests/http.php/user/login';
@@ -62,7 +60,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareRequest(): void {
+  protected function prepareRequest() {
     $session = $this->getSession();
     if ($this->agent) {
       $session->setCookie('SIMPLETEST_USER_AGENT', $this->agent);

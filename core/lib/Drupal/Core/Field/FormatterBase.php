@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -49,7 +47,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    * Constructs a FormatterBase object.
    *
    * @param string $plugin_id
-   *   The plugin ID for the formatter.
+   *   The plugin_id for the formatter.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
@@ -90,16 +88,8 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
     }
     $elements = $this->viewElements($items, $langcode);
 
-    // Field item lists, in particular for computed fields, may carry cacheable
-    // metadata which must be bubbled.
-    if ($items instanceof CacheableDependencyInterface) {
-      (new CacheableMetadata())
-        ->addCacheableDependency($items)
-        ->applyTo($elements);
-    }
-
     // If there are actual renderable children, use #theme => field, otherwise,
-    // let cacheability metadata pass through for correct bubbling.
+    // let access cacheability metadata pass through for correct bubbling.
     if (Element::children($elements)) {
       $entity = $items->getEntity();
       $entity_type = $entity->getEntityTypeId();

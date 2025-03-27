@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\comment\Unit;
 
 use Drupal\comment\CommentManager;
@@ -23,7 +21,7 @@ class CommentManagerTest extends UnitTestCase {
    *
    * @covers ::getFields
    */
-  public function testGetFields(): void {
+  public function testGetFields() {
     // Set up a content entity type.
     $entity_type = $this->createMock('Drupal\Core\Entity\ContentEntityTypeInterface');
     $entity_type->expects($this->any())

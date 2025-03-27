@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\JsOptimizer;
@@ -26,8 +24,8 @@ class JsOptimizerUnitTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $logger = $this->createMock('\Psr\Log\LoggerInterface');
-    $this->optimizer = new JsOptimizer($logger);
+
+    $this->optimizer = new JsOptimizer();
   }
 
   /**
@@ -35,10 +33,10 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Asset\JsOptimizer::clean()
    *
-   * @return array
+   * @returns array
    *   An array of test data.
    */
-  public static function providerTestClean() {
+  public function providerTestClean() {
     $path = dirname(__FILE__) . '/js_test_files/';
     return [
       // File. Tests:
@@ -73,7 +71,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *
    * @dataProvider providerTestClean
    */
-  public function testClean($js_asset, $expected): void {
+  public function testClean($js_asset, $expected) {
     $this->assertEquals($expected, $this->optimizer->clean($js_asset));
   }
 
@@ -82,10 +80,10 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Asset\JsOptimizer::optimize()
    *
-   * @return array
+   * @returns array
    *   An array of test data.
    */
-  public static function providerTestOptimize() {
+  public function providerTestOptimize() {
     $path = dirname(__FILE__) . '/js_test_files/';
     return [
       0 => [
@@ -121,16 +119,6 @@ class JsOptimizerUnitTest extends UnitTestCase {
         ],
         file_get_contents($path . 'to_be_minified.js.optimized.js'),
       ],
-      4 => [
-        [
-          'type' => 'file',
-          'preprocess' => TRUE,
-          'data' => $path . 'syntax_error.js',
-        ],
-        // When there is a syntax error, the 'optimized' contents are the
-        // contents of the original file.
-        file_get_contents($path . 'syntax_error.js'),
-      ],
     ];
   }
 
@@ -139,7 +127,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *
    * @dataProvider providerTestOptimize
    */
-  public function testOptimize($js_asset, $expected): void {
+  public function testOptimize($js_asset, $expected) {
     $this->assertEquals($expected, $this->optimizer->optimize($js_asset));
   }
 

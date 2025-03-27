@@ -29,7 +29,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * mysqli or oci8.
  *
  * For more detailed information on the database abstraction layer, see
- * https://www.drupal.org/docs/drupal-apis/database-api/database-api-overview.
+ * https://www.drupal.org/docs/8/api/database-api/database-api-overview.
  *
  * @section sec_entity Querying entities
  * Any query on Drupal entities or fields should use the Entity Query API. See
@@ -77,7 +77,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *   FROM {example} e
  *   WHERE e.uid = :uid
  *   ORDER BY e.created DESC',
- *   0, 10, [':uid' => $uid)];
+ *   0, 10, array(':uid' => $uid));
  * foreach ($result as $record) {
  *   // Perform operations on $record->title, etc. here.
  * }
@@ -90,7 +90,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * when you convert it to placeholders, omit the quotes:
  * @code
  * WHERE e.my_field = :my_field
- * ... [':my_field' => 'foo'] ...
+ * ... array(':my_field' => 'foo') ...
  * @endcode
  *
  * @section sec_dynamic Dynamic SELECT queries
@@ -110,7 +110,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * would be:
  * @code
  * $result = \Drupal::database()->select('example', 'e')
- *   ->fields('e', ['id', 'title', 'created'])
+ *   ->fields('e', array('id', 'title', 'created'))
  *   ->condition('e.uid', $uid)
  *   ->orderBy('e.created', 'DESC')
  *   ->range(0, 10)
@@ -119,7 +119,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * There are also methods to join to other tables, add fields with aliases,
  * isNull() to query for NULL values, etc. See
- * https://www.drupal.org/docs/drupal-apis/database-api for many more details.
+ * https://www.drupal.org/developing/api/database for many more details.
  *
  * One note on chaining: It is common in the dynamic database API to chain
  * method calls (as illustrated here), because most of the query methods modify
@@ -152,7 +152,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * @endcode
  * You can execute it via:
  * @code
- * $fields = ['id' => 1, 'uid' => 2, 'path' => 'path', 'name' => 'Name'];
+ * $fields = array('id' => 1, 'uid' => 2, 'path' => 'path', 'name' => 'Name');
  * \Drupal::database()->insert('example')
  *   ->fields($fields)
  *   ->execute();
@@ -182,10 +182,10 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     $transaction = $connection->startTransaction();
  *
  *     $id = $connection->insert('example')
- *       ->fields([
+ *       ->fields(array(
  *         'field1' => 'string',
  *         'field2' => 5,
- *       ])
+ *       ))
  *       ->execute();
  *
  *     my_other_function($id);
@@ -201,8 +201,8 @@ use Drupal\Core\Database\Query\SelectInterface;
  *       $transaction->rollBack();
  *     }
  *
- *     // Log the exception.
- *     Error::logException(\Drupal::logger('type'), $e);
+ *     // Log the exception to watchdog.
+ *     watchdog_exception('type', $e);
  *   }
  *
  *   // $transaction goes out of scope here. Unless the transaction was rolled
@@ -216,7 +216,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *   if ($id % 2 == 0) {
  *     $connection->update('example')
  *       ->condition('id', $id)
- *       ->fields(['field2' => 10])
+ *       ->fields(array('field2' => 10))
  *       ->execute();
  *   }
  * }
@@ -239,55 +239,8 @@ use Drupal\Core\Database\Query\SelectInterface;
  * @endcode
  * if you had a connection object variable $connection available to use. See
  * also the @link container Services and Dependency Injection topic. @endlink
- * In Object Oriented code:
- * - If possible, use dependency injection to use the "database" service.
- *   @code
- *   use Drupal\Core\Database\Connection;
  *
- *   class myClass {
- *
- *   public function __construct(protected Connection $database) {
- *     // ...
- *   }
- *   @endcode
- * - If it is not possible to use dependency injection, for example in a static
- *   method, use \Drupal::database().
- *   @code
- *   $connection = \Drupal::database();
- *   $query = $connection->query('...');
- *   @endcode
- * - If services are not yet available, use
- *   \Drupal\Core\Database\Database::getConnection() to get a database
- *   connection;
- *   @code
- *   use Drupal\Core\Database\Database;
- *
- *   // ...
- *
- *   $connection = Database::getConnection();
- *   $query = $connection->query('...');
- *   @endcode
- * - In unit tests, we do not have a booted kernel or a built container. Unit
- *   tests that need a database service should be converted to a kernel test.
- * - In kernel and functional test classes, use
- *   \Drupal\Core\Database\Database::getConnection() to get a database
- *   connection.
- *   @code
- *   use Drupal\Core\Database\Database;
- *
- *   // ...
- *
- *   $connection = Database::getConnection();
- *   $query = $connection->query('...');
- *   @endcode
- * In procedural code, such as *.module, *.inc or script files:
- * - Use \Drupal::database(); to get database connection.
- *   @code
- *   $connection = \Drupal::database();
- *   $query = $connection->query('...');
- *   @endcode
- *
- * @see https://www.drupal.org/docs/drupal-apis/database-api
+ * @see https://www.drupal.org/developing/api/database
  * @see entity_api
  * @see schemaapi
  *
@@ -371,7 +324,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     'varchar' must specify the 'length' parameter.
  *  - 'primary key': An array of one or more key column specifiers (see below)
  *    that form the primary key.
- *  - 'unique keys': An associative array of unique keys ('key_name' =>
+ *  - 'unique keys': An associative array of unique keys ('keyname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form a unique key on the table.
  *  - 'foreign keys': An associative array of relations ('my_relation' =>
@@ -387,9 +340,6 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * A key column specifier is either a string naming a column or an array of two
  * elements, column name and length, specifying a prefix of the named column.
- * Note that some DBMS drivers may opt to ignore the prefix length configuration
- * and still use the whole field value for the key. Code should therefore not
- * rely on this functionality.
  *
  * As an example, this is the schema definition for the 'users_data' table. It
  * shows five fields ('uid', 'module', 'name', 'value', and 'serialized'), the
@@ -469,10 +419,10 @@ use Drupal\Core\Database\Query\SelectInterface;
 /**
  * Perform alterations to a structured query.
  *
- * Structured (aka dynamic) queries that have tags associated may be altered by
- * any module before the query is executed.
+ * Structured (aka dynamic) queries that have tags associated may be altered by any module
+ * before the query is executed.
  *
- * @param Drupal\Core\Database\Query\AlterableInterface $query
+ * @param $query
  *   A Query object describing the composite parts of a SQL query.
  *
  * @see hook_query_TAG_alter()
@@ -497,7 +447,7 @@ function hook_query_alter(Drupal\Core\Database\Query\AlterableInterface $query) 
  * - ENTITY_TYPE . '_access': For queries of entities that will be displayed in
  *   a listing (e.g., from Views) and therefore require access control.
  *
- * @param Drupal\Core\Database\Query\AlterableInterface $query
+ * @param $query
  *   A Query object describing the composite parts of a SQL query.
  *
  * @see hook_query_alter()
@@ -549,8 +499,6 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
 /**
  * Define the current version of the database schema.
  *
- * Only procedural implementations are supported for this hook.
- *
  * A Drupal schema definition is an array structure representing one or more
  * tables and their related keys and indexes. A schema is defined by
  * hook_schema() which must live in your module's .install file.
@@ -577,7 +525,7 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  *
  * @ingroup schemaapi
  */
-function hook_schema(): array {
+function hook_schema() {
   $schema['users_data'] = [
     'description' => 'Stores module data as key/value pairs per user.',
     'fields' => [

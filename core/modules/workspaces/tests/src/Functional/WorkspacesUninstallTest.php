@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -18,7 +16,7 @@ class WorkspacesUninstallTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['workspaces', 'node', 'workspaces_ui'];
+  protected static $modules = ['workspaces', 'node'];
 
   /**
    * {@inheritdoc}
@@ -26,23 +24,11 @@ class WorkspacesUninstallTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $permissions = [
-      'administer workspaces',
-      'administer modules',
-    ];
-
-    $this->drupalLogin($this->drupalCreateUser($permissions));
-  }
-
-  /**
    * Tests deleting workspace entities and uninstalling Workspaces module.
    */
-  public function testUninstallingWorkspace(): void {
+  public function testUninstallingWorkspace() {
     $this->createContentType(['type' => 'article']);
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet('/admin/modules/uninstall');
     $session = $this->assertSession();
     $session->linkExists('Remove workspaces');
@@ -51,8 +37,6 @@ class WorkspacesUninstallTest extends BrowserTestBase {
     $this->drupalGet('/admin/modules/uninstall/entity/workspace');
     $this->submitForm([], 'Delete all workspaces');
     $this->drupalGet('admin/modules/uninstall');
-    $this->submitForm(['uninstall[workspaces_ui]' => TRUE], 'Uninstall');
-    $this->submitForm([], 'Uninstall');
     $this->submitForm(['uninstall[workspaces]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $session->pageTextContains('The selected modules have been uninstalled.');

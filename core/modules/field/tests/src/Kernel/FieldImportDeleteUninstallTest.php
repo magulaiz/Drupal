@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
@@ -9,7 +7,8 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests field storages and fields deletion during config synchronization.
+ * Delete field storages and fields during config synchronization and uninstall
+ * module that provides the field type.
  *
  * @group field
  * @see \Drupal\field\ConfigImporterFieldPurger
@@ -18,7 +17,9 @@ use Drupal\field\Entity\FieldStorageConfig;
 class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['telephone'];
 
@@ -36,7 +37,7 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
   /**
    * Tests deleting field storages and fields as part of config import.
    */
-  public function testImportDeleteUninstall(): void {
+  public function testImportDeleteUninstall() {
     // Create a field to delete to prove that
     // \Drupal\field\ConfigImporterFieldPurger does not purge fields that are
     // not related to the configuration synchronization.
@@ -109,9 +110,10 @@ class FieldImportDeleteUninstallTest extends FieldKernelTestBase {
   }
 
   /**
-   * Tests purging previously deleted fields and storages in config import.
+   * Tests purging already deleted field storages and fields during a config
+   * import.
    */
-  public function testImportAlreadyDeletedUninstall(): void {
+  public function testImportAlreadyDeletedUninstall() {
     // Create a telephone field for validation.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_test',

@@ -18,11 +18,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Source plugin to get content entities from the current version of Drupal.
  *
- * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
- * \Drupal\migrate\Plugin\migrate\source\ContentEntity instead.
- *
- * @see https://www.drupal.org/node/3498916
- *
  * This plugin uses the Entity API to export entity data. If the source entity
  * type has custom field storage fields or computed fields, this class will need
  * to be extended and the new class will need to load/calculate the values for
@@ -66,6 +61,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * For additional configuration keys, refer to the parent class:
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "content_entity",
+ *   source_module = "migrate_drupal",
+ *   deriver = "\Drupal\migrate_drupal\Plugin\migrate\source\ContentEntityDeriver",
+ * )
  */
 class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginInterface {
   use EntityFieldDefinitionTrait;
@@ -113,8 +114,6 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
-    @trigger_error(__CLASS__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\migrate\Plugin\migrate\source\ContentEntity instead. See https://www.drupal.org/node/3498916', E_USER_DEPRECATED);
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     if (empty($plugin_definition['entity_type'])) {
       throw new InvalidPluginDefinitionException($plugin_id, 'Missing required "entity_type" definition.');
     }
@@ -140,7 +139,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
       $configuration,
       $plugin_id,
@@ -243,13 +242,14 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE): int {
+  #[\ReturnTypeWillChange]
+  public function count($refresh = FALSE) {
     // If no translations are included, then a simple query is possible.
     if (!$this->configuration['include_translations']) {
       return parent::count($refresh);
     }
-    // @todo Determine a better way to retrieve a valid count for translations.
-    //   https://www.drupal.org/project/drupal/issues/2937166
+    // @TODO: Determine a better way to retrieve a valid count for translations.
+    // https://www.drupal.org/project/drupal/issues/2937166
     return MigrateSourceInterface::NOT_COUNTABLE;
   }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\node\Entity\Node;
@@ -42,13 +40,10 @@ class RevisionCreateTimestampTest extends ViewsKernelTestBase {
     }
   }
 
-  /**
-   * Tests the revision create timestamp view.
-   */
-  public function testRevisionCreateTimestampView(): void {
+  public function testRevisionCreateTimestampView() {
     $node_type = NodeType::create([
       'type' => 'article',
-      'name' => 'Article',
+      'label' => 'Article',
     ]);
     $node_type->save();
     $node = Node::create([

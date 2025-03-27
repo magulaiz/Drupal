@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core;
 
 use Drupal\Core\PrivateKey;
@@ -51,7 +49,7 @@ class PrivateKeyTest extends UnitTestCase {
   /**
    * Tests PrivateKey::get().
    */
-  public function testGet(): void {
+  public function testGet() {
     $this->state->expects($this->once())
       ->method('get')
       ->with('system.private_key')
@@ -63,14 +61,14 @@ class PrivateKeyTest extends UnitTestCase {
   /**
    * Tests PrivateKey::get() with no private key from state.
    */
-  public function testGetNoState(): void {
+  public function testGetNoState() {
     $this->assertIsString($this->privateKey->get());
   }
 
   /**
    * Tests PrivateKey::setPrivateKey().
    */
-  public function testSet(): void {
+  public function testSet() {
     $random_name = $this->randomMachineName();
 
     $this->state->expects($this->once())

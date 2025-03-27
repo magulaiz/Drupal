@@ -1,12 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\views_test_data\Plugin\views\query;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\views\Attribute\ViewsQuery;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\ResultRow;
@@ -14,40 +10,17 @@ use Drupal\views\ViewExecutable;
 
 /**
  * Defines a query test plugin.
+ *
+ * @ViewsQuery(
+ *   id = "query_test",
+ *   title = @Translation("Query test"),
+ *   help = @Translation("Defines a query test plugin.")
+ * )
  */
-#[ViewsQuery(
-  id: 'query_test',
-  title: new TranslatableMarkup('Query test'),
-  help: new TranslatableMarkup('Defines a query test plugin.')
-)]
 class QueryTest extends QueryPluginBase {
-
-  /**
-   * The conditions to apply to the query.
-   *
-   * @var array
-   */
   protected $conditions = [];
-
-  /**
-   * The list of fields.
-   *
-   * @var string[][]
-   */
   protected $fields = [];
-
-  /**
-   * An array of stdClasses.
-   *
-   * @var \stdClass[]
-   */
   protected $allItems = [];
-
-  /**
-   * The field to order and the direction.
-   *
-   * @var array
-   */
   protected $orderBy = [];
 
   /**
@@ -67,7 +40,7 @@ class QueryTest extends QueryPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['test_setting'] = [
-      '#title' => 'Test setting',
+      '#title' => $this->t('Test setting'),
       '#type' => 'textfield',
       '#default_value' => $this->options['test_setting'],
     ];
@@ -83,9 +56,6 @@ class QueryTest extends QueryPluginBase {
     $this->allItems = $allItems;
   }
 
-  /**
-   * Adds a simple WHERE clause to the query.
-   */
   public function addWhere($group, $field, $value = NULL, $operator = NULL) {
     $this->conditions[] = [
       'field' => $field,
@@ -95,25 +65,16 @@ class QueryTest extends QueryPluginBase {
 
   }
 
-  /**
-   * Adds a new field to a table.
-   */
   public function addField($table, $field, $alias = '', $params = []) {
     $this->fields[$field] = $field;
     return $field;
   }
 
-  /**
-   * Adds an ORDER BY clause to the query.
-   */
   public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = []) {
     $this->orderBy = ['field' => $field, 'order' => $order];
   }
 
-  /**
-   * Ensures a table exists in the queue.
-   */
-  public function ensureTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL) {
+  public function ensureTable($table, $relationship = NULL, JoinPluginBase $join = NULL) {
     // There is no concept of joins.
   }
 

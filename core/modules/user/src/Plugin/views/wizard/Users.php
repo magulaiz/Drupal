@@ -2,22 +2,21 @@
 
 namespace Drupal\user\Plugin\views\wizard;
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\views\Attribute\ViewsWizard;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
- * @todo Replace numbers with constants.
+ * @todo: replace numbers with constants.
  */
 
 /**
  * Tests creating user views with the wizard.
+ *
+ * @ViewsWizard(
+ *   id = "users",
+ *   base_table = "users_field_data",
+ *   title = @Translation("Users")
+ * )
  */
-#[ViewsWizard(
-  id: 'users',
-  title: new TranslatableMarkup('Users'),
-  base_table: 'users_field_data'
-)]
 class Users extends WizardPluginBase {
 
   /**
@@ -29,8 +28,6 @@ class Users extends WizardPluginBase {
 
   /**
    * Set default values for the filters.
-   *
-   * @var string[]
    */
   protected $filters = [
     'status' => [

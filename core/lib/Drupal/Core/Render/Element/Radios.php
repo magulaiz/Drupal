@@ -3,7 +3,6 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Component\Utility\Html as HtmlUtility;
 
 /**
@@ -15,12 +14,12 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  *
  * Usage example:
  * @code
- * $form['settings']['active'] = [
+ * $form['settings']['active'] = array(
  *   '#type' => 'radios',
  *   '#title' => $this->t('Poll status'),
  *   '#default_value' => 1,
- *   '#options' => [0 => $this->t('Closed'), 1 => $this->t('Active')],
- * ];
+ *   '#options' => array(0 => $this->t('Closed'), 1 => $this->t('Active')),
+ * );
  * @endcode
  *
  * Element properties may be set on single option items as follows.
@@ -32,9 +31,10 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  * @see \Drupal\Core\Render\Element\Checkboxes
  * @see \Drupal\Core\Render\Element\Radio
  * @see \Drupal\Core\Render\Element\Select
+ *
+ * @FormElement("radios")
  */
-#[FormElement('radios')]
-class Radios extends FormElementBase {
+class Radios extends FormElement {
 
   use CompositeFormElementTrait;
 
@@ -42,14 +42,15 @@ class Radios extends FormElementBase {
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#process' => [
-        [static::class, 'processRadios'],
+        [$class, 'processRadios'],
       ],
       '#theme_wrappers' => ['radios'],
       '#pre_render' => [
-        [static::class, 'preRenderCompositeFormElement'],
+        [$class, 'preRenderCompositeFormElement'],
       ],
     ];
   }
@@ -73,11 +74,11 @@ class Radios extends FormElementBase {
         $element[$key] += [
           '#type' => 'radio',
           '#title' => $choice,
-          // The key is sanitized in Drupal\Core\Template\Attribute during
-          // output from the theme function.
+          // The key is sanitized in Drupal\Core\Template\Attribute during output
+          // from the theme function.
           '#return_value' => $key,
-          // Use default or FALSE. A value of FALSE means that the radio button
-          // is not 'checked'.
+          // Use default or FALSE. A value of FALSE means that the radio button is
+          // not 'checked'.
           '#default_value' => $element['#default_value'] ?? FALSE,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],

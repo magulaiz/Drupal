@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -9,7 +7,7 @@ namespace Drupal\FunctionalTests\Installer;
  *
  * @group Installer
  */
-class InstallerExistingConfigSyncDirectoryProfileMismatchTest extends InstallerConfigDirectoryTestBase {
+class InstallerExistingConfigSyncDirectoryProfileMismatchTest extends InstallerExistingConfigTestBase {
 
   /**
    * {@inheritdoc}
@@ -29,27 +27,27 @@ class InstallerExistingConfigSyncDirectoryProfileMismatchTest extends InstallerC
   /**
    * {@inheritdoc}
    */
-  protected function getConfigLocation(): string {
-    return __DIR__ . '/../../../fixtures/config_install/multilingual';
+  protected function getConfigTarball() {
+    return __DIR__ . '/../../../fixtures/config_install/multilingual.tar.gz';
   }
 
   /**
    * Installer step: Configure settings.
    */
-  protected function setUpSettings(): void {
+  protected function setUpSettings() {
     // Cause a profile mismatch by hacking the URL.
     $this->drupalGet(str_replace($this->profile, 'minimal', $this->getUrl()));
     parent::setUpSettings();
   }
 
-  protected function setUpSite(): void {
+  protected function setUpSite() {
     // This step will not occur because there is an error.
   }
 
   /**
    * Tests that profile mismatch fails to install.
    */
-  public function testConfigSync(): void {
+  public function testConfigSync() {
     $this->htmlOutput(NULL);
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
     $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');

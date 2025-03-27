@@ -15,10 +15,10 @@ interface QueueInterface {
   /**
    * Adds a queue item and store it directly to the queue.
    *
-   * @param mixed $data
+   * @param $data
    *   Arbitrary data to be associated with the new task in the queue.
    *
-   * @return false|int|string
+   * @return bool|int|string
    *   A unique ID if the item was successfully created and was (best effort)
    *   added to the queue, otherwise FALSE. We don't guarantee the item was
    *   committed to disk etc, but as far as we know, the item is now in the
@@ -45,7 +45,7 @@ interface QueueInterface {
   /**
    * Claims an item in the queue for processing.
    *
-   * @param int $lease_time
+   * @param $lease_time
    *   How long the processing is expected to take in seconds, defaults to an
    *   hour. After this lease expires, the item will be reset and another
    *   consumer can claim the item. For idempotent tasks (which can be run
@@ -71,7 +71,7 @@ interface QueueInterface {
   /**
    * Deletes a finished item from the queue.
    *
-   * @param bool|object $item
+   * @param $item
    *   The item returned by \Drupal\Core\Queue\QueueInterface::claimItem().
    */
   public function deleteItem($item);
@@ -81,7 +81,7 @@ interface QueueInterface {
    *
    * Another worker can come in and process it before the timeout expires.
    *
-   * @param bool|object $item
+   * @param $item
    *   The item returned by \Drupal\Core\Queue\QueueInterface::claimItem().
    *
    * @return bool

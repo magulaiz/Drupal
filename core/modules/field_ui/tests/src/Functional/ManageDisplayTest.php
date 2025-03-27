@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field_ui\Functional;
 
 use Behat\Mink\Exception\ExpectationException;
@@ -25,7 +23,9 @@ class ManageDisplayTest extends BrowserTestBase {
   use FieldUiTestTrait;
 
   /**
-   * {@inheritdoc}
+   * Modules to install.
+   *
+   * @var array
    */
   protected static $modules = [
     'node',
@@ -70,7 +70,6 @@ class ManageDisplayTest extends BrowserTestBase {
       'administer node display',
       'administer taxonomy',
       'administer taxonomy_term fields',
-      'administer taxonomy_term form display',
       'administer taxonomy_term display',
       'administer users',
       'administer account settings',
@@ -80,7 +79,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
-    $type_name = $this->randomMachineName(8) . '_test';
+    $type_name = strtolower($this->randomMachineName(8)) . '_test';
     $type = $this->drupalCreateContentType(['name' => $type_name, 'type' => $type_name]);
     $this->type = $type->id();
 
@@ -88,7 +87,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
-      'vid' => $this->randomMachineName(),
+      'vid' => mb_strtolower($this->randomMachineName()),
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => ['article' => 'article'],
@@ -101,14 +100,14 @@ class ManageDisplayTest extends BrowserTestBase {
   /**
    * Tests switching view modes to use custom or 'default' settings'.
    */
-  public function testViewModeCustom(): void {
+  public function testViewModeCustom() {
     // Create a field, and a node with some data for the field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test field');
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     // For this test, use a formatter setting value that is an integer unlikely
     // to appear in a rendered node other than as part of the field being tested
     // (for example, unlikely to be part of the "Submitted by ... on ..." line).
-    $value = '12345';
+    $value = 12345;
     $settings = [
       'type' => $this->type,
       'field_test' => [['value' => $value]],
@@ -125,8 +124,7 @@ class ManageDisplayTest extends BrowserTestBase {
     ];
 
     // Check that the field is displayed with the default formatter in 'rss'
-    // mode (uses 'default'), and hidden in 'teaser' mode (uses custom
-    // settings).
+    // mode (uses 'default'), and hidden in 'teaser' mode (uses custom settings).
     $this->assertNodeViewText($node, 'rss', $output['field_test_default'], "The field is displayed as expected in view modes that use 'default' settings.");
     $this->assertNodeViewNoText($node, 'teaser', $value, "The field is hidden in view modes that use custom settings.");
 
@@ -179,7 +177,7 @@ class ManageDisplayTest extends BrowserTestBase {
   /**
    * Tests the local tasks are displayed correctly for view modes.
    */
-  public function testViewModeLocalTasks(): void {
+  public function testViewModeLocalTasks() {
     $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
     $this->drupalGet($manage_display);
     $this->assertSession()->linkNotExists('Full content');
@@ -193,7 +191,7 @@ class ManageDisplayTest extends BrowserTestBase {
   /**
    * Tests that fields with no explicit display settings do not break.
    */
-  public function testNonInitializedFields(): void {
+  public function testNonInitializedFields() {
     // Create a test field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test');
 
@@ -204,16 +202,9 @@ class ManageDisplayTest extends BrowserTestBase {
   }
 
   /**
-   * Tests view mode management screens.
+   * Tests hiding the view modes fieldset when there's only one available.
    */
-  public function testViewModeUi(): void {
-    // Tests table headers on "Manage form" and "Manage display" screens.
-    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview/form-display');
-    $this->assertTableHeaderExistsByLabel('field-display-overview', 'Machine name');
-    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview/display');
-    $this->assertTableHeaderExistsByLabel('field-display-overview', 'Machine name');
-
-    // Tests hiding the view modes fieldset when there's only one available.
+  public function testSingleViewMode() {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/display');
     $this->assertSession()->pageTextNotContains('Use custom display settings for the following view modes');
 
@@ -225,7 +216,7 @@ class ManageDisplayTest extends BrowserTestBase {
   /**
    * Tests that a message is shown when there are no fields.
    */
-  public function testNoFieldsDisplayOverview(): void {
+  public function testNoFieldsDisplayOverview() {
     // Create a fresh content type without any fields.
     NodeType::create([
       'type' => 'no_fields',
@@ -240,7 +231,7 @@ class ManageDisplayTest extends BrowserTestBase {
   /**
    * Tests if display mode local tasks appear in alphabetical order by label.
    */
-  public function testViewModeLocalTasksOrder(): void {
+  public function testViewModeLocalTasksOrder() {
     $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
 
     // Specify the 'rss' mode, check that the field is displayed the same.
@@ -254,18 +245,18 @@ class ManageDisplayTest extends BrowserTestBase {
     $this->assertOrderInPage(['RSS', 'Teaser']);
 
     $edit = [
-      'label' => 'Breezier',
+      'label' => 'Breezer',
     ];
     $this->drupalGet('admin/structure/display-modes/view/manage/node.teaser');
     $this->submitForm($edit, 'Save');
 
-    $this->assertOrderInPage(['Breezier', 'RSS']);
+    $this->assertOrderInPage(['Breezer', 'RSS']);
   }
 
   /**
    * Tests if form mode local tasks appear in alphabetical order by label.
    */
-  public function testFormModeLocalTasksOrder(): void {
+  public function testFormModeLocalTasksOrder() {
     EntityFormMode::create([
       'id' => 'node.big',
       'label' => 'Big Form',
@@ -393,13 +384,13 @@ class ManageDisplayTest extends BrowserTestBase {
   /**
    * Extracts all options from a select element.
    *
-   * @param \Behat\Mink\Element\NodeElement $element
+   * @param Behat\Mink\Element\NodeElement $element
    *   The select element field information.
    *
    * @return array
    *   An array of option values as strings.
    */
-  protected function getAllOptionsList(NodeElement $element): array {
+  protected function getAllOptionsList(NodeElement $element) {
     $options = [];
     // Add all options items.
     foreach ($element->option as $option) {

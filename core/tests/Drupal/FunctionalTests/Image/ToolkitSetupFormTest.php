@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Image;
 
 use Drupal\Tests\BrowserTestBase;
@@ -21,7 +19,9 @@ class ToolkitSetupFormTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['system', 'image', 'image_test'];
 
@@ -44,7 +44,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
   /**
    * Tests Image toolkit setup form.
    */
-  public function testToolkitSetupForm(): void {
+  public function testToolkitSetupForm() {
     // Get form.
     $this->drupalGet('admin/config/media/image-toolkit');
 
@@ -83,7 +83,7 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     // Get Status Report.
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->pageTextContains('GD2 image manipulation toolkit');
-    $this->assertSession()->pageTextContains('Supported image file formats: GIF, JPEG, PNG, WEBP, AVIF.');
+    $this->assertSession()->pageTextContains('Supported image file formats: GIF, JPEG, PNG, WEBP.');
   }
 
 }

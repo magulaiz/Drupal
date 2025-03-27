@@ -64,20 +64,17 @@ class TitleResolver implements TitleResolverInterface {
         $options['context'] = $route->getDefault('_title_context');
       }
       $args = [];
-      if ($route->hasDefault('_title_arguments')) {
-        $args = (array) $route->getDefault('_title_arguments');
-      }
       if (($raw_parameters = $request->attributes->get('_raw_variables'))) {
         foreach ($raw_parameters->all() as $key => $value) {
-          if (is_scalar($value)) {
-            $args['@' . $key] = $value;
-            $args['%' . $key] = $value;
-          }
+          $args['@' . $key] = $value ?? '';
+          $args['%' . $key] = $value ?? '';
         }
+      }
+      if ($title_arguments = $route->getDefault('_title_arguments')) {
+        $args = array_merge($args, (array) $title_arguments);
       }
 
       // Fall back to a static string from the route.
-      // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
       $route_title = $this->t($title, $args, $options);
     }
     return $route_title;

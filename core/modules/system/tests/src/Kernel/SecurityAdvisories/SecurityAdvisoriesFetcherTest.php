@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Kernel\SecurityAdvisories;
 
 use Drupal\Core\Extension\Extension;
@@ -11,11 +9,11 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -28,11 +26,11 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
   use RfcLoggerTrait;
 
   /**
-   * The error messages.
+   * The log messages from watchdog_exception.
    *
    * @var string[]
    */
-  protected $errorMessages = [];
+  protected $watchdogExceptionMessages = [];
 
   /**
    * The log error log messages.
@@ -76,7 +74,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    *
    * @dataProvider providerShowAdvisories
    */
-  public function testShowAdvisories(array $feed_item, ?string $existing_version = NULL): void {
+  public function testShowAdvisories(array $feed_item, string $existing_version = NULL): void {
     $this->setFeedItems([$feed_item]);
     if ($existing_version !== NULL) {
       $this->setExistingProjectVersion($existing_version);
@@ -91,7 +89,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
   /**
    * Data provider for testShowAdvisories().
    */
-  public static function providerShowAdvisories(): array {
+  public function providerShowAdvisories(): array {
     return [
       'contrib:exact:non-psa' => [
         'feed_item' => [
@@ -247,7 +245,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    *
    * @dataProvider providerIgnoreAdvisories
    */
-  public function testIgnoreAdvisories(array $feed_item, ?string $existing_version = NULL): void {
+  public function testIgnoreAdvisories(array $feed_item, string $existing_version = NULL): void {
     $this->setFeedItems([$feed_item]);
     if ($existing_version !== NULL) {
       $this->setExistingProjectVersion($existing_version);
@@ -259,7 +257,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
   /**
    * Data provider for testIgnoreAdvisories().
    */
-  public static function providerIgnoreAdvisories(): array {
+  public function providerIgnoreAdvisories(): array {
     return [
       'contrib:not-exact:non-psa' => [
         'feed_item' => [
@@ -509,7 +507,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
         'title' => 'SA title',
         'link' => 'http://example.com',
       ];
-      $responses[] = new Response(200, [], json_encode([$feed_item]));
+      $responses[] = new Response('200', [], json_encode([$feed_item]));
     }
     $this->setTestFeedResponses($responses);
   }
@@ -636,8 +634,8 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
       'link' => 'http://example.com',
     ];
     $this->setTestFeedResponses([
-      new Response(500, [], 'HTTPS failed'),
-      new Response(200, [], json_encode([$feed_item])),
+      new Response('500', [], 'HTTPS failed'),
+      new Response('200', [], json_encode([$feed_item])),
     ]);
     $advisories = $this->getAdvisories();
 
@@ -660,7 +658,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
     $this->assertCount(1, $advisories);
     $this->assertSame('http://example.com', $advisories[0]->getUrl());
     $this->assertSame('SA title', $advisories[0]->getTitle());
-    $this->assertSame(["Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n"], $this->errorMessages);
+    $this->assertSame(["Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n"], $this->watchdogExceptionMessages);
   }
 
   /**
@@ -669,14 +667,14 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    */
   public function testNoHttpFallback(): void {
     $this->setTestFeedResponses([
-      new Response(500, [], 'HTTPS failed'),
+      new Response('500', [], 'HTTPS failed'),
     ]);
 
     $exception_thrown = FALSE;
     try {
       $this->getAdvisories();
     }
-    catch (ClientExceptionInterface $exception) {
+    catch (TransferException $exception) {
       $this->assertSame("Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n", $exception->getMessage());
       $exception_thrown = TRUE;
     }
@@ -747,7 +745,7 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
    */
   public function log($level, $message, array $context = []): void {
     if (isset($context['@message'])) {
-      $this->errorMessages[] = $context['@message'];
+      $this->watchdogExceptionMessages[] = $context['@message'];
     }
     if ($level === RfcLogLevel::ERROR) {
       $this->logErrorMessages[] = $message;

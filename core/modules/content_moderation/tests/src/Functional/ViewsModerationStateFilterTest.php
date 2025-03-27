@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_moderation\Functional;
 
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
@@ -16,7 +15,6 @@ use Drupal\workflows\Entity\Workflow;
  * @coversDefaultClass \Drupal\content_moderation\Plugin\views\filter\ModerationStateFilter
  *
  * @group content_moderation
- * @group #slow
  */
 class ViewsModerationStateFilterTest extends ViewTestBase {
 
@@ -47,15 +45,15 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE, $modules = []): void {
     parent::setUp(FALSE, $modules);
 
-    $this->drupalCreateContentType([
+    NodeType::create([
       'type' => 'example_a',
-    ]);
-    $this->drupalCreateContentType([
+    ])->save();
+    NodeType::create([
       'type' => 'example_b',
-    ]);
-    $this->drupalCreateContentType([
+    ])->save();
+    NodeType::create([
       'type' => 'example_c',
-    ]);
+    ])->save();
 
     $this->createEditorialWorkflow();
 
@@ -85,7 +83,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    * @covers ::calculateDependencies
    * @covers ::onDependencyRemoval
    */
-  public function testModerationStateFilterDependencyHandling(): void {
+  public function testModerationStateFilterDependencyHandling() {
     // First, check that the view doesn't have any config dependency when there
     // are no states configured in the filter.
     $view_id = 'test_content_moderation_state_filter_base_table';
@@ -170,7 +168,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    *
    * @dataProvider providerTestWorkflowChanges
    */
-  public function testWorkflowChanges($view_id): void {
+  public function testWorkflowChanges($view_id) {
     // First, apply the Editorial workflow to both of our content types.
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/type/node');
     $this->submitForm([
@@ -251,7 +249,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    *   An associative array mapping the columns of the result set from the view
    *   (as keys) and the expected result set (as values).
    */
-  protected function executeAndAssertIdenticalResultset(ViewEntityInterface $view_entity, $expected, $column_map): void {
+  protected function executeAndAssertIdenticalResultset(ViewEntityInterface $view_entity, $expected, $column_map) {
     $executable = $this->container->get('views.executable')->get($view_entity);
     $this->executeView($executable);
     $this->assertIdenticalResultset($executable, $expected, $column_map);
@@ -263,7 +261,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    * @return string[]
    *   An array of view IDs.
    */
-  public static function providerTestWorkflowChanges() {
+  public function providerTestWorkflowChanges() {
     return [
       'view on base table, filter on base table' => [
         'test_content_moderation_state_filter_base_table',
@@ -277,7 +275,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   /**
    * Tests the content moderation state filter caching is correct.
    */
-  public function testFilterRenderCache(): void {
+  public function testFilterRenderCache() {
     // Initially all states of the workflow are displayed.
     $this->drupalGet('admin/config/workflow/workflows/manage/editorial/type/node');
     $this->submitForm(['bundles[example_a]' => TRUE], 'Save');
@@ -343,7 +341,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     // Check that the size of the select element does not exceed 8 options.
     if ($check_size) {
       $this->assertGreaterThan(8, count($states));
-      $assert_session->elementAttributeContains('css', '#edit-default-revision-state', 'size', '8');
+      $assert_session->elementAttributeContains('css', '#edit-default-revision-state', 'size', 8);
     }
 
     // Check that an option exists for each of the expected states.

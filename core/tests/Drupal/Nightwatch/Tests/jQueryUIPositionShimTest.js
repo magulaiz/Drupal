@@ -758,7 +758,17 @@ testScenarios.element = testScenarios.selector;
 module.exports = {
   '@tags': ['core'],
   before(browser) {
-    browser.drupalInstall().drupalInstallModule('position_shim_test');
+    browser.drupalInstall().drupalLoginAsAdmin(() => {
+      browser
+        .drupalRelativeURL('/admin/modules')
+        .setValue('input[type="search"]', 'position Shim Test')
+        .waitForElementVisible(
+          'input[name="modules[position_shim_test][enable]"]',
+          1000,
+        )
+        .click('input[name="modules[position_shim_test][enable]"]')
+        .click('input[type="submit"]');
+    });
   },
   after(browser) {
     browser.drupalUninstall();
@@ -820,6 +830,7 @@ module.exports = {
             const regexVertical = /top|center|bottom/;
             const regexOffset = /[+-]\d+(\.[\d]+)?%?/;
             const regexPosition = /^\w+/;
+            const regexPercent = /%$/;
             let positions = offset.split(' ');
             if (positions.length === 1) {
               if (regexHorizontal.test(positions[0])) {
@@ -836,13 +847,13 @@ module.exports = {
             return {
               horizontalOffset: horizontalOffset
                 ? parseFloat(horizontalOffset[0]) *
-                  (horizontalOffset[0].endsWith('%')
+                  (regexPercent.test(horizontalOffset[0])
                     ? element.offsetWidth / 100
                     : 1)
                 : 0,
               verticalOffset: verticalOffset
                 ? parseFloat(verticalOffset[0]) *
-                  (verticalOffset[0].endsWith('%')
+                  (regexPercent.test(verticalOffset[0])
                     ? element.offsetWidth / 100
                     : 1)
                 : 0,
@@ -897,7 +908,7 @@ module.exports = {
                   } else if (atOffsets.vertical === 'bottom') {
                     y = document.documentElement.clientHeight - y;
                   } else {
-                    y += window.scrollY;
+                    y += window.pageYOffset;
                   }
                 } else {
                   // Measure the distance of the tip from the reference element.
@@ -908,8 +919,9 @@ module.exports = {
                   y -= refRect.y;
                 }
                 if (!withinRange(x, options.x) || !withinRange(y, options.y)) {
-                  toReturn[idKey] =
-                    `${idKey} EXPECTED x:${options.x} y:${options.y} ACTUAL x:${x} y:${y}`;
+                  toReturn[
+                    idKey
+                  ] = `${idKey} EXPECTED x:${options.x} y:${options.y} ACTUAL x:${x} y:${y}`;
                 } else {
                   toReturn[idKey] = true;
                 }
@@ -1414,7 +1426,7 @@ module.exports = {
         const $ = jQuery;
         const toReturn = {};
         let count = 0;
-        const elements = $('#el1, #el2');
+        const elems = $('#el1, #el2');
         const of = $('#parentX');
         const expectedPosition = { top: 60, left: 60 };
         const expectedFeedback = {
@@ -1435,7 +1447,7 @@ module.exports = {
           vertical: 'top',
           important: 'vertical',
         };
-        const originalPosition = elements
+        const originalPosition = elems
           .position({
             my: 'right bottom',
             at: 'right bottom',
@@ -1444,14 +1456,14 @@ module.exports = {
           })
           .offset();
 
-        elements.position({
+        elems.position({
           my: 'left top',
           at: 'center+10 bottom',
           of: '#parentX',
           using(position, feedback) {
             toReturn[`correct context for call #${count}`] = {
               actual: this,
-              expected: elements[count],
+              expected: elems[count],
             };
             toReturn[`correct position for call #${count}`] = {
               actual: position,
@@ -1459,9 +1471,9 @@ module.exports = {
             };
             toReturn[`feedback and element match for call #${count}`] = {
               actual: feedback.element.element[0],
-              expected: elements[count],
+              expected: elems[count],
             };
-            // assert.deepEqual(feedback.element.element[0], elements[count]);
+            // assert.deepEqual(feedback.element.element[0], elems[count]);
             delete feedback.element.element;
             toReturn[`expected feedback after delete for call #${count}`] = {
               actual: feedback,
@@ -1472,7 +1484,7 @@ module.exports = {
         });
 
         // eslint-disable-next-line func-names
-        elements.each(function (index) {
+        elems.each(function (index) {
           toReturn[`elements not moved: ${index}`] = {
             actual: $(this).offset(),
             expected: originalPosition,
@@ -1919,10 +1931,9 @@ module.exports = {
       function () {
         const $ = jQuery;
         const toReturn = {};
-        const $elx = $('#elx');
-        Object.assign($elx[0].style, {
-          marginTop: '6px',
-          marginLeft: '4px',
+        const $elx = $('#elx').css({
+          marginTop: 6,
+          marginLeft: 4,
         });
         $elx.position({
           my: 'left top',
@@ -1972,10 +1983,9 @@ module.exports = {
       function () {
         const $ = jQuery;
         const toReturn = {};
-        const $elx = $('#elx');
-        Object.assign($elx[0].style, {
-          marginTop: '6px',
-          marginLeft: '4px',
+        const $elx = $('#elx').css({
+          marginTop: 6,
+          marginLeft: 4,
         });
         $elx.position({
           my: 'left top',
@@ -2172,9 +2182,9 @@ module.exports = {
         const toReturn = {};
 
         const $scrollX = $('#scrollX');
-        Object.assign($scrollX[0].style, {
-          width: '100px',
-          height: '100px',
+        $scrollX.css({
+          width: 100,
+          height: 100,
           left: 0,
           top: 0,
         });
@@ -2215,7 +2225,9 @@ module.exports = {
           },
         };
 
-        $scrollX[0].style.overflow = 'auto';
+        $scrollX.css({
+          overflow: 'auto',
+        });
 
         toReturn['auto, no scroll"'] = {
           actual: $elx.offset(),
@@ -2225,8 +2237,11 @@ module.exports = {
           },
         };
 
-        $scrollX[0].style.overflow = 'auto';
-        $scrollX.append($('<div>').height(300).width(300));
+        $scrollX
+          .css({
+            overflow: 'auto',
+          })
+          .append($('<div>').height(300).width(300));
 
         $elx.position({
           of: '#scrollX',

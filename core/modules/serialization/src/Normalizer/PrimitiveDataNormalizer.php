@@ -4,7 +4,6 @@ namespace Drupal\serialization\Normalizer;
 
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\TypedData\PrimitiveInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Converts primitive data objects to their casted values.
@@ -12,13 +11,16 @@ use Drupal\Core\TypedData\TypedDataInterface;
 class PrimitiveDataNormalizer extends NormalizerBase {
 
   use SerializedColumnNormalizerTrait;
-  use SchematicNormalizerTrait;
-  use JsonSchemaReflectionTrait;
 
   /**
    * {@inheritdoc}
    */
-  public function doNormalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  protected $supportedInterfaceOrClass = PrimitiveInterface::class;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     // Add cacheability if applicable.
     $this->addCacheableDependency($context, $object);
 
@@ -42,23 +44,8 @@ class PrimitiveDataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function getNormalizationSchema(mixed $object, array $context = []): array {
-    $nullable = !$object instanceof TypedDataInterface || !$object->getDataDefinition()->isRequired();
-    return $this->getJsonSchemaForMethod(
-      $object,
-      'getCastedValue',
-      ['$comment' => 'Unable to provide schema, no type specified.'],
-      $nullable,
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSupportedTypes(?string $format): array {
-    return [
-      PrimitiveInterface::class => TRUE,
-    ];
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

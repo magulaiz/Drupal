@@ -24,7 +24,7 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
    * @throws \Symfony\Component\Validator\Exception\UnexpectedTypeException
    *   Thrown when the given constraint is not supported by this validator.
    */
-  public function validate($value, Constraint $constraint): void {
+  public function validate($value, Constraint $constraint) {
     if (!$constraint instanceof SourceEditingPreventSelfXssConstraint) {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\SourceEditingPreventSelfXssConstraint');
     }
@@ -101,7 +101,7 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
    */
   private static function isWildcardAttributeName(string $attribute_name): bool {
     assert($attribute_name !== '*');
-    return str_contains($attribute_name, '*');
+    return strpos($attribute_name, '*') !== FALSE;
   }
 
   /**

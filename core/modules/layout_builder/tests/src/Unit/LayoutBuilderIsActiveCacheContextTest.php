@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -26,7 +24,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
   /**
    * @covers ::getContext
    */
-  public function testGetContextMissingEntityTypeId(): void {
+  public function testGetContextMissingEntityTypeId() {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $cache_context = new LayoutBuilderIsActiveCacheContext($route_match->reveal());
     $this->expectException(\LogicException::class);
@@ -38,7 +36,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
    * @covers ::getContext
    * @covers ::getDisplay
    */
-  public function testGetContextNonFieldableEntity(): void {
+  public function testGetContextNonFieldableEntity() {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $route_match->getParameter('not_a_fieldable_entity')->willReturn('something that is not a fieldable entity');
 
@@ -54,7 +52,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetContext
    */
-  public function testGetContext($is_overridden, $expected): void {
+  public function testGetContext($is_overridden, $expected) {
     $entity_display = $this->prophesize(LayoutEntityDisplayInterface::class);
     $entity_display->isOverridable()->willReturn($is_overridden);
 
@@ -96,7 +94,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
   /**
    * Provides test data for ::testGetContext().
    */
-  public static function providerTestGetContext() {
+  public function providerTestGetContext() {
     $data = [];
     $data['overridden'] = [
       TRUE,

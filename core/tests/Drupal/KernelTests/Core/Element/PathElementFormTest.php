@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Element;
 
 use Drupal\Core\Form\FormInterface;
@@ -28,7 +26,9 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
   protected $testUser;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['system', 'user'];
 
@@ -37,6 +37,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     /** @var \Drupal\user\RoleInterface $role */
     $role = Role::create([
@@ -49,7 +50,8 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
       'name' => 'foobar',
       'mail' => 'foobar@example.com',
     ]);
-    $this->testUser->addRole($role->id())->save();
+    $this->testUser->addRole($role->id());
+    $this->testUser->save();
     \Drupal::service('current_user')->setAccount($this->testUser);
   }
 
@@ -114,7 +116,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => 'Submit',
+      '#value' => t('Submit'),
     ];
 
     return $form;
@@ -138,7 +140,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
   /**
    * Tests that default handlers are added even if custom are specified.
    */
-  public function testPathElement(): void {
+  public function testPathElement() {
     $form_state = (new FormState())
       ->setValues([
         'required_validate' => 'user/' . $this->testUser->id(),
@@ -177,7 +179,7 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     // Should be missing 'required_validate' field.
     $this->assertCount(1, $errors);
-    $this->assertEquals(['required_validate' => 'required_validate field is required.'], $errors);
+    $this->assertEquals(['required_validate' => t('@name field is required.', ['@name' => 'required_validate'])], $errors);
 
     // Test invalid required parameters.
     $form_state = (new FormState())
@@ -193,10 +195,10 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     $this->assertCount(4, $errors);
     $this->assertEquals([
-      'required_validate' => 'This path does not exist or you do not have permission to link to user/74.',
-      'required_validate_route' => 'This path does not exist or you do not have permission to link to user/74.',
-      'required_validate_url' => 'This path does not exist or you do not have permission to link to user/74.',
-      'required_non_validate' => 'required_non_validate field is required.',
+      'required_validate' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
+      'required_validate_route' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
+      'required_validate_url' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
+      'required_non_validate' => t('@name field is required.', ['@name' => 'required_non_validate']),
     ], $errors);
 
     // Test invalid optional parameters.
@@ -215,8 +217,8 @@ class PathElementFormTest extends KernelTestBase implements FormInterface {
     $errors = $form_state->getErrors();
     $this->assertEquals(count($errors), 2);
     $this->assertEquals($errors, [
-      'optional_validate' => 'This path does not exist or you do not have permission to link to user/74.',
-      'optional_validate_route' => 'This path does not exist or you do not have permission to link to user/74.',
+      'optional_validate' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
+      'optional_validate_route' => t('This path does not exist or you do not have permission to link to %path.', ['%path' => 'user/74']),
     ]);
   }
 

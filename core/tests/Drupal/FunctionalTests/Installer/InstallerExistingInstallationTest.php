@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -17,15 +15,13 @@ class InstallerExistingInstallationTest extends InstallerTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests that Drupal fails to install when there is an existing installation.
+   * Verifies that Drupal can't be reinstalled while an existing installation is
+   * available.
    */
-  public function testInstaller(): void {
+  public function testInstaller() {
     // Verify that Drupal can't be immediately reinstalled.
     $this->visitInstaller();
     $this->assertSession()->pageTextContains('Drupal already installed');
-
-    // Verify that Drupal version is not displayed.
-    $this->assertSession()->pageTextNotContains(\Drupal::VERSION);
 
     // Delete settings.php and attempt to reinstall again.
     unlink($this->siteDirectory . '/settings.php');

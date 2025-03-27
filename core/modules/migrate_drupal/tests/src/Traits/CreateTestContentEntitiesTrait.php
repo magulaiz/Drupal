@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal\Traits;
 
 /**
@@ -13,9 +11,8 @@ trait CreateTestContentEntitiesTrait {
    * Gets required modules.
    *
    * @return array
-   *   An array of required modules.
    */
-  protected function getRequiredModules(): array {
+  protected function getRequiredModules() {
     return [
       'block_content',
       'comment',
@@ -31,6 +28,20 @@ trait CreateTestContentEntitiesTrait {
       'text',
       'user',
     ];
+  }
+
+  /**
+   * Install required entity schemas.
+   */
+  protected function installEntitySchemas() {
+    $this->installEntitySchema('block_content');
+    $this->installEntitySchema('comment');
+    $this->installEntitySchema('file');
+    $this->installEntitySchema('menu_link_content');
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('path_alias');
+    $this->installEntitySchema('taxonomy_term');
+    $this->installEntitySchema('user');
   }
 
   /**
@@ -152,7 +163,7 @@ trait CreateTestContentEntitiesTrait {
     if ($entity_type_manager->hasDefinition('menu_link_content')) {
       $menu_link = $entity_type_manager->getStorage('menu_link_content')->create([
         'title' => 'post upgrade menu link',
-        'link' => ['uri' => 'http://www.example.com'],
+        'link' => ['uri' => 'http://www.drupal.org'],
         'menu_name' => 'tools',
       ]);
       $menu_link->save();

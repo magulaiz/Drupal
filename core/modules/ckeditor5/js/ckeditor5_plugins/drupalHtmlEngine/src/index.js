@@ -1,5 +1,4 @@
-// cspell:ignore drupalhtmlengine mediaimagetextalternativeediting
-// cspell:ignore mediaimagetextalternativeui
+// cspell:ignore drupalengine drupalhtmlengine
 import DrupalHtmlEngine from './drupalhtmlengine';
 
 /**

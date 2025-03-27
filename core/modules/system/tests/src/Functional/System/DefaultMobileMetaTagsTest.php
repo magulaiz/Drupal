@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
@@ -38,9 +36,9 @@ class DefaultMobileMetaTagsTest extends BrowserTestBase {
   /**
    * Verifies that the default mobile meta tags are added.
    */
-  public function testDefaultMetaTagsExist(): void {
+  public function testDefaultMetaTagsExist() {
     $this->drupalGet('');
-    foreach ($this->defaultMetaTags as $metatag) {
+    foreach ($this->defaultMetaTags as $name => $metatag) {
       $this->assertSession()->responseContains($metatag);
     }
   }
@@ -48,10 +46,10 @@ class DefaultMobileMetaTagsTest extends BrowserTestBase {
   /**
    * Verifies that the default mobile meta tags can be removed.
    */
-  public function testRemovingDefaultMetaTags(): void {
+  public function testRemovingDefaultMetaTags() {
     \Drupal::service('module_installer')->install(['system_module_test']);
     $this->drupalGet('');
-    foreach ($this->defaultMetaTags as $metatag) {
+    foreach ($this->defaultMetaTags as $name => $metatag) {
       $this->assertSession()->responseNotContains($metatag);
     }
   }

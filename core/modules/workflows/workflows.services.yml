@@ -1,9 +1,4 @@
-parameters:
-  workflows.hooks_converted: true
-
 services:
-  _defaults:
-    autoconfigure: true
   plugin.manager.workflows.type:
     class: Drupal\workflows\WorkflowTypeManager
     parent: default_plugin_manager

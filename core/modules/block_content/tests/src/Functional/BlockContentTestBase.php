@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -34,13 +32,12 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    */
   protected $permissions = [
     'administer blocks',
-    'access block library',
-    'administer block types',
-    'administer block content',
   ];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['block', 'block_content'];
 
@@ -57,7 +54,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     if ($this->autoCreateBasicBlockType) {
-      $this->createBlockContentType(['id' => 'basic'], TRUE);
+      $this->createBlockContentType('basic', TRUE);
     }
 
     $this->adminUser = $this->drupalCreateUser($this->permissions);
@@ -65,7 +62,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a content block.
+   * Creates a custom block.
    *
    * @param bool|string $title
    *   (optional) Title of block. When no value is given uses a random name.
@@ -76,7 +73,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *   (optional) Whether to save the block. Defaults to TRUE.
    *
    * @return \Drupal\block_content\Entity\BlockContent
-   *   Created content block.
+   *   Created custom block.
    */
   protected function createBlockContent($title = FALSE, $bundle = 'basic', $save = TRUE) {
     $title = $title ?: $this->randomMachineName();
@@ -92,28 +89,23 @@ abstract class BlockContentTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a block type (bundle).
+   * Creates a custom block type (bundle).
    *
    * @param array|string $values
-   *   (deprecated) The variable $values as string is deprecated. Provide as an
-   *   array as parameter. The value to create the block content type. If
-   *   $values is an array it should be like: ['id' => 'foo', 'label' => 'Foo'].
-   *   If $values is a string, it will be considered that it represents the
-   *   label.
+   *   The value to create the block content type. If $values is an array
+   *   it should be like: ['id' => 'foo', 'label' => 'Foo']. If $values
+   *   is a string, it will be considered that it represents the label.
    * @param bool $create_body
-   *   Whether or not to create the body field.
+   *   Whether or not to create the body field
    *
    * @return \Drupal\block_content\Entity\BlockContentType
-   *   Created block type.
+   *   Created custom block type.
    */
   protected function createBlockContentType($values, $create_body = FALSE) {
-    if (is_string($values)) {
-      @trigger_error('Using the variable $values as string is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Provide an array as parameter. See https://www.drupal.org/node/3473739', E_USER_DEPRECATED);
-    }
     if (is_array($values)) {
       if (!isset($values['id'])) {
         do {
-          $id = $this->randomMachineName(8);
+          $id = strtolower($this->randomMachineName(8));
         } while (BlockContentType::load($id));
       }
       else {

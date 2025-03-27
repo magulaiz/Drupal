@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Cache\Context\CacheContextsManager;
@@ -32,8 +30,6 @@ class EntityAccessCheckTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class)->reveal();
     $container = new Container();
     $container->set('cache_contexts_manager', $cache_contexts_manager);
@@ -43,7 +39,7 @@ class EntityAccessCheckTest extends UnitTestCase {
   /**
    * Tests the method for checking access to routes.
    */
-  public function testAccess(): void {
+  public function testAccess() {
     $route = new Route('/foo/{var_name}', [], ['_entity_access' => 'var_name.update'], ['parameters' => ['var_name' => ['type' => 'entity:node']]]);
     /** @var \Drupal\Core\Session\AccountInterface $account */
     $account = $this->prophesize(AccountInterface::class)->reveal();
@@ -66,7 +62,7 @@ class EntityAccessCheckTest extends UnitTestCase {
   /**
    * @covers ::access
    */
-  public function testAccessWithTypePlaceholder(): void {
+  public function testAccessWithTypePlaceholder() {
     $route = new Route('/foo/{entity_type}/{var_name}', [], ['_entity_access' => 'var_name.update'], ['parameters' => ['var_name' => ['type' => 'entity:{entity_type}']]]);
     /** @var \Drupal\Core\Session\AccountInterface $account */
     $account = $this->prophesize(AccountInterface::class)->reveal();
@@ -86,7 +82,7 @@ class EntityAccessCheckTest extends UnitTestCase {
   /**
    * @covers ::access
    */
-  public function testAccessWithDifferentRouteParameters(): void {
+  public function testAccessWithDifferentRouteParameters() {
     $route = new Route(
       '/foo/{var_name}',
       [],
@@ -116,10 +112,10 @@ class EntityAccessCheckTest extends UnitTestCase {
    * Wrap any object with a route match, and return that.
    *
    * @param object $object
-   *   Any object, including mocks based on interfaces.
+   *   Any object, including prophesized mocks based on interfaces.
    *
    * @return \Drupal\Core\Routing\RouteMatchInterface
-   *   A mock RouteMatchInterface.
+   *   A prophesized RouteMatchInterface.
    */
   private function createRouteMatchForObject(\stdClass $object) {
     $route_match = $this->prophesize(RouteMatchInterface::class);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityForm;
@@ -12,7 +10,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -52,13 +49,10 @@ class EntityFormTest extends UnitTestCase {
    *
    * @dataProvider providerTestFormIds
    */
-  public function testFormId($expected, $definition): void {
+  public function testFormId($expected, $definition) {
     $this->entityType->set('entity_keys', ['bundle' => $definition['bundle']]);
 
-    $entity = $this->getMockBuilder(StubEntityBase::class)
-      ->setConstructorArgs([[], $definition['entity_type']])
-      ->onlyMethods(['getEntityType', 'bundle'])
-      ->getMock();
+    $entity = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityBase', [[], $definition['entity_type']], '', TRUE, TRUE, TRUE, ['getEntityType', 'bundle']);
 
     $entity->expects($this->any())
       ->method('getEntityType')
@@ -76,7 +70,7 @@ class EntityFormTest extends UnitTestCase {
   /**
    * Provides test data for testFormId().
    */
-  public static function providerTestFormIds() {
+  public function providerTestFormIds() {
     return [
       [
         'node_article_form',
@@ -124,7 +118,7 @@ class EntityFormTest extends UnitTestCase {
   /**
    * @covers ::copyFormValuesToEntity
    */
-  public function testCopyFormValuesToEntity(): void {
+  public function testCopyFormValuesToEntity() {
     $entity_id = 'test_config_entity_id';
     $values = ['id' => $entity_id];
     $entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections')
@@ -154,7 +148,7 @@ class EntityFormTest extends UnitTestCase {
    *
    * @covers ::getEntityFromRouteMatch
    */
-  public function testGetEntityFromRouteMatchEditDelete(): void {
+  public function testGetEntityFromRouteMatchEditDelete() {
     $entity = $this->prophesize(EntityInterface::class)->reveal();
     $id = $this->entityType->id();
     $route_match = new RouteMatch(
@@ -172,7 +166,7 @@ class EntityFormTest extends UnitTestCase {
    *
    * @covers ::getEntityFromRouteMatch
    */
-  public function testGetEntityFromRouteMatchAdd(): void {
+  public function testGetEntityFromRouteMatchAdd() {
     $entity = $this->prophesize(EntityInterface::class)->reveal();
     $this->setUpStorage()->create([])->willReturn($entity);
     $route_match = new RouteMatch('test_route', new Route('/entity-test/add'));
@@ -185,7 +179,7 @@ class EntityFormTest extends UnitTestCase {
    *
    * @covers ::getEntityFromRouteMatch
    */
-  public function testGetEntityFromRouteMatchAddStatic(): void {
+  public function testGetEntityFromRouteMatchAddStatic() {
     $entity = $this->prophesize(EntityInterface::class)->reveal();
     $bundle_key = 'bundle';
     $bundle = 'test_bundle';
@@ -215,7 +209,7 @@ class EntityFormTest extends UnitTestCase {
    *
    * @covers ::getEntityFromRouteMatch
    */
-  public function testGetEntityFromRouteMatchAddEntity(): void {
+  public function testGetEntityFromRouteMatchAddEntity() {
     $entity = $this->prophesize(EntityInterface::class)->reveal();
     $bundle_entity_type_id = 'entity_test_bundle';
     $bundle = 'test_entity_bundle';
@@ -245,10 +239,10 @@ class EntityFormTest extends UnitTestCase {
   /**
    * Sets up the storage accessed via the entity type manager in the form.
    *
-   * @return \Prophecy\Prophecy\ObjectProphecy<\Drupal\Core\Entity\EntityStorageInterface>
+   * @return \Prophecy\Prophecy\ObjectProphecy
    *   The storage prophecy.
    */
-  protected function setUpStorage(): ObjectProphecy {
+  protected function setUpStorage() {
     $storage = $this->prophesize(EntityStorageInterface::class);
 
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\media\Functional\FieldFormatter;
 
 use Drupal\field\Entity\FieldConfig;
@@ -28,8 +26,11 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
   /**
    * Tests the media thumbnail field formatter.
    */
-  public function testRender(): void {
+  public function testRender() {
     $this->drupalLogin($this->adminUser);
+
+    /** @var \Drupal\node\NodeStorage $node_storage */
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
 
     // Create an image media type for testing the formatter.
     $this->createMediaType('image', ['id' => 'image']);
@@ -99,11 +100,11 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
 
     // Change the image thumbnail to point into the content node.
     $this->changeMediaReferenceFieldLinkType('content');
+    $node_storage->resetCache([$nid]);
     $this->drupalGet('node/' . $nid);
 
     // Validate image being loaded with the content on the link.
     $this->assertSession()->responseContains('<a href="' . $node->toUrl()->toString());
-    $this->assertSession()->responseContains('loading="eager"');
   }
 
   /**
@@ -121,7 +122,6 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
         'settings' => [
           'image_link' => $type,
           'image_style' => '',
-          'image_loading' => ['attribute' => 'eager'],
         ],
       ])
       ->save();

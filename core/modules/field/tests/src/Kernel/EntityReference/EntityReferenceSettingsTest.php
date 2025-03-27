@@ -1,17 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel\EntityReference;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 
 /**
@@ -21,7 +18,7 @@ use Symfony\Component\ErrorHandler\BufferingLogger;
  */
 class EntityReferenceSettingsTest extends KernelTestBase {
 
-  use EntityReferenceFieldCreationTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -75,14 +72,14 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
 
     $this->nodeType = NodeType::create([
-      'type' => $this->randomMachineName(),
+      'type' => mb_strtolower($this->randomMachineName()),
       'name' => $this->randomString(),
     ]);
     $this->nodeType->save();
 
     // Create a custom bundle.
-    $this->customBundle = 'test_bundle_' . $this->randomMachineName();
-    EntityTestHelper::createBundle($this->customBundle, NULL, 'entity_test');
+    $this->customBundle = 'test_bundle_' . mb_strtolower($this->randomMachineName());
+    entity_test_create_bundle($this->customBundle, NULL, 'entity_test');
 
     // Prepare the logger for collecting the expected critical error.
     $this->container->get($this->testLogServiceName)->cleanLogs();
@@ -91,12 +88,12 @@ class EntityReferenceSettingsTest extends KernelTestBase {
   /**
    * Tests that config bundle deletions are mirrored in field config settings.
    */
-  public function testConfigTargetBundleDeletion(): void {
+  public function testConfigTargetBundleDeletion() {
     // Create two vocabularies.
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
     $vocabularies = [];
     for ($i = 0; $i < 2; $i++) {
-      $vid = $this->randomMachineName();
+      $vid = mb_strtolower($this->randomMachineName());
       $vocabularies[$i] = Vocabulary::create([
         'name' => $this->randomString(),
         'vid' => $vid,
@@ -104,7 +101,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
       $vocabularies[$i]->save();
     }
     // Attach an entity reference field to $this->nodeType.
-    $name = $this->randomMachineName();
+    $name = mb_strtolower($this->randomMachineName());
     $label = $this->randomString();
     $handler_settings = [
       'target_bundles' => [
@@ -151,9 +148,9 @@ class EntityReferenceSettingsTest extends KernelTestBase {
   /**
    * Tests that deletions of custom bundles are mirrored in field settings.
    */
-  public function testCustomTargetBundleDeletion(): void {
+  public function testCustomTargetBundleDeletion() {
     // Attach an entity reference field to $this->nodeType.
-    $name = $this->randomMachineName();
+    $name = mb_strtolower($this->randomMachineName());
     $label = $this->randomString();
     $handler_settings = ['target_bundles' => [$this->customBundle => $this->customBundle]];
     $this->createEntityReferenceField('node', $this->nodeType->id(), $name, $label, 'entity_test', 'default', $handler_settings);
@@ -164,7 +161,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     $this->assertEquals($handler_settings, $actual_handler_settings);
 
     // Delete the custom bundle.
-    EntityTestHelper::deleteBundle($this->customBundle, 'entity_test');
+    entity_test_delete_bundle($this->customBundle, 'entity_test');
 
     // Ensure that field_field_config_presave() logs the expected critical
     // error.
@@ -185,7 +182,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container): void {
+  public function register(ContainerBuilder $container) {
     parent::register($container);
     $container
       ->register($this->testLogServiceName, BufferingLogger::class)

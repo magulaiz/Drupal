@@ -6,9 +6,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
 use Symfony\Component\Routing\Route;
 
-/**
- * Provides routes for the taxonomy vocabulary.
- */
 class VocabularyRouteProvider extends AdminHtmlRouteProvider {
 
   /**
@@ -27,6 +24,16 @@ class VocabularyRouteProvider extends AdminHtmlRouteProvider {
     }
 
     return $collection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getCollectionRoute(EntityTypeInterface $entity_type) {
+    if ($route = parent::getCollectionRoute($entity_type)) {
+      $route->setRequirement('_permission', 'access taxonomy overview+administer taxonomy');
+      return $route;
+    }
   }
 
   /**

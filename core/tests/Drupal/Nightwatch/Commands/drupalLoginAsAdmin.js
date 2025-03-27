@@ -1,4 +1,5 @@
-const { execSync } = require('node:child_process');
+const { execSync } = require('child_process');
+const { URL } = require('url');
 const { commandAsWebserver } = require('../globals');
 
 /**

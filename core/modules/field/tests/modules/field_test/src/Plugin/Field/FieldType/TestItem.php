@@ -1,26 +1,24 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\Attribute\FieldType;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\field_test\FieldTestHelper;
+use Drupal\Core\Field\FieldItemBase;
 
 /**
  * Defines the 'test_field' entity field item.
+ *
+ * @FieldType(
+ *   id = "test_field",
+ *   label = @Translation("Test field"),
+ *   description = @Translation("Dummy field type used for tests."),
+ *   default_widget = "test_field_widget",
+ *   default_formatter = "field_test_default"
+ * )
  */
-#[FieldType(
-  id: "test_field",
-  label: new TranslatableMarkup("Test field"),
-  default_widget: "test_field_widget",
-  default_formatter: "field_test_default"
-)]
 class TestItem extends FieldItemBase {
 
   /**
@@ -77,13 +75,7 @@ class TestItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $form['cardinality_container'][] = [
-      '#type' => 'html_tag',
-      '#tag' => 'p',
-      '#value' => 'Greetings from ' . __METHOD__,
-    ];
-    $element = [];
-    $element['test_field_storage_setting'] = [
+    $form['test_field_storage_setting'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Field test field storage setting'),
       '#default_value' => $this->getSetting('test_field_storage_setting'),
@@ -91,15 +83,14 @@ class TestItem extends FieldItemBase {
       '#description' => $this->t('A dummy form element to simulate field storage setting.'),
     ];
 
-    return $element;
+    return $form;
   }
 
   /**
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
-    $element = [];
-    $element['test_field_setting'] = [
+    $form['test_field_setting'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Field test field setting'),
       '#default_value' => $this->getSetting('test_field_setting'),
@@ -107,7 +98,7 @@ class TestItem extends FieldItemBase {
       '#description' => $this->t('A dummy form element to simulate field setting.'),
     ];
 
-    return $element;
+    return $form;
   }
 
   /**
@@ -115,7 +106,7 @@ class TestItem extends FieldItemBase {
    */
   public function delete() {
     // Reports that delete() method is executed for testing purposes.
-    FieldTestHelper::memorize('field_test_field_delete', [$this->getEntity()]);
+    field_test_memorize('field_test_field_delete', [$this->getEntity()]);
   }
 
   /**
@@ -129,11 +120,7 @@ class TestItem extends FieldItemBase {
       'value' => [
         'TestField' => [
           'value' => -1,
-          'message' => $this->t('%name does not accept the value @value.', [
-            '%name' => $this->getFieldDefinition()
-              ->getLabel(),
-            '@value' => -1,
-          ]),
+          'message' => $this->t('%name does not accept the value @value.', ['%name' => $this->getFieldDefinition()->getLabel(), '@value' => -1]),
         ],
       ],
     ]);

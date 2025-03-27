@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\jsonapi_test_data_type\Normalizer;
 
 use Drupal\Core\TypedData\Plugin\DataType\StringData;
@@ -12,6 +10,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
  * Normalizes string data weirdly: replaces 'super' with 'NOT' and vice versa.
  */
 class StringNormalizer extends NormalizerBase implements DenormalizerInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $supportedInterfaceOrClass = StringData::class;
 
   /**
    * {@inheritdoc}
@@ -30,8 +33,8 @@ class StringNormalizer extends NormalizerBase implements DenormalizerInterface {
   /**
    * {@inheritdoc}
    */
-  public function getSupportedTypes(?string $format): array {
-    return [StringData::class => TRUE];
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

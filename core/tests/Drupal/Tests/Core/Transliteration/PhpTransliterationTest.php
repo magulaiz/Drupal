@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Transliteration;
 
 use Drupal\Component\Utility\Random;
@@ -32,7 +30,7 @@ class PhpTransliterationTest extends UnitTestCase {
    *
    * @dataProvider providerTestPhpTransliterationWithAlter
    */
-  public function testPhpTransliterationWithAlter($langcode, $original, $expected, $printable = NULL): void {
+  public function testPhpTransliterationWithAlter($langcode, $original, $expected, $printable = NULL) {
     if ($printable === NULL) {
       $printable = $original;
     }
@@ -44,8 +42,7 @@ class PhpTransliterationTest extends UnitTestCase {
       ->method('alter')
       ->willReturnCallback(function ($hook, &$overrides, $langcode) {
         if ($langcode == 'zz') {
-          // The default transliteration of Ä is A, but change it to Z for
-          // testing.
+          // The default transliteration of Ä is A, but change it to Z for testing.
           $overrides[0xC4] = 'Z';
           // Also provide transliterations of two 5-byte characters from
           // http://wikipedia.org/wiki/Gothic_alphabet.
@@ -63,9 +60,8 @@ class PhpTransliterationTest extends UnitTestCase {
    * Provides test data for testPhpTransliterationWithAlter.
    *
    * @return array
-   *   An array of test data for testPhpTransliterationWithAlter.
    */
-  public static function providerTestPhpTransliterationWithAlter() {
+  public function providerTestPhpTransliterationWithAlter() {
     $random_generator = new Random();
     $random = $random_generator->string(10);
     // Make some strings with two, three, and four-byte characters for testing.

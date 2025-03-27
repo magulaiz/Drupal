@@ -1,13 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Unit\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Tests\views\Traits\ViewsLoggerTestTrait;
 use Drupal\views\Plugin\views\field\EntityOperations;
 use Drupal\views\ResultRow;
 
@@ -16,8 +13,6 @@ use Drupal\views\ResultRow;
  * @group Views
  */
 class EntityOperationsUnitTest extends UnitTestCase {
-
-  use ViewsLoggerTestTrait;
 
   /**
    * The entity type manager.
@@ -53,13 +48,11 @@ class EntityOperationsUnitTest extends UnitTestCase {
    * @covers ::__construct
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityRepository = $this->createMock(EntityRepositoryInterface::class);
     $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
 
-    $configuration = ['entity_type' => 'foo', 'entity field' => 'bar'];
+    $configuration = [];
     $plugin_id = $this->randomMachineName();
     $plugin_definition = [
       'title' => $this->randomMachineName(),
@@ -77,7 +70,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
       ->getMock();
     $display = $this->getMockBuilder('\Drupal\views\Plugin\views\display\DisplayPluginBase')
       ->disableOriginalConstructor()
-      ->getMock();
+      ->getMockForAbstractClass();
     $view->display_handler = $display;
     $this->plugin->init($view, $display);
   }
@@ -85,14 +78,14 @@ class EntityOperationsUnitTest extends UnitTestCase {
   /**
    * @covers ::usesGroupBy
    */
-  public function testUsesGroupBy(): void {
+  public function testUsesGroupBy() {
     $this->assertFalse($this->plugin->usesGroupBy());
   }
 
   /**
    * @covers ::defineOptions
    */
-  public function testDefineOptions(): void {
+  public function testDefineOptions() {
     $options = $this->plugin->defineOptions();
     $this->assertIsArray($options);
     $this->assertArrayHasKey('destination', $options);
@@ -101,7 +94,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
   /**
    * @covers ::render
    */
-  public function testRenderWithDestination(): void {
+  public function testRenderWithDestination() {
     $entity_type_id = $this->randomMachineName();
     $entity = $this->getMockBuilder('\Drupal\user\Entity\Role')
       ->disableOriginalConstructor()
@@ -134,9 +127,6 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $expected_build = [
       '#type' => 'operations',
       '#links' => $operations,
-      '#attached' => [
-        'library' => ['core/drupal.dialog.ajax'],
-      ],
     ];
     $expected_build['#links']['foo']['query'] = ['destination' => 'foobar'];
     $build = $this->plugin->render($result);
@@ -146,7 +136,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
   /**
    * @covers ::render
    */
-  public function testRenderWithoutDestination(): void {
+  public function testRenderWithoutDestination() {
     $entity_type_id = $this->randomMachineName();
     $entity = $this->getMockBuilder('\Drupal\user\Entity\Role')
       ->disableOriginalConstructor()
@@ -179,9 +169,6 @@ class EntityOperationsUnitTest extends UnitTestCase {
     $expected_build = [
       '#type' => 'operations',
       '#links' => $operations,
-      '#attached' => [
-        'library' => ['core/drupal.dialog.ajax'],
-      ],
     ];
     $build = $this->plugin->render($result);
     $this->assertSame($expected_build, $build);
@@ -190,9 +177,7 @@ class EntityOperationsUnitTest extends UnitTestCase {
   /**
    * @covers ::render
    */
-  public function testRenderWithoutEntity(): void {
-    $this->setUpMockLoggerWithMissingEntity();
-
+  public function testRenderWithoutEntity() {
     $entity = NULL;
 
     $result = new ResultRow();

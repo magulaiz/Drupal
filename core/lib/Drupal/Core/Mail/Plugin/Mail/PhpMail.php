@@ -2,24 +2,21 @@
 
 namespace Drupal\Core\Mail\Plugin\Mail;
 
-use Drupal\Core\Mail\Attribute\Mail;
 use Drupal\Core\Mail\MailFormatHelper;
 use Drupal\Core\Mail\MailInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Mime\Header\Headers;
 use Symfony\Component\Mime\Header\UnstructuredHeader;
 
-// cspell:ignore windir
-
 /**
  * Defines the default Drupal mail backend, using PHP's native mail() function.
+ *
+ * @Mail(
+ *   id = "php_mail",
+ *   label = @Translation("Default PHP mailer"),
+ *   description = @Translation("Sends the message as plain text, using PHP's native mail() function.")
+ * )
  */
-#[Mail(
-  id: 'php_mail',
-  label: new TranslatableMarkup('Default PHP Mailer'),
-  description: new TranslatableMarkup("Sends the message as plain text, using PHP's native mail() function."),
-)]
 class PhpMail implements MailInterface {
 
   /**
@@ -64,8 +61,10 @@ class PhpMail implements MailInterface {
     // Join the body array into one string.
     $message['body'] = implode("\n\n", $message['body']);
 
-    // Convert any HTML to plain text (which also wraps the mail body).
+    // Convert any HTML to plain-text.
     $message['body'] = MailFormatHelper::htmlToText($message['body']);
+    // Wrap the mail body for sending.
+    $message['body'] = MailFormatHelper::wrapMail($message['body']);
 
     return $message;
   }
@@ -98,7 +97,7 @@ class PhpMail implements MailInterface {
       if (in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
         // Split values by comma, but ignore commas encapsulated in double
         // quotes.
-        $value = str_getcsv($value, escape: '\\');
+        $value = str_getcsv($value, ',');
       }
       $headers->addHeader($name, $value);
     }
@@ -110,7 +109,10 @@ class PhpMail implements MailInterface {
     // line-ending format appropriate for your system. If you need to
     // override this, adjust $settings['mail_line_endings'] in settings.php.
     $mail_body = preg_replace('@\r?\n@', $line_endings, $message['body']);
-    $mail_headers = $headers->toString();
+    // For headers, PHP's API suggests that we use CRLF normally,
+    // but some MTAs incorrectly replace LF with CRLF. See #234403.
+    $mail_headers = str_replace("\r\n", "\n", $headers->toString());
+    $mail_subject = str_replace("\r\n", "\n", $mail_subject);
 
     if (!$this->request->server->has('WINDIR') && !str_contains($this->request->server->get('SERVER_SOFTWARE'), 'Win32')) {
       // On most non-Windows systems, the "-f" option to the sendmail command

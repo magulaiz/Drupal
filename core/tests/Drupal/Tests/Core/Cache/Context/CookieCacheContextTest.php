@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Cache\Context;
 
 use Drupal\Core\Cache\Context\CookiesCacheContext;
@@ -20,7 +18,7 @@ class CookieCacheContextTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetContext
    */
-  public function testGetContext($cookies, $cookie_name, $context): void {
+  public function testGetContext($cookies, $cookie_name, $context) {
     $request_stack = new RequestStack();
     $request = Request::create('/', 'GET');
     foreach ($cookies as $cookie => $value) {
@@ -34,7 +32,7 @@ class CookieCacheContextTest extends UnitTestCase {
   /**
    * Provides a list of cookies and expected cache contexts.
    */
-  public static function providerTestGetContext() {
+  public function providerTestGetContext() {
     return [
       [['foo' => 1, 'bar' => 2, 'baz' => 3], 'foo', 1],
       // Context is ordered by cookie name.

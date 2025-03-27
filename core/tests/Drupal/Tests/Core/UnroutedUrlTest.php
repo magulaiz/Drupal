@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -53,7 +51,7 @@ class UnroutedUrlTest extends UnitTestCase {
     $this->urlAssembler = $this->createMock('Drupal\Core\Utility\UnroutedUrlAssemblerInterface');
     $this->urlAssembler->expects($this->any())
       ->method('assemble')
-      ->willReturnArgument(0);
+      ->will($this->returnArgument(0));
 
     $this->router = $this->createMock('Drupal\Tests\Core\Routing\TestRouterInterface');
     $container = new ContainerBuilder();
@@ -69,7 +67,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @dataProvider providerFromUri
    */
-  public function testFromUri($uri, $is_external): void {
+  public function testFromUri($uri, $is_external) {
     $url = Url::fromUri($uri);
 
     $this->assertInstanceOf('Drupal\Core\Url', $url);
@@ -78,7 +76,7 @@ class UnroutedUrlTest extends UnitTestCase {
   /**
    * Data provider for testFromUri().
    */
-  public static function providerFromUri() {
+  public function providerFromUri() {
     return [
       // [$uri, $is_external]
       // An external URI.
@@ -104,15 +102,15 @@ class UnroutedUrlTest extends UnitTestCase {
    * @covers ::fromUri
    * @dataProvider providerFromInvalidUri
    */
-  public function testFromInvalidUri($uri): void {
+  public function testFromInvalidUri($uri) {
     $this->expectException(\InvalidArgumentException::class);
-    Url::fromUri($uri);
+    $url = Url::fromUri($uri);
   }
 
   /**
    * Data provider for testFromInvalidUri().
    */
-  public static function providerFromInvalidUri() {
+  public function providerFromInvalidUri() {
     return [
       // Schemeless paths.
       ['test'],
@@ -134,7 +132,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::createFromRequest
    */
-  public function testCreateFromRequest(): void {
+  public function testCreateFromRequest() {
     $request = Request::create('/test-path');
 
     $this->router->expects($this->once())
@@ -154,7 +152,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::isExternal
    */
-  public function testIsExternal($uri, $is_external): void {
+  public function testIsExternal($uri, $is_external) {
     $url = Url::fromUri($uri);
     $this->assertSame($url->isExternal(), $is_external);
   }
@@ -167,7 +165,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::toString
    */
-  public function testToString($uri): void {
+  public function testToString($uri) {
     $url = Url::fromUri($uri);
     $this->assertSame($uri, $url->toString());
   }
@@ -180,7 +178,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getRouteName
    */
-  public function testGetRouteName($uri): void {
+  public function testGetRouteName($uri) {
     $url = Url::fromUri($uri);
     $this->expectException(\UnexpectedValueException::class);
     $url->getRouteName();
@@ -194,7 +192,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getRouteParameters
    */
-  public function testGetRouteParameters($uri): void {
+  public function testGetRouteParameters($uri) {
     $url = Url::fromUri($uri);
     $this->expectException(\UnexpectedValueException::class);
     $url->getRouteParameters();
@@ -208,7 +206,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getInternalPath
    */
-  public function testGetInternalPath($uri): void {
+  public function testGetInternalPath($uri) {
     $url = Url::fromUri($uri);
     $this->expectException(\Exception::class);
     $url->getInternalPath();
@@ -222,7 +220,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getUri
    */
-  public function testGetUri($uri): void {
+  public function testGetUri($uri) {
     $url = Url::fromUri($uri);
     $this->assertNotNull($url->getUri());
   }
@@ -235,7 +233,7 @@ class UnroutedUrlTest extends UnitTestCase {
    *
    * @covers ::getOptions
    */
-  public function testGetOptions($uri): void {
+  public function testGetOptions($uri) {
     $url = Url::fromUri($uri);
     $this->assertIsArray($url->getOptions());
   }

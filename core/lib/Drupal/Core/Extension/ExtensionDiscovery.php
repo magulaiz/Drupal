@@ -4,7 +4,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterCallback;
+use Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -54,7 +54,7 @@ class ExtensionDiscovery {
    *
    * @see http://php.net/manual/functions.user-defined.php
    */
-  const PHP_FUNCTION_PATTERN = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
+  const PHP_FUNCTION_PATTERN = '/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/';
 
   /**
    * Previously discovered files keyed by origin directory and extension type.
@@ -81,11 +81,6 @@ class ExtensionDiscovery {
    * The file cache object.
    *
    * @var \Drupal\Component\FileCache\FileCacheInterface
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no
-   *   direct replacement.
-   *
-   * @see https://www.drupal.org/node/3490431
    */
   protected $fileCache;
 
@@ -97,35 +92,22 @@ class ExtensionDiscovery {
   protected $sitePath;
 
   /**
-   * The info parser.
-   *
-   * Reads .info.yml files efficiently.
-   *
-   * @var \Drupal\Core\Extension\InfoParser|null
-   */
-  protected ?InfoParser $infoParser;
-
-  /**
    * Constructs a new ExtensionDiscovery object.
    *
    * @param string $root
    *   The app root.
-   * @param bool $use_info_parser
-   *   Whether the info_parser should be used. Note this argument also
-   *   determines if the deprecated file cache property is set to maintain BC in
-   *   Drupal 11.
+   * @param bool $use_file_cache
+   *   Whether file cache should be used.
    * @param string[] $profile_directories
-   *   The available profile directories.
+   *   The available profile directories
    * @param string $site_path
    *   The path to the site.
    */
-  public function __construct(string $root, $use_info_parser = TRUE, ?array $profile_directories = NULL, ?string $site_path = NULL) {
+  public function __construct(string $root, $use_file_cache = TRUE, array $profile_directories = NULL, string $site_path = NULL) {
     $this->root = $root;
-    // @phpstan-ignore property.deprecated
-    $this->fileCache = $use_info_parser ? FileCacheFactory::get('extension_discovery') : NULL;
+    $this->fileCache = $use_file_cache ? FileCacheFactory::get('extension_discovery') : NULL;
     $this->profileDirectories = $profile_directories;
     $this->sitePath = $site_path;
-    $this->infoParser = $use_info_parser ? new InfoParser($root) : NULL;
   }
 
   /**
@@ -176,15 +158,15 @@ class ExtensionDiscovery {
     }
 
     // Search the core directory.
-    $search_dirs[static::ORIGIN_CORE] = 'core';
+    $searchdirs[static::ORIGIN_CORE] = 'core';
 
     // Search the legacy sites/all directory.
-    $search_dirs[static::ORIGIN_SITES_ALL] = 'sites/all';
+    $searchdirs[static::ORIGIN_SITES_ALL] = 'sites/all';
 
     // Search for contributed and custom extensions in top-level directories.
     // The scan uses a list of extension types to limit recursion to the
     // expected extension type specific directory names only.
-    $search_dirs[static::ORIGIN_ROOT] = '';
+    $searchdirs[static::ORIGIN_ROOT] = '';
 
     // Tests use the regular built-in multi-site functionality of Drupal for
     // running web tests. As a consequence, extensions of the parent site
@@ -194,7 +176,7 @@ class ExtensionDiscovery {
     // so that contained extensions are still discovered.
     // @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareSettings().
     if ($parent_site = Settings::get('test_parent_site')) {
-      $search_dirs[static::ORIGIN_PARENT_SITE] = $parent_site;
+      $searchdirs[static::ORIGIN_PARENT_SITE] = $parent_site;
     }
 
     // Find the site-specific directory to search. Since we are using this
@@ -202,10 +184,10 @@ class ExtensionDiscovery {
     // at install time. Therefore Kernel service is not always available, but is
     // preferred.
     if (\Drupal::hasService('kernel')) {
-      $search_dirs[static::ORIGIN_SITE] = \Drupal::getContainer()->getParameter('site.path');
+      $searchdirs[static::ORIGIN_SITE] = \Drupal::getContainer()->getParameter('site.path');
     }
     else {
-      $search_dirs[static::ORIGIN_SITE] = $this->sitePath ?: DrupalKernel::findSitePath(Request::createFromGlobals());
+      $searchdirs[static::ORIGIN_SITE] = $this->sitePath ?: DrupalKernel::findSitePath(Request::createFromGlobals());
     }
 
     // Unless an explicit value has been passed, manually check whether we are
@@ -217,7 +199,7 @@ class ExtensionDiscovery {
     }
 
     $files = [];
-    foreach ($search_dirs as $dir) {
+    foreach ($searchdirs as $dir) {
       // Discover all extensions in the directory, unless we did already.
       if (!isset(static::$files[$this->root][$dir][$include_tests])) {
         static::$files[$this->root][$dir][$include_tests] = $this->scanDirectory($dir, $include_tests);
@@ -232,7 +214,7 @@ class ExtensionDiscovery {
     // installation profiles.
     $files = $this->filterByProfileDirectories($files);
     // Sort the discovered extensions by their originating directories.
-    $origin_weights = array_flip($search_dirs);
+    $origin_weights = array_flip($searchdirs);
     $files = $this->sort($files, $origin_weights);
 
     // Process and return the list of extensions keyed by extension name.
@@ -246,24 +228,7 @@ class ExtensionDiscovery {
    */
   public function setProfileDirectoriesFromSettings() {
     $this->profileDirectories = [];
-    // This method may be called by the database system early in bootstrap
-    // before the container is initialized. In that case, the parameter is not
-    // accessible yet, hence return.
-    if (!\Drupal::hasContainer() || !\Drupal::getContainer()->hasParameter('install_profile')) {
-      return $this;
-    }
-
-    $profile = \Drupal::installProfile();
-    // If $profile is FALSE then we need to add a fake directory as a profile
-    // directory in order to filter out profile provided modules. This ensures
-    // that, after uninstalling a profile, a site cannot install modules
-    // contained in an install profile. During installation $profile will be
-    // NULL, so we need to discover all modules and profiles.
-    if ($profile === FALSE) {
-      // cspell:ignore CNKDSIUSYFUISEFCB
-      $this->profileDirectories[] = '_does_not_exist_profile_CNKDSIUSYFUISEFCB';
-    }
-    elseif ($profile) {
+    if ($profile = \Drupal::installProfile()) {
       $this->profileDirectories[] = \Drupal::service('extension.list.profile')->getPath($profile);
     }
     return $this;
@@ -289,7 +254,7 @@ class ExtensionDiscovery {
    *
    * @return $this
    */
-  public function setProfileDirectories(?array $paths = NULL) {
+  public function setProfileDirectories(array $paths = NULL) {
     $this->profileDirectories = $paths;
     return $this;
   }
@@ -417,7 +382,7 @@ class ExtensionDiscovery {
    *   are associative arrays of \Drupal\Core\Extension\Extension objects, keyed
    *   by absolute path name.
    *
-   * @see \Drupal\Core\Extension\Discovery\RecursiveExtensionFilterCallback
+   * @see \Drupal\Core\Extension\Discovery\RecursiveExtensionFilterIterator
    */
   protected function scanDirectory($dir, $include_tests) {
     $files = [];
@@ -453,8 +418,8 @@ class ExtensionDiscovery {
     // Important: Without a RecursiveFilterIterator, RecursiveDirectoryIterator
     // would recurse into the entire filesystem directory tree without any kind
     // of limitations.
-    $callback = new RecursiveExtensionFilterCallback($ignore_directories, $include_tests);
-    $filter = new \RecursiveCallbackFilterIterator($directory_iterator, [$callback, 'accept']);
+    $filter = new RecursiveExtensionFilterIterator($directory_iterator, $ignore_directories);
+    $filter->acceptTests($include_tests);
 
     // The actual recursive filesystem scan is only invoked by instantiating the
     // RecursiveIteratorIterator.
@@ -471,9 +436,12 @@ class ExtensionDiscovery {
         continue;
       }
 
-      // Determine the extension type from the info file.
-      $type = FALSE;
-      if ($this->infoParser === NULL) {
+      $extension_arguments = $this->fileCache ? $this->fileCache->get($fileinfo->getPathName()) : FALSE;
+      // Ensure $extension_arguments is an array. Previously, the Extension
+      // object was cached and now needs to be replaced with the array.
+      if (empty($extension_arguments) || !is_array($extension_arguments)) {
+        // Determine extension type from info file.
+        $type = FALSE;
         $file = $fileinfo->openFile('r');
         while (!$type && !$file->eof()) {
           preg_match('@^type:\s*(\'|")?(\w+)\1?\s*(?:\#.*)?$@', $file->fgets(), $matches);
@@ -481,37 +449,43 @@ class ExtensionDiscovery {
             $type = $matches[2];
           }
         }
-      }
-      else {
-        $type = $this->infoParser->parse($fileinfo->getPathname())['type'] ?? FALSE;
-      }
-      if (empty($type)) {
-        continue;
+        if (empty($type)) {
+          continue;
+        }
+        $name = $fileinfo->getBasename('.info.yml');
+        $pathname = $dir_prefix . $fileinfo->getSubPathname();
+
+        // Determine whether the extension has a main extension file.
+        // For theme engines, the file extension is .engine.
+        if ($type == 'theme_engine') {
+          $filename = $name . '.engine';
+        }
+        // For profiles/modules/themes, it is the extension type.
+        else {
+          $filename = $name . '.' . $type;
+        }
+        if (!file_exists($this->root . '/' . dirname($pathname) . '/' . $filename)) {
+          $filename = NULL;
+        }
+        $extension_arguments = [
+          'type' => $type,
+          'pathname' => $pathname,
+          'filename' => $filename,
+          'subpath' => $fileinfo->getSubPath(),
+        ];
+
+        if ($this->fileCache) {
+          $this->fileCache->set($fileinfo->getPathName(), $extension_arguments);
+        }
       }
 
-      $name = $fileinfo->getBasename('.info.yml');
-      $pathname = $dir_prefix . $fileinfo->getSubPathname();
-
-      // Determine whether the extension has a main extension file.
-      // For theme engines, the file extension is .engine.
-      if ($type == 'theme_engine') {
-        $filename = $name . '.engine';
-      }
-      // For profiles/modules/themes, it is the extension type.
-      else {
-        $filename = $name . '.' . $type;
-      }
-      if (!file_exists($this->root . '/' . dirname($pathname) . '/' . $filename)) {
-        $filename = NULL;
-      }
-
-      $extension = new Extension($this->root, $type, $pathname, $filename);
+      $extension = new Extension($this->root, $extension_arguments['type'], $extension_arguments['pathname'], $extension_arguments['filename']);
 
       // Track the originating directory for sorting purposes.
-      $extension->subpath = $fileinfo->getSubPath();
+      $extension->subpath = $extension_arguments['subpath'];
       $extension->origin = $dir;
 
-      $files[$type][$key] = $extension;
+      $files[$extension_arguments['type']][$key] = $extension;
     }
     return $files;
   }

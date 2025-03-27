@@ -33,8 +33,8 @@ class ConfirmFormHelper {
       try {
         $url = Url::fromUserInput('/' . ltrim($options['path'], '/'), $options);
       }
-      catch (\InvalidArgumentException) {
-        // Suppress the exception and fall back to the form's cancel URL.
+      catch (\InvalidArgumentException $e) {
+        // Suppress the exception and fall back to the form's cancel url.
       }
     }
     // Check for a route-based cancel link.
@@ -45,7 +45,7 @@ class ConfirmFormHelper {
     return [
       '#type' => 'link',
       '#title' => $form->getCancelText(),
-      '#attributes' => ['class' => ['button', 'dialog-cancel']],
+      '#attributes' => ['class' => ['button']],
       '#url' => $url,
       '#cache' => [
         'contexts' => [

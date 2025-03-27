@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
@@ -32,7 +30,7 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
   /**
    * Tests Drupal 6 node type to Drupal 8 migration.
    */
-  public function testNodeType(): void {
+  public function testNodeType() {
     $id_map = $this->getMigration('d6_node_type')->getIdMap();
     // Test the test_page content type.
     $node_type_page = NodeType::load('test_page');
@@ -47,9 +45,9 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertSame('This is the body field label', $field->getLabel(), 'Body field was found.');
 
     // Test default menus.
-    $expected_available_menus = ['tools'];
+    $expected_available_menus = ['navigation'];
     $this->assertSame($expected_available_menus, $node_type_page->getThirdPartySetting('menu_ui', 'available_menus'));
-    $expected_parent = 'tools:';
+    $expected_parent = 'navigation:';
     $this->assertSame($expected_parent, $node_type_page->getThirdPartySetting('menu_ui', 'parent'));
 
     // Test the test_story content type.
@@ -66,9 +64,9 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $this->assertNull($field, 'No body field found');
 
     // Test default menus.
-    $expected_available_menus = ['tools'];
+    $expected_available_menus = ['navigation'];
     $this->assertSame($expected_available_menus, $node_type_story->getThirdPartySetting('menu_ui', 'available_menus'));
-    $expected_parent = 'tools:';
+    $expected_parent = 'navigation:';
     $this->assertSame($expected_parent, $node_type_story->getThirdPartySetting('menu_ui', 'parent'));
 
     // Test the test_event content type.
@@ -84,9 +82,9 @@ class MigrateNodeTypeTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::loadByName('node', 'test_event', 'body');
     $this->assertSame('Body', $field->getLabel(), 'Body field was found.');
 
-    $expected_available_menus = ['tools'];
+    $expected_available_menus = ['navigation'];
     $this->assertSame($expected_available_menus, $node_type_event->getThirdPartySetting('menu_ui', 'available_menus'));
-    $expected_parent = 'tools:';
+    $expected_parent = 'navigation:';
     $this->assertSame($expected_parent, $node_type_event->getThirdPartySetting('menu_ui', 'parent'));
 
     // Test the 32 character type name exists.

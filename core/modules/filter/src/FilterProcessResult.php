@@ -3,9 +3,9 @@
 namespace Drupal\filter;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Render\PlaceholderGenerator;
 
 /**
  * Used to return values from a text filter plugin's processing method.
@@ -42,11 +42,11 @@ use Drupal\Core\Render\PlaceholderGenerator;
  *   $result = new FilterProcessResult($text);
  *
  *   // Associate assets to be attached.
- *   $result->setAttachments([
- *     'library' => [
+ *   $result->setAttachments(array(
+ *     'library' => array(
  *        'filter/caption',
- *     ],
- *   ]);
+ *     ),
+ *   ));
  *
  *   // Associate cache contexts to vary by.
  *   $result->setCacheContexts(['language']);
@@ -66,9 +66,9 @@ class FilterProcessResult extends BubbleableMetadata {
   /**
    * The processed text.
    *
-   * @var string
-   *
    * @see \Drupal\filter\Plugin\FilterInterface::process()
+   *
+   * @var string
    */
   protected $processedText;
 
@@ -86,7 +86,6 @@ class FilterProcessResult extends BubbleableMetadata {
    * Gets the processed text.
    *
    * @return string
-   *   The processed text.
    */
   public function getProcessedText() {
     return $this->processedText;
@@ -96,7 +95,6 @@ class FilterProcessResult extends BubbleableMetadata {
    * Gets the processed text.
    *
    * @return string
-   *   The processed text.
    */
   public function __toString() {
     return $this->getProcessedText();
@@ -135,11 +133,10 @@ class FilterProcessResult extends BubbleableMetadata {
    */
   public function createPlaceholder($callback, array $args) {
     // Generate placeholder markup.
-    $placeholder_markup = PlaceholderGenerator::createPlaceholderTag('drupal-filter-placeholder', [
-      'callback' => $callback,
-      'arguments' => UrlHelper::buildQuery($args),
-      'token' => Crypt::hashBase64(serialize([$callback, $args])),
-    ]);
+    // @see \Drupal\Core\Render\PlaceholderGenerator::createPlaceholder()
+    $arguments = UrlHelper::buildQuery($args);
+    $token = Crypt::hashBase64(serialize([$callback, $args]));
+    $placeholder_markup = '<drupal-filter-placeholder callback="' . Html::escape($callback) . '" arguments="' . Html::escape($arguments) . '" token="' . Html::escape($token) . '"></drupal-filter-placeholder>';
 
     // Add the placeholder attachment.
     $this->addAttachments([

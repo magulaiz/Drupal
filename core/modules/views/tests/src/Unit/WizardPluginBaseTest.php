@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Unit;
 
 use Drupal\Core\Form\FormState;
@@ -20,7 +18,7 @@ class WizardPluginBaseTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetSelected
    */
-  public function testGetSelected($expected, $element = [], $parents = [], $user_input = [], $not_rebuilding_expected = NULL): void {
+  public function testGetSelected($expected, $element = [], $parents = [], $user_input = [], $not_rebuilding_expected = NULL) {
     $not_rebuilding_expected = $not_rebuilding_expected ?: $expected;
     $form_state = new FormState();
     $form_state->setUserInput($user_input);
@@ -38,7 +36,7 @@ class WizardPluginBaseTest extends UnitTestCase {
   /**
    * Provides test data for testGetSelected().
    */
-  public static function providerTestGetSelected() {
+  public function providerTestGetSelected() {
     $data = [];
     // A form element with an invalid #type.
     $data['invalid_type'] = [

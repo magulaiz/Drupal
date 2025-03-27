@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -26,7 +24,7 @@ class InstallerExistingConfigDirectoryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     mkdir($this->root . DIRECTORY_SEPARATOR . $this->siteDirectory . '/config_read_only', 0444);
     $this->expectedFilePerms = fileperms($this->siteDirectory . '/config_read_only');
@@ -39,7 +37,7 @@ class InstallerExistingConfigDirectoryTest extends InstallerTestBase {
   /**
    * Verifies that installation succeeded.
    */
-  public function testInstaller(): void {
+  public function testInstaller() {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertEquals($this->expectedFilePerms, fileperms($this->siteDirectory . '/config_read_only'));

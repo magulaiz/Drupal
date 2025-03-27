@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\history\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Tests the History endpoints.
@@ -20,7 +17,9 @@ class HistoryTest extends BrowserTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['node', 'history'];
 
@@ -69,7 +68,7 @@ class HistoryTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  protected function getNodeReadTimestamps(array $node_ids): ResponseInterface {
+  protected function getNodeReadTimestamps(array $node_ids) {
     // Perform HTTP request.
     $http_client = $this->getHttpClient();
     $url = Url::fromRoute('history.get_last_node_view')
@@ -92,7 +91,7 @@ class HistoryTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response body.
    */
-  protected function markNodeAsRead($node_id): ResponseInterface {
+  protected function markNodeAsRead($node_id) {
     $http_client = $this->getHttpClient();
     $url = Url::fromRoute('history.read_node', ['node' => $node_id], ['absolute' => TRUE])->toString();
 
@@ -105,7 +104,7 @@ class HistoryTest extends BrowserTestBase {
   /**
    * Verifies that the history endpoints work.
    */
-  public function testHistory(): void {
+  public function testHistory() {
     $nid = $this->testNode->id();
 
     // Verify that previews of new entities do not create the history.
@@ -159,10 +158,7 @@ class HistoryTest extends BrowserTestBase {
     $this->assertEquals(403, $response->getStatusCode());
 
     // Additional check to ensure that we did not forget to verify anything.
-    $rows = \Drupal::database()->select('history')
-      ->fields('history', ['nid', 'uid', 'timestamp'])
-      ->execute()
-      ->fetchAll();
+    $rows = \Drupal::database()->query('SELECT * FROM {history}')->fetchAll();
     $this->assertCount(1, $rows);
     $this->assertSame($this->user->id(), $rows[0]->uid);
     $this->assertSame($this->testNode->id(), $rows[0]->nid);

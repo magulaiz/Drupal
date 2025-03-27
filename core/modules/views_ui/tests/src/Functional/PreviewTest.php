@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views_ui\Functional;
 
 /**
@@ -16,13 +14,7 @@ class PreviewTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = [
-    'test_preview',
-    'test_preview_error',
-    'test_pager_full',
-    'test_mini_pager',
-    'test_click_sort',
-  ];
+  public static $testViews = ['test_preview', 'test_preview_error', 'test_pager_full', 'test_mini_pager', 'test_click_sort'];
 
   /**
    * {@inheritdoc}
@@ -32,7 +24,7 @@ class PreviewTest extends UITestBase {
   /**
    * Tests contextual links in the preview form.
    */
-  public function testPreviewContextual(): void {
+  public function testPreviewContextual() {
     \Drupal::service('module_installer')->install(['contextual']);
     $this->resetAll();
 
@@ -67,7 +59,7 @@ class PreviewTest extends UITestBase {
   /**
    * Tests arguments in the preview form.
    */
-  public function testPreviewUI(): void {
+  public function testPreviewUI() {
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -93,7 +85,7 @@ class PreviewTest extends UITestBase {
     // Test feed preview.
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = $this->randomMachineName(16);
+    $view['id'] = strtolower($this->randomMachineName(16));
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
@@ -149,7 +141,7 @@ SQL;
   /**
    * Tests the additional information query info area.
    */
-  public function testPreviewAdditionalInfo(): void {
+  public function testPreviewAdditionalInfo() {
     \Drupal::service('module_installer')->install(['views_ui_test']);
     $this->resetAll();
 
@@ -170,37 +162,13 @@ SQL;
   /**
    * Tests view validation error messages in the preview.
    */
-  public function testPreviewError(): void {
+  public function testPreviewError() {
     $this->drupalGet('admin/structure/views/view/test_preview_error/edit');
     $this->assertSession()->statusCodeEquals(200);
 
     $this->submitForm($edit = [], 'Update preview');
 
     $this->assertSession()->pageTextContains('Unable to preview due to validation errors.');
-  }
-
-  /**
-   * Tests HTML is filtered from the view title when previewing.
-   */
-  public function testPreviewTitle(): void {
-    // Update the view and change title with html tags.
-    \Drupal::configFactory()->getEditable('views.view.test_preview')
-      ->set('display.default.display_options.title', '<strong>Test preview title</strong>')
-      ->save();
-
-    $this->drupalGet('admin/structure/views/view/test_preview/edit');
-    $this->assertSession()->statusCodeEquals(200);
-    $this->submitForm([], 'Update preview');
-    $this->assertSession()->pageTextContains('Test preview title');
-    // Ensure allowed HTML tags are still displayed.
-    $this->assertCount(2, $this->xpath('//div[@id="views-live-preview"]//strong[text()=:text]', [':text' => 'Test preview title']));
-
-    // Ensure other tags are filtered.
-    \Drupal::configFactory()->getEditable('views.view.test_preview')
-      ->set('display.default.display_options.title', '<b>Test preview title</b>')
-      ->save();
-    $this->submitForm([], 'Update preview');
-    $this->assertCount(0, $this->xpath('//div[@id="views-live-preview"]//b[text()=:text]', [':text' => 'Test preview title']));
   }
 
 }

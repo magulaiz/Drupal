@@ -2,10 +2,9 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Psr\Log\LoggerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines a factory class for workspace operations.
@@ -17,7 +16,61 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class WorkspaceOperationFactory {
 
-  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected Connection $database, protected WorkspaceManagerInterface $workspaceManager, protected WorkspaceAssociationInterface $workspaceAssociation, protected EventDispatcherInterface $eventDispatcher, protected LoggerInterface $logger) {
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
+   * The workspace manager.
+   *
+   * @var \Drupal\workspaces\WorkspaceManagerInterface
+   */
+  protected $workspaceManager;
+
+  /**
+   * The workspace association service.
+   *
+   * @var \Drupal\workspaces\WorkspaceAssociationInterface
+   */
+  protected $workspaceAssociation;
+
+  /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagsInvalidator;
+
+  /**
+   * Constructs a new WorkspacePublisher.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Database\Connection $database
+   *   Database connection.
+   * @param \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager
+   *   The workspace manager service.
+   * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
+   *   The workspace association service.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
+   *   The cache tags invalidator service.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->database = $database;
+    $this->workspaceManager = $workspace_manager;
+    $this->workspaceAssociation = $workspace_association;
+    $this->cacheTagsInvalidator = $cache_tags_invalidator;
   }
 
   /**
@@ -30,7 +83,7 @@ class WorkspaceOperationFactory {
    *   A workspace publisher object.
    */
   public function getPublisher(WorkspaceInterface $source) {
-    return new WorkspacePublisher($this->entityTypeManager, $this->database, $this->workspaceManager, $this->workspaceAssociation, $this->eventDispatcher, $source, $this->logger);
+    return new WorkspacePublisher($this->entityTypeManager, $this->database, $this->workspaceManager, $this->workspaceAssociation, $source);
   }
 
   /**
@@ -45,7 +98,7 @@ class WorkspaceOperationFactory {
    *   A workspace merger object.
    */
   public function getMerger(WorkspaceInterface $source, WorkspaceInterface $target) {
-    return new WorkspaceMerger($this->entityTypeManager, $this->database, $this->workspaceAssociation, $source, $target, $this->logger);
+    return new WorkspaceMerger($this->entityTypeManager, $this->database, $this->workspaceAssociation, $this->cacheTagsInvalidator, $source, $target);
   }
 
 }

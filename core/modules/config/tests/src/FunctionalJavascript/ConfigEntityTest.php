@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\config\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -26,7 +24,7 @@ class ConfigEntityTest extends WebDriverTestBase {
   /**
    * Tests ajax operations through the UI on 'Add' page.
    */
-  public function testAjaxOnAddPage(): void {
+  public function testAjaxOnAddPage() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));

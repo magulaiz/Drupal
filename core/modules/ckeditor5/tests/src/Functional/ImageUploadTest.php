@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\ckeditor5\Functional;
 
 use Drupal\Core\Url;
@@ -13,7 +11,6 @@ use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Test image upload.
@@ -61,16 +58,16 @@ class ImageUploadTest extends BrowserTestBase {
   /**
    * Tests using the file upload route with a disallowed extension.
    */
-  public function testUploadFileExtension(): void {
+  public function testUploadFileExtension() {
     $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,
       'scheme' => 'public',
       'directory' => 'inline-images',
-      'max_size' => NULL,
+      'max_size' => '',
       'max_dimensions' => [
-        'width' => NULL,
-        'height' => NULL,
+        'width' => 0,
+        'height' => 0,
       ],
     ]);
 
@@ -87,7 +84,7 @@ class ImageUploadTest extends BrowserTestBase {
   /**
    * Tests using the file upload route with a file size larger than allowed.
    */
-  public function testFileUploadLargerFileSize(): void {
+  public function testFileUploadLargerFileSize() {
     $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,
@@ -95,8 +92,8 @@ class ImageUploadTest extends BrowserTestBase {
       'directory' => 'inline-images',
       'max_size' => 30000,
       'max_dimensions' => [
-        'width' => NULL,
-        'height' => NULL,
+        'width' => 0,
+        'height' => 0,
       ],
     ]);
 
@@ -121,7 +118,7 @@ class ImageUploadTest extends BrowserTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3184974
    */
-  public function testLockAfterFailedValidation(): void {
+  public function testLockAfterFailedValidation() {
     $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,
@@ -129,8 +126,8 @@ class ImageUploadTest extends BrowserTestBase {
       'directory' => 'inline-images',
       'max_size' => 30000,
       'max_dimensions' => [
-        'width' => NULL,
-        'height' => NULL,
+        'width' => 0,
+        'height' => 0,
       ],
     ]);
 
@@ -162,7 +159,7 @@ class ImageUploadTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response.
    */
-  protected function uploadRequest(Url $url, string $file_contents, string $file_name): ResponseInterface {
+  protected function uploadRequest(Url $url, string $file_contents, string $file_name) {
     $request_options[RequestOptions::HEADERS] = [
       'Accept' => 'application/json',
     ];
@@ -178,10 +175,10 @@ class ImageUploadTest extends BrowserTestBase {
   }
 
   /**
-   * Provides the image upload URL.
+   * Provides the image upload url.
    *
    * @return \Drupal\Core\Url
-   *   The upload image URL for the basic_html format.
+   *   The upload image url for the basic_html format.
    */
   protected function getUploadUrl() {
     $token = $this->container->get('csrf_token')->get('ckeditor5/upload-image/basic_html');
@@ -193,7 +190,7 @@ class ImageUploadTest extends BrowserTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function createBasicFormat(): void {
+  protected function createBasicFormat() {
     $basic_html_format = FilterFormat::create([
       'format' => 'basic_html',
       'name' => 'Basic HTML',
@@ -227,11 +224,7 @@ class ImageUploadTest extends BrowserTestBase {
             'drupalInsertImage',
           ],
         ],
-        'plugins' => [
-          'ckeditor5_imageResize' => [
-            'allow_resize' => FALSE,
-          ],
-        ],
+        'plugins' => [],
       ],
       'image_upload' => $upload_config,
     ]);

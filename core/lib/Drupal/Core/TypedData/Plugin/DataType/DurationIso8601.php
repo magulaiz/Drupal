@@ -2,20 +2,18 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
-use Drupal\Core\Serialization\Attribute\JsonSchema;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\Type\DurationInterface;
 
 /**
  * The duration ISO8601 data type.
  *
  * The plain value of this data type is an ISO8601 duration string.
+ *
+ * @DataType(
+ *   id = "duration_iso8601",
+ *   label = @Translation("Duration")
+ * )
  */
-#[DataType(
-  id: "duration_iso8601",
-  label: new TranslatableMarkup("Duration")
-)]
 class DurationIso8601 extends StringData implements DurationInterface {
 
   /**
@@ -23,26 +21,10 @@ class DurationIso8601 extends StringData implements DurationInterface {
    */
   public function getDuration() {
     if ($this->value) {
-      // @todo Add support for negative intervals on top of the DateInterval
+      // @todo: Add support for negative intervals on top of the DateInterval
       // constructor.
       return new \DateInterval($this->value);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  #[JsonSchema(['type' => 'string', 'format' => 'duration'])]
-  public function getDurationAsIso8601Abnf(): string {
-    return $this->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  #[JsonSchema(['type' => 'string', 'format' => 'duration'])]
-  public function getCastedValue() {
-    return parent::getCastedValue();
   }
 
   /**

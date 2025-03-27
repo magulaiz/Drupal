@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Unit\Event;
 
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
@@ -18,7 +16,7 @@ class MigratePostRowSaveEventTest extends EventBaseTest {
    * @covers ::__construct
    * @covers ::getDestinationIdValues
    */
-  public function testGetDestinationIdValues(): void {
+  public function testGetDestinationIdValues() {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
     $message_service = $this->prophesize('\Drupal\migrate\MigrateMessageInterface')->reveal();
     $row = $this->prophesize('\Drupal\migrate\Row')->reveal();
@@ -32,7 +30,7 @@ class MigratePostRowSaveEventTest extends EventBaseTest {
    * @covers ::__construct
    * @covers ::getRow
    */
-  public function testGetRow(): void {
+  public function testGetRow() {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
     $message_service = $this->prophesize('\Drupal\migrate\MigrateMessageInterface');
     $row = $this->prophesize('\Drupal\migrate\Row')->reveal();

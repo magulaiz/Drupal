@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Asset;
 
 use Drupal\Core\Extension\ExtensionLifecycle;
@@ -15,7 +13,6 @@ use Drupal\KernelTests\KernelTestBase;
  * applied.
  *
  * @group Asset
- * @group #slow
  */
 class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
 
@@ -115,6 +112,10 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
       return TRUE;
     });
 
+    // Install the System module configuration as Olivero's block configuration
+    // depends on the system menus.
+    // @todo Remove this in https://www.drupal.org/node/3219959
+    $this->installConfig('system');
     // Install the 'user' entity schema because the workspaces module's install
     // hook creates a workspace with default uid of 1. Then the layout_builder
     // module's implementation of hook_entity_presave will cause
@@ -122,10 +123,6 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     // on the workspace which will fail because the user table is not present.
     // @todo Remove this in https://www.drupal.org/node/3039217.
     $this->installEntitySchema('user');
-
-    // Install the 'path_alias' entity schema because the path alias path
-    // processor requires it.
-    $this->installEntitySchema('path_alias');
 
     // Remove demo_umami_content module as its install hook creates content
     // that relies on the presence of entity tables and various other elements
@@ -155,7 +152,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   /**
    * Ensures that all core module and theme library files exist.
    */
-  public function testCoreLibraryCompleteness(): void {
+  public function testCoreLibraryCompleteness() {
     // First verify all libraries with no active theme.
     $this->verifyLibraryFilesExist($this->getAllLibraries());
 
@@ -164,7 +161,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     // and these changes are only applied for the active theme.
     foreach ($this->allThemes as $theme) {
       $this->themeManager->setActiveTheme($this->themeInitialization->getActiveThemeByName($theme));
-      $this->libraryDiscovery->clear();
+      $this->libraryDiscovery->clearCachedDefinitions();
 
       $this->verifyLibraryFilesExist($this->getAllLibraries());
     }
@@ -177,7 +174,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
    *   An array of library definitions, keyed by extension, then by library, and
    *   so on.
    */
-  protected function verifyLibraryFilesExist($library_definitions): void {
+  protected function verifyLibraryFilesExist($library_definitions) {
     foreach ($library_definitions as $extension => $libraries) {
       foreach ($libraries as $library_name => $library) {
         if (in_array("$extension/$library_name", $this->librariesToSkip)) {
@@ -204,7 +201,6 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
    * Gets all libraries for core and all installed modules.
    *
    * @return \Drupal\Core\Extension\Extension[]
-   *   An array of discovered libraries keyed by extension name.
    */
   protected function getAllLibraries() {
     $modules = \Drupal::moduleHandler()->getModuleList();

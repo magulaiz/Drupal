@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\LibraryDiscoveryCollector;
@@ -83,19 +81,12 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
     ],
   ];
 
-  /**
-   * The active theme.
-   *
-   * @var \Drupal\Core\Theme\ActiveTheme|\PHPUnit\Framework\MockObject\MockObject
-   */
   protected $activeTheme;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
     $this->themeManager = $this->getMockBuilder('Drupal\Core\Theme\ThemeManagerInterface')
@@ -111,7 +102,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
    *
    * @covers ::resolveCacheMiss
    */
-  public function testResolveCacheMiss(): void {
+  public function testResolveCacheMiss() {
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -137,7 +128,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
    *
    * @covers ::destruct
    */
-  public function testDestruct(): void {
+  public function testDestruct() {
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -181,7 +172,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
    *
    * @covers ::applyLibrariesExtend
    */
-  public function testLibrariesExtend(): void {
+  public function testLibrariesExtend() {
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
       ->disableOriginalConstructor()
       ->getMock();
@@ -226,7 +217,7 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testLibrariesExtendDeprecated(): void {
+  public function testLibrariesExtendDeprecated() {
     $this->expectDeprecation('Theme "test" is extending a deprecated library. The "test/test_4" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use the test_3 library instead. See https://www.example.com');
     $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
       ->disableOriginalConstructor()

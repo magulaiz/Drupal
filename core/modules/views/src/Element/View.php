@@ -2,24 +2,25 @@
 
 namespace Drupal\views\Element;
 
-use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\RenderElementBase;
+use Drupal\Core\Render\Element\RenderElement;
 use Drupal\views\Exception\ViewRenderElementException;
 use Drupal\views\Views;
 
 /**
  * Provides a render element to display a view.
+ *
+ * @RenderElement("view")
  */
-#[RenderElement('view')]
-class View extends RenderElementBase {
+class View extends RenderElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#pre_render' => [
-        [static::class, 'preRenderViewElement'],
+        [$class, 'preRenderViewElement'],
       ],
       '#name' => NULL,
       '#display_id' => 'default',
@@ -66,11 +67,11 @@ class View extends RenderElementBase {
       }
       else {
         // Add contextual links to the view. We need to attach them to the dummy
-        // $view_array variable, since contextual_preprocess() requires that
-        // they be attached to an array (not an object) in order to process
-        // them. For our purposes, it doesn't matter what we attach them to,
-        // since once they are processed by contextual_preprocess() they will
-        // appear in the $title_suffix variable (which we will then render in
+        // $view_array variable, since contextual_preprocess() requires that they
+        // be attached to an array (not an object) in order to process them. For
+        // our purposes, it doesn't matter what we attach them to, since once they
+        // are processed by contextual_preprocess() they will appear in the
+        // $title_suffix variable (which we will then render in
         // views-view.html.twig).
         $view->setDisplay($element['#display_id']);
         // Add the result of the executed view as a child element so any

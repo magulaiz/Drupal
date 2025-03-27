@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -16,7 +14,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
- * Verifies log entries and user access based on permissions.
+ * Generate events and verify dblog entries; verify user access to log reports
+ * based on permissions.
  *
  * @group dblog
  */
@@ -25,12 +24,15 @@ class DbLogTest extends BrowserTestBase {
   use AssertBreadcrumbTrait;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'dblog',
     'error_test',
     'node',
+    'forum',
     'help',
     'block',
   ];
@@ -66,7 +68,6 @@ class DbLogTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'administer site configuration',
       'access administration pages',
-      'access help pages',
       'access site reports',
       'administer users',
     ]);
@@ -80,7 +81,7 @@ class DbLogTest extends BrowserTestBase {
    * Database Logging module functionality through both the admin and user
    * interfaces.
    */
-  public function testDbLog(): void {
+  public function testDbLog() {
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
 
@@ -102,18 +103,12 @@ class DbLogTest extends BrowserTestBase {
     // Log in the regular user.
     $this->drupalLogin($this->webUser);
     $this->verifyReports(403);
-
-    $this->testLogEventNotFoundPage();
-    $this->testLogEventPageWithMissingInfo();
-    $this->test403LogEventPage();
-    $this->testMessageParsing();
-    $this->testOverviewLinks();
   }
 
   /**
    * Tests individual log event page.
    */
-  public function testLogEventPage(): void {
+  public function testLogEventPage() {
     // Login the admin user.
     $this->drupalLogin($this->adminUser);
 
@@ -126,7 +121,7 @@ class DbLogTest extends BrowserTestBase {
       'channel' => 'testing',
       'link' => 'foo/bar',
       'ip' => '0.0.1.0',
-      'timestamp' => \Drupal::time()->getRequestTime(),
+      'timestamp' => REQUEST_TIME,
     ];
     \Drupal::service('logger.dblog')->log(RfcLogLevel::NOTICE, 'Test message', $context);
     $query = Database::getConnection()->select('watchdog');
@@ -149,39 +144,9 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the details page displays the backtrace for a logged \Throwable.
-   */
-  public function testOnError(): void {
-    // Log in as the admin user.
-    $this->drupalLogin($this->adminUser);
-
-    // Load a page that throws an exception in the controller, and includes its
-    // function arguments in the exception backtrace.
-    $this->drupalGet('error-test/trigger-exception');
-
-    // Load the details page for the most recent event logged by the "php"
-    // logger.
-    $query = Database::getConnection()->select('watchdog')
-      ->condition('type', 'php');
-    $query->addExpression('MAX([wid])');
-    $wid = $query->execute()->fetchField();
-    $this->drupalGet('admin/reports/dblog/event/' . $wid);
-
-    // Verify the page displays a dblog-event table with a "Type" header.
-    $table = $this->assertSession()->elementExists('xpath', "//table[@class='dblog-event']");
-    $type = "//tr/th[contains(text(), 'Type')]/../td";
-    $this->assertSession()->elementsCount('xpath', $type, 1, $table);
-
-    // Verify that the backtrace row exists and is HTML-encoded.
-    $backtrace = "//tr//pre[contains(@class, 'backtrace')]";
-    $this->assertCount(1, $table->findAll('xpath', $backtrace));
-    $this->assertSession()->responseContains('&lt;script&gt;alert(&#039;xss&#039;)&lt;/script&gt;');
-  }
-
-  /**
    * Tests that a 403 event is logged with the exception triggering it.
    */
-  protected function test403LogEventPage(): void {
+  public function test403LogEventPage() {
     $assert_session = $this->assertSession();
     $uri = 'admin/reports';
 
@@ -221,7 +186,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Tests not-existing log event page.
    */
-  protected function testLogEventNotFoundPage(): void {
+  public function testLogEventNotFoundPage() {
     // Login the admin user.
     $this->drupalLogin($this->adminUser);
 
@@ -235,12 +200,12 @@ class DbLogTest extends BrowserTestBase {
    * Tests individual log event page with missing log attributes.
    *
    * In some cases few log attributes are missing. For example:
-   * - Missing referer: When request is made to a specific URL directly and
+   * - Missing referer: When request is made to a specific url directly and
    *   error occurred. In this case there is no referer.
    * - Incorrect location: When location attribute is incorrect uri which can
    *   not be used to generate a valid link.
    */
-  protected function testLogEventPageWithMissingInfo(): void {
+  public function testLogEventPageWithMissingInfo() {
     $this->drupalLogin($this->adminUser);
     $connection = Database::getConnection();
 
@@ -283,7 +248,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Test that twig errors are displayed correctly.
    */
-  protected function testMessageParsing(): void {
+  public function testMessageParsing() {
     $this->drupalLogin($this->adminUser);
     // Log a common twig error with {{ }} and { } variables.
     \Drupal::service('logger.factory')->get("php")
@@ -291,9 +256,7 @@ class DbLogTest extends BrowserTestBase {
         ['foo' => 'bar', 'path' => '/baz', 'value' => 'horse']
       );
     // View the log page to verify it's correct.
-    $query = Database::getConnection()->select('watchdog');
-    $query->addExpression('MAX([wid])');
-    $wid = $query->execute()->fetchField();
+    $wid = \Drupal::database()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertSession()
       ->responseContains('Incorrect parameter {bar} in path /baz: horse');
@@ -305,24 +268,23 @@ class DbLogTest extends BrowserTestBase {
    * @param int $row_limit
    *   The row limit.
    */
-  private function verifyRowLimit($row_limit): void {
+  private function verifyRowLimit($row_limit) {
     // Change the database log row limit.
     $edit = [];
     $edit['dblog_row_limit'] = $row_limit;
     $this->drupalGet('admin/config/development/logging');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->statusMessageContains('The configuration options have been saved.');
     $this->assertSession()->statusCodeEquals(200);
 
     // Check row limit variable.
     $current_limit = $this->config('dblog.settings')->get('row_limit');
-    $this->assertEquals($current_limit, $row_limit, "[Cache] Row limit variable of $current_limit equals row limit of $row_limit");
+    $this->assertEquals($current_limit, $row_limit, new FormattableMarkup('[Cache] Row limit variable of @count equals row limit of @limit', ['@count' => $current_limit, '@limit' => $row_limit]));
   }
 
   /**
    * Clear the entry logs by clicking on 'Clear log messages' button.
    */
-  protected function clearLogsEntries(): void {
+  protected function clearLogsEntries() {
     $this->drupalGet(Url::fromRoute('dblog.confirm'));
   }
 
@@ -334,7 +296,7 @@ class DbLogTest extends BrowserTestBase {
    * @param string $severity
    *   (optional) The log entry severity.
    */
-  protected function filterLogsEntries($type = NULL, $severity = NULL): void {
+  protected function filterLogsEntries($type = NULL, $severity = NULL) {
     $edit = [];
     if (isset($type)) {
       $edit['type[]'] = $type;
@@ -351,7 +313,7 @@ class DbLogTest extends BrowserTestBase {
    * @param int $response
    *   (optional) HTTP response code. Defaults to 200.
    */
-  private function verifyReports($response = 200): void {
+  private function verifyReports($response = 200) {
     // View the database log help page.
     $this->drupalGet('admin/help/dblog');
     $this->assertSession()->statusCodeEquals($response);
@@ -400,7 +362,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Generates and then verifies breadcrumbs.
    */
-  private function verifyBreadcrumbs(): void {
+  private function verifyBreadcrumbs() {
     // View the database log event page.
     $query = Database::getConnection()->select('watchdog');
     $query->addExpression('MIN([wid])');
@@ -417,13 +379,14 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Generates and then verifies various types of events.
    */
-  private function verifyEvents(): void {
+  private function verifyEvents() {
     // Invoke events.
     $this->doUser();
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->doNode('article');
     $this->doNode('page');
+    $this->doNode('forum');
 
     // When a user account is canceled, any content they created remains but the
     // uid = 0. Records in the watchdog table related to that user have the uid
@@ -438,16 +401,17 @@ class DbLogTest extends BrowserTestBase {
    * @param string $order
    *   The order by which the table should be sorted.
    */
-  public function verifySort($sort = 'asc', $order = 'Date'): void {
+  public function verifySort($sort = 'asc', $order = 'Date') {
     $this->drupalGet('admin/reports/dblog', ['query' => ['sort' => $sort, 'order' => $order]]);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Recent log messages');
   }
 
   /**
-   * Tests link escaping in the operation row of a database log detail page.
+   * Tests the escaping of links in the operation row of a database log detail
+   * page.
    */
-  private function verifyLinkEscaping(): void {
+  private function verifyLinkEscaping() {
     $link = Link::fromTextAndUrl('View', Url::fromRoute('entity.node.canonical', ['node' => 1]))->toString();
     $message = 'Log entry added to do the verifyLinkEscaping test.';
     $this->generateLogEntries(1, [
@@ -465,7 +429,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Generates and then verifies some user events.
    */
-  private function doUser(): void {
+  private function doUser() {
     // Set user variables.
     $name = $this->randomMachineName();
     $pass = \Drupal::service('password_generator')->generate();
@@ -482,7 +446,7 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Retrieve the user object.
     $user = user_load_by_name($name);
-    $this->assertNotNull($user, "User $name was loaded");
+    $this->assertNotNull($user, new FormattableMarkup('User @name was loaded', ['@name' => $name]));
     // pass_raw property is needed by drupalLogin.
     $user->passRaw = $pass;
     // Log in user.
@@ -495,7 +459,7 @@ class DbLogTest extends BrowserTestBase {
       $ids[] = $row->wid;
     }
     $count_before = (isset($ids)) ? count($ids) : 0;
-    $this->assertGreaterThan(0, $count_before, "DBLog contains $count_before records for {$user->getAccountName()}");
+    $this->assertGreaterThan(0, $count_before, new FormattableMarkup('DBLog contains @count records for @name', ['@count' => $count_before, '@name' => $user->getAccountName()]));
 
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
@@ -549,9 +513,9 @@ class DbLogTest extends BrowserTestBase {
    * Generates and then verifies some node events.
    *
    * @param string $type
-   *   A node type (e.g., 'article' or 'page').
+   *   A node type (e.g., 'article', 'page' or 'forum').
    */
-  private function doNode($type): void {
+  private function doNode($type) {
     // Create user.
     $perm = ['create ' . $type . ' content', 'edit own ' . $type . ' content', 'delete own ' . $type . ' content'];
     $user = $this->drupalCreateUser($perm);
@@ -560,21 +524,16 @@ class DbLogTest extends BrowserTestBase {
 
     // Create a node using the form in order to generate an add content event
     // (which is not triggered by drupalCreateNode).
-    $edit = [
-      'title[0][value]' => $this->randomMachineName(8),
-      'body[0][value]'  => $this->randomMachineName(32),
-    ];
+    $edit = $this->getContent($type);
     $title = $edit['title[0][value]'];
     $this->drupalGet('node/add/' . $type);
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
     // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertNotNull($node, "Node $title was loaded");
+    $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
     // Edit the node.
-    $edit = [
-      'body[0][value]' => $this->randomMachineName(32),
-    ];
+    $edit = $this->getContentUpdate($type);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
@@ -617,12 +576,57 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
+   * Creates random content based on node content type.
+   *
+   * @param string $type
+   *   Node content type (e.g., 'article').
+   *
+   * @return array
+   *   Random content needed by various node types.
+   */
+  private function getContent($type) {
+    switch ($type) {
+      case 'forum':
+        $content = [
+          'title[0][value]' => $this->randomMachineName(8),
+          'taxonomy_forums' => 1,
+          'body[0][value]' => $this->randomMachineName(32),
+        ];
+        break;
+
+      default:
+        $content = [
+          'title[0][value]' => $this->randomMachineName(8),
+          'body[0][value]' => $this->randomMachineName(32),
+        ];
+        break;
+    }
+    return $content;
+  }
+
+  /**
+   * Creates random content as an update based on node content type.
+   *
+   * @param string $type
+   *   Node content type (e.g., 'article').
+   *
+   * @return array
+   *   Random content needed by various node types.
+   */
+  private function getContentUpdate($type) {
+    $content = [
+      'body[0][value]' => $this->randomMachineName(32),
+    ];
+    return $content;
+  }
+
+  /**
    * Tests the addition and clearing of log events through the admin interface.
    *
    * Logs in the admin user, creates a database log event, and tests the
    * functionality of clearing the database log through the admin interface.
    */
-  public function testDBLogAddAndClear(): void {
+  public function testDBLogAddAndClear() {
     global $base_root;
     $connection = Database::getConnection();
     // Get a count of how many watchdog entries already exist.
@@ -637,12 +641,12 @@ class DbLogTest extends BrowserTestBase {
       'request_uri' => $base_root . \Drupal::request()->getRequestUri(),
       'referer'     => \Drupal::request()->server->get('HTTP_REFERER'),
       'ip'          => '127.0.0.1',
-      'timestamp'   => \Drupal::time()->getRequestTime(),
+      'timestamp'   => REQUEST_TIME,
     ];
     // Add a watchdog entry.
     $this->container->get('logger.dblog')->log($log['severity'], $log['message'], $log);
     // Make sure the table count has actually been incremented.
-    $this->assertEquals($count + 1, (int) $connection->select('watchdog')->countQuery()->execute()->fetchField(), '\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog ' . $count);
+    $this->assertEquals($count + 1, (int) $connection->select('watchdog')->countQuery()->execute()->fetchField(), new FormattableMarkup('\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog :count', [':count' => $count]));
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // Post in order to clear the database table.
@@ -651,13 +655,13 @@ class DbLogTest extends BrowserTestBase {
     $this->submitForm([], 'Confirm');
     // Count the rows in watchdog that previously related to the deleted user.
     $count = $connection->select('watchdog')->countQuery()->execute()->fetchField();
-    $this->assertEquals(0, $count, "DBLog contains $count records after a clear.");
+    $this->assertEquals(0, $count, new FormattableMarkup('DBLog contains :count records after a clear.', [':count' => $count]));
   }
 
   /**
    * Tests the database log filter functionality at admin/reports/dblog.
    */
-  public function testFilter(): void {
+  public function testFilter() {
     $this->drupalLogin($this->adminUser);
 
     // Clear the log to ensure that only generated entries will be found.
@@ -740,7 +744,7 @@ class DbLogTest extends BrowserTestBase {
    *   - message: (string) The message for this database log event.
    *   - user: (string) The user associated with this database log event.
    */
-  protected function getLogEntries(): array {
+  protected function getLogEntries() {
     $entries = [];
     if ($table = $this->getLogsEntriesTable()) {
       foreach ($table as $row) {
@@ -775,7 +779,7 @@ class DbLogTest extends BrowserTestBase {
    * @return array
    *   The count of each type keyed by the key of the $types array.
    */
-  protected function getTypeCount(array $types): array {
+  protected function getTypeCount(array $types) {
     $entries = $this->getLogEntries();
     $count = array_fill(0, count($types), 0);
     foreach ($entries as $entry) {
@@ -833,16 +837,16 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Tests that the details page displays correctly for a temporary user.
    */
-  public function testTemporaryUser(): void {
+  public function testTemporaryUser() {
     // Create a temporary user.
-    $temporary_user = $this->drupalCreateUser();
-    $temporary_user_uid = $temporary_user->id();
+    $tempuser = $this->drupalCreateUser();
+    $tempuser_uid = $tempuser->id();
 
     // Log in as the admin user.
     $this->drupalLogin($this->adminUser);
 
     // Generate a single watchdog entry.
-    $this->generateLogEntries(1, ['user' => $temporary_user, 'uid' => $temporary_user_uid]);
+    $this->generateLogEntries(1, ['user' => $tempuser, 'uid' => $tempuser_uid]);
     $query = Database::getConnection()->select('watchdog');
     $query->addExpression('MAX([wid])');
     $wid = $query->execute()->fetchField();
@@ -852,8 +856,8 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Dblog test log message');
 
     // Delete the user.
-    $temporary_user->delete();
-    $this->drupalGet('user/' . $temporary_user_uid);
+    $tempuser->delete();
+    $this->drupalGet('user/' . $tempuser_uid);
     $this->assertSession()->statusCodeEquals(404);
 
     // Check if the full message displays on the details page.
@@ -864,7 +868,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Make sure HTML tags are filtered out in the log overview links.
    */
-  protected function testOverviewLinks(): void {
+  public function testOverviewLinks() {
     $this->drupalLogin($this->adminUser);
     // cSpell:disable-next-line
     $this->generateLogEntries(1, ['message' => "&lt;script&gt;alert('foo');&lt;/script&gt;<strong>Lorem</strong> ipsum dolor sit amet, consectetur adipiscing & elit."]);
@@ -887,7 +891,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Tests sorting for entries with the same timestamp.
    */
-  public function testSameTimestampEntries(): void {
+  public function testSameTimestampEntries() {
     $this->drupalLogin($this->adminUser);
 
     $this->generateLogEntries(1, ['timestamp' => 1498062000, 'type' => 'same_time', 'message' => 'First']);
@@ -905,7 +909,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * Tests that the details page displays correctly backtrace.
    */
-  public function testBacktrace(): void {
+  public function testBacktrace() {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('/error-test/generate-warnings');
 

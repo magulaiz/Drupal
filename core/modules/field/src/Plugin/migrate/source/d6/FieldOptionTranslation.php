@@ -2,10 +2,6 @@
 
 namespace Drupal\field\Plugin\migrate\source\d6;
 
-// cspell:ignore objectid objectindex plid
-
-use Drupal\migrate\Attribute\MigrateSource;
-
 /**
  * Drupal 6 i18n field option labels source from database.
  *
@@ -13,11 +9,12 @@ use Drupal\migrate\Attribute\MigrateSource;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_field_option_translation",
+ *   source_module = "i18ncck"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_field_option_translation',
-  source_module: 'i18ncck',
-)]
 class FieldOptionTranslation extends Field {
 
   /**
@@ -36,10 +33,10 @@ class FieldOptionTranslation extends Field {
       ->condition('i18n.type', 'field')
       ->condition('property', 'option\_%', 'LIKE');
     $query->innerJoin('locales_target', 'lt', '[lt].[lid] = [i18n].[lid]');
-    $query->leftJoin('content_node_field', 'cnf', '[cnf].[field_name] = [i18n].[objectid]');
+    $query->leftjoin('content_node_field', 'cnf', '[cnf].[field_name] = [i18n].[objectid]');
     $query->addField('cnf', 'field_name');
     $query->addField('cnf', 'global_settings');
-    // Minimize changes to the d6_field_option_translation.yml, which is copied
+    // Minimise changes to the d6_field_option_translation.yml, which is copied
     // from d6_field.yml, by ensuring the 'type' property is from
     // content_node_field table.
     $query->addField('cnf', 'type');
@@ -47,6 +44,7 @@ class FieldOptionTranslation extends Field {
 
     // The i18n_string module adds a status column to locale_target. It was
     // originally 'status' in a later revision it was named 'i18n_status'.
+    /** @var \Drupal\Core\Database\Schema $db */
     if ($this->getDatabase()->schema()->fieldExists('locales_target', 'status')) {
       $query->addField('lt', 'status', 'i18n_status');
     }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Database\Database;
@@ -9,8 +7,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
-
-// cspell:ignore februar januar juni marz
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Base class for testing updates to string translations.
@@ -46,7 +43,9 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
   protected $timestampNow;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['locale', 'locale_test'];
 
@@ -57,10 +56,10 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
     parent::setUp();
 
     // Setup timestamps to identify old and new translation sources.
-    $this->timestampOld = \Drupal::time()->getRequestTime() - 300;
-    $this->timestampMedium = \Drupal::time()->getRequestTime() - 200;
-    $this->timestampNew = \Drupal::time()->getRequestTime() - 100;
-    $this->timestampNow = \Drupal::time()->getRequestTime();
+    $this->timestampOld = REQUEST_TIME - 300;
+    $this->timestampMedium = REQUEST_TIME - 200;
+    $this->timestampNew = REQUEST_TIME - 100;
+    $this->timestampNow = REQUEST_TIME;
 
     // Enable import of translations. By default this is disabled for automated
     // tests.
@@ -93,7 +92,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add language');
     $this->container->get('language_manager')->reset();
-    $this->assertNotEmpty(\Drupal::languageManager()->getLanguage($langcode), "Language $langcode added.");
+    $this->assertNotEmpty(\Drupal::languageManager()->getLanguage($langcode), new FormattableMarkup('Language %langcode added.', ['%langcode' => $langcode]));
   }
 
   /**
@@ -111,7 +110,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    *   in source and translations strings.
    */
   protected function makePoFile($path, $filename, $timestamp = NULL, array $translations = []) {
-    $timestamp = $timestamp ?: \Drupal::time()->getRequestTime();
+    $timestamp = $timestamp ? $timestamp : REQUEST_TIME;
     $path = 'public://' . $path;
     $text = '';
     $po_header = <<<EOF
@@ -134,11 +133,10 @@ EOF;
     }
 
     \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
-    $fileUri = $path . '/' . $filename;
     $file = File::create([
       'uid' => 1,
       'filename' => $filename,
-      'uri' => $fileUri,
+      'uri' => $path . '/' . $filename,
       'filemime' => 'text/x-gettext-translation',
       'timestamp' => $timestamp,
     ]);
@@ -146,9 +144,6 @@ EOF;
     file_put_contents($file->getFileUri(), $po_header . $text);
     touch(\Drupal::service('file_system')->realpath($file->getFileUri()), $timestamp);
     $file->save();
-
-    $this->assertTrue(file_exists($fileUri));
-    $this->assertEquals($timestamp, filemtime($fileUri));
   }
 
   /**
@@ -214,7 +209,8 @@ EOF;
   }
 
   /**
-   * Sets up existing translations and their statuses in the database.
+   * Setup existing translations in the database and set up the status of
+   * existing translations.
    */
   protected function setCurrentTranslations() {
     // Add non customized translations to the database.
@@ -314,7 +310,7 @@ EOF;
       ->execute()
       ->fetchField();
     $db_translation = $db_translation == FALSE ? '' : $db_translation;
-    $this->assertEquals($translation, $db_translation, $message ?: "Correct translation of $source ($langcode)");
+    $this->assertEquals($translation, $db_translation, $message ? $message : new FormattableMarkup('Correct translation of %source (%language)', ['%source' => $source, '%language' => $langcode]));
   }
 
 }

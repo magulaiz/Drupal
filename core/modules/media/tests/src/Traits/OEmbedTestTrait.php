@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\media\Traits;
 
 use Drupal\Component\Serialization\Json;
@@ -17,9 +15,8 @@ trait OEmbedTestTrait {
    * Returns the relative path to the oEmbed fixtures directory.
    *
    * @return string
-   *   The relative path to the oEmbed fixtures directory.
    */
-  protected function getFixturesDirectory(): string {
+  protected function getFixturesDirectory() {
     return \Drupal::service('extension.list.module')->getPath('media') . '/tests/fixtures/oembed';
   }
 
@@ -27,9 +24,8 @@ trait OEmbedTestTrait {
    * Returns the absolute URL of the oEmbed fixtures directory.
    *
    * @return string
-   *   The absolute URL of the oEmbed fixtures directory.
    */
-  protected function getFixturesUrl(): string {
+  protected function getFixturesUrl() {
     return $this->baseUrl . '/' . $this->getFixturesDirectory();
   }
 
@@ -43,11 +39,10 @@ trait OEmbedTestTrait {
   }
 
   /**
-   * Configures the HTTP client to always use the fixtures directory.
-   *
-   * All requests are carried out relative to the URL of the fixtures directory.
-   * For example, after calling this method, a request for foobar.html will
-   * actually request http://test-site/path/to/fixtures/foobar.html.
+   * Configures the http_client service so that all requests are carried out
+   * relative to the URL of the fixtures directory. For example, after calling
+   * this method, a request for foobar.html will actually request
+   * http://test-site/path/to/fuxtures/foobar.html.
    */
   protected function lockHttpClientToFixtures() {
     $this->writeSettings([
@@ -67,10 +62,9 @@ trait OEmbedTestTrait {
   }
 
   /**
-   * Ensures that oEmbed provider endpoints use the test resource route.
-   *
-   * All oEmbed provider endpoints defined in the fixture providers.json will
-   * use the media_test_oembed.resource.get route as their URL.
+   * Ensures that all oEmbed provider endpoints defined in the fixture
+   * providers.json will use the media_test_oembed.resource.get route as their
+   * URL.
    *
    * This requires the media_test_oembed module in order to work.
    */

@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Validation;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestStringId;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\TestTools\Random;
 
 /**
  * Tests the unique field value validation constraint.
@@ -33,7 +30,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    *
    * @covers ::validate
    */
-  public function testEntityWithStringId(): void {
+  public function testEntityWithStringId() {
     $this->installEntitySchema('entity_test_string_id');
 
     EntityTestStringId::create([
@@ -69,7 +66,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    *
    * @dataProvider providerTestEntityWithStringIdWithViolation
    */
-  public function testEntityWithStringIdWithViolation($id): void {
+  public function testEntityWithStringIdWithViolation($id) {
     $this->installEntitySchema('entity_test_string_id');
 
     $value = $this->randomString();
@@ -105,14 +102,14 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    *
    * @see self::testEntityWithStringIdWithViolation()
    */
-  public static function providerTestEntityWithStringIdWithViolation() {
+  public function providerTestEntityWithStringIdWithViolation() {
     return [
       'without an id' => [NULL],
       'zero as integer' => [0],
       'zero as string' => ["0"],
       'non-zero as integer' => [mt_rand(1, 127)],
       'non-zero as string' => [(string) mt_rand(1, 127)],
-      'alphanumeric' => [Random::machineName()],
+      'alphanumeric' => [$this->randomMachineName()],
     ];
   }
 
@@ -124,7 +121,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    *
    * @covers ::validate
    */
-  public function testViolationDespiteNoAccess(): void {
+  public function testViolationDespiteNoAccess() {
     $this->installEntitySchema('entity_test');
 
     // Create and save an entity with a given field value in the field that has

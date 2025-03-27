@@ -3,7 +3,6 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 
 /**
@@ -48,7 +47,6 @@ use Drupal\Core\Render\Element;
  *     since all user agents automatically preselect the first available
  *     option. But people are used to this being the behavior of select
  *     controls.
- *
  *     @todo Address the above issue in Drupal 8.
  *   - If #required is not TRUE and this value is set (most commonly to an
  *     empty string), then an extra option (see #empty_option above)
@@ -78,25 +76,27 @@ use Drupal\Core\Render\Element;
  *   ],
  * ];
  * @endcode
+ *
+ * @FormElement("select")
  */
-#[FormElement('select')]
-class Select extends FormElementBase {
+class Select extends FormElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#multiple' => FALSE,
       '#sort_options' => FALSE,
       '#sort_start' => NULL,
       '#process' => [
-        [static::class, 'processSelect'],
-        [static::class, 'processAjaxForm'],
+        [$class, 'processSelect'],
+        [$class, 'processAjaxForm'],
       ],
       '#pre_render' => [
-        [static::class, 'preRenderSelect'],
+        [$class, 'preRenderSelect'],
       ],
       '#theme' => 'select',
       '#theme_wrappers' => ['form_element'],
@@ -130,9 +130,8 @@ class Select extends FormElementBase {
       $element['#attributes']['name'] = $element['#name'] . '[]';
     }
     // A non-#multiple select needs special handling to prevent user agents from
-    // preselecting the first option without intention. #multiple select lists
-    // do not get an empty option, as it would not make sense, user
-    // interface-wise.
+    // preselecting the first option without intention. #multiple select lists do
+    // not get an empty option, as it would not make sense, user interface-wise.
     else {
       // If the element is set to #required through #states, override the
       // element's #required setting.

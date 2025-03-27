@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
@@ -23,7 +21,9 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class ConfigTranslationListUiTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'block',
@@ -62,9 +62,6 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $permissions = [
       'access site-wide contact form',
       'administer blocks',
-      'administer block content',
-      'administer block types',
-      'access block library',
       'administer contact forms',
       'administer content types',
       'administer block_content fields',
@@ -101,10 +98,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    * There are no blocks placed in the testing profile. Add one, then check
    * for Translate operation.
    */
-  protected function doBlockListTest(): void {
+  protected function doBlockListTest() {
     // Add a test block, any block will do.
     // Set the machine name so the translate link can be built later.
-    $id = $this->randomMachineName(16);
+    $id = mb_strtolower($this->randomMachineName(16));
     $this->drupalPlaceBlock('system_powered_by_block', ['id' => $id]);
 
     // Get the Block listing.
@@ -122,12 +119,12 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the menu listing for the translate operation.
    */
-  protected function doMenuListTest(): void {
+  protected function doMenuListTest() {
     // Create a test menu to decouple looking for translate operations link so
     // this does not test more than necessary.
     $this->drupalGet('admin/structure/menu/add');
     // Lowercase the machine name.
-    $menu_name = $this->randomMachineName(16);
+    $menu_name = mb_strtolower($this->randomMachineName(16));
     $label = $this->randomMachineName(16);
     $edit = [
       'id' => $menu_name,
@@ -170,13 +167,13 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the vocabulary listing for the translate operation.
    */
-  protected function doVocabularyListTest(): void {
+  protected function doVocabularyListTest() {
     // Create a test vocabulary to decouple looking for translate operations
     // link so this does not test more than necessary.
     $vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
-      'vid' => $this->randomMachineName(),
+      'vid' => mb_strtolower($this->randomMachineName()),
     ]);
     $vocabulary->save();
 
@@ -190,31 +187,26 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     // Test if the link to translate actually goes to the translate page.
     $this->drupalGet($translate_link);
     $this->assertSession()->responseContains('<th>Language</th>');
-
-    // Test if the local task for translation is on this page.
-    $this->assertSession()->linkExists('Translate taxonomy vocabulary');
-    $local_task_url = parse_url($this->getSession()->getPage()->findLink('Translate taxonomy vocabulary')->getAttribute('href'));
-    $this->assertSame(base_path() . $translate_link, $local_task_url['path']);
   }
 
   /**
-   * Tests the content block listing for the translate operation.
+   * Tests the custom block listing for the translate operation.
    */
-  public function doCustomContentTypeListTest(): void {
-    // Create a test block type to decouple looking for translate
+  public function doCustomContentTypeListTest() {
+    // Create a test custom block type to decouple looking for translate
     // operations link so this does not test more than necessary.
     $block_content_type = BlockContentType::create([
-      'id' => $this->randomMachineName(16),
+      'id' => mb_strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
       'revision' => FALSE,
     ]);
     $block_content_type->save();
 
-    // Get the block type listing.
+    // Get the custom block type listing.
     $this->drupalGet('admin/structure/block-content');
 
     $translate_link = 'admin/structure/block-content/manage/' . $block_content_type->id() . '/translate';
-    // Test if the link to translate the block type is on the page.
+    // Test if the link to translate the custom block type is on the page.
     $this->assertSession()->linkByHrefExists($translate_link);
 
     // Test if the link to translate actually goes to the translate page.
@@ -225,11 +217,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the contact forms listing for the translate operation.
    */
-  public function doContactFormsListTest(): void {
+  public function doContactFormsListTest() {
     // Create a test contact form to decouple looking for translate operations
     // link so this does not test more than necessary.
     $contact_form = ContactForm::create([
-      'id' => $this->randomMachineName(16),
+      'id' => mb_strtolower($this->randomMachineName(16)),
       'label' => $this->randomMachineName(),
     ]);
     $contact_form->save();
@@ -249,11 +241,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the content type listing for the translate operation.
    */
-  public function doContentTypeListTest(): void {
+  public function doContentTypeListTest() {
     // Create a test content type to decouple looking for translate operations
     // link so this does not test more than necessary.
     $content_type = $this->drupalCreateContentType([
-      'type' => $this->randomMachineName(16),
+      'type' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ]);
 
@@ -272,11 +264,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the formats listing for the translate operation.
    */
-  public function doFormatsListTest(): void {
+  public function doFormatsListTest() {
     // Create a test format to decouple looking for translate operations
     // link so this does not test more than necessary.
     $filter_format = FilterFormat::create([
-      'format' => $this->randomMachineName(16),
+      'format' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ]);
     $filter_format->save();
@@ -296,11 +288,11 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the shortcut listing for the translate operation.
    */
-  public function doShortcutListTest(): void {
+  public function doShortcutListTest() {
     // Create a test shortcut to decouple looking for translate operations
     // link so this does not test more than necessary.
     $shortcut = ShortcutSet::create([
-      'id' => $this->randomMachineName(16),
+      'id' => mb_strtolower($this->randomMachineName(16)),
       'label' => $this->randomString(),
     ]);
     $shortcut->save();
@@ -320,10 +312,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the role listing for the translate operation.
    */
-  public function doUserRoleListTest(): void {
+  public function doUserRoleListTest() {
     // Create a test role to decouple looking for translate operations
     // link so this does not test more than necessary.
-    $role_id = $this->randomMachineName(16);
+    $role_id = mb_strtolower($this->randomMachineName(16));
     $this->drupalCreateRole([], $role_id);
 
     // Get the role listing.
@@ -341,7 +333,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the language listing for the translate operation.
    */
-  public function doLanguageListTest(): void {
+  public function doLanguageListTest() {
     // Create a test language to decouple looking for translate operations
     // link so this does not test more than necessary.
     ConfigurableLanguage::createFromLangcode('ga')->save();
@@ -361,7 +353,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the image style listing for the translate operation.
    */
-  public function doImageStyleListTest(): void {
+  public function doImageStyleListTest() {
     // Get the image style listing.
     $this->drupalGet('admin/config/media/image-styles');
 
@@ -377,7 +369,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the responsive image mapping listing for the translate operation.
    */
-  public function doResponsiveImageListTest(): void {
+  public function doResponsiveImageListTest() {
     $edit = [];
     $edit['label'] = $this->randomMachineName();
     $edit['id'] = strtolower($edit['label']);
@@ -402,10 +394,10 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the field listing for the translate operation.
    */
-  public function doFieldListTest(): void {
+  public function doFieldListTest() {
     // Create a base content type.
     $content_type = $this->drupalCreateContentType([
-      'type' => $this->randomMachineName(16),
+      'type' => mb_strtolower($this->randomMachineName(16)),
       'name' => $this->randomMachineName(),
     ]);
 
@@ -458,7 +450,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests the date format listing for the translate operation.
    */
-  public function doDateFormatListTest(): void {
+  public function doDateFormatListTest() {
     // Get the date format listing.
     $this->drupalGet('admin/config/regional/date-time');
 
@@ -477,7 +469,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    * @param string $link
    *   URL of the settings page to test.
    */
-  public function doSettingsPageTest($link): void {
+  public function doSettingsPageTest($link) {
     // Get the settings page.
     $this->drupalGet($link);
 
@@ -493,7 +485,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   /**
    * Tests if translate link is added to operations in all configuration lists.
    */
-  public function testTranslateOperationInListUi(): void {
+  public function testTranslateOperationInListUi() {
     // All lists based on paths provided by the module.
     $this->doBlockListTest();
     $this->doMenuListTest();
@@ -510,8 +502,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
     $this->doDateFormatListTest();
     $this->doFieldListTest();
 
-    // Views is tested in
-    // Drupal\config_translation\Tests\ConfigTranslationViewListUiTest
+    // Views is tested in Drupal\config_translation\Tests\ConfigTranslationViewListUiTest
 
     // Test the maintenance settings page.
     $this->doSettingsPageTest('admin/config/development/maintenance');

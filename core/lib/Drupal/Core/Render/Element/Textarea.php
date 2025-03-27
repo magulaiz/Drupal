@@ -3,7 +3,6 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 
 /**
  * Provides a form element for input of multiple-line text.
@@ -17,46 +16,39 @@ use Drupal\Core\Render\Attribute\FormElement;
  *
  * Usage example:
  * @code
- * $form['text'] = [
+ * $form['text'] = array(
  *   '#type' => 'textarea',
  *   '#title' => $this->t('Text'),
- * ];
+ * );
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield
  * @see \Drupal\filter\Element\TextFormat
+ *
+ * @FormElement("textarea")
  */
-#[FormElement('textarea')]
-class Textarea extends FormElementBase {
+class Textarea extends FormElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#cols' => 60,
       '#rows' => 5,
       '#resizable' => 'vertical',
       '#process' => [
-        [static::class, 'processAjaxForm'],
-        [static::class, 'processGroup'],
+        [$class, 'processAjaxForm'],
+        [$class, 'processGroup'],
       ],
       '#pre_render' => [
-        [static::class, 'preRenderGroup'],
-        [static::class, 'preRenderAttachments'],
+        [$class, 'preRenderGroup'],
       ],
       '#theme' => 'textarea',
       '#theme_wrappers' => ['form_element'],
     ];
-  }
-
-  /**
-   * Adds the textarea resize library.
-   */
-  public static function preRenderAttachments($element): array {
-    $element['#attached']['library'][] = 'core/drupal.textarea-resize';
-    return $element;
   }
 
   /**

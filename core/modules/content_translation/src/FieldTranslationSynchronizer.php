@@ -101,8 +101,8 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           return;
         }
         // When this mode is enabled, changes to synchronized properties are
-        // allowed only in the default translation, thus we need to make sure
-        // this is always used as source for the synchronization process.
+        // allowed only in the default translation, thus we need to make sure this
+        // is always used as source for the synchronization process.
         else {
           $sync_langcode = $entity->getUntranslated()->language()->getId();
         }
@@ -189,13 +189,12 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
    *   The unchanged entity.
    */
   protected function getOriginalEntity(ContentEntityInterface $entity) {
-    if (!$entity->getOriginal()) {
-      /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    if (!isset($entity->original)) {
       $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-      $original = $entity->wasDefaultRevision() ? $storage->loadUnchanged($entity->id()) : $storage->loadRevision($entity->getLoadedRevisionId());
+      $original = $entity->isDefaultRevision() ? $storage->loadUnchanged($entity->id()) : $storage->loadRevision($entity->getLoadedRevisionId());
     }
     else {
-      $original = $entity->getOriginal();
+      $original = $entity->original;
     }
     return $original;
   }
@@ -328,7 +327,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
    * @param array $properties
    *   An array of column names to be synchronized.
    *
-   * @return string
+   * @returns string
    *   A hash code that can be used to identify the item.
    */
   protected function itemHash(array $items, $delta, array $properties) {

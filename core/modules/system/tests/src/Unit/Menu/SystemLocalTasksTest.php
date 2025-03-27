@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Unit\Menu;
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -54,7 +52,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
       ->expects($this->once())
       ->method('hasLinkTemplate')
       ->with('version-history')
-      ->willReturn(TRUE);
+      ->will($this->returnValue(TRUE));
     $entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $entityTypeManager->expects($this->any())
       ->method('getDefinitions')
@@ -69,14 +67,14 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
    *
    * @dataProvider getSystemAdminRoutes
    */
-  public function testSystemAdminLocalTasks($route, $expected): void {
+  public function testSystemAdminLocalTasks($route, $expected) {
     $this->assertLocalTasks($route, $expected);
   }
 
   /**
    * Provides a list of routes to test.
    */
-  public static function getSystemAdminRoutes() {
+  public function getSystemAdminRoutes() {
     return [
       ['system.admin_content', [['system.admin_content']]],
       [

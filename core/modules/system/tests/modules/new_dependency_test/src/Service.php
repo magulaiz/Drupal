@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\new_dependency_test;
 
 /**
@@ -24,7 +22,7 @@ class Service {
    * @param \Drupal\new_dependency_test\Service|null $inner
    *   The service to decorate.
    */
-  public function __construct(?Service $inner = NULL) {
+  public function __construct(Service $inner = NULL) {
     $this->inner = $inner;
   }
 

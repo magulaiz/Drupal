@@ -1,25 +1,23 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\path\Functional;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
-use Drupal\Tests\WaitTerminateTestTrait;
 
 /**
- * Tests modifying path aliases from the UI.
+ * Add, edit, delete, and change alias and verify its consistency in the
+ * database.
  *
  * @group path
  */
 class PathAliasTest extends PathTestBase {
 
-  use WaitTerminateTestTrait;
-
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['path'];
 
@@ -43,17 +41,12 @@ class PathAliasTest extends PathTestBase {
       'access content overview',
     ]);
     $this->drupalLogin($web_user);
-
-    // The \Drupal\path_alias\AliasPrefixList service performs cache clears
-    // after Drupal has flushed the response to the client. We use
-    // WaitTerminateTestTrait to wait for Drupal to do this before continuing.
-    $this->setWaitForTerminate();
   }
 
   /**
    * Tests the path cache.
    */
-  public function testPathCache(): void {
+  public function testPathCache() {
     // Create test node.
     $node1 = $this->drupalCreateNode();
 
@@ -64,10 +57,10 @@ class PathAliasTest extends PathTestBase {
     $this->drupalGet('admin/config/search/path/add');
     $this->submitForm($edit, 'Save');
 
-    // Check the path alias prefix list cache.
-    $prefix_list = \Drupal::cache('bootstrap')->get('path_alias_prefix_list');
-    $this->assertTrue($prefix_list->data['node']);
-    $this->assertFalse($prefix_list->data['admin']);
+    // Check the path alias whitelist cache.
+    $whitelist = \Drupal::cache('bootstrap')->get('path_alias_whitelist');
+    $this->assertTrue($whitelist->data['node']);
+    $this->assertFalse($whitelist->data['admin']);
 
     // Visit the system path for the node and confirm a cache entry is
     // created.
@@ -87,7 +80,7 @@ class PathAliasTest extends PathTestBase {
   /**
    * Tests alias functionality through the admin interfaces.
    */
-  public function testAdminAlias(): void {
+  public function testAdminAlias() {
     // Create test node.
     $node1 = $this->drupalCreateNode();
 
@@ -153,7 +146,7 @@ class PathAliasTest extends PathTestBase {
 
     // Set alias to second test node.
     $edit['path[0][value]'] = '/node/' . $node2->id();
-    // Leave $edit['alias'] the same
+    // leave $edit['alias'] the same
     $this->drupalGet('admin/config/search/path/add');
     $this->submitForm($edit, 'Save');
 
@@ -182,10 +175,14 @@ class PathAliasTest extends PathTestBase {
     $edit['path[0][value]'] = '/node/' . $node1->id();
     $alias = '/' . $this->randomMachineName(128);
     $edit['alias[0][value]'] = $alias;
+    // The alias is shortened to 50 characters counting the ellipsis.
+    $truncated_alias = substr($alias, 0, 47);
     $this->drupalGet('admin/config/search/path/add');
     $this->submitForm($edit, 'Save');
-    // The alias will always be found.
-    $this->assertSession()->pageTextContains($alias);
+    // The untruncated alias should not be found.
+    $this->assertSession()->pageTextNotContains($alias);
+    // The 'truncated' alias will always be found.
+    $this->assertSession()->pageTextContains($truncated_alias);
 
     // Create third test node.
     $node3 = $this->drupalCreateNode();
@@ -256,7 +253,7 @@ class PathAliasTest extends PathTestBase {
   /**
    * Tests alias functionality through the node interfaces.
    */
-  public function testNodeAlias(): void {
+  public function testNodeAlias() {
     // Create test node.
     $node1 = $this->drupalCreateNode();
 
@@ -420,7 +417,7 @@ class PathAliasTest extends PathTestBase {
   /**
    * Tests that duplicate aliases fail validation.
    */
-  public function testDuplicateNodeAlias(): void {
+  public function testDuplicateNodeAlias() {
     // Create one node with a random alias.
     $node_one = $this->drupalCreateNode();
     $edit = [];

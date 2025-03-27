@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -44,7 +42,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
   /**
    * Tests dialog for filter criteria.
    */
-  public function testFilterCriteriaDialog(): void {
+  public function testFilterCriteriaDialog() {
     // Checks that the admin summary is not double escaped.
     $this->drupalGet('admin/structure/views/view/who_s_online');
     $page = $this->getSession()->getPage();
@@ -130,7 +128,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
   /**
    * Tests operator labels.
    */
-  public function testOperatorLabels(): void {
+  public function testOperatorLabels() {
     // Open the "Frontpage" view.
     $this->drupalGet('admin/structure/views/view/frontpage');
     $session = $this->getSession();
@@ -178,7 +176,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
   /**
    * Uses the 'And/Or Rearrange' link for filters to open a dialog.
    */
-  protected function openFilterDialog(): void {
+  protected function openFilterDialog() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $dropbutton = $page->find('css', '.views-ui-display-tab-bucket.filter .dropbutton-toggle button');

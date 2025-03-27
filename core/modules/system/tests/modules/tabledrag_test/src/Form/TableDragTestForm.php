@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\tabledrag_test\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -183,7 +181,9 @@ class TableDragTestForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $operation = $form_state->getTriggeringElement()['#op'] ?? 'save';
+    $operation = isset($form_state->getTriggeringElement()['#op']) ?
+      $form_state->getTriggeringElement()['#op'] :
+      'save';
 
     switch ($operation) {
       case 'reset':

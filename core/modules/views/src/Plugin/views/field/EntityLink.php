@@ -3,15 +3,15 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to an entity.
  *
  * @ingroup views_field_handlers
+ *
+ * @ViewsField("entity_link")
  */
-#[ViewsField("entity_link")]
 class EntityLink extends LinkBase {
 
   /**
@@ -26,8 +26,7 @@ class EntityLink extends LinkBase {
    */
   protected function renderLink(ResultRow $row) {
     if ($this->options['output_url_as_text']) {
-      $url_info = $this->getUrlInfo($row);
-      return $url_info ? $url_info->toString() : '';
+      return $this->getUrlInfo($row)->toString();
     }
     return parent::renderLink($row);
   }
@@ -38,9 +37,6 @@ class EntityLink extends LinkBase {
   protected function getUrlInfo(ResultRow $row) {
     $template = $this->getEntityLinkTemplate();
     $entity = $this->getEntity($row);
-    if ($entity === NULL) {
-      return NULL;
-    }
     if ($this->languageManager->isMultilingual()) {
       $entity = $this->getEntityTranslationByRelationship($entity, $row);
     }
@@ -50,7 +46,7 @@ class EntityLink extends LinkBase {
   /**
    * Returns the entity link template name identifying the link route.
    *
-   * @return string
+   * @returns string
    *   The link template name.
    */
   protected function getEntityLinkTemplate() {

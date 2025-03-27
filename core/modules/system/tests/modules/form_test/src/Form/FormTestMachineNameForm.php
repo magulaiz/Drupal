@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -35,7 +33,6 @@ class FormTestMachineNameForm extends FormBase {
       '#title' => 'Machine name 1',
       '#description' => 'A machine name.',
       '#machine_name' => [
-        'exists' => [$this, 'load'],
         'source' => ['machine_name_1_label'],
       ],
     ];
@@ -48,7 +45,6 @@ class FormTestMachineNameForm extends FormBase {
       '#title' => 'Machine name 2',
       '#description' => 'Another machine name.',
       '#machine_name' => [
-        'exists' => [$this, 'load'],
         'source' => ['machine_name_2_label'],
       ],
     ];
@@ -62,7 +58,6 @@ class FormTestMachineNameForm extends FormBase {
       '#title' => 'Machine name 3',
       '#description' => 'Another machine name.',
       '#machine_name' => [
-        'exists' => [$this, 'load'],
         'source' => ['machine_name_3_label'],
       ],
     ];
@@ -78,19 +73,6 @@ class FormTestMachineNameForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setResponse(new JsonResponse($form_state->getValues()));
-  }
-
-  /**
-   * Loading stub for machine name.
-   *
-   * @param string $machine_name
-   *   The machine name.
-   *
-   * @return bool
-   *   TRUE if the machine name is a duplicate, FALSE otherwise.
-   */
-  public function load($machine_name) {
-    return str_contains($machine_name, 'duplicate');
   }
 
 }

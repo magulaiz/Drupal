@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Session;
 
 use Drupal\Tests\UnitTestCase;
@@ -33,8 +31,6 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->wrappedSessionHandler = $this->createMock('SessionHandlerInterface');
     $this->sessionHandler = new WriteSafeSessionHandler($this->wrappedSessionHandler);
   }
@@ -46,7 +42,7 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
    * @covers ::isSessionWritable
    * @covers ::write
    */
-  public function testConstructWriteSafeSessionHandlerDefaultArgs(): void {
+  public function testConstructWriteSafeSessionHandlerDefaultArgs() {
     $session_id = 'some-id';
     $session_data = 'serialized-session-data';
 
@@ -72,7 +68,7 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
    * @covers ::isSessionWritable
    * @covers ::write
    */
-  public function testConstructWriteSafeSessionHandlerDisableWriting(): void {
+  public function testConstructWriteSafeSessionHandlerDisableWriting() {
     $session_id = 'some-id';
     $session_data = 'serialized-session-data';
 
@@ -91,7 +87,7 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
    * @covers ::setSessionWritable
    * @covers ::write
    */
-  public function testSetSessionWritable(): void {
+  public function testSetSessionWritable() {
     $session_id = 'some-id';
     $session_data = 'serialized-session-data';
 
@@ -136,7 +132,7 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
    * @covers ::gc
    * @dataProvider providerTestOtherMethods
    */
-  public function testOtherMethods($method, $expected_result, $args): void {
+  public function testOtherMethods($method, $expected_result, $args) {
     $invocation = $this->wrappedSessionHandler->expects($this->exactly(2))
       ->method($method)
       ->willReturn($expected_result);
@@ -162,7 +158,7 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestOtherMethods() {
+  public function providerTestOtherMethods() {
     return [
       ['open', TRUE, ['/some/path', 'some-session-id']],
       ['read', 'some-session-data', ['a-session-id']],

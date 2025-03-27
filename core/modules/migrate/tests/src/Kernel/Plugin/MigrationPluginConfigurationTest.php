@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -21,7 +19,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
     'migrate',
     'migrate_drupal',
     // Test with a simple migration.
-    'migrate_plugin_config_test',
+    'ban',
     'locale',
   ];
 
@@ -30,7 +28,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
    *
    * @dataProvider mergeProvider
    */
-  public function testConfigurationMerge($id, $configuration, $expected): void {
+  public function testConfigurationMerge($id, $configuration, $expected) {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->container->get('plugin.manager.migration')
       ->createInstance($id, $configuration);
@@ -41,12 +39,12 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
   /**
    * Provide configuration data for testing.
    */
-  public static function mergeProvider() {
+  public function mergeProvider() {
     return [
       // Tests adding new configuration to a migration.
       [
         // New configuration.
-        'simple_migration',
+        'd7_blocked_ips',
         [
           'source' => [
             'constants' => [
@@ -56,7 +54,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
         ],
         // Expected final source configuration.
         [
-          'plugin' => 'simple_source',
+          'plugin' => 'd7_blocked_ips',
           'constants' => [
             'added_setting' => 'Ban them all!',
           ],
@@ -65,7 +63,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
       // Tests overriding pre-existing configuration in a migration.
       [
         // New configuration.
-        'simple_migration',
+        'd7_blocked_ips',
         [
           'source' => [
             'plugin' => 'a_different_plugin',

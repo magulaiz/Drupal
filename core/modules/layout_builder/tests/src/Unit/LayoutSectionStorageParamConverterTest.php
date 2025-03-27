@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\layout_builder\Routing\LayoutSectionStorageParamConverter;
@@ -19,7 +17,7 @@ class LayoutSectionStorageParamConverterTest extends UnitTestCase {
   /**
    * @covers ::convert
    */
-  public function testConvert(): void {
+  public function testConvert() {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $converter = new LayoutSectionStorageParamConverter($section_storage_manager->reveal());
 
@@ -42,7 +40,7 @@ class LayoutSectionStorageParamConverterTest extends UnitTestCase {
   /**
    * @covers ::convert
    */
-  public function testConvertNoType(): void {
+  public function testConvertNoType() {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $converter = new LayoutSectionStorageParamConverter($section_storage_manager->reveal());
 
@@ -61,7 +59,7 @@ class LayoutSectionStorageParamConverterTest extends UnitTestCase {
   /**
    * @covers ::convert
    */
-  public function testConvertInvalidConverter(): void {
+  public function testConvertInvalidConverter() {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $converter = new LayoutSectionStorageParamConverter($section_storage_manager->reveal());
 

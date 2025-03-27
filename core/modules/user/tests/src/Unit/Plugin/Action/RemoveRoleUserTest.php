@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Unit\Plugin\Action;
 
 use Drupal\user\Plugin\Action\RemoveRoleUser;
@@ -15,10 +13,9 @@ class RemoveRoleUserTest extends RoleUserTestBase {
   /**
    * Tests the execute method on a user with a role.
    */
-  public function testExecuteRemoveExistingRole(): void {
+  public function testExecuteRemoveExistingRole() {
     $this->account->expects($this->once())
-      ->method('removeRole')
-      ->willReturn($this->account);
+      ->method('removeRole');
 
     $this->account->expects($this->any())
       ->method('hasRole')
@@ -34,10 +31,9 @@ class RemoveRoleUserTest extends RoleUserTestBase {
   /**
    * Tests the execute method on a user without a specific role.
    */
-  public function testExecuteRemoveNonExistingRole(): void {
+  public function testExecuteRemoveNonExistingRole() {
     $this->account->expects($this->never())
-      ->method('removeRole')
-      ->willReturn($this->account);
+      ->method('removeRole');
 
     $this->account->expects($this->any())
       ->method('hasRole')

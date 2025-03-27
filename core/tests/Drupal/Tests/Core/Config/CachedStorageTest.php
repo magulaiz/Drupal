@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Tests\UnitTestCase;
@@ -23,7 +21,7 @@ class CachedStorageTest extends UnitTestCase {
   /**
    * Tests listAll static cache.
    */
-  public function testListAllStaticCache(): void {
+  public function testListAllStaticCache() {
     $prefix = __FUNCTION__;
     $storage = $this->createMock('Drupal\Core\Config\StorageInterface');
 

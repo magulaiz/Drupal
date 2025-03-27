@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 
 /**
@@ -21,38 +20,40 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['author'] = [
+ * $form['author'] = array(
  *   '#type' => 'details',
  *   '#title' => $this->t('Author'),
- * ];
+ * );
  *
- * $form['author']['name'] = [
+ * $form['author']['name'] = array(
  *   '#type' => 'textfield',
  *   '#title' => $this->t('Name'),
- * ];
+ * );
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Fieldset
  * @see \Drupal]Core\Render\Element\VerticalTabs
+ *
+ * @RenderElement("details")
  */
-#[RenderElement('details')]
-class Details extends RenderElementBase {
+class Details extends RenderElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#open' => FALSE,
       '#summary_attributes' => [],
       '#value' => NULL,
       '#process' => [
-        [static::class, 'processGroup'],
-        [static::class, 'processAjaxForm'],
+        [$class, 'processGroup'],
+        [$class, 'processAjaxForm'],
       ],
       '#pre_render' => [
-        [static::class, 'preRenderDetails'],
-        [static::class, 'preRenderGroup'],
+        [$class, 'preRenderDetails'],
+        [$class, 'preRenderGroup'],
       ],
       '#theme_wrappers' => ['details'],
     ];
@@ -61,7 +62,7 @@ class Details extends RenderElementBase {
   /**
    * Adds form element theming to details.
    *
-   * @param array $element
+   * @param $element
    *   An associative array containing the properties and children of the
    *   details.
    *

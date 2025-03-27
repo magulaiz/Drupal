@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\NullStorage;
@@ -18,7 +16,7 @@ class NullStorageTest extends UnitTestCase {
   /**
    * Tests createCollection.
    */
-  public function testCollection(): void {
+  public function testCollection() {
     $nullStorage = new NullStorage();
     $collection = $nullStorage->createCollection('test');
     $this->assertInstanceOf(StorageInterface::class, $collection);

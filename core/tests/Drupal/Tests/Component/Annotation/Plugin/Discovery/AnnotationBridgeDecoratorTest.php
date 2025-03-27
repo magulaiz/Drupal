@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Annotation\Plugin\Discovery;
 
 use Drupal\Component\Annotation\Plugin;
@@ -22,7 +20,7 @@ class AnnotationBridgeDecoratorTest extends TestCase {
   /**
    * @covers ::getDefinitions
    */
-  public function testGetDefinitions(): void {
+  public function testGetDefinitions() {
     $definitions = [];
     $definitions['object'] = new ObjectDefinition(['id' => 'foo']);
     $definitions['array'] = ['id' => 'bar'];

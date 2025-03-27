@@ -2,29 +2,24 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the 'decimal' field type.
+ *
+ * @FieldType(
+ *   id = "decimal",
+ *   label = @Translation("Number (decimal)"),
+ *   description = @Translation("This field stores a number in the database in a fixed decimal format."),
+ *   category = @Translation("Number"),
+ *   default_widget = "number",
+ *   default_formatter = "number_decimal"
+ * )
  */
-#[FieldType(
-  id: "decimal",
-  label: new TranslatableMarkup("Number (decimal)"),
-  description: [
-    new TranslatableMarkup("Ideal for exact counts and measures (prices, temperatures, distances, volumes, etc.)"),
-    new TranslatableMarkup("Stores a number in the database in a fixed decimal format"),
-    new TranslatableMarkup("For example, 12.34 km or € when used for further detailed calculations (such as summing many of these)"),
-  ],
-  category: "number",
-  weight: -30,
-  default_widget: "number",
-  default_formatter: "number_decimal"
-)]
 class DecimalItem extends NumericItemBase {
 
   /**
@@ -41,7 +36,7 @@ class DecimalItem extends NumericItemBase {
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
-    $properties['value'] = DataDefinition::create('decimal')
+    $properties['value'] = DataDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Decimal value'))
       ->setRequired(TRUE);
 
@@ -91,6 +86,24 @@ class DecimalItem extends NumericItemBase {
     ];
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+    $constraints = parent::getConstraints();
+
+    $constraints[] = $constraint_manager->create('ComplexData', [
+      'value' => [
+        'Regex' => [
+          'pattern' => '/^[+-]?((\d+(\.\d*)?)|(\.\d+))$/i',
+        ],
+      ],
+    ]);
+
+    return $constraints;
   }
 
   /**

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Datetime;
 
 use Drupal\Component\Datetime\Time;
@@ -9,12 +7,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Tests the Time class.
+ * @coversDefaultClass \Drupal\Component\Datetime\Time
+ * @group Datetime
  *
  * Isolate the tests to prevent side effects from altering system time.
  *
- * @coversDefaultClass \Drupal\Component\Datetime\Time
- * @group Datetime
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
@@ -49,7 +46,7 @@ class TimeTest extends TestCase {
    *
    * @covers ::getRequestTime
    */
-  public function testGetRequestTime(): void {
+  public function testGetRequestTime() {
     $expected = 12345678;
 
     $request = Request::createFromGlobals();
@@ -68,7 +65,7 @@ class TimeTest extends TestCase {
    *
    * @covers ::getRequestMicroTime
    */
-  public function testGetRequestMicroTime(): void {
+  public function testGetRequestMicroTime() {
     $expected = 1234567.89;
 
     $request = Request::createFromGlobals();
@@ -85,10 +82,8 @@ class TimeTest extends TestCase {
   /**
    * @covers ::getRequestTime
    */
-  public function testGetRequestTimeNoRequest(): void {
-    // With no request, and no global variable, we expect to get the int part
-    // of the microtime.
-    $expected = 1234567;
+  public function testGetRequestTimeNoRequest() {
+    $expected = 12345678;
     unset($_SERVER['REQUEST_TIME']);
     $this->assertEquals($expected, $this->time->getRequestTime());
     $_SERVER['REQUEST_TIME'] = 23456789;
@@ -98,7 +93,7 @@ class TimeTest extends TestCase {
   /**
    * @covers ::getRequestMicroTime
    */
-  public function testGetRequestMicroTimeNoRequest(): void {
+  public function testGetRequestMicroTimeNoRequest() {
     $expected = 1234567.89;
     unset($_SERVER['REQUEST_TIME_FLOAT']);
     $this->assertEquals($expected, $this->time->getRequestMicroTime());
@@ -111,7 +106,7 @@ class TimeTest extends TestCase {
    *
    * @covers ::getCurrentTime
    */
-  public function testGetCurrentTime(): void {
+  public function testGetCurrentTime() {
     $expected = 12345678;
     $this->assertEquals($expected, $this->time->getCurrentTime());
   }
@@ -121,7 +116,7 @@ class TimeTest extends TestCase {
    *
    * @covers ::getCurrentMicroTime
    */
-  public function testGetCurrentMicroTime(): void {
+  public function testGetCurrentMicroTime() {
     $expected = 1234567.89;
     $this->assertEquals($expected, $this->time->getCurrentMicroTime());
   }
@@ -133,8 +128,7 @@ namespace Drupal\Component\Datetime;
 /**
  * Shadow time() system call.
  *
- * @return int
- *   The fixed integer timestamp used for testing purposes.
+ * @returns int
  */
 function time() {
   return 12345678;
@@ -143,9 +137,8 @@ function time() {
 /**
  * Shadow microtime system call.
  *
- * @return float
- *   The fixed float timestamp used for testing purposes.
+ * @returns float
  */
-function microtime(bool $as_float = FALSE) {
+function microtime() {
   return 1234567.89;
 }

@@ -8,14 +8,13 @@
 /**
  * Implements hook_schema().
  */
-function dblog_schema(): array {
+function dblog_schema() {
   $schema['watchdog'] = [
     'description' => 'Table that contains logs of all system events.',
     'fields' => [
       'wid' => [
         'type' => 'serial',
         'not null' => TRUE,
-        'size' => 'big',
         'description' => 'Primary Key: Unique watchdog event ID.',
       ],
       'uid' => [
@@ -96,6 +95,23 @@ function dblog_schema(): array {
 /**
  * Implements hook_update_last_removed().
  */
-function dblog_update_last_removed(): int {
-  return 10101;
+function dblog_update_last_removed() {
+  return 8600;
+}
+
+/**
+ * Remove the year 2038 date limitation.
+ */
+function dblog_update_10100(&$sandbox = NULL) {
+  $connection = \Drupal::database();
+  if ($connection->schema()->tableExists('watchdog') && $connection->databaseType() != 'sqlite') {
+    $new = [
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+      'description' => 'Unix timestamp of when event occurred.',
+      'size' => 'big',
+    ];
+    $connection->schema()->changeField('watchdog', 'timestamp', 'timestamp', $new);
+  }
 }

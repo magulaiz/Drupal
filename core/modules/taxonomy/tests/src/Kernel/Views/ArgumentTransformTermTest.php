@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Kernel\Views;
 
-use Drupal\TestTools\Random;
 use Drupal\views\Views;
 
 /**
@@ -24,12 +21,12 @@ class ArgumentTransformTermTest extends TaxonomyTestBase {
   /**
    * Tests term argument transformation of hyphens and spaces.
    *
+   * @dataProvider termArgumentTransformationProvider
+   *
    * @param string $name
    *   The name of the taxonomy term to use for the test.
-   *
-   * @dataProvider termArgumentTransformationProvider
    */
-  public function testTermArgumentTransformation($name): void {
+  public function testTermArgumentTransformation($name) {
     /** @var \Drupal\taxonomy\TermInterface $term */
     $term = $this->createTerm(['name' => $name]);
 
@@ -50,16 +47,16 @@ class ArgumentTransformTermTest extends TaxonomyTestBase {
    * @return array[]
    *   Test data.
    */
-  public static function termArgumentTransformationProvider() {
+  public function termArgumentTransformationProvider() {
     return [
       'space in the middle' => [
-        'name' => Random::machineName() . ' ' . Random::machineName(),
+        'name' => $this->randomMachineName() . ' ' . $this->randomMachineName(),
       ],
       'space at the start' => [
-        'name' => ' ' . Random::machineName(),
+        'name' => ' ' . $this->randomMachineName(),
       ],
       'space at the end' => [
-        'name' => Random::machineName() . ' ',
+        'name' => $this->randomMachineName() . ' ',
       ],
     ];
   }

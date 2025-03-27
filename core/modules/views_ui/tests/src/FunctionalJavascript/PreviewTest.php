@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views_ui\FunctionalJavascript;
 
 use Behat\Mink\Element\NodeElement;
@@ -66,9 +64,8 @@ class PreviewTest extends WebDriverTestBase {
    * Because the schema of views_test_data.module is dependent on the test
    * using it, it cannot be enabled normally.
    */
-  protected function enableViewsTestModule(): void {
-    // Define the schema and views data variable before enabling the test
-    // module.
+  protected function enableViewsTestModule() {
+    // Define the schema and views data variable before enabling the test module.
     \Drupal::state()->set('views_test_data_schema', $this->schemaDefinition());
     \Drupal::state()->set('views_test_data_views_data', $this->viewsData());
 
@@ -117,7 +114,7 @@ class PreviewTest extends WebDriverTestBase {
    *
    * @see https://www.drupal.org/node/2452659
    */
-  public function testTaxonomyAJAX(): void {
+  public function testTaxonomyAJAX() {
     \Drupal::service('module_installer')->install(['taxonomy']);
     $this->getPreviewAJAX('taxonomy_term', 'page_1', 0);
   }
@@ -125,7 +122,7 @@ class PreviewTest extends WebDriverTestBase {
   /**
    * Tests pagers in the preview form.
    */
-  public function testPreviewWithPagersUI(): void {
+  public function testPreviewWithPagersUI() {
     // Create 11 nodes and make sure that everyone is returned.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
@@ -230,7 +227,7 @@ class PreviewTest extends WebDriverTestBase {
   /**
    * Tests the link to sort in the preview form.
    */
-  public function testPreviewSortLink(): void {
+  public function testPreviewSortLink() {
     // Get the preview.
     $this->getPreviewAJAX('test_click_sort_ajax', 'page_1', 0);
 
@@ -260,7 +257,7 @@ class PreviewTest extends WebDriverTestBase {
    * @param int $row_count
    *   The expected number of rows in the preview.
    */
-  protected function getPreviewAJAX($view_name, $panel_id, $row_count): void {
+  protected function getPreviewAJAX($view_name, $panel_id, $row_count) {
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/' . $panel_id);
     $this->getSession()->getPage()->pressButton('Update preview');
     $this->assertSession()->assertWaitOnAjaxRequest();
@@ -275,7 +272,7 @@ class PreviewTest extends WebDriverTestBase {
    * @param int $row_count
    *   The expected number of rows in the preview.
    */
-  protected function clickPreviewLinkAJAX(NodeElement $element, $row_count): void {
+  protected function clickPreviewLinkAJAX(NodeElement $element, $row_count) {
     $element->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertPreviewAJAX($row_count);

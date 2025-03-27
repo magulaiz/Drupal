@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -9,7 +7,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\pager\PagerPluginBase;
-use Drupal\views\Plugin\ViewsPluginManager;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\area\Result;
 use Drupal\views\ViewsData;
@@ -48,8 +45,7 @@ class ResultTest extends UnitTestCase {
     $user = $this->prophesize(AccountInterface::class)->reveal();
     $views_data = $this->prophesize(ViewsData::class)->reveal();
     $route_provider = $this->prophesize(RouteProviderInterface::class)->reveal();
-    $display_plugin_manager = $this->prophesize(ViewsPluginManager::class)->reveal();
-    $this->view = new ViewExecutable($storage->reveal(), $user, $views_data, $route_provider, $display_plugin_manager);
+    $this->view = new ViewExecutable($storage->reveal(), $user, $views_data, $route_provider);
 
     $this->resultHandler = new Result([], 'result', []);
     $this->resultHandler->view = $this->view;
@@ -58,7 +54,7 @@ class ResultTest extends UnitTestCase {
   /**
    * Tests the query method.
    */
-  public function testQuery(): void {
+  public function testQuery() {
     $this->assertNull($this->view->get_total_rows);
     // @total should set get_total_rows.
     $this->resultHandler->options['content'] = '@total';
@@ -83,7 +79,7 @@ class ResultTest extends UnitTestCase {
    *
    * @dataProvider providerTestResultArea
    */
-  public function testResultArea($content, $expected, $items_per_page = 0): void {
+  public function testResultArea($content, $expected, $items_per_page = 0) {
     $this->setupViewPager($items_per_page);
     $this->resultHandler->options['content'] = $content;
     $this->assertEquals(['#markup' => $expected], $this->resultHandler->render());
@@ -93,9 +89,8 @@ class ResultTest extends UnitTestCase {
    * Data provider for testResultArea.
    *
    * @return array
-   *   An array of test cases.
    */
-  public static function providerTestResultArea() {
+  public function providerTestResultArea() {
     return [
       ['@label', 'ResultTest'],
       ['@start', '1'],
@@ -123,7 +118,7 @@ class ResultTest extends UnitTestCase {
    * @param int $items_per_page
    *   The value to return from getItemsPerPage().
    */
-  protected function setupViewPager($items_per_page = 0): void {
+  protected function setupViewPager($items_per_page = 0) {
     $pager = $this->prophesize(PagerPluginBase::class);
     $pager->getItemsPerPage()
       ->willReturn($items_per_page)

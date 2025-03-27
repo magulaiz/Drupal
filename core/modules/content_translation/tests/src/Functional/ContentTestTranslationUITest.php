@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_translation\Functional;
 
 /**
  * Tests the test content translation UI with the test entity.
  *
  * @group content_translation
- * @group #slow
  */
 class ContentTestTranslationUITest extends ContentTranslationUITestBase {
 
@@ -29,7 +26,9 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'language',
@@ -49,13 +48,12 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
     // Use the entity_test_mul as this has multilingual property support.
     $this->entityTypeId = 'entity_test_mul_changed';
     parent::setUp();
-    $this->doSetup();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions(): array {
+  protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), ['administer entity_test content', 'view test entity']);
   }
 

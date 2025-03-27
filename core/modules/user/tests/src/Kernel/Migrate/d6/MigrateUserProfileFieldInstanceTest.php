@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
@@ -33,7 +31,7 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
   /**
    * Tests migration of user profile fields.
    */
-  public function testUserProfileFields(): void {
+  public function testUserProfileFields() {
     // Migrated a text field.
     $field = FieldConfig::load('user.user.profile_color');
     $this->assertSame('Favorite color', $field->label());
@@ -69,8 +67,7 @@ class MigrateUserProfileFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('Birthdate', $field->label());
     $this->assertSame("Enter your birth date and we'll send you a coupon.", $field->getDescription());
 
-    // Another migrated checkbox field, with a different source visibility
-    // setting.
+    // Another migrated checkbox field, with a different source visibility setting.
     $field = FieldConfig::load('user.user.profile_really_really_love_mig');
     $this->assertSame('I really, really, really love migrations', $field->label());
     $this->assertSame("If you check this box, you love migrations.", $field->getDescription());

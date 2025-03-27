@@ -2,31 +2,26 @@
 
 namespace Drupal\datetime\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'datetime' field type.
+ *
+ * @FieldType(
+ *   id = "datetime",
+ *   label = @Translation("Date"),
+ *   description = @Translation("Create and store date values."),
+ *   default_widget = "datetime_default",
+ *   default_formatter = "datetime_default",
+ *   list_class = "\Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList",
+ *   constraints = {"DateTimeFormat" = {}}
+ * )
  */
-#[FieldType(
-  id: "datetime",
-  label: new TranslatableMarkup("Date"),
-  description: [
-    new TranslatableMarkup("Ideal when date and time needs to be input by users, like event dates and times"),
-    new TranslatableMarkup("Date or date and time stored in a readable string format"),
-    new TranslatableMarkup("Easy to read and understand for humans"),
-  ],
-  category: "date_time",
-  default_widget: "datetime_default",
-  default_formatter: "datetime_default",
-  list_class: DateTimeFieldItemList::class,
-  constraints: ["DateTimeFormat" => []]
-)]
 class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
 
   /**
@@ -113,7 +108,7 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
 
     // Just pick a date in the past year. No guidance is provided by this Field
     // type.
-    $timestamp = \Drupal::time()->getRequestTime() - mt_rand(0, 86400 * 365);
+    $timestamp = REQUEST_TIME - mt_rand(0, 86400 * 365);
     if ($type == DateTimeItem::DATETIME_TYPE_DATE) {
       $values['value'] = gmdate(static::DATE_STORAGE_FORMAT, $timestamp);
     }
@@ -137,7 +132,7 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
   public function onChange($property_name, $notify = TRUE) {
     // Enforce that the computed date is recalculated.
     if ($property_name == 'value') {
-      $this->set('date', NULL);
+      $this->date = NULL;
     }
     parent::onChange($property_name, $notify);
   }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Graph;
 
 use Drupal\Component\Graph\Graph;
@@ -16,7 +14,7 @@ class GraphTest extends TestCase {
   /**
    * Tests depth-first-search features.
    */
-  public function testDepthFirstSearch(): void {
+  public function testDepthFirstSearch() {
     // The sample graph used is:
     // @code
     // 1 --> 2 --> 3     5 ---> 6
@@ -84,13 +82,13 @@ class GraphTest extends TestCase {
   /**
    * Normalizes a graph.
    *
-   * @param array $graph
+   * @param $graph
    *   A graph array processed by \Drupal\Component\Graph\Graph::searchAndSort()
    *
    * @return array
    *   The normalized version of a graph.
    */
-  protected function normalizeGraph($graph): array {
+  protected function normalizeGraph($graph) {
     $normalized_graph = [];
     foreach ($graph as $vertex => $edges) {
       // Create vertex even if it hasn't any edges.
@@ -145,8 +143,7 @@ class GraphTest extends TestCase {
    * Verify expected components in a graph.
    *
    * @param array $graph
-   *   A graph array processed by
-   *   \Drupal\Component\Graph\Graph::searchAndSort().
+   *   A graph array processed by \Drupal\Component\Graph\Graph::searchAndSort().
    * @param array $expected_components
    *   An array containing of components defined as a list of their vertices.
    *
@@ -187,12 +184,12 @@ class GraphTest extends TestCase {
   /**
    * Helper function to output vertices as comma-separated list.
    *
-   * @param array $paths
+   * @param $paths
    *   An array containing a list of vertices.
-   * @param bool $keys
+   * @param $keys
    *   (optional) Whether to output the keys of $paths instead of the values.
    */
-  protected function displayArray($paths, $keys = FALSE): string {
+  protected function displayArray($paths, $keys = FALSE) {
     if (!empty($paths)) {
       return implode(', ', $keys ? array_keys($paths) : $paths);
     }

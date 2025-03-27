@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\field\Entity\FieldConfig;
@@ -22,7 +20,9 @@ use Drupal\views\Views;
 class RowEntityRenderersTest extends ViewsKernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'field',
@@ -106,10 +106,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     $this->testAuthor->save();
 
     // Make sure we do not try to render non-existing user data.
-    $node_type = NodeType::create([
-      'type' => 'test',
-      'name' => 'Test',
-    ]);
+    $node_type = NodeType::create(['type' => 'test']);
     $node_type->setDisplaySubmitted(FALSE);
     $node_type->save();
 
@@ -166,35 +163,35 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
   /**
    * Tests the entity row renderers.
    */
-  public function testEntityRenderers(): void {
+  public function testEntityRenderers() {
     $this->checkLanguageRenderers('page_1', $this->values);
   }
 
   /**
    * Tests the field row renderers.
    */
-  public function testFieldRenderers(): void {
+  public function testFieldRenderers() {
     $this->checkLanguageRenderers('page_2', $this->values);
   }
 
   /**
    * Tests the entity row renderers for relationships.
    */
-  public function testEntityRenderersRelationship(): void {
+  public function testEntityRenderersRelationship() {
     $this->checkLanguageRenderersRelationship('page_3', $this->values);
   }
 
   /**
    * Tests the field row renderers for relationships.
    */
-  public function testFieldRenderersRelationship(): void {
+  public function testFieldRenderersRelationship() {
     $this->checkLanguageRenderersRelationship('page_4', $this->values);
   }
 
   /**
    * Tests the row renderer with a revision base table.
    */
-  public function testRevisionBaseTable(): void {
+  public function testRevisionBaseTable() {
     $view = Views::getView('test_entity_row_renderers_revisions_base');
     $view->execute();
     $this->assertIdenticalResultset($view, $this->ids, ['nid' => 'nid', 'uid' => 'uid']);
@@ -210,7 +207,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *   associated with language keys appropriate for the translation of that
    *   node.
    */
-  protected function checkLanguageRenderers($display, $values): void {
+  protected function checkLanguageRenderers($display, $values) {
     $expected = [
       $values[0]['en'],
       $values[0]['en'],
@@ -294,7 +291,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
    *   associated with language keys appropriate for the translation of that
    *   node.
    */
-  protected function checkLanguageRenderersRelationship($display, $values): void {
+  protected function checkLanguageRenderersRelationship($display, $values) {
     $expected = [
       $values[1]['en'],
       $values[1]['en'],
@@ -386,8 +383,8 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     foreach ($expected as $index => $expected_output) {
       if (!empty($view->result[$index])) {
         $build = $view->rowPlugin->render($view->result[$index]);
-        $output = (string) \Drupal::service('renderer')->renderRoot($build);
-        $result = str_contains($output, $expected_output);
+        $output = \Drupal::service('renderer')->renderRoot($build);
+        $result = strpos($output, $expected_output) !== FALSE;
         if (!$result) {
           break;
         }

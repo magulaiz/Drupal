@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Annotation;
 
 use Drupal\Core\Annotation\PluralTranslation;
 use Drupal\Tests\UnitTestCase;
-use Drupal\TestTools\Random;
 
 /**
  * @coversDefaultClass \Drupal\Core\Annotation\PluralTranslation
@@ -19,7 +16,7 @@ class PluralTranslationTest extends UnitTestCase {
    *
    * @dataProvider providerTestGet
    */
-  public function testGet(array $values): void {
+  public function testGet(array $values) {
     $annotation = new PluralTranslation($values);
 
     $default_values = [
@@ -31,19 +28,19 @@ class PluralTranslationTest extends UnitTestCase {
   /**
    * Provides data to self::testGet().
    */
-  public static function providerTestGet() {
+  public function providerTestGet() {
     $data = [];
     $data[] = [
       [
-        'singular' => Random::machineName(),
-        'plural' => Random::machineName(),
-        'context' => Random::machineName(),
+        'singular' => $this->randomMachineName(),
+        'plural' => $this->randomMachineName(),
+        'context' => $this->randomMachineName(),
       ],
     ];
     $data[] = [
       [
-        'singular' => Random::machineName(),
-        'plural' => Random::machineName(),
+        'singular' => $this->randomMachineName(),
+        'plural' => $this->randomMachineName(),
       ],
     ];
 
@@ -53,12 +50,12 @@ class PluralTranslationTest extends UnitTestCase {
   /**
    * @dataProvider providerTestMissingData
    */
-  public function testMissingData($data): void {
+  public function testMissingData($data) {
     $this->expectException(\InvalidArgumentException::class);
     new PluralTranslation($data);
   }
 
-  public static function providerTestMissingData() {
+  public function providerTestMissingData() {
     $data = [];
     $data['all-missing'] = [[]];
     $data['singular-missing'] = [['plural' => 'muh']];

@@ -30,7 +30,13 @@ class EntityTypeRepository implements EntityTypeRepositoryInterface {
    */
   protected $classNameEntityTypeMap = [];
 
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, protected EntityTypeBundleInfoInterface $entityTypeBundleInfo) {
+  /**
+   * Constructs a new EntityTypeRepository.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -77,7 +83,7 @@ class EntityTypeRepository implements EntityTypeRepositoryInterface {
     $entity_type_id = NULL;
     $definitions = $this->entityTypeManager->getDefinitions();
     foreach ($definitions as $entity_type) {
-      if ($entity_type->getOriginalClass() == $class_name || $entity_type->getClass() == $class_name) {
+      if ($entity_type->getOriginalClass() == $class_name  || $entity_type->getClass() == $class_name) {
         $entity_type_id = $entity_type->id();
         if ($same_class++) {
           throw new AmbiguousEntityClassException($class_name);
@@ -89,14 +95,11 @@ class EntityTypeRepository implements EntityTypeRepositoryInterface {
     // a separate loop to avoid false positives, since an entity class can
     // subclass another entity class.
     if (!$entity_type_id) {
-      $bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
-      foreach ($bundle_info as $info_entity_type_id => $bundles) {
-        foreach ($bundles as $info) {
-          if (isset($info['class']) && $info['class'] === $class_name) {
-            $entity_type_id = $info_entity_type_id;
-            if ($same_class++) {
-              throw new AmbiguousBundleClassException($class_name);
-            }
+      foreach ($definitions as $entity_type) {
+        if (is_subclass_of($class_name, $entity_type->getOriginalClass()) || is_subclass_of($class_name, $entity_type->getClass())) {
+          $entity_type_id = $entity_type->id();
+          if ($same_class++) {
+            throw new AmbiguousBundleClassException($class_name);
           }
         }
       }

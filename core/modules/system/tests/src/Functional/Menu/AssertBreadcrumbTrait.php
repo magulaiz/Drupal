@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Menu;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 
@@ -31,7 +30,7 @@ trait AssertBreadcrumbTrait {
    *   (optional) An associative array whose keys are link paths and whose
    *   values are link titles (not sanitized) of an expected active trail in a
    *   menu tree output on the page.
-   * @param bool $last_active
+   * @param $last_active
    *   (optional) Whether the last link in $tree is expected to be active (TRUE)
    *   or just to be in the active trail (FALSE).
    * @param string $active_trail_class
@@ -98,19 +97,19 @@ trait AssertBreadcrumbTrait {
     // No parts must be left, or an expected "Home" will always pass.
     $pass = ($pass && empty($parts));
 
-    $this->assertTrue($pass, sprintf('Expected breadcrumb %s on %s but found %s.',
-      implode(' » ', $trail),
-      $this->getUrl(),
-      implode(' » ', array_map(function (array $item) {
+    $this->assertTrue($pass, new FormattableMarkup('Expected breadcrumb %parts on @path but found %found.', [
+      '%parts' => implode(' » ', $trail),
+      '%found' => implode(' » ', array_map(function (array $item) {
         return $item['text'];
       }, $found)),
-    ));
+      '@path' => $this->getUrl(),
+    ]));
   }
 
   /**
    * Returns the breadcrumb contents of the current page in the internal browser.
    */
-  protected function getBreadcrumbParts(): array {
+  protected function getBreadcrumbParts() {
     $parts = [];
     $elements = $this->xpath('//nav[@aria-labelledby="system-breadcrumb"]//ol/li/a');
     if (!empty($elements)) {

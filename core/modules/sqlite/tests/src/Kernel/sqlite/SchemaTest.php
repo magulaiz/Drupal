@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\sqlite\Kernel\sqlite;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
@@ -16,7 +14,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * {@inheritdoc}
    */
-  public function checkSchemaComment(string $description, string $table, ?string $column = NULL): void {
+  public function checkSchemaComment(string $description, string $table, string $column = NULL): void {
     // The sqlite driver schema does not support fetching table/column
     // comments.
   }
@@ -96,6 +94,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     unset($table_specification['fields']);
 
     $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
+    $introspect_index_schema->setAccessible(TRUE);
     $index_schema = $introspect_index_schema->invoke($this->schema, $table_name);
 
     $this->assertEquals($table_specification, $index_schema);

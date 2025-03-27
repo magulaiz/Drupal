@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\file\Functional\Formatter;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -48,7 +46,7 @@ abstract class FileMediaFormatterTestBase extends BrowserTestBase {
    */
   protected function createMediaField($formatter, $file_extensions, array $formatter_settings = []) {
     $entity_type = $bundle = 'entity_test';
-    $field_name = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
 
     FieldStorageConfig::create([
       'entity_type' => $entity_type,
@@ -86,7 +84,7 @@ abstract class FileMediaFormatterTestBase extends BrowserTestBase {
    *     - The number of expected HTML tags.
    *     - An array of settings for the field formatter.
    */
-  public static function dataProvider(): array {
+  public function dataProvider() {
     return [
       [2, []],
       [1, ['multiple_file_display_type' => 'sources']],

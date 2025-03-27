@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Config\StorageComparer;
@@ -13,11 +11,7 @@ use Drupal\Tests\system\Functional\Module\ModuleTestBase;
 /**
  * Tests the largest configuration import possible with all available modules.
  *
- * Note that the use of SchemaCheckTestTrait means that the schema conformance
- * of all default configuration is also tested.
- *
  * @group config
- * @group #slow
  */
 class ConfigImportAllTest extends ModuleTestBase {
 
@@ -31,19 +25,13 @@ class ConfigImportAllTest extends ModuleTestBase {
   protected $webUser;
 
   /**
-   * {@inheritdoc}
+   * The profile to install as a basis for testing.
+   *
+   * Using the standard profile as this has a lot of additional configuration.
+   *
+   * @var string
    */
-  protected static $modules = ['config'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $profile = 'testing';
+  protected $profile = 'standard';
 
   /**
    * {@inheritdoc}
@@ -58,9 +46,9 @@ class ConfigImportAllTest extends ModuleTestBase {
   /**
    * Tests that a fixed set of modules can be installed and uninstalled.
    */
-  public function testInstallUninstall(): void {
+  public function testInstallUninstall() {
 
-    // Get a list of modules to install.
+    // Get a list of modules to enable.
     $all_modules = $this->container->get('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
       // Filter out contrib, hidden, testing, experimental, and deprecated
@@ -108,17 +96,16 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     $all_modules = \Drupal::service('extension.list.module')->getList();
     $database_module = \Drupal::service('database')->getProvider();
-    $expected_modules = ['path_alias', 'system', 'user', $database_module];
+    $expected_modules = ['path_alias', 'system', 'user', 'standard', $database_module];
 
-    // Ensure that only core required modules and the install profile can not be
-    // uninstalled.
+    // Ensure that only core required modules and the install profile can not be uninstalled.
     $validation_reasons = \Drupal::service('module_installer')->validateUninstall(array_keys($all_modules));
     $validation_modules = array_keys($validation_reasons);
     $this->assertEqualsCanonicalizing($expected_modules, $validation_modules);
 
     $modules_to_uninstall = array_filter($all_modules, function ($module) {
-      // Filter profiles, and required and not enabled modules.
-      if (!empty($module->info['required']) || $module->status == FALSE || $module->getType() === 'profile') {
+      // Filter required and not enabled modules.
+      if (!empty($module->info['required']) || $module->status == FALSE) {
         return FALSE;
       }
       return TRUE;

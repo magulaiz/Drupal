@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Core\Url;
@@ -24,14 +22,13 @@ class ContentTranslationOutdatedRevisionTranslationTest extends ContentTranslati
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->doSetup();
     $this->enableContentModeration();
   }
 
   /**
    * Tests that outdated revision translations work correctly.
    */
-  public function testFlagAsOutdatedHidden(): void {
+  public function testFlagAsOutdatedHidden() {
     // Create a test node.
     $values = [
       'title' => 'Test 1.1 EN',

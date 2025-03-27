@@ -2,31 +2,26 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Plugin\PreWarmablePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use Drupal\Core\PreWarm\PreWarmableInterface;
-use Drupal\Core\Render\Attribute\RenderElement;
-use Drupal\Core\Render\Element\ElementInterface;
 use Drupal\Core\Render\Element\FormElementInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
 /**
  * Provides a plugin manager for element plugins.
  *
- * @see \Drupal\Core\Render\Attribute\RenderElement
- * @see \Drupal\Core\Render\Attribute\FormElement
- * @see \Drupal\Core\Render\Element\RenderElementBase
- * @see \Drupal\Core\Render\Element\FormElementBase
+ * @see \Drupal\Core\Render\Annotation\RenderElement
+ * @see \Drupal\Core\Render\Annotation\FormElement
+ * @see \Drupal\Core\Render\Element\RenderElement
+ * @see \Drupal\Core\Render\Element\FormElement
  * @see \Drupal\Core\Render\Element\ElementInterface
  * @see \Drupal\Core\Render\Element\FormElementInterface
  * @see plugin_api
  */
-class ElementInfoManager extends DefaultPluginManager implements ElementInfoManagerInterface, PreWarmableInterface {
-
-  use PreWarmablePluginManagerTrait;
+class ElementInfoManager extends DefaultPluginManager implements ElementInfoManagerInterface {
 
   /**
    * Stores the available element information.
@@ -36,6 +31,20 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
   protected $elementInfo;
 
   /**
+   * The theme manager.
+   *
+   * @var \Drupal\Core\Theme\ThemeManagerInterface
+   */
+  protected $themeManager;
+
+  /**
+   * The cache tag invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagInvalidator;
+
+  /**
    * Constructs an ElementInfoManager object.
    *
    * @param \Traversable $namespaces
@@ -43,22 +52,19 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
-   *   The theme handler.
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tag_invalidator
+   *   The cache tag invalidator.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $themeManager
+   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
    */
-  public function __construct(
-    \Traversable $namespaces,
-    CacheBackendInterface $cache_backend,
-    protected ThemeHandlerInterface $themeHandler,
-    ModuleHandlerInterface $module_handler,
-    protected ThemeManagerInterface $themeManager,
-  ) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, CacheTagsInvalidatorInterface $cache_tag_invalidator, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager) {
     $this->setCacheBackend($cache_backend, 'element_info');
-    parent::__construct('Element', $namespaces, $module_handler, ElementInterface::class, RenderElement::class, 'Drupal\Core\Render\Annotation\RenderElement');
+    $this->themeManager = $theme_manager;
+    $this->cacheTagInvalidator = $cache_tag_invalidator;
+
+    parent::__construct('Element', $namespaces, $module_handler, 'Drupal\Core\Render\Element\ElementInterface', 'Drupal\Core\Render\Annotation\RenderElement');
     $this->alterInfo('element_plugin');
   }
 
@@ -91,7 +97,6 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *   The theme name.
    *
    * @return array
-   *   An array containing all element information.
    */
   protected function buildInfo($theme_name) {
     // Get cached definitions.
@@ -133,7 +138,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
     $this->moduleHandler->alter('element_info', $info);
     $this->themeManager->alter('element_info', $info);
 
-    $this->cacheBackend->set($cid, $info);
+    $this->cacheBackend->set($cid, $info, Cache::PERMANENT, ['element_info_build']);
 
     return $info;
   }
@@ -143,7 +148,6 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *
    * @return \Drupal\Core\Render\Element\ElementInterface
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
   public function createInstance($plugin_id, array $configuration = []) {
     return parent::createInstance($plugin_id, $configuration);
   }
@@ -153,13 +157,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    */
   public function clearCachedDefinitions() {
     $this->elementInfo = NULL;
-
-    $cids = [];
-    foreach ($this->themeHandler->listInfo() as $theme_name => $info) {
-      $cids[] = $this->getCid($theme_name);
-    }
-
-    $this->cacheBackend->deleteMultiple($cids);
+    $this->cacheTagInvalidator->invalidateTags(['element_info_build']);
 
     parent::clearCachedDefinitions();
   }
@@ -171,7 +169,6 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *   The theme name.
    *
    * @return string
-   *   The cache ID.
    */
   protected function getCid($theme_name) {
     return 'element_info_build:' . $theme_name;

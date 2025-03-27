@@ -3,7 +3,6 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 
 /**
@@ -15,34 +14,36 @@ use Drupal\Core\Render\Element;
  *
  * Usage example:
  * @code
- * $form['pass'] = [
+ * $form['pass'] = array(
  *   '#type' => 'password',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
  *   '#pattern' => '[01]+',
- * ];
+ * );
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\PasswordConfirm
  * @see \Drupal\Core\Render\Element\Textfield
+ *
+ * @FormElement("password")
  */
-#[FormElement('password')]
-class Password extends FormElementBase {
+class Password extends FormElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#size' => 60,
       '#maxlength' => 128,
       '#process' => [
-        [static::class, 'processAjaxForm'],
-        [static::class, 'processPattern'],
+        [$class, 'processAjaxForm'],
+        [$class, 'processPattern'],
       ],
       '#pre_render' => [
-        [static::class, 'preRenderPassword'],
+        [$class, 'preRenderPassword'],
       ],
       '#theme' => 'input__password',
       '#theme_wrappers' => ['form_element'],

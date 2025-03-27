@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\language\Unit;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -19,7 +17,7 @@ class ConfigurableLanguageUnitTest extends UnitTestCase {
   /**
    * @covers ::getDirection
    */
-  public function testDirection(): void {
+  public function testDirection() {
     // Direction of language writing, an integer. Usually either
     // ConfigurableLanguage::DIRECTION_LTR or
     // ConfigurableLanguage::DIRECTION_RTL.
@@ -35,7 +33,7 @@ class ConfigurableLanguageUnitTest extends UnitTestCase {
    * @covers ::getWeight
    * @covers ::setWeight
    */
-  public function testWeight(): void {
+  public function testWeight() {
     // The weight, an integer. Used to order languages with larger positive
     // weights sinking items toward the bottom of lists.
     $configurableLanguage = new ConfigurableLanguage(['weight' => -5], 'configurable_language');

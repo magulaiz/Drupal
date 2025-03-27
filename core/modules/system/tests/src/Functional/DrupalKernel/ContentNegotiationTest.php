@@ -1,12 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\DrupalKernel;
 
 use Drupal\Tests\BrowserTestBase;
-
-// cspell:ignore msword pjpeg silverlight xbap
 
 /**
  * Tests content negotiation.
@@ -28,7 +24,7 @@ class ContentNegotiationTest extends BrowserTestBase {
    *
    * @see https://www.drupal.org/node/1716790
    */
-  public function testBogusAcceptHeader(): void {
+  public function testBogusAcceptHeader() {
     $tests = [
       // See https://bugs.webkit.org/show_bug.cgi?id=27267.
       'Firefox 3.5 (2009)' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -44,8 +40,8 @@ class ContentNegotiationTest extends BrowserTestBase {
       'Android #1 (2012)' => 'application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5',
       'Android #2 (2012)' => 'text/xml,text/html,application/xhtml+xml,image/png,text/plain,*/*;q=0.8',
     ];
-    foreach ($tests as $header) {
-      $this->drupalGet('', [], ['Accept' => $header]);
+    foreach ($tests as $case => $header) {
+      $this->drupalGet('', [], ['Accept: ' . $header]);
       $this->assertSession()->pageTextNotContains('Unsupported Media Type');
       $this->assertSession()->pageTextContains('Log in');
     }

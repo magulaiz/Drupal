@@ -2,7 +2,6 @@
 
 namespace Drupal\search;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Database\Connection;
@@ -14,29 +13,60 @@ use Drupal\search\Exception\SearchIndexException;
 class SearchIndex implements SearchIndexInterface {
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The database replica connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $replica;
+
+  /**
+   * The cache tags invalidator.
+   *
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
+   */
+  protected $cacheTagsInvalidator;
+
+  /**
+   * The text processor.
+   *
+   * @var \Drupal\search\SearchTextProcessorInterface
+   */
+  protected $textProcessor;
+
+  /**
    * SearchIndex constructor.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \Drupal\Core\Database\Connection $replica
    *   The database replica connection.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cacheTagsInvalidator
+   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
    *   The cache tags invalidator.
-   * @param \Drupal\search\SearchTextProcessorInterface $textProcessor
+   * @param \Drupal\search\SearchTextProcessorInterface $text_processor
    *   The text processor.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service.
    */
-  public function __construct(
-    protected ConfigFactoryInterface $configFactory,
-    protected Connection $connection,
-    protected Connection $replica,
-    protected CacheTagsInvalidatorInterface $cacheTagsInvalidator,
-    protected SearchTextProcessorInterface $textProcessor,
-    protected TimeInterface $time ,
-  ) {
+  public function __construct(ConfigFactoryInterface $config_factory, Connection $connection, Connection $replica, CacheTagsInvalidatorInterface $cache_tags_invalidator, SearchTextProcessorInterface $text_processor) {
+    $this->configFactory = $config_factory;
+    $this->connection = $connection;
+    $this->replica = $replica;
+    $this->cacheTagsInvalidator = $cache_tags_invalidator;
+    $this->textProcessor = $text_processor;
   }
 
   /**
@@ -69,11 +99,11 @@ class SearchIndex implements SearchIndexInterface {
     // Starting score per word.
     $score = 1;
     // Accumulator for cleaned up data.
-    $accumulator = ' ';
+    $accum = ' ';
     // Stack with open tags.
-    $tag_stack = [];
+    $tagstack = [];
     // Counter for consecutive words.
-    $tag_words = 0;
+    $tagwords = 0;
     // Focus state.
     $focus = 1;
 
@@ -90,30 +120,30 @@ class SearchIndex implements SearchIndexInterface {
           $tagname = substr($tagname, 1);
           // If we encounter unexpected tags, reset score to avoid incorrect
           // boosting.
-          if (!count($tag_stack) || $tag_stack[0] != $tagname) {
-            $tag_stack = [];
+          if (!count($tagstack) || $tagstack[0] != $tagname) {
+            $tagstack = [];
             $score = 1;
           }
           else {
             // Remove from tag stack and decrement score.
-            $score = max(1, $score - $tags[array_shift($tag_stack)]);
+            $score = max(1, $score - $tags[array_shift($tagstack)]);
           }
         }
         else {
-          if (isset($tag_stack[0]) && $tag_stack[0] == $tagname) {
+          if (isset($tagstack[0]) && $tagstack[0] == $tagname) {
             // None of the tags we look for make sense when nested identically.
             // If they are, it's probably broken HTML.
-            $tag_stack = [];
+            $tagstack = [];
             $score = 1;
           }
           else {
             // Add to open tag stack and increment score.
-            array_unshift($tag_stack, $tagname);
+            array_unshift($tagstack, $tagname);
             $score += $tags[$tagname];
           }
         }
         // A tag change occurred, reset counter.
-        $tag_words = 0;
+        $tagwords = 0;
       }
       else {
         // Note: use of PREG_SPLIT_DELIM_CAPTURE above will introduce empty
@@ -122,7 +152,7 @@ class SearchIndex implements SearchIndexInterface {
           $words = $this->textProcessor->process($value, $langcode);
           foreach ($words as $word) {
             // Add word to accumulator.
-            $accumulator .= $word . ' ';
+            $accum .= $word . ' ';
             // Check word length.
             if (is_numeric($word) || mb_strlen($word) >= $minimum_word_size) {
               if (!isset($scored_words[$word])) {
@@ -134,11 +164,11 @@ class SearchIndex implements SearchIndexInterface {
               // e.g. 0.5 at 500 words and 0.3 at 1000 words.
               $focus = min(1, .01 + 3.5 / (2 + count($scored_words) * .015));
             }
-            $tag_words++;
+            $tagwords++;
             // Too many words inside a single tag probably mean a tag was
             // accidentally left open.
-            if (count($tag_stack) && $tag_words >= 15) {
-              $tag_stack = [];
+            if (count($tagstack) && $tagwords >= 15) {
+              $tagstack = [];
               $score = 1;
             }
           }
@@ -158,7 +188,7 @@ class SearchIndex implements SearchIndexInterface {
           'sid' => $sid,
           'langcode' => $langcode,
           'type' => $type,
-          'data' => $accumulator,
+          'data' => $accum,
           'reindex' => 0,
         ])
         ->execute();
@@ -235,7 +265,7 @@ class SearchIndex implements SearchIndexInterface {
 
     try {
       $query = $this->connection->update('search_dataset')
-        ->fields(['reindex' => $this->time->getRequestTime()])
+        ->fields(['reindex' => REQUEST_TIME])
         // Only mark items that were not previously marked for reindex, so that
         // marked items maintain their priority by request time.
         ->condition('reindex', 0);

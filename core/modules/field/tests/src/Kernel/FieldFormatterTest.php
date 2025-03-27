@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -56,7 +54,7 @@ class FieldFormatterTest extends KernelTestBase {
 
     $entity_type = 'entity_test_rev';
     $bundle = $entity_type;
-    $this->fieldName = $this->randomMachineName();
+    $this->fieldName = mb_strtolower($this->randomMachineName());
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,
@@ -87,7 +85,7 @@ class FieldFormatterTest extends KernelTestBase {
   /**
    * Tests availability of third party settings in field render arrays.
    */
-  public function testThirdPartySettings(): void {
+  public function testThirdPartySettings() {
     $third_party_settings = [
       'field_test' => [
         'foo' => 'bar',

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel\Uri;
 
 use Drupal\entity_test\Entity\EntityTest;
@@ -35,11 +33,11 @@ class UriItemTest extends FieldKernelTestBase {
   /**
    * Tests URI field.
    */
-  public function testUriField(): void {
+  public function testUriField() {
     $label = $this->randomMachineName();
 
     // Create a field with settings to validate.
-    $field_name = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

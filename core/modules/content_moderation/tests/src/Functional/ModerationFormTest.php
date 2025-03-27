@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Url;
-use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
 /**
  * Tests the moderation form, specifically on nodes.
@@ -15,10 +12,10 @@ use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
  */
 class ModerationFormTest extends ModerationStateTestBase {
 
-  use ContentTranslationTestTrait;
-
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'node',
@@ -31,18 +28,6 @@ class ModerationFormTest extends ModerationStateTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getAdministratorPermissions(): array {
-    return array_merge($this->permissions, [
-      'administer entity_test content',
-      'view test entity',
-      'translate any entity',
-      'bypass node access',
-    ]);
-  }
 
   /**
    * {@inheritdoc}
@@ -62,7 +47,7 @@ class ModerationFormTest extends ModerationStateTestBase {
    * @see \Drupal\content_moderation\EntityOperations
    * @see \Drupal\Tests\content_moderation\Functional\ModerationStateBlockTest::testCustomBlockModeration
    */
-  public function testModerationForm(): void {
+  public function testModerationForm() {
     // Test the states that appear by default when creating a new item of
     // content.
     $this->drupalGet('node/add/moderated_content');
@@ -199,9 +184,8 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * Tests moderation non-bundle entity type.
    */
-  public function testNonBundleModerationForm(): void {
-    $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
-    $this->drupalLogin($this->adminUser);
+  public function testNonBundleModerationForm() {
+    $this->drupalLogin($this->rootUser);
     $this->workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_mulrevpub', 'entity_test_mulrevpub');
     $this->workflow->save();
 
@@ -268,7 +252,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * Tests the revision author is updated when the moderation form is used.
    */
-  public function testModerationFormSetsRevisionAuthor(): void {
+  public function testModerationFormSetsRevisionAuthor() {
     // Create new moderated content in published.
     $node = $this->createNode(['type' => 'moderated_content', 'moderation_state' => 'published']);
     // Make a pending revision.
@@ -294,15 +278,24 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * Tests translated and moderated nodes.
    */
-  public function testContentTranslationNodeForm(): void {
-    $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
-    $this->drupalLogin($this->adminUser);
+  public function testContentTranslationNodeForm() {
+    $this->drupalLogin($this->rootUser);
 
     // Add French language.
-    static::createLanguageFromLangcode('fr');
+    $edit = [
+      'predefined_langcode' => 'fr',
+    ];
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
 
-    // Enable content translation on moderated_content.
-    $this->enableContentTranslation('node', 'moderated_content');
+    // Enable content translation on articles.
+    $this->drupalGet('admin/config/regional/content-language');
+    $edit = [
+      'entity_types[node]' => TRUE,
+      'settings[node][moderated_content][translatable]' => TRUE,
+      'settings[node][moderated_content][settings][language][language_alterable]' => TRUE,
+    ];
+    $this->submitForm($edit, 'Save configuration');
 
     // Adding languages requires a container rebuild in the test running
     // environment so that multilingual services are used.
@@ -325,7 +318,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     $french = \Drupal::languageManager()->getLanguage('fr');
 
     $this->drupalGet($latest_version_path);
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals('403');
     $this->assertSession()->elementNotExists('xpath', '//ul[@class="entity-moderation-form"]');
 
     // Add french translation (revision 2).
@@ -339,7 +332,7 @@ class ModerationFormTest extends ModerationStateTestBase {
     ], 'Save (this translation)');
 
     $this->drupalGet($latest_version_path, ['language' => $french]);
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals('403');
     $this->assertSession()->elementNotExists('xpath', '//ul[@class="entity-moderation-form"]');
 
     // Add french pending revision (revision 3).
@@ -496,7 +489,7 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * Tests the moderation_state field when an alternative widget is set.
    */
-  public function testAlternativeModerationStateWidget(): void {
+  public function testAlternativeModerationStateWidget() {
     $entity_form_display = EntityFormDisplay::load('node.moderated_content.default');
     $entity_form_display->setComponent('moderation_state', [
       'type' => 'string_textfield',
@@ -517,7 +510,7 @@ class ModerationFormTest extends ModerationStateTestBase {
    * @covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowHasData
    * @covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowStateHasData
    */
-  public function testWorkflowInUse(): void {
+  public function testWorkflowInUse() {
     $user = $this->createUser([
       'administer workflows',
       'create moderated_content content',

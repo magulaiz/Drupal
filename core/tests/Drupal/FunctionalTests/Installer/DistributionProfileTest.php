@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Serialization\Yaml;
@@ -25,7 +23,7 @@ class DistributionProfileTest extends InstallerTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     $this->info = [
       'type' => 'profile',
@@ -40,16 +38,16 @@ class DistributionProfileTest extends InstallerTestBase {
       ],
     ];
     // File API functions are not available yet.
-    $path = $this->siteDirectory . '/profiles/my_distribution';
+    $path = $this->siteDirectory . '/profiles/my_distro';
     mkdir($path, 0777, TRUE);
-    file_put_contents("$path/my_distribution.info.yml", Yaml::encode($this->info));
-    file_put_contents("$path/my_distribution.install", "<?php function my_distribution_install() {\Drupal::entityTypeManager()->getStorage('path_alias')->create(['path' => '/user/1', 'alias' => '/root-user'])->save();}");
+    file_put_contents("$path/my_distro.info.yml", Yaml::encode($this->info));
+    file_put_contents("$path/my_distro.install", "<?php function my_distro_install() {\Drupal::entityTypeManager()->getStorage('path_alias')->create(['path' => '/user/1', 'alias' => '/root-user'])->save();}");
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // Verify that the distribution name appears.
     $this->assertSession()->pageTextContains($this->info['distribution']['name']);
     // Verify that the distribution name is used in the site title.
@@ -65,22 +63,22 @@ class DistributionProfileTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile(): void {
+  protected function setUpProfile() {
     // This step is skipped, because there is a distribution profile.
   }
 
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled(): void {
+  public function testInstalled() {
     $this->assertSession()->addressEquals('root-user');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
     $this->assertSession()->pageTextContains($this->rootUser->getAccountName());
 
     // Confirm that Drupal recognizes this distribution as the current profile.
-    $this->assertEquals('my_distribution', \Drupal::installProfile());
-    $this->assertEquals('my_distribution', $this->config('core.extension')->get('profile'), 'The install profile has been written to core.extension configuration.');
+    $this->assertEquals('my_distro', \Drupal::installProfile());
+    $this->assertEquals('my_distro', $this->config('core.extension')->get('profile'), 'The install profile has been written to core.extension configuration.');
   }
 
 }

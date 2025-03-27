@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\path_alias\Unit\PathProcessor;
 
 use Drupal\Core\Cache\Cache;
@@ -35,8 +33,6 @@ class AliasPathProcessorTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->aliasManager = $this->createMock('Drupal\path_alias\AliasManagerInterface');
     $this->pathProcessor = new AliasPathProcessor($this->aliasManager);
   }
@@ -46,16 +42,16 @@ class AliasPathProcessorTest extends UnitTestCase {
    *
    * @see \Drupal\path_alias\PathProcessor\AliasPathProcessor::processInbound
    */
-  public function testProcessInbound(): void {
+  public function testProcessInbound() {
     $this->aliasManager->expects($this->exactly(2))
       ->method('getPathByAlias')
       ->willReturnMap([
-        ['url-alias', NULL, 'internal-url'],
+        ['urlalias', NULL, 'internal-url'],
         ['url', NULL, 'url'],
       ]);
 
-    $request = Request::create('/url-alias');
-    $this->assertEquals('internal-url', $this->pathProcessor->processInbound('url-alias', $request));
+    $request = Request::create('/urlalias');
+    $this->assertEquals('internal-url', $this->pathProcessor->processInbound('urlalias', $request));
     $request = Request::create('/url');
     $this->assertEquals('url', $this->pathProcessor->processInbound('url', $request));
   }
@@ -65,11 +61,11 @@ class AliasPathProcessorTest extends UnitTestCase {
    *
    * @dataProvider providerTestProcessOutbound
    */
-  public function testProcessOutbound($path, array $options, $expected_path): void {
+  public function testProcessOutbound($path, array $options, $expected_path) {
     $this->aliasManager->expects($this->any())
       ->method('getAliasByPath')
       ->willReturnMap([
-        ['internal-url', NULL, 'url-alias'],
+        ['internal-url', NULL, 'urlalias'],
         ['url', NULL, 'url'],
       ]);
 
@@ -82,11 +78,10 @@ class AliasPathProcessorTest extends UnitTestCase {
 
   /**
    * @return array
-   *   The data provider for testProcessOutbound.
    */
-  public static function providerTestProcessOutbound() {
+  public function providerTestProcessOutbound() {
     return [
-      ['internal-url', [], 'url-alias'],
+      ['internal-url', [], 'urlalias'],
       ['internal-url', ['alias' => TRUE], 'internal-url'],
       ['url', [], 'url'],
     ];

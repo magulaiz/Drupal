@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\rest\Functional;
 
 /**
@@ -25,7 +23,7 @@ trait XmlNormalizationQuirksTrait {
    *
    * @see \Symfony\Component\Serializer\Encoder\XmlEncoder
    */
-  protected function applyXmlDecodingQuirks(array $normalization): array {
+  protected function applyXmlDecodingQuirks(array $normalization) {
     foreach ($normalization as $key => $value) {
       if ($value === [] || $value === NULL) {
         $normalization[$key] = '';

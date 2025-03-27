@@ -1,14 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Unit\Plugin\views\query;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\query\SqliteDateSql;
-
-// cspell:ignore unixepoch
 
 /**
  * Tests the MySQL-specific date query handler.
@@ -39,7 +35,7 @@ class SqliteDateSqlTest extends UnitTestCase {
    *
    * @covers ::getDateField
    */
-  public function testGetDateField(): void {
+  public function testGetDateField() {
     $date_sql = new SqliteDateSql($this->database);
 
     $expected = "strftime('%s', foo.field)";
@@ -56,7 +52,7 @@ class SqliteDateSqlTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetDateFormat
    */
-  public function testGetDateFormat($field, $format, $expected): void {
+  public function testGetDateFormat($field, $format, $expected) {
     $date_sql = new SqliteDateSql($this->database);
 
     $this->assertEquals($expected, $date_sql->getDateFormat($field, $format));
@@ -65,28 +61,12 @@ class SqliteDateSqlTest extends UnitTestCase {
   /**
    * Provider for date formatting test.
    */
-  public static function providerTestGetDateFormat() {
+  public function providerTestGetDateFormat() {
     return [
-      [
-        'foo.field',
-        'Y-y-M-m',
-        "strftime('%Y-%Y-%m-%m', foo.field, 'unixepoch')",
-      ],
-      [
-        'bar.field',
-        'n-F D d l',
-        "strftime('%m-%m %d %d %d', bar.field, 'unixepoch')",
-      ],
-      [
-        'baz.bar_field',
-        'j/W/H-h i s A',
-        "strftime('%d/%W/%H-%H %M %S ', baz.bar_field, 'unixepoch')",
-      ],
-      [
-        'foo.field',
-        'W',
-        "CAST(((strftime('%j', date(strftime('%Y-%m-%d', foo.field, 'unixepoch'), '-3 days', 'weekday 4')) - 1) / 7 + 1) AS NUMERIC)",
-      ],
+      ['foo.field', 'Y-y-M-m', "strftime('%Y-%Y-%m-%m', foo.field, 'unixepoch')"],
+      ['bar.field', 'n-F D d l', "strftime('%m-%m %d %d %d', bar.field, 'unixepoch')"],
+      ['baz.bar_field', 'j/W/H-h i s A', "strftime('%d/%W/%H-%H %M %S ', baz.bar_field, 'unixepoch')"],
+      ['foo.field', 'W', "CAST(((strftime('%j', date(strftime('%Y-%m-%d', foo.field, 'unixepoch'), '-3 days', 'weekday 4')) - 1) / 7 + 1) AS NUMERIC)"],
     ];
   }
 
@@ -95,7 +75,7 @@ class SqliteDateSqlTest extends UnitTestCase {
    *
    * @covers ::setFieldTimezoneOffset
    */
-  public function testSetFieldTimezoneOffset(): void {
+  public function testSetFieldTimezoneOffset() {
     $date_sql = new SqliteDateSql($this->database);
 
     $field = 'foobar.field';
@@ -108,7 +88,7 @@ class SqliteDateSqlTest extends UnitTestCase {
    *
    * @covers ::setTimezoneOffset
    */
-  public function testSetTimezoneOffset(): void {
+  public function testSetTimezoneOffset() {
     $database = $this->prophesize(Connection::class);
     $database->query()->shouldNotBeCalled();
     $date_sql = new SqliteDateSql($database->reveal());

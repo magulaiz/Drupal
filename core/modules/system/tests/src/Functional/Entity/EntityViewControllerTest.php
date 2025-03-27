@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Entity;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\Tests\BrowserTestBase;
 
@@ -16,7 +13,9 @@ use Drupal\Tests\BrowserTestBase;
 class EntityViewControllerTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['entity_test'];
 
@@ -50,7 +49,7 @@ class EntityViewControllerTest extends BrowserTestBase {
   /**
    * Tests EntityViewController.
    */
-  public function testEntityViewController(): void {
+  public function testEntityViewController() {
     $get_label_markup = function ($label) {
       return '<h1 class="page-title">
             <div class="field field--name-name field--type-string field--label-hidden field__item">' . $label . '</div>
@@ -92,7 +91,7 @@ class EntityViewControllerTest extends BrowserTestBase {
   /**
    * Tests field item attributes.
    */
-  public function testFieldItemAttributes(): void {
+  public function testFieldItemAttributes() {
     // Make sure the test field will be rendered.
     \Drupal::service('entity_display.repository')
       ->getViewDisplay('entity_test', 'entity_test')
@@ -114,7 +113,7 @@ class EntityViewControllerTest extends BrowserTestBase {
   /**
    * Tests that a view builder can successfully override the view builder.
    */
-  public function testEntityViewControllerViewBuilder(): void {
+  public function testEntityViewControllerViewBuilder() {
     $entity_test = $this->createTestEntity('entity_test_view_builder');
     $entity_test->save();
     $this->drupalGet('entity_test_view_builder/' . $entity_test->id());
@@ -132,7 +131,7 @@ class EntityViewControllerTest extends BrowserTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The created entity.
    */
-  protected function createTestEntity($entity_type, $name = NULL): EntityInterface {
+  protected function createTestEntity($entity_type, $name = NULL) {
     $data = [
       'bundle' => $entity_type,
       'name' => $name ?? $this->randomMachineName(),

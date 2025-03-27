@@ -1,15 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
-
-// cspell:ignore blocknodebundle testbody
 
 /**
  * Tests toggling of content preview.
@@ -58,7 +54,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
   /**
    * Tests the content preview toggle.
    */
-  public function testContentPreviewToggle(): void {
+  public function testContentPreviewToggle() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $links_field_placeholder_label = '"Links" field';
@@ -157,7 +153,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     // Filter will only return value if block contains expected text.
     $blocks_with_expected_text = array_filter($blocks, function ($block, $key) use ($items) {
       $block_text = $block->getText();
-      return str_contains($block_text, $items[$key]);
+      return strpos($block_text, $items[$key]) !== FALSE;
     }, ARRAY_FILTER_USE_BOTH);
 
     $this->assertSameSize($items, $blocks_with_expected_text);

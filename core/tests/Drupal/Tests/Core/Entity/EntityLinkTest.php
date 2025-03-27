@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Link;
-use Drupal\Tests\Core\Config\Entity\StubConfigEntity;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -56,13 +54,13 @@ class EntityLinkTest extends UnitTestCase {
   }
 
   /**
-   * Tests for the EntityBase::toLink() method.
+   * Tests for the Entity::toLink() method.
    *
    * @covers ::toLink
    *
    * @dataProvider providerTestLink
    */
-  public function testToLink($entity_label, $link_text, $expected_text, $link_rel = 'canonical', array $link_options = []): void {
+  public function testToLink($entity_label, $link_text, $expected_text, $link_rel = 'canonical', array $link_options = []) {
     $language = new Language(['id' => 'es']);
     $link_options += ['language' => $language];
     $this->languageManager->expects($this->any())
@@ -95,10 +93,11 @@ class EntityLinkTest extends UnitTestCase {
       ->with($entity_type_id)
       ->willReturn($entity_type);
 
-    $entity = new StubConfigEntity(
+    /** @var \Drupal\Core\Entity\Entity $entity */
+    $entity = $this->getMockForAbstractClass(ConfigEntityBase::class, [
       ['id' => $entity_id, 'label' => $entity_label, 'langcode' => 'es'],
       $entity_type_id,
-    );
+    ]);
 
     $expected_link = Link::createFromRoute(
       $expected_text,
@@ -114,12 +113,12 @@ class EntityLinkTest extends UnitTestCase {
   /**
    * Provides test data for testLink().
    */
-  public static function providerTestLink() {
+  public function providerTestLink() {
     $data = [];
     $data[] = [
       'some_entity_label',
-      'link text',
-      'link text',
+      'qwerqwer',
+      'qwerqwer',
     ];
     $data[] = [
       'some_entity_label',
@@ -133,22 +132,22 @@ class EntityLinkTest extends UnitTestCase {
     ];
     $data[] = [
       'some_entity_label',
-      'link text',
-      'link text',
+      'qwerqwer',
+      'qwerqwer',
       'edit-form',
     ];
     $data[] = [
       'some_entity_label',
-      'link text',
-      'link text',
+      'qwerqwer',
+      'qwerqwer',
       'edit-form',
     ];
     $data[] = [
       'some_entity_label',
-      'link text',
-      'link text',
+      'qwerqwer',
+      'qwerqwer',
       'edit-form',
-      ['foo' => 'bar'],
+      ['foo' => 'qwer'],
     ];
     return $data;
   }

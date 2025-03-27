@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -28,7 +26,7 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller(): void {
+  protected function visitInstaller() {
     // Place a custom local translation in the translations directory.
     mkdir($this->root . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
     file_put_contents($this->root . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
@@ -49,7 +47,7 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage(): void {
+  protected function setUpLanguage() {
     // The language was preset by passing a query parameter in the URL, so no
     // explicit language selection is necessary.
   }
@@ -57,14 +55,13 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
   /**
    * Verifies the expected behaviors of the installation result.
    */
-  public function testInstaller(): void {
+  public function testInstaller() {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    // cspell:ignore deutsch
-    $this->assertSession()->pageTextContains('Deutsch');
+    $this->assertSession()->pageTextContains('German');
     $this->assertSession()->pageTextNotContains('English');
   }
 
@@ -77,14 +74,14 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
    * @return string
    *   Contents for the test .po file.
    */
-  protected function getPo($langcode): string {
-    return <<<PO
+  protected function getPo($langcode) {
+    return <<<ENDPO
 msgid ""
 msgstr ""
 
 msgid "Save and continue"
 msgstr "Save and continue $langcode"
-PO;
+ENDPO;
   }
 
 }

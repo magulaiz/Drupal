@@ -66,19 +66,15 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     // If no module implements the hook or the node does not have an id there is
     // no point in querying the database for access grants.
-    if (!$this->moduleHandler->hasImplementations('node_grants') || $node->isNew()) {
+    if (!$this->moduleHandler->hasImplementations('node_grants') || !$node->id()) {
       // Return the equivalent of the default grant, defined by
       // self::writeDefault().
       if ($operation === 'view') {
-        $result = AccessResult::allowedIf($node->isPublished());
-        if (!$node->isNew()) {
-          $result->addCacheableDependency($node);
-        }
-
-        return $result;
+        return AccessResult::allowedIf($node->isPublished());
       }
-
-      return AccessResult::neutral();
+      else {
+        return AccessResult::neutral();
+      }
     }
 
     // Check the database for potential access grants.
@@ -86,16 +82,10 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     $query->addExpression('1');
     // Only interested for granting in the current operation.
     $query->condition('grant_' . $operation, 1, '>=');
-    // Check for grants for this node and the correct langcode. New translations
-    // do not yet have a langcode and must check the fallback node record.
+    // Check for grants for this node and the correct langcode.
     $nids = $query->andConditionGroup()
-      ->condition('nid', $node->id());
-    if (!$node->isNewTranslation()) {
-      $nids->condition('langcode', $node->language()->getId());
-    }
-    else {
-      $nids->condition('fallback', 1);
-    }
+      ->condition('nid', $node->id())
+      ->condition('langcode', $node->language()->getId());
     // If the node is published, also take the default grant into account. The
     // default is saved with a node ID of 0.
     $status = $node->isPublished();
@@ -156,22 +146,22 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table) {
+  public function alterQuery($query, array $tables, $op, AccountInterface $account, $base_table) {
     if (!$langcode = $query->getMetaData('langcode')) {
       $langcode = FALSE;
     }
 
-    // Find all instances of the base table being joined which could appear
+    // Find all instances of the base table being joined -- could appear
     // more than once in the query, and could be aliased. Join each one to
     // the node_access table.
-    $grants = node_access_grants($operation, $account);
+    $grants = node_access_grants($op, $account);
     // If any grant exists for the specified user, then user has access to the
     // node for the specified operation.
     $grant_conditions = $this->buildGrantsQueryCondition($grants);
     $grants_exist = count($grant_conditions->conditions()) > 0;
 
     $is_multilingual = \Drupal::languageManager()->isMultilingual();
-    foreach ($tables as $table_alias => $tableinfo) {
+    foreach ($tables as $nalias => $tableinfo) {
       $table = $tableinfo['table'];
       if (!($table instanceof SelectInterface) && $table == $base_table) {
         // Set the subquery.
@@ -182,7 +172,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
         if ($grants_exist) {
           $subquery->condition($grant_conditions);
         }
-        $subquery->condition('na.grant_' . $operation, 1, '>=');
+        $subquery->condition('na.grant_' . $op, 1, '>=');
 
         // Add langcode-based filtering if this is a multilingual site.
         if ($is_multilingual) {
@@ -199,22 +189,9 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
         $field = 'nid';
         // Now handle entities.
-        $subquery->where("[$table_alias].[$field] = [na].[nid]");
+        $subquery->where("[$nalias].[$field] = [na].[nid]");
 
-        if (empty($tableinfo['join type'])) {
-          $query->exists($subquery);
-        }
-        else {
-          // If this is a join, add the node access check to the join condition.
-          // This requires using $query->getTables() to alter the table
-          // information.
-          $join_cond = $query
-            ->andConditionGroup()
-            ->exists($subquery);
-          $join_cond->where($tableinfo['condition'], $query->getTables()[$table_alias]['arguments']);
-          $query->getTables()[$table_alias]['arguments'] = [];
-          $query->getTables()[$table_alias]['condition'] = $join_cond;
-        }
+        $query->exists($subquery);
       }
     }
   }

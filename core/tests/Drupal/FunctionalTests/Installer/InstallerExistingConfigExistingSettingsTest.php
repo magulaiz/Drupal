@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
@@ -19,7 +17,7 @@ class InstallerExistingConfigExistingSettingsTest extends InstallerExistingConfi
    * Partially configures a preexisting settings.php file before invoking the
    * interactive installer.
    */
-  protected function prepareEnvironment(): void {
+  protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Pre-configure hash salt.
     // Any string is valid, so simply use the class name of this test.

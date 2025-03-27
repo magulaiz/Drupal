@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
@@ -15,7 +14,9 @@ use Drupal\views\Views;
 class FieldCounterTest extends ViewsKernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['user'];
 
@@ -26,10 +27,7 @@ class FieldCounterTest extends ViewsKernelTestBase {
    */
   public static $testViews = ['test_view'];
 
-  /**
-   * Tests the behavior of a simple View rendering with overridden field options.
-   */
-  public function testSimple(): void {
+  public function testSimple() {
     $view = Views::getView('test_view');
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('fields', [
@@ -49,11 +47,11 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $view->preview();
 
     $counter = $view->style_plugin->getField(0, 'counter');
-    $this->assertEquals('1', $counter, "Make sure the expected number (1) patches with the rendered number ($counter)");
+    $this->assertEquals('1', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 1, '@counter' => $counter]));
     $counter = $view->style_plugin->getField(1, 'counter');
-    $this->assertEquals('2', $counter, "Make sure the expected number (2) patches with the rendered number ($counter)");
+    $this->assertEquals('2', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 2, '@counter' => $counter]));
     $counter = $view->style_plugin->getField(2, 'counter');
-    $this->assertEquals('3', $counter, "Make sure the expected number (3) patches with the rendered number ($counter)");
+    $this->assertEquals('3', $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => 3, '@counter' => $counter]));
     $view->destroy();
     $view->storage->invalidateCaches();
 
@@ -78,19 +76,19 @@ class FieldCounterTest extends ViewsKernelTestBase {
 
     $counter = $view->style_plugin->getField(0, 'counter');
     $expected_number = 0 + $rand_start;
-    $this->assertEquals((string) $expected_number, $counter, "Make sure the expected number ($expected_number) patches with the rendered number ($counter)");
+    $this->assertEquals((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
     $counter = $view->style_plugin->getField(1, 'counter');
     $expected_number = 1 + $rand_start;
-    $this->assertEquals((string) $expected_number, $counter, "Make sure the expected number ($expected_number) patches with the rendered number ($counter)");
+    $this->assertEquals((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
     $counter = $view->style_plugin->getField(2, 'counter');
     $expected_number = 2 + $rand_start;
-    $this->assertEquals((string) $expected_number, $counter, "Make sure the expected number ($expected_number) patches with the rendered number ($counter)");
+    $this->assertEquals((string) $expected_number, $counter, new FormattableMarkup('Make sure the expected number (@expected) patches with the rendered number (@counter)', ['@expected' => $expected_number, '@counter' => $counter]));
   }
 
   /**
    * Tests the counter field when using a pager.
    */
-  public function testPager(): void {
+  public function testPager() {
     $view = Views::getView('test_view');
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('fields', [

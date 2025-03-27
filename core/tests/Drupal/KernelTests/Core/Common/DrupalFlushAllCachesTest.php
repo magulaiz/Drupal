@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Common;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\system_test\Hook\SystemTestHooks;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -29,7 +26,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
   /**
    * Tests that drupal_flush_all_caches() uses core.extension properly.
    */
-  public function testDrupalFlushAllCachesModuleList(): void {
+  public function testDrupalFlushAllCachesModuleList() {
     $this->assertFalse(function_exists('system_test_help'));
     $core_extension = \Drupal::configFactory()->getEditable('core.extension');
     $module = $core_extension->get('module');
@@ -47,7 +44,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
     sort($container_modules);
     $this->assertSame($module_list, $container_modules);
     $this->assertSame(1, $this->containerBuilds);
-    $this->assertTrue(method_exists(SystemTestHooks::class, 'help'));
+    $this->assertTrue(function_exists('system_test_help'));
 
     $core_extension->clear('module.system_test')->save();
     $this->containerBuilds = 0;
@@ -66,7 +63,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container): void {
+  public function register(ContainerBuilder $container) {
     parent::register($container);
     $this->containerBuilds++;
   }

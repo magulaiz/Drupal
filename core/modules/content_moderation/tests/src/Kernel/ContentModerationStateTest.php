@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
@@ -11,7 +9,6 @@ use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -97,7 +94,6 @@ class ContentModerationStateTest extends KernelTestBase {
     $this->installEntitySchema('block_content');
     $this->installEntitySchema('media');
     $this->installEntitySchema('file');
-    $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
     $this->installSchema('file', 'file_usage');
@@ -111,18 +107,10 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * Tests basic monolingual content moderation through the API.
+   *
+   * @dataProvider basicModerationTestCases
    */
-  public function testBasicModeration(): void {
-    foreach (static::basicModerationTestCases() as $case) {
-      [$entity_type_id] = $case;
-      $this->doTestBasicModeration($entity_type_id);
-    }
-  }
-
-  /**
-   * Tests basic monolingual content moderation through the API.
-   */
-  protected function doTestBasicModeration($entity_type_id): void {
+  public function testBasicModeration($entity_type_id) {
     $entity = $this->createEntity($entity_type_id, 'draft');
     $entity = $this->reloadEntity($entity);
     $this->assertEquals('draft', $entity->moderation_state->value);
@@ -162,7 +150,6 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity->save();
 
     // Revert to the previous (published) revision.
-    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
     $previous_revision = $entity_storage->loadRevision(4);
     $previous_revision->isDefaultRevision(TRUE);
@@ -181,13 +168,10 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Test cases for basic moderation test.
    */
-  public static function basicModerationTestCases() {
+  public function basicModerationTestCases() {
     return [
       'Nodes' => [
         'node',
-      ],
-      'Taxonomy term' => [
-        'taxonomy_term',
       ],
       'Block content' => [
         'block_content',
@@ -209,18 +193,10 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * Tests removal of content moderation state entity.
+   *
+   * @dataProvider basicModerationTestCases
    */
-  public function testContentModerationStateDataRemoval(): void {
-    foreach (static::basicModerationTestCases() as $case) {
-      [$entity_type_id] = $case;
-      $this->doTestContentModerationStateDataRemoval($entity_type_id);
-    }
-  }
-
-  /**
-   * Tests removal of content moderation state entity.
-   */
-  public function doTestContentModerationStateDataRemoval($entity_type_id): void {
+  public function testContentModerationStateDataRemoval($entity_type_id) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->createEntity($entity_type_id);
     $entity = $this->reloadEntity($entity);
@@ -231,18 +207,10 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * Tests removal of content moderation state entity revisions.
+   *
+   * @dataProvider basicModerationTestCases
    */
-  public function testContentModerationStateRevisionDataRemoval(): void {
-    foreach (static::basicModerationTestCases() as $case) {
-      [$entity_type_id] = $case;
-      $this->doTestContentModerationStateRevisionDataRemoval($entity_type_id);
-    }
-  }
-
-  /**
-   * Tests removal of content moderation state entity revisions.
-   */
-  public function doTestContentModerationStateRevisionDataRemoval($entity_type_id): void {
+  public function testContentModerationStateRevisionDataRemoval($entity_type_id) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->createEntity($entity_type_id);
     $revision_1 = clone $entity;
@@ -263,7 +231,6 @@ class ContentModerationStateTest extends KernelTestBase {
     // Delete the second revision and check that its content moderation state is
     // removed as well, while the content moderation states for revisions 1 and
     // 3 are kept in place.
-    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
     $entity_storage->deleteRevision($revision_2->getRevisionId());
 
@@ -274,18 +241,10 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * Tests removal of content moderation state pending entity revisions.
+   *
+   * @dataProvider basicModerationTestCases
    */
-  public function testContentModerationStatePendingRevisionDataRemoval(): void {
-    foreach (static::basicModerationTestCases() as $case) {
-      [$entity_type_id] = $case;
-      $this->doTestContentModerationStatePendingRevisionDataRemoval($entity_type_id);
-    }
-  }
-
-  /**
-   * Tests removal of content moderation state pending entity revisions.
-   */
-  public function doTestContentModerationStatePendingRevisionDataRemoval($entity_type_id): void {
+  public function testContentModerationStatePendingRevisionDataRemoval($entity_type_id) {
     $entity = $this->createEntity($entity_type_id, 'published');
     $entity->setNewRevision(TRUE);
     $entity->moderation_state = 'draft';
@@ -294,7 +253,6 @@ class ContentModerationStateTest extends KernelTestBase {
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
     $this->assertNotEmpty($content_moderation_state);
 
-    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
     $entity_storage->deleteRevision($entity->getRevisionId());
 
@@ -305,8 +263,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Tests removal of content moderation state entities for preexisting content.
    */
-  public function testExistingContentModerationStateDataRemoval(): void {
-    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+  public function testExistingContentModerationStateDataRemoval() {
     $storage = $this->entityTypeManager->getStorage('entity_test_mulrevpub');
 
     $entity = $this->createEntity('entity_test_mulrevpub', 'published', FALSE);
@@ -328,24 +285,16 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * Tests removal of content moderation state translations.
+   *
+   * @dataProvider basicModerationTestCases
    */
-  public function testContentModerationStateTranslationDataRemoval(): void {
-    foreach (static::basicModerationTestCases() as $case) {
-      [$entity_type_id] = $case;
-      $this->doTestContentModerationStateTranslationDataRemoval($entity_type_id);
-    }
-  }
-
-  /**
-   * Tests removal of content moderation state translations.
-   */
-  public function doTestContentModerationStateTranslationDataRemoval($entity_type_id): void {
+  public function testContentModerationStateTranslationDataRemoval($entity_type_id) {
     // Test content moderation state translation deletion.
     if ($this->entityTypeManager->getDefinition($entity_type_id)->isTranslatable()) {
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
       $entity = $this->createEntity($entity_type_id, 'published');
       $langcode = 'fr';
-      $translation = $entity->addTranslation($langcode, [$entity->getEntityType()->getKey('label') => 'French title test']);
+      $translation = $entity->addTranslation($langcode, ['title' => 'French title test']);
       // Make sure we add values for all of the required fields.
       if ($entity_type_id == 'block_content') {
         $translation->info = $this->randomString();
@@ -363,7 +312,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Tests basic multilingual content moderation through the API.
    */
-  public function testMultilingualModeration(): void {
+  public function testMultilingualModeration() {
     $this->createContentType([
       'type' => 'example',
     ]);
@@ -473,7 +422,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Tests moderation when the moderation_state field has a config override.
    */
-  public function testModerationWithFieldConfigOverride(): void {
+  public function testModerationWithFieldConfigOverride() {
     $this->createContentType([
       'type' => 'test_type',
     ]);
@@ -505,7 +454,7 @@ class ContentModerationStateTest extends KernelTestBase {
    *
    * @dataProvider moderationWithSpecialLanguagesTestCases
    */
-  public function testModerationWithSpecialLanguages($original_language, $updated_language): void {
+  public function testModerationWithSpecialLanguages($original_language, $updated_language) {
     $workflow = $this->createEditorialWorkflow();
     $this->addEntityTypeAndBundleToWorkflow($workflow, $this->revEntityTypeId, $this->revEntityTypeId);
 
@@ -527,7 +476,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Test cases for ::testModerationWithSpecialLanguages().
    */
-  public static function moderationWithSpecialLanguagesTestCases() {
+  public function moderationWithSpecialLanguagesTestCases() {
     return [
       'Not specified to not specified' => [
         LanguageInterface::LANGCODE_NOT_SPECIFIED,
@@ -547,7 +496,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Tests changing the language of content without adding a translation.
    */
-  public function testChangingContentLangcode(): void {
+  public function testChangingContentLangcode() {
     $this->createContentType([
       'type' => 'test_type',
     ]);
@@ -580,7 +529,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Tests that a non-translatable entity type with a langcode can be moderated.
    */
-  public function testNonTranslatableEntityTypeModeration(): void {
+  public function testNonTranslatableEntityTypeModeration() {
     $workflow = $this->createEditorialWorkflow();
     $this->addEntityTypeAndBundleToWorkflow($workflow, $this->revEntityTypeId, $this->revEntityTypeId);
 
@@ -601,9 +550,10 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Tests moderation of a non-translatable entity type with no langcode.
+   * Tests that a non-translatable entity type without a langcode can be
+   * moderated.
    */
-  public function testNonLangcodeEntityTypeModeration(): void {
+  public function testNonLangcodeEntityTypeModeration() {
     // Unset the langcode entity key for 'entity_test_rev'.
     $entity_type = clone $this->entityTypeManager->getDefinition($this->revEntityTypeId);
     $keys = $entity_type->getKeys();
@@ -638,7 +588,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Tests the dependencies of the workflow when using content moderation.
    */
-  public function testWorkflowDependencies(): void {
+  public function testWorkflowDependencies() {
     $node_type = $this->createContentType([
       'type' => 'example',
     ]);
@@ -681,9 +631,9 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * Tests the content moderation workflow dependencies for non-config bundles.
    */
-  public function testWorkflowNonConfigBundleDependencies(): void {
+  public function testWorkflowNonConfigBundleDependencies() {
     // Create a bundle not based on any particular configuration.
-    EntityTestHelper::createBundle('test_bundle');
+    entity_test_create_bundle('test_bundle');
 
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test', 'test_bundle');
@@ -702,7 +652,7 @@ class ContentModerationStateTest extends KernelTestBase {
 
     // Delete the test bundle to ensure the workflow entity responds
     // appropriately.
-    EntityTestHelper::deleteBundle('test_bundle');
+    entity_test_delete_bundle('test_bundle');
 
     $workflow = Workflow::load('editorial');
     $this->assertEquals([], $workflow->getTypePlugin()->getBundlesForEntityType('entity_test'));
@@ -715,21 +665,13 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * Tests the revision default state of the moderation state entity revisions.
-   */
-  public function testRevisionDefaultState(): void {
-    foreach (static::basicModerationTestCases() as $case) {
-      [$entity_type_id] = $case;
-      $this->doTestRevisionDefaultState($entity_type_id);
-    }
-  }
-
-  /**
-   * Tests the revision default state of the moderation state entity revisions.
    *
    * @param string $entity_type_id
    *   The ID of entity type to be tested.
+   *
+   * @dataProvider basicModerationTestCases
    */
-  public function doTestRevisionDefaultState($entity_type_id): void {
+  public function testRevisionDefaultState($entity_type_id) {
     // Check that the revision default state of the moderated entity and the
     // content moderation state entity always match.
     $entity = $this->createEntity($entity_type_id, 'published');
@@ -784,9 +726,6 @@ class ContentModerationStateTest extends KernelTestBase {
         $bundle_entity = $bundle_entity_storage->create([
           $bundle_entity_type->getKey('id') => 'example',
         ]);
-        if ($bundle_entity_type->hasKey('label')) {
-          $bundle_entity->set($bundle_entity_type->getKey('label'), $this->randomMachineName());
-        }
         if ($entity_type_id == 'media') {
           $bundle_entity->set('source', 'test');
           $bundle_entity->save();
@@ -835,8 +774,7 @@ class ContentModerationStateTest extends KernelTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The reloaded entity.
    */
-  protected function reloadEntity(EntityInterface $entity, $revision_id = FALSE): EntityInterface {
-    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+  protected function reloadEntity(EntityInterface $entity, $revision_id = FALSE) {
     $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
     $storage->resetCache([$entity->id()]);
     if ($revision_id) {
@@ -866,6 +804,16 @@ class ContentModerationStateTest extends KernelTestBase {
     if ($published !== NULL && $entity instanceof EntityPublishedInterface) {
       $this->assertSame($published, $entity->isPublished());
     }
+  }
+
+  /**
+   * Tests that the 'taxonomy_term' entity type cannot be moderated.
+   */
+  public function testTaxonomyTermEntityTypeModeration() {
+    /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
+    $moderation_info = \Drupal::service('content_moderation.moderation_information');
+    $entity_type = \Drupal::entityTypeManager()->getDefinition('taxonomy_term');
+    $this->assertFalse($moderation_info->canModerateEntitiesOfEntityType($entity_type));
   }
 
 }

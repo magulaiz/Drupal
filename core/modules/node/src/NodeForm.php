@@ -56,14 +56,7 @@ class NodeForm extends ContentEntityForm {
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
    */
-  public function __construct(
-    EntityRepositoryInterface $entity_repository,
-    PrivateTempStoreFactory $temp_store_factory,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info,
-    TimeInterface $time,
-    AccountInterface $current_user,
-    DateFormatterInterface $date_formatter,
-  ) {
+  public function __construct(EntityRepositoryInterface $entity_repository, PrivateTempStoreFactory $temp_store_factory, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, AccountInterface $current_user, DateFormatterInterface $date_formatter) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->tempStoreFactory = $temp_store_factory;
     $this->currentUser = $current_user;
@@ -91,10 +84,6 @@ class NodeForm extends ContentEntityForm {
     // Try to restore from temp store, this must be done before calling
     // parent::form().
     $store = $this->tempStoreFactory->get('node_preview');
-
-    // Because of the temp store integration, this is not cacheable.
-    // @todo add the correct cache contexts in https://www.drupal.org/project/drupal/issues/3397987
-    $form['#cache']['max-age'] = 0;
 
     // Attempt to load from preview when the uuid is present unless we are
     // rebuilding the form.
@@ -248,9 +237,9 @@ class NodeForm extends ContentEntityForm {
   /**
    * Form submission handler for the 'preview' action.
    *
-   * @param array $form
+   * @param $form
    *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * @param $form_state
    *   The current state of the form.
    */
   public function preview(array $form, FormStateInterface $form_state) {
@@ -298,8 +287,7 @@ class NodeForm extends ContentEntityForm {
       if ($node->access('view')) {
         $form_state->setRedirect(
           'entity.node.canonical',
-          ['node' => $node->id()],
-          ['language' => $node->language()]
+          ['node' => $node->id()]
         );
       }
       else {

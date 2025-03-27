@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Component\DependencyInjection\ContainerInterface;
@@ -20,7 +18,7 @@ class ChainedFastBackendFactoryTest extends UnitTestCase {
   /**
    * Test if the same name is provided for consistent and fast services.
    */
-  public function testIdenticalService(): void {
+  public function testIdenticalService() {
     $container = $this->createMock(ContainerInterface::class);
     $testCacheFactory = $this->createMock(CacheFactoryInterface::class);
     $testCacheBackend = $this->createMock(CacheBackendInterface::class);
@@ -47,7 +45,7 @@ class ChainedFastBackendFactoryTest extends UnitTestCase {
   /**
    * Test if different names are provided for consistent and fast services.
    */
-  public function testDifferentServices(): void {
+  public function testDifferentServices() {
     $container = $this->createMock(ContainerInterface::class);
     $testConsistentCacheFactory = $this->createMock(CacheFactoryInterface::class);
     $testFastCacheFactory = $this->createMock(CacheFactoryInterface::class);
@@ -56,13 +54,13 @@ class ChainedFastBackendFactoryTest extends UnitTestCase {
 
     $container->expects($this->exactly(2))
       ->method('get')
-      ->willReturnCallback(
-        function ($service) use ($testFastCacheFactory, $testConsistentCacheFactory) {
+      ->will(
+        $this->returnCallback(function ($service) use ($testFastCacheFactory, $testConsistentCacheFactory) {
           return match ($service) {
             'cache.backend.test_consistent' => $testConsistentCacheFactory,
             'cache.backend.test_fast' => $testFastCacheFactory,
           };
-        }
+        })
       );
 
     // The same bin should be retrieved from both backends.

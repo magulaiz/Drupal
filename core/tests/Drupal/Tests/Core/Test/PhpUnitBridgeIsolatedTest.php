@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Tests\UnitTestCase;
@@ -18,7 +16,7 @@ use Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass;
  */
 class PhpUnitBridgeIsolatedTest extends UnitTestCase {
 
-  public function testDeprecatedClass(): void {
+  public function testDeprecatedClass() {
     $this->expectDeprecation('Drupal\deprecation_test\Deprecation\FixtureDeprecatedClass is deprecated.');
     $deprecated = new FixtureDeprecatedClass();
     $this->assertEquals('test', $deprecated->testFunction());

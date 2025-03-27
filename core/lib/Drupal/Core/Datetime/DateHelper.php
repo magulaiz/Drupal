@@ -81,7 +81,7 @@ class DateHelper {
   public static function monthNames($required = FALSE) {
     // Force the key to use the correct month value, rather than
     // starting with zero.
-    $month_names = [
+    $monthnames = [
       1  => t('January', [], ['context' => 'Long month name']),
       2  => t('February', [], ['context' => 'Long month name']),
       3  => t('March', [], ['context' => 'Long month name']),
@@ -96,7 +96,7 @@ class DateHelper {
       12 => t('December', [], ['context' => 'Long month name']),
     ];
     $none = ['' => ''];
-    return !$required ? $none + $month_names : $month_names;
+    return !$required ? $none + $monthnames : $monthnames;
   }
 
   /**
@@ -112,7 +112,7 @@ class DateHelper {
   public static function monthNamesAbbr($required = FALSE) {
     // Force the key to use the correct month value, rather than
     // starting with zero.
-    $month_names = [
+    $monthnames = [
       1  => t('Jan', [], ['context' => 'Abbreviated month name']),
       2  => t('Feb', [], ['context' => 'Abbreviated month name']),
       3  => t('Mar', [], ['context' => 'Abbreviated month name']),
@@ -127,7 +127,7 @@ class DateHelper {
       12 => t('Dec', [], ['context' => 'Abbreviated month name']),
     ];
     $none = ['' => ''];
-    return !$required ? $none + $month_names : $month_names;
+    return !$required ? $none + $monthnames : $monthnames;
   }
 
   /**
@@ -290,12 +290,11 @@ class DateHelper {
    */
   public static function years($min = 0, $max = 0, $required = FALSE) {
     // Ensure $min and $max are valid values.
-    $requestTime = \Drupal::time()->getRequestTime();
     if (empty($min)) {
-      $min = intval(date('Y', $requestTime) - 3);
+      $min = intval(date('Y', REQUEST_TIME) - 3);
     }
     if (empty($max)) {
-      $max = intval(date('Y', $requestTime) + 3);
+      $max = intval(date('Y', REQUEST_TIME) + 3);
     }
     $none = ['' => ''];
     $range = range($min, $max);
@@ -451,10 +450,9 @@ class DateHelper {
    *   Defaults to NULL, which means to use the current date.
    *
    * @return int
-   *   The number of days in the month, or null if the $date has errors.
+   *   The number of days in the month.
    */
   public static function daysInMonth($date = NULL) {
-    $date = $date ?? 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
@@ -471,11 +469,10 @@ class DateHelper {
    *   (optional) A DrupalDateTime object or a date string.
    *   Defaults to NULL, which means to use the current date.
    *
-   * @return int|null
-   *   The number of days in the year, or null if the $date has errors.
+   * @return int
+   *   The number of days in the year.
    */
   public static function daysInYear($date = NULL) {
-    $date = $date ?? 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
@@ -497,11 +494,10 @@ class DateHelper {
    *   (optional) A DrupalDateTime object or a date string.
    *   Defaults to NULL, which means use the current date.
    *
-   * @return int|null
-   *   The number of the day in the week, or null if the $date has errors.
+   * @return int
+   *   The number of the day in the week.
    */
   public static function dayOfWeek($date = NULL) {
-    $date = $date ?? 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
@@ -521,21 +517,16 @@ class DateHelper {
    *   (optional) Whether to return the abbreviated name for that day.
    *   Defaults to TRUE.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
-   *   The name of the day in the week for that date, or null if the $date has
-   *   errors.
+   * @return string
+   *   The name of the day in the week for that date.
    */
   public static function dayOfWeekName($date = NULL, $abbr = TRUE) {
-    $date = $date ?? 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
-    if (!$date->hasErrors()) {
-      $dow = self::dayOfWeek($date);
-      $days = $abbr ? self::weekDaysAbbr() : self::weekDays();
-      return $days[$dow];
-    }
-    return NULL;
+    $dow = self::dayOfWeek($date);
+    $days = $abbr ? self::weekDaysAbbr() : self::weekDays();
+    return $days[$dow];
   }
 
 }

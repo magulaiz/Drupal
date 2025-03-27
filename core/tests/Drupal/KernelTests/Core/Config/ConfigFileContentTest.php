@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\FileStorage;
@@ -18,16 +16,16 @@ class ConfigFileContentTest extends KernelTestBase {
   /**
    * Exempt from strict schema checking.
    *
-   * @var bool
-   *
    * @see \Drupal\Core\Config\Development\ConfigSchemaChecker
+   *
+   * @var bool
    */
   protected $strictConfigSchema = FALSE;
 
   /**
    * Tests setting, writing, and reading of a configuration setting.
    */
-  public function testReadWriteConfig(): void {
+  public function testReadWriteConfig() {
     $storage = $this->container->get('config.storage');
 
     $name = 'foo.bar';
@@ -190,7 +188,7 @@ class ConfigFileContentTest extends KernelTestBase {
   /**
    * Tests serialization of configuration to file.
    */
-  public function testSerialization(): void {
+  public function testSerialization() {
     $name = $this->randomMachineName(10) . '.' . $this->randomMachineName(10);
     $config_data = [
       // Indexed arrays; the order of elements is essential.
@@ -200,7 +198,6 @@ class ConfigFileContentTest extends KernelTestBase {
         // HTML/XML in values.
         'HTML' => '<strong> <bold> <em> <blockquote>',
         // UTF-8 in values.
-        // cspell:disable-next-line
         'UTF-8' => 'FrançAIS is ÜBER-åwesome',
         // Unicode in keys and values.
         // cSpell:disable-next-line
@@ -210,9 +207,9 @@ class ConfigFileContentTest extends KernelTestBase {
     ];
 
     // Encode and write, and reload and decode the configuration data.
-    $file_storage = new FileStorage(Settings::get('config_sync_directory'));
-    $file_storage->write($name, $config_data);
-    $config_parsed = $file_storage->read($name);
+    $filestorage = new FileStorage(Settings::get('config_sync_directory'));
+    $filestorage->write($name, $config_data);
+    $config_parsed = $filestorage->read($name);
 
     $key = 'numeric keys';
     $this->assertSame($config_data[$key], $config_parsed[$key]);

@@ -1,13 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\search\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchTextProcessorInterface;
-
-// cspell:ignore bopomofo jamo lisu
 
 /**
  * Tests that CJK tokenizer works as intended.
@@ -22,14 +18,6 @@ class SearchTokenizerTest extends KernelTestBase {
   protected static $modules = ['search'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->installConfig(['search']);
-  }
-
-  /**
    * Verifies that strings of CJK characters are tokenized.
    *
    * The text analysis function does special things with numbers, symbols
@@ -37,7 +25,7 @@ class SearchTokenizerTest extends KernelTestBase {
    * character classes are tokenized properly. See PREG_CLASS_CKJ for more
    * information.
    */
-  public function testTokenizer(): void {
+  public function testTokenizer() {
     // Set the minimum word size to 1 (to split all CJK characters) and make
     // sure CJK tokenizing is turned on.
     $this->config('search.settings')
@@ -66,8 +54,8 @@ class SearchTokenizerTest extends KernelTestBase {
       'Katakana Ext' => 0x31f0,
       'CJK Reserve 1' => 0x20000,
       'CJK Reserve 2' => 0x30000,
-      'Bopomofo' => 0x3100,
-      'Bopomofo Ext' => 0x31a0,
+      'Bomofo' => 0x3100,
+      'Bomofo Ext' => 0x31a0,
       'Lisu' => 0xa4d0,
       'Yi' => 0xa000,
     ];
@@ -90,8 +78,8 @@ class SearchTokenizerTest extends KernelTestBase {
       'Katakana Ext' => 0x31ff,
       'CJK Reserve 1' => 0x2fffd,
       'CJK Reserve 2' => 0x3fffd,
-      'Bopomofo' => 0x312f,
-      'Bopomofo Ext' => 0x31b7,
+      'Bomofo' => 0x312f,
+      'Bomofo Ext' => 0x31b7,
       'Lisu' => 0xa4fd,
       'Yi' => 0xa48f,
     ];
@@ -122,7 +110,7 @@ class SearchTokenizerTest extends KernelTestBase {
    * This is just a sanity check - it verifies that strings of letters are
    * not tokenized.
    */
-  public function testNoTokenizer(): void {
+  public function testNoTokenizer() {
     // Set the minimum word size to 1 (to split all CJK characters) and make
     // sure CJK tokenizing is turned on.
     $this->config('search.settings')

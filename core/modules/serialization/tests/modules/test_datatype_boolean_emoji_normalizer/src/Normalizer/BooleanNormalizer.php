@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\test_datatype_boolean_emoji_normalizer\Normalizer;
 
 use Drupal\Core\TypedData\Plugin\DataType\BooleanData;
@@ -12,6 +10,11 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
  * Normalizes boolean data weirdly: renders them as 👍 (TRUE) or 👎 (FALSE).
  */
 class BooleanNormalizer extends NormalizerBase implements DenormalizerInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $supportedInterfaceOrClass = BooleanData::class;
 
   /**
    * {@inheritdoc}
@@ -33,8 +36,8 @@ class BooleanNormalizer extends NormalizerBase implements DenormalizerInterface 
   /**
    * {@inheritdoc}
    */
-  public function getSupportedTypes(?string $format): array {
-    return [BooleanData::class => TRUE];
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

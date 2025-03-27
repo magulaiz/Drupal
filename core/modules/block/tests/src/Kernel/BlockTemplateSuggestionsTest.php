@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
@@ -25,14 +23,14 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
   /**
    * Tests template suggestions from block_theme_suggestions_block().
    */
-  public function testBlockThemeHookSuggestions(): void {
+  public function testBlockThemeHookSuggestions() {
     $this->installConfig(['system']);
 
     // Create a block using a plugin with derivative to be preprocessed.
     $block = Block::create([
       'plugin' => 'system_menu_block:admin',
       'region' => 'footer',
-      'id' => 'machine_name',
+      'id' => 'machinename',
     ]);
 
     $variables = [];
@@ -49,7 +47,7 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
       'block__system',
       'block__system_menu_block',
       'block__system_menu_block__admin',
-      'block__machine_name',
+      'block__machinename',
     ], $suggestions);
   }
 

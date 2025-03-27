@@ -124,8 +124,8 @@
     // confirmation, because switching text formats might cause certain
     // markup to be stripped away.
     const supportContentFiltering =
-      drupalSettings.editor.formats[newFormatID]
-        ?.editorSupportsContentFiltering;
+      drupalSettings.editor.formats[newFormatID] &&
+      drupalSettings.editor.formats[newFormatID].editorSupportsContentFiltering;
     // If there is no content yet, it's always safe to change the text format.
     const hasContent = field.value !== '';
     if (hasContent && supportContentFiltering) {
@@ -137,9 +137,7 @@
       );
       const confirmationDialog = Drupal.dialog(`<div>${message}</div>`, {
         title: Drupal.t('Change text format?'),
-        classes: {
-          'ui-dialog': 'editor-change-text-format-modal',
-        },
+        dialogClass: 'editor-change-text-format-modal',
         resizable: false,
         buttons: [
           {
@@ -159,8 +157,6 @@
               // change event is only triggered after the change has already
               // been accepted.
               select.value = activeFormatID;
-              const eventChange = new Event('change');
-              select.dispatchEvent(eventChange);
               confirmationDialog.close();
             },
           },
@@ -237,11 +233,11 @@
         });
 
         // Attach onChange handler to text format selector element.
-        if (editor.tagName === 'SELECT') {
+        if ($this.is('select')) {
           $this.on('change.editorAttach', { field }, onTextFormatChange);
         }
         // Detach any editor when the containing form is submitted.
-        $(field.form).on('submit', (event) => {
+        $this.parents('form').on('submit', (event) => {
           // Do not detach if the event was canceled.
           if (event.isDefaultPrevented()) {
             return;

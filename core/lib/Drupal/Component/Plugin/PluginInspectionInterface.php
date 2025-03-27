@@ -13,17 +13,17 @@ namespace Drupal\Component\Plugin;
 interface PluginInspectionInterface {
 
   /**
-   * Gets the plugin ID of the plugin instance.
+   * Gets the plugin_id of the plugin instance.
    *
    * @return string
-   *   The plugin ID of the plugin instance.
+   *   The plugin_id of the plugin instance.
    */
   public function getPluginId();
 
   /**
    * Gets the definition of the plugin implementation.
    *
-   * @return \Drupal\Component\Plugin\Definition\PluginDefinitionInterface|array
+   * @return array
    *   The plugin definition, as returned by the discovery object used by the
    *   plugin manager.
    */

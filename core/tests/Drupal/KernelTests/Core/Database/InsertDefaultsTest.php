@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\NoFieldsException;
@@ -18,7 +16,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
    *
    * @see \database_test_schema()
    */
-  public function testDefaultInsert(): void {
+  public function testDefaultInsert() {
     $query = $this->connection->insert('test')->useDefaults(['job']);
     $id = $query->execute();
     $job = $this->connection->query('SELECT [job] FROM {test} WHERE [id] = :id', [':id' => $id])->fetchField();
@@ -28,7 +26,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
   /**
    * Tests that no action will be preformed if no fields are specified.
    */
-  public function testDefaultEmptyInsert(): void {
+  public function testDefaultEmptyInsert() {
     $num_records_before = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     try {
@@ -36,7 +34,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
       // This is only executed if no exception has been thrown.
       $this->fail('Expected exception NoFieldsException has not been thrown.');
     }
-    catch (NoFieldsException) {
+    catch (NoFieldsException $e) {
       // Expected exception; just continue testing.
     }
 
@@ -49,7 +47,7 @@ class InsertDefaultsTest extends DatabaseTestBase {
    *
    * @see \database_test_schema()
    */
-  public function testDefaultInsertWithFields(): void {
+  public function testDefaultInsertWithFields() {
     $query = $this->connection->insert('test')
       ->fields(['name' => 'Bob'])
       ->useDefaults(['job']);

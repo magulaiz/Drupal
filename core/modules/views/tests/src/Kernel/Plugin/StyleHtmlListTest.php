@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -25,10 +23,10 @@ class StyleHtmlListTest extends ViewsKernelTestBase {
   /**
    * Make sure that the HTML list style markup is correct.
    */
-  public function testDefaultRowClasses(): void {
+  public function testDefaultRowClasses() {
     $view = Views::getView('test_style_html_list');
     $output = $view->preview();
-    $output = (string) \Drupal::service('renderer')->renderRoot($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
 
     // Check that an empty class attribute is not added if the wrapper class is
     // not set.
@@ -43,7 +41,7 @@ class StyleHtmlListTest extends ViewsKernelTestBase {
     $view->style_plugin->options['wrapper_class'] = 'wrapper-class';
 
     $output = $view->preview();
-    $output = (string) \Drupal::service('renderer')->renderRoot($output);
+    $output = \Drupal::service('renderer')->renderRoot($output);
 
     // Check that class attribute is present if the wrapper class is set.
     $this->assertStringContainsString('<div class="wrapper-class">', $output, 'Class is added to DIV');

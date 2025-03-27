@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\settings_tray_override_test;
 
 use Drupal\Core\Cache\CacheableMetadata;
@@ -32,7 +30,7 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
     }
     if (in_array('system.menu.main', $names)) {
       if (\Drupal::state()->get('settings_tray_override_test.menu')) {
-        $overrides = $overrides + ['system.menu.main' => ['label' => 'Foo label']];
+        $overrides = $overrides + ['system.menu.main' => ['label' => 'Labely label']];
       }
     }
     return $overrides;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Composer;
 
 use Symfony\Component\Finder\Finder;
@@ -20,7 +18,7 @@ trait ComposerIntegrationTrait {
    * @return \Symfony\Component\Finder\Finder
    *   A Finder object able to iterate all the composer.json files in core.
    */
-  public static function getComposerJsonFinder($drupal_root) {
+  public function getComposerJsonFinder($drupal_root) {
     $composer_json_finder = new Finder();
     $composer_json_finder->name('composer.json')
       ->in([

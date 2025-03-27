@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Routing;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -14,8 +12,6 @@ class MockMatcher implements RequestMatcherInterface {
 
   /**
    * The matcher being tested.
-   *
-   * @var \Closure
    */
   protected $matcher;
 

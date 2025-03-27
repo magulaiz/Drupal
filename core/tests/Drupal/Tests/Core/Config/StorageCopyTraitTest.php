@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\MemoryStorage;
@@ -26,7 +24,7 @@ class StorageCopyTraitTest extends UnitTestCase {
    *
    * @dataProvider providerTestReplaceStorageContents
    */
-  public function testReplaceStorageContents($source_collections, $target_collections): void {
+  public function testReplaceStorageContents($source_collections, $target_collections) {
     $source = new MemoryStorage();
     $target = new MemoryStorage();
     // Empty the storage should be the same.
@@ -68,7 +66,7 @@ class StorageCopyTraitTest extends UnitTestCase {
   /**
    * Provides data for testCheckRequirements().
    */
-  public static function providerTestReplaceStorageContents() {
+  public function providerTestReplaceStorageContents() {
     $data = [];
     $data[] = [TRUE, TRUE];
     $data[] = [TRUE, FALSE];
@@ -85,11 +83,11 @@ class StorageCopyTraitTest extends UnitTestCase {
    *   The config storage to extract the data from.
    *
    * @return array
-   *   The config data as an array.
    */
   protected static function toArray(MemoryStorage $storage) {
     $reflection = new \ReflectionObject($storage);
     $property = $reflection->getProperty('config');
+    $property->setAccessible(TRUE);
 
     return $property->getValue($storage)->getArrayCopy();
   }
@@ -102,7 +100,7 @@ class StorageCopyTraitTest extends UnitTestCase {
    * @param bool $collections
    *   Add random collections or not.
    */
-  protected function generateRandomData(StorageInterface $storage, $collections = TRUE): void {
+  protected function generateRandomData(StorageInterface $storage, $collections = TRUE) {
     $generator = $this->getRandomGenerator();
     for ($i = 0; $i < rand(2, 10); $i++) {
       $storage->write($this->randomMachineName(), (array) $generator->object());
@@ -122,7 +120,7 @@ class StorageCopyTraitTest extends UnitTestCase {
    *
    * @covers ::replaceStorageContents
    */
-  public function testWithInvalidConfiguration(): void {
+  public function testWithInvalidConfiguration() {
     $source = new TestStorage();
     $this->generateRandomData($source);
 
@@ -175,12 +173,12 @@ class StorageCopyTraitTest extends UnitTestCase {
 class TestStorage extends MemoryStorage {
 
   /**
-   * Provides a setter to bypass the array type hint on ::write().
+   * Provides a setter to bypass the array typehint on ::write().
    *
    * This method allows us to create invalid configurations. The method
    * ::write() only allows values of the type array.
    */
-  public function setValue($name, $value): void {
+  public function setValue($name, $value) {
     $this->config[$this->collection][$name] = $value;
   }
 

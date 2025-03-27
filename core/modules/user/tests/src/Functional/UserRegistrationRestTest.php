@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Cache\CacheableMetadata;
@@ -11,7 +9,6 @@ use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
 use Drupal\user\UserInterface;
 use GuzzleHttp\RequestOptions;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Tests registration of user using REST.
@@ -72,7 +69,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
   /**
    * Tests that only anonymous users can register users.
    */
-  public function testRegisterUser(): void {
+  public function testRegisterUser() {
     $config = $this->config('user.settings');
 
     // Test out different setting User Registration and Email Verification.
@@ -88,14 +85,14 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $this->assertEquals(0, $email_count);
 
     // Attempt to register without sending a password.
-    $response = $this->registerRequest('PhilipK.Dick', FALSE);
+    $response = $this->registerRequest('Rick.Deckard', FALSE);
     $this->assertResourceErrorResponse(422, "No password provided.", $response);
 
-    // Attempt to register with a password when email verification is on.
+    // Attempt to register with a password when e-mail verification is on.
     $config->set('register', UserInterface::REGISTER_VISITORS);
     $config->set('verify_mail', 1);
     $config->save();
-    $response = $this->registerRequest('UrsulaK.LeGuin');
+    $response = $this->registerRequest('Estraven');
     $this->assertResourceErrorResponse(422, 'A Password cannot be specified. It will be generated on login.', $response);
 
     // Allow visitors to register with email verification.
@@ -104,8 +101,8 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $config->save();
     $name = 'Jason.Taverner';
     $user = $this->registerUser($name, FALSE);
-    $this->assertNotEmpty($user->getPassword());
-    $this->assertFalse($user->isBlocked());
+    $this->assertEmpty($user->getPassword());
+    $this->assertTrue($user->isBlocked());
     $this->resetAll();
 
     $this->assertMailString('body', 'You may now log in by clicking this link', 1);
@@ -114,26 +111,26 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $config->set('verify_mail', 0);
     $config->save();
-    $name = 'Alex';
+    $name = 'Argaven';
     $user = $this->registerUser($name);
     $this->resetAll();
     $this->assertNotEmpty($user->getPassword());
     $this->assertTrue($user->isBlocked());
     $this->assertMailString('body', 'Your application for an account is', 2);
-    $this->assertMailString('body', 'Alex has applied for an account', 2);
+    $this->assertMailString('body', 'Argaven has applied for an account', 2);
 
-    // Allow visitors to register with Admin approval and email verification.
+    // Allow visitors to register with Admin approval and e-mail verification.
     $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
     $config->set('verify_mail', 1);
     $config->save();
-    $name = 'PhilipK.Dick';
+    $name = 'Bob.Arctor';
     $user = $this->registerUser($name, FALSE);
     $this->resetAll();
-    $this->assertNotEmpty($user->getPassword());
+    $this->assertEmpty($user->getPassword());
     $this->assertTrue($user->isBlocked());
 
     $this->assertMailString('body', 'Your application for an account is', 2);
-    $this->assertMailString('body', 'PhilipK.Dick has applied for an account', 2);
+    $this->assertMailString('body', 'Bob.Arctor has applied for an account', 2);
 
     // Verify that an authenticated user cannot register a new user, despite
     // being granted permission to do so because only anonymous users can
@@ -157,7 +154,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * @return array
    *   Return the request body.
    */
-  protected function createRequestBody($name, $include_password = TRUE, $include_email = TRUE): array {
+  protected function createRequestBody($name, $include_password = TRUE, $include_email = TRUE) {
     $request_body = [
       'langcode' => [['value' => 'en']],
       'name' => [['value' => $name]],
@@ -226,7 +223,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   Return the Response.
    */
-  protected function registerRequest($name, $include_password = TRUE, $include_email = TRUE): ResponseInterface {
+  protected function registerRequest($name, $include_password = TRUE, $include_email = TRUE) {
     $user_register_url = Url::fromRoute('user.register')
       ->setRouteParameter('_format', static::$format);
     $request_body = $this->createRequestBody($name, $include_password, $include_email);
@@ -239,7 +236,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     switch ($method) {
       case 'POST':
         $this->grantPermissionsToAuthenticatedRole(['restful post user_registration']);
@@ -259,7 +256,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessMessage($method): string {
+  protected function getExpectedUnauthorizedAccessMessage($method) {
     return '';
   }
 

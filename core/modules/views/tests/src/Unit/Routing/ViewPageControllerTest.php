@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Unit\Routing;
 
 use Drupal\Core\Routing\RouteMatch;
@@ -41,15 +39,13 @@ class ViewPageControllerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->pageController = new ViewPageController();
   }
 
   /**
    * Tests the page controller.
    */
-  public function testPageController(): void {
+  public function testPageController() {
     $build = [
       '#type' => 'view',
       '#name' => 'test_page_view',
@@ -67,11 +63,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $options = [
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
     ];
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(
-      '/test',
-      ['view_id' => 'test_page_view', 'display_id' => 'default'],
-      [],
-      $options));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
     $route_match = RouteMatch::createFromRequest($request);
 
     $output = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
@@ -82,7 +74,7 @@ class ViewPageControllerTest extends UnitTestCase {
   /**
    * Tests the page controller with arguments on a non overridden page view.
    */
-  public function testHandleWithArgumentsWithoutOverridden(): void {
+  public function testHandleWithArgumentsWithoutOverridden() {
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
@@ -92,11 +84,7 @@ class ViewPageControllerTest extends UnitTestCase {
       '_view_argument_map' => ['arg_0' => 'arg_0'],
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
     ];
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(
-      '/test/{arg_0}',
-      ['view_id' => 'test_page_view', 'display_id' => 'default'],
-      [],
-      $options));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{arg_0}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
     $route_match = RouteMatch::createFromRequest($request);
 
     $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
@@ -120,7 +108,7 @@ class ViewPageControllerTest extends UnitTestCase {
    *
    * Note: This test does not care about upcasting for now.
    */
-  public function testHandleWithArgumentsOnOverriddenRoute(): void {
+  public function testHandleWithArgumentsOnOverriddenRoute() {
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
@@ -132,11 +120,7 @@ class ViewPageControllerTest extends UnitTestCase {
       ],
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
     ];
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(
-      '/test/{parameter}',
-      ['view_id' => 'test_page_view', 'display_id' => 'default'],
-      [],
-      $options));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{parameter}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
     $route_match = RouteMatch::createFromRequest($request);
 
     $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
@@ -161,7 +145,7 @@ class ViewPageControllerTest extends UnitTestCase {
    * This test care about upcasted values and ensures that the raw variables
    * are pulled in.
    */
-  public function testHandleWithArgumentsOnOverriddenRouteWithUpcasting(): void {
+  public function testHandleWithArgumentsOnOverriddenRouteWithUpcasting() {
     $request = new Request();
     $request->attributes->set('view_id', 'test_page_view');
     $request->attributes->set('display_id', 'page_1');
@@ -175,11 +159,7 @@ class ViewPageControllerTest extends UnitTestCase {
       ],
       '_view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Page',
     ];
-    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route(
-      '/test/{test_entity}',
-      ['view_id' => 'test_page_view', 'display_id' => 'default'],
-      [],
-      $options));
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('/test/{test_entity}', ['view_id' => 'test_page_view', 'display_id' => 'default'], [], $options));
     $route_match = RouteMatch::createFromRequest($request);
 
     $result = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
@@ -206,10 +186,7 @@ namespace Drupal\views\Routing;
 
 if (!function_exists('views_add_contextual_links')) {
 
-  /**
-   * Define method views_add_contextual_links for this test.
-   */
-  function views_add_contextual_links(&$render_element, $location, $display_id, ?array $view_element = NULL): void {
+  function views_add_contextual_links() {
   }
 
 }

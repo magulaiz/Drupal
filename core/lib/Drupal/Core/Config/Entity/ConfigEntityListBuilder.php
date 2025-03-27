@@ -13,13 +13,6 @@ use Drupal\Core\Entity\EntityListBuilder;
 class ConfigEntityListBuilder extends EntityListBuilder {
 
   /**
-   * The config entity storage class.
-   *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
-   */
-  protected $storage;
-
-  /**
    * {@inheritdoc}
    */
   public function load() {
@@ -42,14 +35,14 @@ class ConfigEntityListBuilder extends EntityListBuilder {
     if ($this->entityType->hasKey('status')) {
       if (!$entity->status() && $entity->hasLinkTemplate('enable')) {
         $operations['enable'] = [
-          'title' => $this->t('Enable'),
+          'title' => t('Enable'),
           'weight' => -10,
           'url' => $this->ensureDestination($entity->toUrl('enable')),
         ];
       }
       elseif ($entity->hasLinkTemplate('disable')) {
         $operations['disable'] = [
-          'title' => $this->t('Disable'),
+          'title' => t('Disable'),
           'weight' => 40,
           'url' => $this->ensureDestination($entity->toUrl('disable')),
         ];
@@ -57,16 +50,6 @@ class ConfigEntityListBuilder extends EntityListBuilder {
     }
 
     return $operations;
-  }
-
-  /**
-   * Gets the config entity storage.
-   *
-   * @return \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
-   *   The config storage used by this list builder.
-   */
-  public function getStorage(): ConfigEntityStorageInterface {
-    return $this->storage;
   }
 
 }

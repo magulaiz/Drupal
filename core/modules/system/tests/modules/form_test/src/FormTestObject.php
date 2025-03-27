@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -41,7 +39,7 @@ class FormTestObject extends ConfigFormBase {
     $form['strawberry'] = [
       '#type' => 'hidden',
       '#value' => 'red',
-      '#attributes' => ['id' => 'red-strawberry-hidden-field'],
+      '#attributes' => ['id' => 'redstrawberryhiddenfield'],
     ];
 
     $form['actions']['#type'] = 'actions';

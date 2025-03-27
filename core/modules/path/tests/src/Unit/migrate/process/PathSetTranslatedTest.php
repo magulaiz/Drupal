@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\path\Unit\migrate\process;
 
 use Drupal\path\Plugin\migrate\process\PathSetTranslated;
@@ -29,7 +27,7 @@ class PathSetTranslatedTest extends MigrateProcessTestCase {
    *
    * @dataProvider transformDataProvider
    */
-  public function testTransform($path, $node_translation, $expected_result): void {
+  public function testTransform($path, $node_translation, $expected_result) {
     $plugin = new PathSetTranslated([], 'path_set_translated', []);
     $this->assertSame($expected_result, $plugin->transform([$path, $node_translation], $this->migrateExecutable, $this->row, 'destination_property'));
   }
@@ -40,7 +38,7 @@ class PathSetTranslatedTest extends MigrateProcessTestCase {
    * @return array
    *   The data.
    */
-  public static function transformDataProvider() {
+  public function transformDataProvider() {
     return [
       'non-node-path' => [
         'path' => '/non-node-path',

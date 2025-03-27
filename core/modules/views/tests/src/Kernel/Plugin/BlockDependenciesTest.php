@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -22,24 +20,18 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
   public static $testViews = ['test_exposed_block'];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['node', 'block', 'user', 'field'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
-    $this->container->get('theme_installer')->install(['stark']);
-  }
 
   /**
    * Tests that exposed filter blocks have the correct dependencies.
    *
    * @see \Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock::getDerivativeDefinitions()
    */
-  public function testExposedBlock(): void {
+  public function testExposedBlock() {
     $block = $this->createBlock('views_exposed_filter_block:test_exposed_block-page_1');
     $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = [
@@ -55,7 +47,7 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
    *
    * @see \Drupal\views\Plugin\Derivative\ViewsBlock::getDerivativeDefinitions()
    */
-  public function testViewsBlock(): void {
+  public function testViewsBlock() {
     $block = $this->createBlock('views_block:content_recent-block_1');
     $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = [
@@ -76,9 +68,9 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
    *   Override the defaults by specifying the key and value in the array, for
    *   example:
    *   @code
-   *     $this->createBlock('system_powered_by_block', [
+   *     $this->createBlock('system_powered_by_block', array(
    *       'label' => 'Hello, world!',
-   *     ]);
+   *     ));
    *   @endcode
    *   The following defaults are provided:
    *   - label: Random string.
@@ -94,7 +86,7 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
     $settings += [
       'plugin' => $plugin_id,
       'region' => 'sidebar_first',
-      'id' => $this->randomMachineName(8),
+      'id' => strtolower($this->randomMachineName(8)),
       'theme' => $this->config('system.theme')->get('default'),
       'label' => $this->randomMachineName(8),
       'visibility' => [],

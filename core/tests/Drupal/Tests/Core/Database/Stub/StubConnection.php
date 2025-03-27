@@ -1,14 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Database\Stub;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\Log;
-use Drupal\Core\Database\StatementWrapperIterator;
-use Drupal\Tests\Core\Database\Stub\Driver\Schema;
+use Drupal\Core\Database\StatementWrapper;
 
 /**
  * A stub of the abstract Connection class for testing purposes.
@@ -20,7 +16,7 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  protected $statementWrapperClass = StatementWrapperIterator::class;
+  protected $statementWrapperClass = StatementWrapper::class;
 
   /**
    * Public property so we can test driver loading mechanism.
@@ -86,6 +82,13 @@ class StubConnection extends Connection {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function nextId($existing_id = 0) {
+    return 0;
+  }
+
+  /**
    * Helper method to test database classes are not included in backtraces.
    *
    * @return array
@@ -93,37 +96,6 @@ class StubConnection extends Connection {
    */
   public function testLogCaller() {
     return (new Log())->findCaller();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function exceptionHandler() {
-    return new ExceptionHandler();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function upsert($table, array $options = []) {
-    return new StubUpsert($this, $table, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function schema() {
-    if (empty($this->schema)) {
-      $this->schema = new Schema();
-    }
-    return $this->schema;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function condition($conjunction) {
-    return new StubCondition($conjunction);
   }
 
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Component\Utility\Variable;
@@ -28,7 +26,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests map when the source is a string.
    */
-  public function testMapWithSourceString(): void {
+  public function testMapWithSourceString() {
     $value = $this->plugin->transform('foo', $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame(['bar' => 'baz'], $value);
   }
@@ -36,7 +34,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests map when the source is a list.
    */
-  public function testMapWithSourceList(): void {
+  public function testMapWithSourceList() {
     $value = $this->plugin->transform(['foo', 'bar'], $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('baz', $value);
   }
@@ -44,7 +42,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests when the source is empty.
    */
-  public function testMapWithEmptySource(): void {
+  public function testMapWithEmptySource() {
     $this->expectException(MigrateException::class);
     $this->plugin->transform([], $this->migrateExecutable, $this->row, 'destination_property');
   }
@@ -52,7 +50,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests when the source is invalid.
    */
-  public function testMapWithInvalidSource(): void {
+  public function testMapWithInvalidSource() {
     $this->expectException(MigrateSkipRowException::class);
     $this->expectExceptionMessage(sprintf("No static mapping found for '%s' and no default value provided for destination '%s'.", Variable::export(['bar']), 'destination_property'));
     $this->plugin->transform(['bar'], $this->migrateExecutable, $this->row, 'destination_property');
@@ -61,7 +59,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests when the source is invalid but there's a default.
    */
-  public function testMapWithInvalidSourceWithADefaultValue(): void {
+  public function testMapWithInvalidSourceWithADefaultValue() {
     $configuration['map']['foo']['bar'] = 'baz';
     $configuration['default_value'] = 'test';
     $this->plugin = new StaticMap($configuration, 'map', []);
@@ -72,7 +70,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests when the source is invalid but there's a default value of NULL.
    */
-  public function testMapWithInvalidSourceWithANullDefaultValue(): void {
+  public function testMapWithInvalidSourceWithANullDefaultValue() {
     $configuration['map']['foo']['bar'] = 'baz';
     $configuration['default_value'] = NULL;
     $this->plugin = new StaticMap($configuration, 'map', []);
@@ -83,7 +81,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests when the source is invalid and bypass is enabled.
    */
-  public function testMapWithInvalidSourceAndBypass(): void {
+  public function testMapWithInvalidSourceAndBypass() {
     $configuration['map']['foo']['bar'] = 'baz';
     $configuration['default_value'] = 'test';
     $configuration['bypass'] = TRUE;
@@ -96,7 +94,7 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests when the source is NULL.
    */
-  public function testWithNullSourceNotInMap(): void {
+  public function testWithNullSourceNotInMap() {
     $this->expectException(MigrateSkipRowException::class);
     $this->expectExceptionMessage("No static mapping found for 'NULL' and no default value provided for destination 'destination_property'");
     $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
@@ -105,22 +103,12 @@ class StaticMapTest extends MigrateProcessTestCase {
   /**
    * Tests when the source is invalid but there's a default.
    */
-  public function testWithNullSource(): void {
+  public function testWithNullSource() {
     $configuration['map']['foo']['bar'] = 'baz';
     $configuration['map'][NULL] = 'mapped NULL';
     $this->plugin = new StaticMap($configuration, 'map', []);
     $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame('mapped NULL', $value);
-  }
-
-  /**
-   * Tests when there is a dot in a map key.
-   */
-  public function testMapDotInKey(): void {
-    $configuration['map']['foo.bar'] = 'baz';
-    $this->plugin = new StaticMap($configuration, 'map', []);
-    $value = $this->plugin->transform('foo.bar', $this->migrateExecutable, $this->row, 'destination_property');
-    $this->assertSame('baz', $value);
   }
 
 }

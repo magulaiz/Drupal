@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Batch;
 
-use Drupal\batch_test\BatchTestHelper;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -15,7 +12,9 @@ use Drupal\Tests\BrowserTestBase;
 class PageTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['batch_test'];
 
@@ -27,7 +26,7 @@ class PageTest extends BrowserTestBase {
   /**
    * Tests that the batch API progress page uses the correct theme.
    */
-  public function testBatchProgressPageTheme(): void {
+  public function testBatchProgressPageTheme() {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
     $this->container->get('theme_installer')->install(['claro', 'olivero']);
@@ -46,14 +45,13 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('admin/batch-test/test-theme');
     // The stack should contain the name of the theme used on the progress
     // page.
-    $batch_test_helper = new BatchTestHelper();
-    $this->assertEquals(['claro'], $batch_test_helper->stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
+    $this->assertEquals(['claro'], batch_test_stack(), 'A progressive batch correctly uses the theme of the page that started the batch.');
   }
 
   /**
    * Tests that the batch API progress page shows the title correctly.
    */
-  public function testBatchProgressPageTitle(): void {
+  public function testBatchProgressPageTitle() {
     // Visit an administrative page that runs a test batch, and check that the
     // title shown during batch execution (which the batch callback function
     // saved as a variable) matches the theme used on the administrative page.
@@ -67,15 +65,14 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('batch-test/test-title');
 
     // The stack should contain the title shown on the progress page.
-    $batch_test_helper = new BatchTestHelper();
-    $this->assertEquals(['Batch Test'], $batch_test_helper->stack(), 'The batch title is shown on the batch page.');
+    $this->assertEquals(['Batch Test'], batch_test_stack(), 'The batch title is shown on the batch page.');
     $this->assertSession()->pageTextContains('Redirection successful.');
   }
 
   /**
    * Tests that the progress messages are correct.
    */
-  public function testBatchProgressMessages(): void {
+  public function testBatchProgressMessages() {
     // Go to the initial step only.
     $this->maximumMetaRefreshCount = 0;
     $this->drupalGet('batch-test/test-title');

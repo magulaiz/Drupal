@@ -1,11 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\filter\Unit;
 
-use Drupal\filter\FilterProcessResult;
-use Drupal\filter\Plugin\FilterBase;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -34,7 +30,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoPlugins(): void {
+  public function testValidateNoPlugins() {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')
       ->willReturn([]);
@@ -50,7 +46,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoFormats(): void {
+  public function testValidateNoFormats() {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')
       ->willReturn([
@@ -72,7 +68,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoMatchingFormats(): void {
+  public function testValidateNoMatchingFormats() {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')
       ->willReturn([
@@ -94,8 +90,8 @@ class FilterUninstallValidatorTest extends UnitTestCase {
         ],
       ]);
 
-    $filter_plugin_enabled = new FilterBaseTestableClass(['status' => TRUE], '', ['provider' => 'filter_test']);
-    $filter_plugin_disabled = new FilterBaseTestableClass(['status' => FALSE], '', ['provider' => 'filter_test']);
+    $filter_plugin_enabled = $this->getMockForAbstractClass('Drupal\filter\Plugin\FilterBase', [['status' => TRUE], '', ['provider' => 'filter_test']]);
+    $filter_plugin_disabled = $this->getMockForAbstractClass('Drupal\filter\Plugin\FilterBase', [['status' => FALSE], '', ['provider' => 'filter_test']]);
 
     // The first format has 2 matching and enabled filters, but the loop breaks
     // after finding the first one.
@@ -162,20 +158,6 @@ class FilterUninstallValidatorTest extends UnitTestCase {
     ];
     $reasons = $this->filterUninstallValidator->validate($this->randomMachineName());
     $this->assertEquals($expected, $reasons);
-  }
-
-}
-
-/**
- * A class extending FilterBase for testing purposes.
- */
-class FilterBaseTestableClass extends FilterBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function process($text, $langcode) {
-    return new FilterProcessResult();
   }
 
 }

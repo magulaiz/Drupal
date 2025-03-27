@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\views\Unit\EventSubscriber\RouteSubscriberTest.
+ */
 
 namespace Drupal\Tests\views\Unit\EventSubscriber;
 
@@ -25,9 +28,9 @@ class RouteSubscriberTest extends UnitTestCase {
   protected $entityTypeManager;
 
   /**
-   * The mocked config entity storage.
+   * The mocked view storage.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Tests\views\Kernel\ViewStorageTest|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewStorage;
 
@@ -49,8 +52,6 @@ class RouteSubscriberTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->viewStorage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
       ->disableOriginalConstructor()
@@ -66,7 +67,7 @@ class RouteSubscriberTest extends UnitTestCase {
   /**
    * @covers ::routeRebuildFinished
    */
-  public function testRouteRebuildFinished(): void {
+  public function testRouteRebuildFinished() {
     [$display_1, $display_2] = $this->setupMocks();
 
     $display_1->expects($this->once())
@@ -80,9 +81,7 @@ class RouteSubscriberTest extends UnitTestCase {
 
     $this->state->expects($this->once())
       ->method('set')
-      ->with(
-        'views.view_route_names',
-        ['test_id.page_1' => 'views.test_id.page_1', 'test_id.page_2' => 'views.test_id.page_2']);
+      ->with('views.view_route_names', ['test_id.page_1' => 'views.test_id.page_1', 'test_id.page_2' => 'views.test_id.page_2']);
     $this->routeSubscriber->routeRebuildFinished();
   }
 
@@ -91,7 +90,7 @@ class RouteSubscriberTest extends UnitTestCase {
    *
    * @see \Drupal\views\EventSubscriber\RouteSubscriber::onAlterRoutes()
    */
-  public function testOnAlterRoutes(): void {
+  public function testOnAlterRoutes() {
     $collection = new RouteCollection();
     // The first route will be overridden later.
     $collection->add('test_route', new Route('test_route', ['_controller' => 'Drupal\Tests\Core\Controller\TestController']));
@@ -147,7 +146,7 @@ class RouteSubscriberTest extends UnitTestCase {
    * @return \Drupal\views\Plugin\views\display\DisplayRouterInterface[]|\PHPUnit\Framework\MockObject\MockObject[]
    *   An array of two mocked view displays.
    */
-  protected function setupMocks(): array {
+  protected function setupMocks() {
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->getMock();

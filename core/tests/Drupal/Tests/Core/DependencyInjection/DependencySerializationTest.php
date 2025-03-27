@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\DependencyInjection\DependencySerializationTest.
+ */
 
 namespace Drupal\Tests\Core\DependencyInjection;
 
@@ -8,6 +11,7 @@ use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,7 +24,7 @@ class DependencySerializationTest extends UnitTestCase {
    * @covers ::__sleep
    * @covers ::__wakeup
    */
-  public function testSerialization(): void {
+  public function testSerialization() {
     // Create a pseudo service and dependency injected object.
     $service = new \stdClass();
     $container = TestKernel::setContainerWithKernel();
@@ -45,7 +49,7 @@ class DependencySerializationTest extends UnitTestCase {
 /**
  * Defines a test class which has a single service as dependency.
  */
-class DependencySerializationTestDummy {
+class DependencySerializationTestDummy implements ContainerAwareInterface {
 
   use DependencySerializationTrait;
 
@@ -76,7 +80,7 @@ class DependencySerializationTestDummy {
   /**
    * {@inheritdoc}
    */
-  public function setContainer(?ContainerInterface $container): void {
+  public function setContainer(ContainerInterface $container = NULL) {
     $this->container = $container;
   }
 

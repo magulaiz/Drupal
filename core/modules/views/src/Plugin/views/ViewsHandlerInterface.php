@@ -30,16 +30,14 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
   public function getEntityType();
 
   /**
-   * Determines if the handler is considered 'broken'.
-   *
-   * Broken means it's a placeholder used when a handler can't be found.
+   * Determines if the handler is considered 'broken', meaning it's a
+   * placeholder used when a handler can't be found.
    */
   public function broken();
 
   /**
-   * Ensures that the main table for this handler is in the query.
-   *
-   * This is used a lot.
+   * Ensure the main table for this handler is in the query. This is used
+   * a lot.
    */
   public function ensureMyTable();
 
@@ -66,9 +64,9 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
   /**
    * Sanitize the value for output.
    *
-   * @param mixed $value
+   * @param $value
    *   The value being rendered.
-   * @param string $type
+   * @param $type
    *   The type of sanitization needed. If not provided,
    *   \Drupal\Component\Utility\Html::escape() is used.
    *
@@ -86,7 +84,6 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
    *   The table to join to.
    *
    * @return \Drupal\views\Plugin\views\join\JoinPluginBase
-   *   The table join.
    */
   public static function getTableJoin($table, $base_table);
 
@@ -110,18 +107,12 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
 
   /**
    * Shortcut to display the exposed options form.
-   *
-   * @param array $form
-   *   The form array to alter, passed by reference.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
    */
   public function showExposeForm(&$form, FormStateInterface $form_state);
 
   /**
-   * Sets up any needed relationship.
-   *
-   * This is called just prior to query().
+   * Called just prior to query(), this lets a handler set up any relationship
+   * it needs.
    */
   public function setRelationship();
 

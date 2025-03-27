@@ -3,8 +3,6 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\views\Attribute\ViewsDisplay;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -15,14 +13,15 @@ use Drupal\views\ViewExecutable;
  * the same view. They can share some information.
  *
  * @ingroup views_display_plugins
+ *
+ * @ViewsDisplay(
+ *   id = "attachment",
+ *   title = @Translation("Attachment"),
+ *   help = @Translation("Attachments added to other displays to achieve multiple views in the same view."),
+ *   theme = "views_view",
+ *   contextual_links_locations = {""}
+ * )
  */
-#[ViewsDisplay(
-  id: "attachment",
-  title: new TranslatableMarkup("Attachment"),
-  help: new TranslatableMarkup("Attachments added to other displays to achieve multiple views in the same view."),
-  theme: "views_view",
-  contextual_links_locations: [""]
-)]
 class Attachment extends DisplayPluginBase {
 
   /**
@@ -32,9 +31,6 @@ class Attachment extends DisplayPluginBase {
    */
   protected $usesPager = FALSE;
 
-  /**
-   * {@inheritdoc}
-   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -48,16 +44,10 @@ class Attachment extends DisplayPluginBase {
     return $options;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function execute() {
     return $this->view->render($this->display['id']);
   }
 
-  /**
-   * Gets the positions for the attachment in relation to the parent display.
-   */
   public function attachmentPositions($position = NULL) {
     $positions = [
       'before' => $this->t('Before'),
@@ -284,11 +274,11 @@ class Attachment extends DisplayPluginBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Attachment displays only use exposed widgets if
+   * they are set to inherit the exposed filter settings
+   * of their parent display.
    */
   public function usesExposed() {
-    // Attachment displays only use exposed widgets if they are set to inherit
-    // the exposed filter settings of their parent display.
     if (!empty($this->options['inherit_exposed_filters']) && parent::usesExposed()) {
       return TRUE;
     }
@@ -296,18 +286,14 @@ class Attachment extends DisplayPluginBase {
   }
 
   /**
-   * {@inheritdoc}
+   * If an attachment is set to inherit the exposed filter
+   * settings from its parent display, then don't render and
+   * display a second set of exposed filter widgets.
    */
   public function displaysExposed() {
-    // If an attachment is set to inherit the exposed filter settings from its
-    // parent display, then don't render and display a second set of exposed
-    // filter widgets.
     return $this->options['inherit_exposed_filters'] ? FALSE : TRUE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function renderPager() {
     return $this->usesPager() && $this->getOption('render_pager');
   }

@@ -1,13 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldException;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 
@@ -48,7 +45,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     parent::setUp();
 
     $this->fieldStorageDefinition = [
-      'field_name' => $this->randomMachineName(),
+      'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ];
@@ -61,7 +58,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     ];
   }
 
-  // @todo Test creation with
+  // TODO : test creation with
   // - a full fledged $field structure, check that all the values are there
   // - a minimal $field structure, check all default values are set
   // defer actual $field comparison to a helper function, used for the two cases above,
@@ -70,7 +67,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Tests the creation of a field.
    */
-  public function testCreateField(): void {
+  public function testCreateField() {
     $field = FieldConfig::create($this->fieldDefinition);
     $field->save();
 
@@ -108,7 +105,7 @@ class FieldCrudTest extends FieldKernelTestBase {
       FieldConfig::create($this->fieldDefinition)->save();
       $this->fail('Cannot create two fields with the same field / bundle combination.');
     }
-    catch (EntityStorageException) {
+    catch (EntityStorageException $e) {
       // Expected exception; just continue testing.
     }
 
@@ -118,11 +115,11 @@ class FieldCrudTest extends FieldKernelTestBase {
       FieldConfig::create($this->fieldDefinition)->save();
       $this->fail('Cannot create a field with a non-existing storage.');
     }
-    catch (FieldException) {
+    catch (FieldException $e) {
       // Expected exception; just continue testing.
     }
 
-    // @todo Test other failures.
+    // TODO: test other failures.
   }
 
   /**
@@ -131,7 +128,7 @@ class FieldCrudTest extends FieldKernelTestBase {
    * @covers ::setPropertyConstraints
    * @covers ::addPropertyConstraints
    */
-  public function testFieldPropertyConstraints(): void {
+  public function testFieldPropertyConstraints() {
     $field = FieldConfig::create($this->fieldDefinition);
     $field->save();
     $field_name = $this->fieldStorage->getName();
@@ -169,7 +166,7 @@ class FieldCrudTest extends FieldKernelTestBase {
    *
    * @see field_test_entity_bundle_field_info_alter()
    */
-  protected function doFieldPropertyConstraintsTests(): void {
+  protected function doFieldPropertyConstraintsTests() {
     $field_name = $this->fieldStorage->getName();
 
     // Check that a valid value (not -2 and between 0 and 32) doesn't trigger
@@ -186,10 +183,10 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertCount(2, $violations, 'Two violations found when using a null and outside the range value.');
 
     $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals(sprintf('%s does not accept the value -2.', $field_name), $violations[0]->getMessage());
+    $this->assertEquals(t('%name does not accept the value @value.', ['%name' => $field_name, '@value' => -2]), $violations[0]->getMessage());
 
     $this->assertEquals($field_name . '.0.value', $violations[1]->getPropertyPath());
-    $this->assertEquals('This value should be between 0 and 32.', $violations[1]->getMessage());
+    $this->assertEquals(t('This value should be between %min and %max.', ['%min' => 0, '%max' => 32]), $violations[1]->getMessage());
 
     // Check that a value that is not specifically restricted but outside the
     // range triggers the expected violation.
@@ -197,14 +194,14 @@ class FieldCrudTest extends FieldKernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations, 'Violations found when using value outside the range.');
     $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals('This value should be between 0 and 32.', $violations[0]->getMessage());
+    $this->assertEquals(t('This value should be between %min and %max.', ['%min' => 0, '%max' => 32]), $violations[0]->getMessage());
   }
 
   /**
    * Tests creating a field with custom storage set.
    */
-  public function testCreateFieldCustomStorage(): void {
-    $field_name = $this->randomMachineName();
+  public function testCreateFieldCustomStorage() {
+    $field_name = mb_strtolower($this->randomMachineName());
     \Drupal::state()->set('field_test_custom_storage', $field_name);
 
     $field_storage = FieldStorageConfig::create([
@@ -241,7 +238,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Tests reading back a field definition.
    */
-  public function testReadField(): void {
+  public function testReadField() {
     FieldConfig::create($this->fieldDefinition)->save();
 
     // Read the field back.
@@ -254,7 +251,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Tests the update of a field.
    */
-  public function testUpdateField(): void {
+  public function testUpdateField() {
     FieldConfig::create($this->fieldDefinition)->save();
 
     // Check that basic changes are saved.
@@ -270,13 +267,13 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertEquals($field->getLabel(), $field_new->getLabel(), '"label" change is saved');
     $this->assertEquals($field->getDescription(), $field_new->getDescription(), '"description" change is saved');
 
-    // @todo Test failures.
+    // TODO: test failures.
   }
 
   /**
    * Tests the deletion of a field with no data.
    */
-  public function testDeleteFieldNoData(): void {
+  public function testDeleteFieldNoData() {
     // Deleting and purging fields with data is tested in
     // \Drupal\Tests\field\Kernel\BulkDeleteTest.
 
@@ -285,31 +282,17 @@ class FieldCrudTest extends FieldKernelTestBase {
     FieldConfig::create($this->fieldDefinition)->save();
     $another_field_definition = $this->fieldDefinition;
     $another_field_definition['bundle'] .= '_another_bundle';
-    EntityTestHelper::createBundle($another_field_definition['bundle']);
+    entity_test_create_bundle($another_field_definition['bundle']);
     FieldConfig::create($another_field_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
-    $field = current(\Drupal::entityTypeManager()
-      ->getStorage('field_config')
-      ->loadByProperties([
-        'entity_type' => 'entity_test',
-        'field_name' => $this->fieldDefinition['field_name'],
-        'bundle' => $this->fieldDefinition['bundle'],
-        'include_deleted' => TRUE,
-      ]));
+    $field = current(\Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]));
     $this->assertFalse($field->isDeleted());
     $field->delete();
 
     // Make sure the field was deleted without being marked for purging as there
     // was no data.
-    $fields = \Drupal::entityTypeManager()
-      ->getStorage('field_config')
-      ->loadByProperties([
-        'entity_type' => 'entity_test',
-        'field_name' => $this->fieldDefinition['field_name'],
-        'bundle' => $this->fieldDefinition['bundle'],
-        'include_deleted' => TRUE,
-      ]);
+    $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]);
     $this->assertCount(0, $fields, 'A deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
@@ -324,10 +307,10 @@ class FieldCrudTest extends FieldKernelTestBase {
   /**
    * Tests the cross deletion behavior between field storages and fields.
    */
-  public function testDeleteFieldCrossDeletion(): void {
+  public function testDeleteFieldCrossDeletion() {
     $field_definition_2 = $this->fieldDefinition;
     $field_definition_2['bundle'] .= '_another_bundle';
-    EntityTestHelper::createBundle($field_definition_2['bundle']);
+    entity_test_create_bundle($field_definition_2['bundle']);
 
     // Check that deletion of a field storage deletes its fields.
     $field_storage = $this->fieldStorage;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\entity_test\Entity\EntityTestRev;
@@ -18,7 +16,9 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
 class FieldDisplayTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'entity_test',
@@ -67,7 +67,7 @@ class FieldDisplayTest extends KernelTestBase {
 
     $this->entityType = 'entity_test_rev';
     $this->bundle = $this->entityType;
-    $this->fieldName = $this->randomMachineName();
+    $this->fieldName = mb_strtolower($this->randomMachineName());
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,
@@ -99,7 +99,7 @@ class FieldDisplayTest extends KernelTestBase {
   /**
    * Tests that visually hidden works with core.
    */
-  public function testFieldVisualHidden(): void {
+  public function testFieldVisualHidden() {
     $value = $this->randomMachineName();
 
     // Set the formatter to link to the entity.
@@ -115,8 +115,8 @@ class FieldDisplayTest extends KernelTestBase {
 
     $build = $this->display->build($entity);
     $renderer = \Drupal::service('renderer');
-    $content = (string) $renderer->renderInIsolation($build);
-    $this->setRawContent($content);
+    $content = $renderer->renderPlain($build);
+    $this->setRawContent((string) $content);
 
     $css_selector_converter = new CssSelectorConverter();
     $elements = $this->xpath($css_selector_converter->toXPath('.visually-hidden'));

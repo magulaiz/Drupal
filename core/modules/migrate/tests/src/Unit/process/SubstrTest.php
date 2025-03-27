@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
@@ -19,11 +17,18 @@ use Drupal\migrate\Plugin\migrate\process\Substr;
 class SubstrTest extends MigrateProcessTestCase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+  }
+
+  /**
    * Tests Substr plugin based on providerTestSubstr() values.
    *
    * @dataProvider providerTestSubstr
    */
-  public function testSubstr($start = NULL, $length = NULL, $expected = NULL): void {
+  public function testSubstr($start = NULL, $length = NULL, $expected = NULL) {
     $configuration['start'] = $start;
     $configuration['length'] = $length;
     $this->plugin = new Substr($configuration, 'map', []);
@@ -34,7 +39,7 @@ class SubstrTest extends MigrateProcessTestCase {
   /**
    * Data provider for testSubstr().
    */
-  public static function providerTestSubstr() {
+  public function providerTestSubstr() {
     return [
       // Tests with valid start and length values.
       [0, 7, 'Captain'],
@@ -54,7 +59,7 @@ class SubstrTest extends MigrateProcessTestCase {
   /**
    * Tests invalid input type.
    */
-  public function testSubstrFail(): void {
+  public function testSubstrFail() {
     $configuration = [];
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);
@@ -65,7 +70,7 @@ class SubstrTest extends MigrateProcessTestCase {
   /**
    * Tests that the start parameter is an integer.
    */
-  public function testStartIsString(): void {
+  public function testStartIsString() {
     $configuration['start'] = '2';
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);
@@ -76,7 +81,7 @@ class SubstrTest extends MigrateProcessTestCase {
   /**
    * Tests that the length parameter is an integer.
    */
-  public function testLengthIsString(): void {
+  public function testLengthIsString() {
     $configuration['length'] = '1';
     $this->plugin = new Substr($configuration, 'map', []);
     $this->expectException(MigrateException::class);

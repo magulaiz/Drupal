@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views\Views;
@@ -32,7 +30,7 @@ class StyleGridTest extends PluginKernelTestBase {
   /**
    * Tests the grid style.
    */
-  public function testGrid(): void {
+  public function testGrid() {
     $view = Views::getView('test_grid');
     foreach (['horizontal', 'vertical'] as $alignment) {
       $this->assertGrid($view, $alignment, 5);
@@ -67,13 +65,7 @@ class StyleGridTest extends PluginKernelTestBase {
     $output = \Drupal::service('renderer')->renderRoot($output);
     $this->setRawContent($output);
     if (!in_array($alignment, $this->alignmentsTested)) {
-      $result = $this->xpath(
-        '//div[contains(@class, "views-view-grid") and contains(@class, :alignment) and contains(@class, :columns)]',
-        [
-          ':alignment' => $alignment,
-          ':columns' => 'cols-' . $columns,
-        ]
-      );
+      $result = $this->xpath('//div[contains(@class, "views-view-grid") and contains(@class, :alignment) and contains(@class, :columns)]', [':alignment' => $alignment, ':columns' => 'cols-' . $columns]);
       $this->assertGreaterThan(0, count($result), ucfirst($alignment) . " grid markup detected.");
       $this->alignmentsTested[] = $alignment;
     }
@@ -95,12 +87,7 @@ class StyleGridTest extends PluginKernelTestBase {
         break;
     }
     // Ensure last column exists.
-    $result = $this->xpath(
-      '//div[contains(@class, "views-col") and contains(@class, :columns) and starts-with(@style, :width)]',
-      [
-        ':columns' => 'col-' . $columns,
-        ':width' => 'width: ' . $width,
-      ]);
+    $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns) and starts-with(@style, :width)]', [':columns' => 'col-' . $columns, ':width' => 'width: ' . $width]);
     $this->assertGreaterThan(0, count($result), ucfirst($alignment) . " $columns column grid: last column exists and automatic width calculated correctly.");
     // Ensure no extra columns were generated.
     $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns)]', [':columns' => 'col-' . ($columns + 1)]);

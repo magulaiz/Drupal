@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\help\Functional;
 
 /**
@@ -29,7 +27,7 @@ class HelpPageReverseOrderTest extends HelpPageOrderTest {
    * @var string[]
    */
   protected $stringOrder = [
-    'This description should appear',
+    'Tours guide you',
     'Module overviews are provided',
   ];
 

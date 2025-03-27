@@ -1,10 +1,12 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Core\Render\ElementInfoManagerTest.
+ */
 
 namespace Drupal\Tests\Core\Render;
 
-use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Render\ElementInfoManager;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Tests\UnitTestCase;
@@ -44,11 +46,11 @@ class ElementInfoManagerTest extends UnitTestCase {
   protected $themeManager;
 
   /**
-   * The mocked theme handler.
+   * The cache tags invalidator.
    *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $themeHandler;
+  protected $cacheTagsInvalidator;
 
   /**
    * {@inheritdoc}
@@ -59,11 +61,11 @@ class ElementInfoManagerTest extends UnitTestCase {
     parent::setUp();
 
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
-    $this->themeHandler = $this->createMock(ThemeHandlerInterface::class);
+    $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
 
-    $this->elementInfo = new ElementInfoManager(new \ArrayObject(), $this->cache, $this->themeHandler, $this->moduleHandler, $this->themeManager);
+    $this->elementInfo = new ElementInfoManager(new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager);
   }
 
   /**
@@ -74,11 +76,11 @@ class ElementInfoManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetInfoElementPlugin
    */
-  public function testGetInfoElementPlugin($plugin_class, $expected_info): void {
+  public function testGetInfoElementPlugin($plugin_class, $expected_info) {
     $this->moduleHandler->expects($this->once())
       ->method('alter')
       ->with('element_info', $this->anything())
-      ->willReturnArgument(0);
+      ->will($this->returnArgument(0));
 
     $plugin = $this->createMock($plugin_class);
     $plugin->expects($this->once())
@@ -88,7 +90,7 @@ class ElementInfoManagerTest extends UnitTestCase {
       ]);
 
     $element_info = $this->getMockBuilder('Drupal\Core\Render\ElementInfoManager')
-      ->setConstructorArgs([new \ArrayObject(), $this->cache, $this->themeHandler, $this->moduleHandler, $this->themeManager])
+      ->setConstructorArgs([new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager])
       ->onlyMethods(['getDefinitions', 'createInstance'])
       ->getMock();
 
@@ -113,9 +115,8 @@ class ElementInfoManagerTest extends UnitTestCase {
    * Provides tests data for testGetInfoElementPlugin().
    *
    * @return array
-   *   An array of test data for testGetInfoElementPlugin().
    */
-  public static function providerTestGetInfoElementPlugin() {
+  public function providerTestGetInfoElementPlugin() {
     $data = [];
     $data[] = [
       'Drupal\Core\Render\Element\ElementInterface',
@@ -142,12 +143,12 @@ class ElementInfoManagerTest extends UnitTestCase {
   /**
    * @covers ::getInfoProperty
    */
-  public function testGetInfoProperty(): void {
+  public function testGetInfoProperty() {
     $this->themeManager
       ->method('getActiveTheme')
       ->willReturn(new ActiveTheme(['name' => 'test']));
 
-    $element_info = new TestElementInfoManager(new \ArrayObject(), $this->cache, $this->themeHandler, $this->moduleHandler, $this->themeManager);
+    $element_info = new TestElementInfoManager(new \ArrayObject(), $this->cache, $this->cacheTagsInvalidator, $this->moduleHandler, $this->themeManager);
     $this->assertSame('baz', $element_info->getInfoProperty('foo', '#bar'));
     $this->assertNull($element_info->getInfoProperty('foo', '#non_existing_property'));
     $this->assertSame('qux', $element_info->getInfoProperty('foo', '#non_existing_property', 'qux'));

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\FunctionalJavascript\Form;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -53,7 +51,7 @@ class RebuildTest extends WebDriverTestBase {
    * The 'action' attribute of a form should not change after an Ajax submission
    * followed by a non-Ajax submission, which triggers a validation error.
    */
-  public function testPreserveFormActionAfterAJAX(): void {
+  public function testPreserveFormActionAfterAJAX() {
     $page = $this->getSession()->getPage();
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';

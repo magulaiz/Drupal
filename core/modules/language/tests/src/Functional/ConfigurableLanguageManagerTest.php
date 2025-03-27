@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Cache\Cache;
@@ -13,9 +11,6 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\WaitTerminateTestTrait;
-
-// cspell:ignore funciona
 
 /**
  * Tests Language Negotiation.
@@ -25,8 +20,6 @@ use Drupal\Tests\WaitTerminateTestTrait;
  * @group language
  */
 class ConfigurableLanguageManagerTest extends BrowserTestBase {
-
-  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -51,11 +44,6 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    // The \Drupal\locale\LocaleTranslation service clears caches after the
-    // response is flushed to the client. We use WaitTerminateTestTrait to wait
-    // for Drupal to perform its termination work before continuing.
-    $this->setWaitForTerminate();
 
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->createUser([], '', TRUE);
@@ -91,6 +79,10 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     // Set the preferred language of the user for admin pages to English.
     $user->set('preferred_admin_langcode', 'en')->save();
 
+    // Make sure node edit pages are administration pages.
+    $this->config('node.settings')->set('use_admin_theme', '1')->save();
+    $this->container->get('router.builder')->rebuild();
+
     // Place a Block with a translatable string on the page.
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
 
@@ -116,7 +108,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
    * The interface language uses the preferred language for admin pages of the
    * user and after that the URL. The Content uses just the URL.
    */
-  public function testUrlContentTranslationWithPreferredAdminLanguage(): void {
+  public function testUrlContentTranslationWithPreferredAdminLanguage() {
     $assert_session = $this->assertSession();
     // Set the interface language to use the preferred administration language
     // and then the URL.
@@ -157,7 +149,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   /**
    * Tests translation with URL and Session Language Negotiators.
    */
-  public function testUrlContentTranslationWithSessionLanguage(): void {
+  public function testUrlContentTranslationWithSessionLanguage() {
     $assert_session = $this->assertSession();
     /** @var \Drupal\language\LanguageNegotiatorInterface $language_negotiator */
     $language_negotiator = \Drupal::getContainer()->get('language_negotiator');
@@ -209,7 +201,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
    * admin language negotiator because of the recursive way that the negotiator
    * is called.
    */
-  public function testUserProfileTranslationWithPreferredAdminLanguage(): void {
+  public function testUserProfileTranslationWithPreferredAdminLanguage() {
     $assert_session = $this->assertSession();
     // Set the interface language to use the preferred administration language.
     /** @var \Drupal\language\LanguageNegotiatorInterface $language_negotiator */
@@ -220,8 +212,8 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     ]);
 
     // Create a field on the user entity.
-    $field_name = $this->randomMachineName();
-    $label = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
+    $label = mb_strtolower($this->randomMachineName());
     $field_label_en = "English $label";
     $field_label_es = "Español $label";
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
@@ -16,7 +14,9 @@ use Drupal\user\Entity\User;
 class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['node_access_test'];
 
@@ -27,15 +27,11 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
 
   /**
    * User with permission to view content.
-   *
-   * @var \Drupal\user\Entity\User|false
    */
   protected $accessUser;
 
   /**
    * User without permission to view content.
-   *
-   * @var \Drupal\user\Entity\User|false
    */
   protected $noAccessUser;
 
@@ -45,15 +41,6 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
    * @var \Drupal\user\Entity\User
    */
   protected User $noAccessUser2;
-
-  /**
-   * User with permission to bypass node access.
-   *
-   * @var \Drupal\user\Entity\User|false
-   *
-   * @see \Drupal\Tests\user\Traits\UserCreationTrait::createUser
-   */
-  protected $adminUser;
 
   /**
    * @var array
@@ -89,12 +76,9 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
       'access content overview',
       'access content',
     ]);
-    $this->adminUser = $this->drupalCreateUser([
-      'bypass node access',
-    ]);
 
     $this->userMapping = [
-      1 => $this->adminUser,
+      1 => $this->rootUser,
       2 => $this->accessUser,
       3 => $this->noAccessUser,
     ];
@@ -121,7 +105,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
   /**
    * Tests NodeAccessGrantsCacheContext::getContext().
    */
-  public function testCacheContext(): void {
+  public function testCacheContext() {
     $this->assertUserCacheContext([
       0 => 'view.all:0;node_access_test_author:0;node_access_all:0',
       1 => 'all',

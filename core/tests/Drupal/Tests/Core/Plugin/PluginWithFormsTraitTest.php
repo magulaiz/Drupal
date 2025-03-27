@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
@@ -22,16 +20,15 @@ class PluginWithFormsTraitTest extends UnitTestCase {
    * @covers ::hasFormClass
    * @dataProvider providerGetFormClass
    */
-  public function testGetFormClass(PluginWithFormsInterface $block_plugin, $operation, $expected_class): void {
+  public function testGetFormClass(PluginWithFormsInterface $block_plugin, $operation, $expected_class) {
     $this->assertSame($expected_class, $block_plugin->getFormClass($operation));
     $this->assertSame($expected_class !== NULL, $block_plugin->hasFormClass($operation));
   }
 
   /**
    * @return array
-   *   Test cases for different block plugins and operations, mapping them to expected form classes.
    */
-  public static function providerGetFormClass() {
+  public function providerGetFormClass() {
     $block_plugin_without_forms = new TestClass([], 'block_plugin_without_forms', [
       'provider' => 'block_test',
     ]);
@@ -54,9 +51,6 @@ class PluginWithFormsTraitTest extends UnitTestCase {
 
 }
 
-/**
- * Stub class for testing PluginWithFormsTrait.
- */
 class TestClass extends PluginBase implements PluginWithFormsInterface, PluginFormInterface {
   use PluginWithFormsTrait;
 

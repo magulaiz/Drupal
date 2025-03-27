@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Composer\Plugin\VendorHardening;
 
 use Composer\Package\RootPackageInterface;
 use Drupal\Composer\Plugin\VendorHardening\Config;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,10 +13,12 @@ use PHPUnit\Framework\TestCase;
  */
 class ConfigTest extends TestCase {
 
+  use PhpUnitWarnings;
+
   /**
    * @covers ::getPathsForPackage
    */
-  public function testGetPathsForPackageMixedCase(): void {
+  public function testGetPathsForPackageMixedCase() {
     $config = $this->getMockBuilder(Config::class)
       ->onlyMethods(['getAllCleanupPaths'])
       ->disableOriginalConstructor()
@@ -33,9 +34,11 @@ class ConfigTest extends TestCase {
   /**
    * @covers ::getAllCleanupPaths
    */
-  public function testNoRootMergeConfig(): void {
+  public function testNoRootMergeConfig() {
     // Root package has no extra field.
-    $root = $this->createMock(RootPackageInterface::class);
+    $root = $this->getMockBuilder(RootPackageInterface::class)
+      ->onlyMethods(['getExtra'])
+      ->getMockForAbstractClass();
     $root->expects($this->once())
       ->method('getExtra')
       ->willReturn([]);
@@ -43,8 +46,10 @@ class ConfigTest extends TestCase {
     $config = new Config($root);
 
     $ref_default = new \ReflectionProperty($config, 'defaultConfig');
+    $ref_default->setAccessible(TRUE);
 
     $ref_plugin_config = new \ReflectionMethod($config, 'getAllCleanupPaths');
+    $ref_plugin_config->setAccessible(TRUE);
 
     $this->assertEquals(
       $ref_default->getValue($config), $ref_plugin_config->invoke($config)
@@ -54,9 +59,11 @@ class ConfigTest extends TestCase {
   /**
    * @covers ::getAllCleanupPaths
    */
-  public function testRootMergeConfig(): void {
+  public function testRootMergeConfig() {
     // Root package has configuration in extra.
-    $root = $this->createMock(RootPackageInterface::class);
+    $root = $this->getMockBuilder(RootPackageInterface::class)
+      ->onlyMethods(['getExtra'])
+      ->getMockForAbstractClass();
     $root->expects($this->once())
       ->method('getExtra')
       ->willReturn([
@@ -69,6 +76,7 @@ class ConfigTest extends TestCase {
     $config = new Config($root);
 
     $ref_plugin_config = new \ReflectionMethod($config, 'getAllCleanupPaths');
+    $ref_plugin_config->setAccessible(TRUE);
 
     $plugin_config = $ref_plugin_config->invoke($config);
 
@@ -78,12 +86,12 @@ class ConfigTest extends TestCase {
 
   /**
    * @covers ::getAllCleanupPaths
-   *
-   * @runInSeparateProcess
    */
-  public function testMixedCaseConfigCleanupPackages(): void {
+  public function testMixedCaseConfigCleanupPackages() {
     // Root package has configuration in extra.
-    $root = $this->createMock(RootPackageInterface::class);
+    $root = $this->getMockBuilder(RootPackageInterface::class)
+      ->onlyMethods(['getExtra'])
+      ->getMockForAbstractClass();
     $root->expects($this->once())
       ->method('getExtra')
       ->willReturn([
@@ -95,12 +103,14 @@ class ConfigTest extends TestCase {
     $config = new Config($root);
 
     $ref_plugin_config = new \ReflectionMethod($config, 'getAllCleanupPaths');
+    $ref_plugin_config->setAccessible(TRUE);
 
     // Put some mixed-case in the defaults.
     $ref_default = new \ReflectionProperty($config, 'defaultConfig');
+    $ref_default->setAccessible(TRUE);
     $ref_default->setValue($config, [
-      'BeHatted/Monk' => ['tests'],
-      'SymPhony/HTTPFoundational' => ['src'],
+      'BeHatted/Mank' => ['tests'],
+      'SymFunic/HTTPFoundational' => ['src'],
     ]);
 
     $plugin_config = $ref_plugin_config->invoke($config);

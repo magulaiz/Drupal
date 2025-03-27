@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\user\Entity\Role;
@@ -32,7 +30,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user', 'language'];
+  protected static $modules = ['user'];
 
   /**
    * {@inheritdoc}
@@ -44,7 +42,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
 
     $role_with_access = Role::create([
       'id' => 'with_access',
-      'permissions' => ['view test entity field', 'access content'],
+      'permissions' => ['view test entity field'],
       'label' => 'With access',
     ]);
     $role_with_access->save();
@@ -95,7 +93,6 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
     $base_table = ($data_table && ($field_name !== 'uuid')) ? $data_table : $entity_type->getBaseTable();
     $entity = View::create([
       'id' => $view_id,
-      'label' => $view_id,
       'base_table' => $base_table,
       'display' => [
         'default' => [

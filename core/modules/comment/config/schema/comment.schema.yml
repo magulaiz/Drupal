@@ -2,8 +2,6 @@
 comment.settings:
   type: config_object
   label: 'Comment settings'
-  constraints:
-    FullyValidatable: ~
   mapping:
     log_ip_addresses:
       type: boolean
@@ -24,15 +22,26 @@ field.widget.settings.comment_default:
   type: mapping
   label: 'Comment display format settings'
 
+action.configuration.comment_unpublish_by_keyword_action:
+  type: mapping
+  label: 'Unpublish comment containing keyword(s) configuration'
+  mapping:
+    keywords:
+      type: sequence
+      label: 'Keywords'
+      sequence:
+        type: string
+        label: 'Keyword'
+
 comment.type.*:
   type: config_entity
   label: 'Comment type settings'
   mapping:
     id:
-      type: machine_name
+      type: string
       label: 'ID'
     label:
-      type: required_label
+      type: label
       label: 'Label'
     target_entity_type_id:
       type: string

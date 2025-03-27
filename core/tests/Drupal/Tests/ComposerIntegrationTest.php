@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests;
 
 use Drupal\Composer\Plugin\VendorHardening\Config;
@@ -25,7 +23,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @see https://www.drupal.org/about/core/policies/core-dependencies-policies/managing-composer-updates-for-drupal-core
    */
-  public function testComposerLockHash(): void {
+  public function testComposerLockHash() {
     $content_hash = self::getContentHash(file_get_contents($this->root . '/composer.json'));
     $lock = json_decode(file_get_contents($this->root . '/composer.lock'), TRUE);
     $this->assertSame($content_hash, $lock['content-hash']);
@@ -52,8 +50,8 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @dataProvider providerTestComposerJson
    */
-  public function testComposerTilde(string $path): void {
-    if (str_ends_with($path, 'composer/Metapackage/CoreRecommended/composer.json')) {
+  public function testComposerTilde($path) {
+    if (preg_match('#composer/Metapackage/CoreRecommended/composer.json$#', $path)) {
       $this->markTestSkipped("$path has tilde");
     }
     $content = json_decode(file_get_contents($path), TRUE);
@@ -77,11 +75,10 @@ class ComposerIntegrationTest extends UnitTestCase {
    * Data provider for all the composer.json provided by Drupal core.
    *
    * @return array
-   *   An array of composer.json file paths.
    */
-  public static function providerTestComposerJson(): array {
+  public function providerTestComposerJson() {
     $data = [];
-    $composer_json_finder = self::getComposerJsonFinder(realpath(__DIR__ . '/../../../../'));
+    $composer_json_finder = $this->getComposerJsonFinder(realpath(__DIR__ . '/../../../../'));
     foreach ($composer_json_finder->getIterator() as $composer_json) {
       $data[$composer_json->getPathname()] = [$composer_json->getPathname()];
     }
@@ -135,9 +132,8 @@ class ComposerIntegrationTest extends UnitTestCase {
    * Data provider for the scaffold files test for Drupal core.
    *
    * @return array
-   *   An array of scaffold file mappings.
    */
-  public static function providerTestExpectedScaffoldFiles() {
+  public function providerTestExpectedScaffoldFiles() {
     return [
       ['.editorconfig', 'assets/scaffold/files/editorconfig', '[project-root]'],
       ['.gitattributes', 'assets/scaffold/files/gitattributes', '[project-root]'],
@@ -152,6 +148,7 @@ class ComposerIntegrationTest extends UnitTestCase {
       ['README.md', 'assets/scaffold/files/drupal.README.md'],
       ['robots.txt', 'assets/scaffold/files/robots.txt'],
       ['update.php', 'assets/scaffold/files/update.php'],
+      ['web.config', 'assets/scaffold/files/web.config'],
       ['sites/README.txt', 'assets/scaffold/files/sites.README.txt'],
       ['sites/development.services.yml', 'assets/scaffold/files/development.services.yml'],
       ['sites/example.settings.local.php', 'assets/scaffold/files/example.settings.local.php'],
@@ -179,15 +176,15 @@ class ComposerIntegrationTest extends UnitTestCase {
    * See https://www.drupal.org/project/drupal/issues/3075954
    *
    * @param string $destRelPath
-   *   Path to scaffold file destination location.
+   *   Path to scaffold file destination location
    * @param string $sourceRelPath
-   *   Path to scaffold file source location.
+   *   Path to scaffold file source location
    * @param string $expectedDestination
-   *   Named location to the destination path of the scaffold file.
+   *   Named location to the destination path of the scaffold file
    *
    * @dataProvider providerTestExpectedScaffoldFiles
    */
-  public function testExpectedScaffoldFiles($destRelPath, $sourceRelPath, $expectedDestination = '[web-root]'): void {
+  public function testExpectedScaffoldFiles($destRelPath, $sourceRelPath, $expectedDestination = '[web-root]') {
     // Grab the 'file-mapping' section of the core composer.json file.
     $json = json_decode(file_get_contents($this->root . '/core/composer.json'));
     $scaffold_file_mapping = (array) $json->extra->{'drupal-scaffold'}->{'file-mapping'};
@@ -219,11 +216,11 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @return string
    */
-  protected static function getContentHash($composerFileContents): string
+  protected static function getContentHash($composerFileContents)
   {
     $content = json_decode($composerFileContents, true);
 
-    $relevantKeys = [
+    $relevantKeys = array(
       'name',
       'version',
       'require',
@@ -235,9 +232,9 @@ class ComposerIntegrationTest extends UnitTestCase {
       'prefer-stable',
       'repositories',
       'extra',
-    ];
+    );
 
-    $relevantContent = [];
+    $relevantContent = array();
 
     foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
       $relevantContent[$key] = $content[$key];
@@ -263,6 +260,7 @@ class ComposerIntegrationTest extends UnitTestCase {
     }
 
     $reflection = new \ReflectionProperty(Config::class, 'defaultConfig');
+    $reflection->setAccessible(TRUE);
     $config = $reflection->getValue();
     foreach (array_keys($config) as $package) {
       $this->assertContains(strtolower($package), $packages);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Kernel\Context;
 
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
@@ -13,22 +11,17 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 /**
  * @coversDefaultClass \Drupal\jsonapi\Context\FieldResolver
  * @group jsonapi
- * @group #slow
  *
  * @internal
  */
 class FieldResolverTest extends JsonapiKernelTestBase {
 
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = [
     'entity_test',
-    'field',
-    'file',
     'jsonapi_test_field_aliasing',
     'jsonapi_test_field_filter_access',
     'serialization',
+    'field',
     'text',
     'user',
   ];
@@ -89,7 +82,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @covers ::resolveInternalEntityQueryPath
    * @dataProvider resolveInternalIncludePathProvider
    */
-  public function testResolveInternalIncludePath($expect, $external_path, $entity_type_id = 'entity_test_with_bundle', $bundle = 'bundle1'): void {
+  public function testResolveInternalIncludePath($expect, $external_path, $entity_type_id = 'entity_test_with_bundle', $bundle = 'bundle1') {
     $path_parts = explode('.', $external_path);
     $resource_type = $this->resourceTypeRepository->get($entity_type_id, $bundle);
     $this->assertEquals($expect, $this->sut->resolveInternalIncludePath($resource_type, $path_parts));
@@ -98,7 +91,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for resolveInternalEntityQueryPath.
    */
-  public static function resolveInternalIncludePathProvider() {
+  public function resolveInternalIncludePathProvider() {
     return [
       'entity reference' => [[['field_test_ref2']], 'field_test_ref2'],
       'entity reference with multi target bundles' => [[['field_test_ref1']], 'field_test_ref1'],
@@ -131,7 +124,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @covers ::resolveInternalIncludePath
    * @dataProvider resolveInternalIncludePathErrorProvider
    */
-  public function testResolveInternalIncludePathError($entity_type, $bundle, $external_path, $expected_message = ''): void {
+  public function testResolveInternalIncludePathError($entity_type, $bundle, $external_path, $expected_message = '') {
     $path_parts = explode('.', $external_path);
     $this->expectException(CacheableBadRequestHttpException::class);
     if (!empty($expected_message)) {
@@ -144,7 +137,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalIncludePathError.
    */
-  public static function resolveInternalIncludePathErrorProvider() {
+  public function resolveInternalIncludePathErrorProvider() {
     return [
       // Should fail because none of these bundles have these fields.
       ['entity_test_with_bundle', 'bundle1', 'host.fail!!.deep'],
@@ -174,7 +167,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @covers ::resolveInternalEntityQueryPath
    * @dataProvider resolveInternalEntityQueryPathProvider
    */
-  public function testResolveInternalEntityQueryPath($expect, $external_path, $entity_type_id = 'entity_test_with_bundle', $bundle = 'bundle1'): void {
+  public function testResolveInternalEntityQueryPath($expect, $external_path, $entity_type_id = 'entity_test_with_bundle', $bundle = 'bundle1') {
     $resource_type = $this->resourceTypeRepository->get($entity_type_id, $bundle);
     $this->assertEquals($expect, $this->sut->resolveInternalEntityQueryPath($resource_type, $external_path));
   }
@@ -182,7 +175,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalEntityQueryPath.
    */
-  public static function resolveInternalEntityQueryPathProvider() {
+  public function resolveInternalEntityQueryPathProvider() {
     return [
       'config entity as base' => [
         'uuid', 'id', 'entity_test_bundle', 'entity_test_bundle',
@@ -192,84 +185,30 @@ class FieldResolverTest extends JsonapiKernelTestBase {
       'primitive field; variation A' => ['field_test1', 'field_test1'],
       'primitive field; variation B' => ['field_test2', 'field_test2'],
 
-      'entity reference then a primitive field; variation A' => [
-        'field_test_ref2.entity:entity_test_with_bundle.field_test1',
-        'field_test_ref2.field_test1',
-      ],
-      'entity reference then a primitive field; variation B' => [
-        'field_test_ref2.entity:entity_test_with_bundle.field_test2',
-        'field_test_ref2.field_test2',
-      ],
+      'entity reference then a primitive field; variation A' => ['field_test_ref2.entity:entity_test_with_bundle.field_test1', 'field_test_ref2.field_test1'],
+      'entity reference then a primitive field; variation B' => ['field_test_ref2.entity:entity_test_with_bundle.field_test2', 'field_test_ref2.field_test2'],
 
-      'entity reference then a complex field with property specifier `value`' => [
-        'field_test_ref2.entity:entity_test_with_bundle.field_test_text.value',
-        'field_test_ref2.field_test_text.value',
-      ],
-      'entity reference then a complex field with property specifier `format`' => [
-        'field_test_ref2.entity:entity_test_with_bundle.field_test_text.format',
-        'field_test_ref2.field_test_text.format',
-      ],
+      'entity reference then a complex field with property specifier `value`' => ['field_test_ref2.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref2.field_test_text.value'],
+      'entity reference then a complex field with property specifier `format`' => ['field_test_ref2.entity:entity_test_with_bundle.field_test_text.format', 'field_test_ref2.field_test_text.format'],
 
-      'entity reference then no delta with property specifier `id`' => [
-        'field_test_ref1.entity:entity_test_with_bundle.uuid',
-        'field_test_ref1.id',
-      ],
-      'entity reference then delta 0 with property specifier `id`' => [
-        'field_test_ref1.0.entity:entity_test_with_bundle.uuid',
-        'field_test_ref1.0.id',
-      ],
-      'entity reference then delta 1 with property specifier `id`' => [
-        'field_test_ref1.1.entity:entity_test_with_bundle.uuid',
-        'field_test_ref1.1.id',
-      ],
+      'entity reference then no delta with property specifier `id`' => ['field_test_ref1.entity:entity_test_with_bundle.uuid', 'field_test_ref1.id'],
+      'entity reference then delta 0 with property specifier `id`' => ['field_test_ref1.0.entity:entity_test_with_bundle.uuid', 'field_test_ref1.0.id'],
+      'entity reference then delta 1 with property specifier `id`' => ['field_test_ref1.1.entity:entity_test_with_bundle.uuid', 'field_test_ref1.1.id'],
 
-      'entity reference then no reference property and a complex field with property specifier `value`' => [
-        'field_test_ref1.entity:entity_test_with_bundle.field_test_text.value',
-        'field_test_ref1.field_test_text.value',
-      ],
-      'entity reference then a reference property and a complex field with property specifier `value`' => [
-        'field_test_ref1.entity.field_test_text.value',
-        'field_test_ref1.entity.field_test_text.value',
-      ],
-      'entity reference then no reference property and a complex field with property specifier `format`' => [
-        'field_test_ref1.entity:entity_test_with_bundle.field_test_text.format',
-        'field_test_ref1.field_test_text.format',
-      ],
-      'entity reference then a reference property and a complex field with property specifier `format`' => [
-        'field_test_ref1.entity.field_test_text.format',
-        'field_test_ref1.entity.field_test_text.format',
-      ],
+      'entity reference then no reference property and a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.field_test_text.value'],
+      'entity reference then a reference property and a complex field with property specifier `value`' => ['field_test_ref1.entity.field_test_text.value', 'field_test_ref1.entity.field_test_text.value'],
+      'entity reference then no reference property and a complex field with property specifier `format`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_text.format', 'field_test_ref1.field_test_text.format'],
+      'entity reference then a reference property and a complex field with property specifier `format`' => ['field_test_ref1.entity.field_test_text.format', 'field_test_ref1.entity.field_test_text.format'],
 
-      'entity reference then property specifier `entity:entity_test_with_bundle` then a complex field with property specifier `value`' => [
-        'field_test_ref1.entity:entity_test_with_bundle.field_test_text.value',
-        'field_test_ref1.entity:entity_test_with_bundle.field_test_text.value',
-      ],
+      'entity reference then property specifier `entity:entity_test_with_bundle` then a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.entity:entity_test_with_bundle.field_test_text.value'],
 
-      'entity reference with a delta and no reference property then a complex field and property specifier `value`' => [
-        'field_test_ref1.0.entity:entity_test_with_bundle.field_test_text.value',
-        'field_test_ref1.0.field_test_text.value',
-      ],
-      'entity reference with a delta and a reference property then a complex field and property specifier `value`' => [
-        'field_test_ref1.0.entity.field_test_text.value',
-        'field_test_ref1.0.entity.field_test_text.value',
-      ],
+      'entity reference with a delta and no reference property then a complex field and property specifier `value`' => ['field_test_ref1.0.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.0.field_test_text.value'],
+      'entity reference with a delta and a reference property then a complex field and property specifier `value`' => ['field_test_ref1.0.entity.field_test_text.value', 'field_test_ref1.0.entity.field_test_text.value'],
 
-      'entity reference with no reference property then another entity reference with no reference property a complex field with property specifier `value`' => [
-        'field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity:entity_test_with_bundle.field_test_text.value',
-        'field_test_ref1.field_test_ref3.field_test_text.value',
-      ],
-      'entity reference with a reference property then another entity reference with no reference property a complex field with property specifier `value`' => [
-        'field_test_ref1.entity.field_test_ref3.entity:entity_test_with_bundle.field_test_text.value',
-        'field_test_ref1.entity.field_test_ref3.field_test_text.value',
-      ],
-      'entity reference with no reference property then another entity reference with a reference property a complex field with property specifier `value`' => [
-        'field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity.field_test_text.value',
-        'field_test_ref1.field_test_ref3.entity.field_test_text.value',
-      ],
-      'entity reference with a reference property then another entity reference with a reference property a complex field with property specifier `value`' => [
-        'field_test_ref1.entity.field_test_ref3.entity.field_test_text.value',
-        'field_test_ref1.entity.field_test_ref3.entity.field_test_text.value',
-      ],
+      'entity reference with no reference property then another entity reference with no reference property a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.field_test_ref3.field_test_text.value'],
+      'entity reference with a reference property then another entity reference with no reference property a complex field with property specifier `value`' => ['field_test_ref1.entity.field_test_ref3.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.entity.field_test_ref3.field_test_text.value'],
+      'entity reference with no reference property then another entity reference with a reference property a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity.field_test_text.value', 'field_test_ref1.field_test_ref3.entity.field_test_text.value'],
+      'entity reference with a reference property then another entity reference with a reference property a complex field with property specifier `value`' => ['field_test_ref1.entity.field_test_ref3.entity.field_test_text.value', 'field_test_ref1.entity.field_test_ref3.entity.field_test_text.value'],
 
       'entity reference with target bundles then property specifier `entity:entity_test_with_bundle` then a primitive field on multiple bundles' => [
         'field_test_ref1.entity:entity_test_with_bundle.field_test3',
@@ -290,10 +229,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
         'entity_test_with_bundle', 'bundle3',
       ],
 
-      'entity reference then property specifier `entity:entity_test_with_bundle` then another entity reference before a primitive field' => [
-        'field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity:entity_test_with_bundle.field_test2',
-        'field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.field_test2',
-      ],
+      'entity reference then property specifier `entity:entity_test_with_bundle` then another entity reference before a primitive field' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity:entity_test_with_bundle.field_test2', 'field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.field_test2'],
     ];
   }
 
@@ -312,7 +248,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @covers ::resolveInternalEntityQueryPath
    * @dataProvider resolveInternalEntityQueryPathErrorProvider
    */
-  public function testResolveInternalEntityQueryPathError($entity_type, $bundle, $external_path, $expected_message = ''): void {
+  public function testResolveInternalEntityQueryPathError($entity_type, $bundle, $external_path, $expected_message = '') {
     $this->expectException(CacheableBadRequestHttpException::class);
     if (!empty($expected_message)) {
       $this->expectExceptionMessage($expected_message);
@@ -324,7 +260,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalEntityQueryPathError.
    */
-  public static function resolveInternalEntityQueryPathErrorProvider() {
+  public function resolveInternalEntityQueryPathErrorProvider() {
     return [
       'nested fields' => [
         'entity_test_with_bundle', 'bundle1', 'none.of.these.exist',
@@ -411,7 +347,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @param string $name
    *   The name of the bundle to create.
    */
-  protected function makeBundle($name): void {
+  protected function makeBundle($name) {
     EntityTestBundle::create([
       'id' => $name,
     ])->save();
@@ -433,7 +369,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @param array $config_settings
    *   Custom configuration settings for the field.
    */
-  protected function makeField($type, $name, $entity_type, array $bundles, array $storage_settings = [], array $config_settings = []): void {
+  protected function makeField($type, $name, $entity_type, array $bundles, array $storage_settings = [], array $config_settings = []) {
     $storage_config = [
       'field_name' => $name,
       'type' => $type,

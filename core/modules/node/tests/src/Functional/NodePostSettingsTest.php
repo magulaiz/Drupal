@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Functional;
 
 /**
- * Tests the node setting for displaying author and date information.
+ * Tests that the post information (submitted by Username on date) text displays
+ * appropriately.
  *
  * @group node
  */
@@ -33,13 +32,13 @@ class NodePostSettingsTest extends NodeTestBase {
   /**
    * Confirms "Basic page" content type and post information is on a new node.
    */
-  public function testPagePostInfo(): void {
+  public function testPagePostInfo() {
 
     // Set "Basic page" content type to display post information.
     $edit = [];
     $edit['display_submitted'] = TRUE;
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save content type');
 
     // Create a node.
     $edit = [];
@@ -57,7 +56,7 @@ class NodePostSettingsTest extends NodeTestBase {
     $edit = [];
     $edit['display_submitted'] = FALSE;
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save content type');
 
     // Create a node.
     $edit = [];

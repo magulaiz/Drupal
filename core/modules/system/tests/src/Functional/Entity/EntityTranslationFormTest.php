@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -18,7 +16,9 @@ use Drupal\Tests\BrowserTestBase;
 class EntityTranslationFormTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['entity_test', 'language', 'node'];
 
@@ -27,11 +27,6 @@ class EntityTranslationFormTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * The test language codes.
-   *
-   * @var string[]
-   */
   protected $langcodes;
 
   /**
@@ -57,7 +52,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
   /**
    * Tests entity form language.
    */
-  public function testEntityFormLanguage(): void {
+  public function testEntityFormLanguage() {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $web_user = $this->drupalCreateUser([
@@ -95,7 +90,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/page');
     $edit = ['language_configuration[language_alterable]' => TRUE, 'language_configuration[langcode]' => LanguageInterface::LANGCODE_NOT_SPECIFIED];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 
     // Create a node with language.

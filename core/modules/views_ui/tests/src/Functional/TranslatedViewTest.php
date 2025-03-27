@@ -1,12 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-
-// cspell:ignore fichiers
 
 /**
  * Tests that translated strings in views UI don't override original strings.
@@ -16,7 +12,9 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class TranslatedViewTest extends UITestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'config_translation',
@@ -57,8 +55,6 @@ class TranslatedViewTest extends UITestBase {
       'translate interface',
     ];
 
-    $this->drupalPlaceBlock('local_tasks_block', ['id' => 'test_role_admin_test_local_tasks_block']);
-
     // Create and log in user.
     $this->adminUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->adminUser);
@@ -71,10 +67,7 @@ class TranslatedViewTest extends UITestBase {
     $this->rebuildContainer();
   }
 
-  /**
-   * Tests view translation.
-   */
-  public function testTranslatedStrings(): void {
+  public function testTranslatedStrings() {
     $translation_url = 'admin/structure/views/view/files/translate/fr/add';
     $edit_url = 'admin/structure/views/view/files';
 
@@ -121,12 +114,6 @@ class TranslatedViewTest extends UITestBase {
     $this->drupalGet($translation_url);
     $this->assertSession()->fieldExists('translation[config_names][views.view.files][display][block_1][display_options][fields][filename][alter][path]');
     $this->assertSession()->fieldExists('translation[config_names][views.view.files][display][default][display_options][link_url]');
-
-    // Assert that the View translation link is shown when viewing a display.
-    $this->drupalGet($edit_url);
-    $this->assertSession()->linkExists('Translate view');
-    $this->drupalGet('/admin/structure/views/view/files/edit/block_1');
-    $this->assertSession()->linkExists('Translate view');
   }
 
 }

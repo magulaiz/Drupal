@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Session;
 
 use Drupal\Core\Session\AccountInterface;
@@ -23,7 +21,7 @@ class AccountProxyTest extends UnitTestCase {
    * @covers ::id
    * @covers ::setInitialAccountId
    */
-  public function testId(): void {
+  public function testId() {
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);
     $dispatcher->dispatch(Argument::any(), Argument::any())->willReturn(new Event());
     $account_proxy = new AccountProxy($dispatcher->reveal());
@@ -43,7 +41,7 @@ class AccountProxyTest extends UnitTestCase {
   /**
    * @covers ::setInitialAccountId
    */
-  public function testSetInitialAccountIdException(): void {
+  public function testSetInitialAccountIdException() {
     $this->expectException(\LogicException::class);
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);
     $dispatcher->dispatch(Argument::any(), Argument::any())->willReturn(new Event());
@@ -56,7 +54,7 @@ class AccountProxyTest extends UnitTestCase {
   /**
    * @covers ::hasRole
    */
-  public function testHasRole(): void {
+  public function testHasRole() {
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);
     $dispatcher->dispatch(Argument::any(), Argument::any())->willReturn(new Event());
     $account_proxy = new AccountProxy($dispatcher->reveal());

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\node\Entity\Node;
@@ -45,7 +43,6 @@ class ViewsDataIntegrationTest extends ViewsKernelTestBase {
 
     $node_type = NodeType::create([
       'type' => 'page',
-      'name' => 'Page',
     ]);
     $node_type->save();
     $workflow = $this->createEditorialWorkflow();
@@ -59,7 +56,7 @@ class ViewsDataIntegrationTest extends ViewsKernelTestBase {
   /**
    * Tests the content moderation state views field.
    */
-  public function testContentModerationStateField(): void {
+  public function testContentModerationStateField() {
     $node = Node::create([
       'type' => 'page',
       'title' => 'Test title',
@@ -76,13 +73,7 @@ class ViewsDataIntegrationTest extends ViewsKernelTestBase {
         'moderation_state' => 'published',
       ],
     ];
-    $this->assertIdenticalResultset(
-      $view,
-      $expected_result,
-      [
-        'title' => 'title',
-        'moderation_state' => 'moderation_state',
-      ]);
+    $this->assertIdenticalResultset($view, $expected_result, ['title' => 'title', 'moderation_state' => 'moderation_state']);
   }
 
 }

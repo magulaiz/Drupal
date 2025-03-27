@@ -1,10 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Unit;
-
-use Prophecy\Argument;
 
 /**
  * Tests the \Drupal\migrate\MigrateExecutable::memoryExceeded() method.
@@ -23,7 +19,7 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
   /**
    * The mocked migrate message.
    *
-   * @var \Drupal\migrate\MigrateMessageInterface|\Prophecy\Prophecy\ObjectProphecy
+   * @var \Drupal\migrate\MigrateMessageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $message;
 
@@ -56,9 +52,9 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->migration = $this->getMigration();
-    $this->message = $this->prophesize('Drupal\migrate\MigrateMessageInterface');
+    $this->message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
 
-    $this->executable = new TestMigrateExecutable($this->migration, $this->message->reveal());
+    $this->executable = new TestMigrateExecutable($this->migration, $this->message);
     $this->executable->setStringTranslation($this->getStringTranslationStub());
   }
 
@@ -77,19 +73,29 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
    * @param int|null $memory_limit
    *   (optional) The memory limit. Defaults to NULL.
    */
-  protected function runMemoryExceededTest($message, $memory_exceeded, $memory_usage_first = NULL, $memory_usage_second = NULL, $memory_limit = NULL): void {
+  protected function runMemoryExceededTest($message, $memory_exceeded, $memory_usage_first = NULL, $memory_usage_second = NULL, $memory_limit = NULL) {
     $this->executable->setMemoryLimit($memory_limit ?: $this->memoryLimit);
     $this->executable->setMemoryUsage($memory_usage_first ?: $this->memoryLimit, $memory_usage_second ?: $this->memoryLimit);
     $this->executable->setMemoryThreshold(0.85);
     if ($message) {
-      $this->message->display(Argument::that(fn(string $subject) => str_contains($subject, 'reclaiming memory')), 'warning')
-        ->shouldBeCalledOnce();
-      $this->message->display(Argument::that(fn(string $subject) => str_contains($subject, $message)), 'warning')
-        ->shouldBeCalledOnce();
+      $this->executable->message->expects($this->exactly(2))
+        ->method('display')
+        ->withConsecutive(
+          [
+            $this->callback(function ($subject) {
+              return mb_stripos((string) $subject, 'reclaiming memory') !== FALSE;
+            }),
+          ],
+          [
+            $this->callback(function ($subject) use ($message) {
+              return mb_stripos((string) $subject, $message) !== FALSE;
+            }),
+          ],
+        );
     }
     else {
-      $this->message->display(Argument::cetera())
-        ->shouldNotBeCalled();
+      $this->executable->message->expects($this->never())
+        ->method($this->anything());
     }
     $result = $this->executable->memoryExceeded();
     $this->assertEquals($memory_exceeded, $result);
@@ -98,7 +104,7 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
   /**
    * Tests memoryExceeded method when a new batch is needed.
    */
-  public function testMemoryExceededNewBatch(): void {
+  public function testMemoryExceededNewBatch() {
     // First case try reset and then start new batch.
     $this->runMemoryExceededTest('starting new batch', TRUE);
   }
@@ -106,14 +112,14 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
   /**
    * Tests memoryExceeded method when enough is cleared.
    */
-  public function testMemoryExceededClearedEnough(): void {
+  public function testMemoryExceededClearedEnough() {
     $this->runMemoryExceededTest('reclaimed enough', FALSE, $this->memoryLimit, $this->memoryLimit * 0.75);
   }
 
   /**
    * Tests memoryExceeded when memory usage is not exceeded.
    */
-  public function testMemoryNotExceeded(): void {
+  public function testMemoryNotExceeded() {
     $this->runMemoryExceededTest('', FALSE, floor($this->memoryLimit * 0.85) - 1);
   }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d6;
 
 use Drupal\field\Plugin\migrate\process\d6\FieldTypeDefaults;
@@ -29,7 +27,7 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
    *
    * @covers ::transform
    */
-  public function testDefaults(): void {
+  public function testDefaults() {
     $this->row->expects($this->once())
       ->method('getSourceProperty')
       ->willReturn('date');
@@ -48,7 +46,7 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
    *
    * @covers ::transform
    */
-  public function testDefaultsException(): void {
+  public function testDefaultsException() {
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage(sprintf('Failed to lookup field type %s in the static map.', var_export([], TRUE)));
     $this->plugin->transform([], $this->migrateExecutable, $this->row, 'property');

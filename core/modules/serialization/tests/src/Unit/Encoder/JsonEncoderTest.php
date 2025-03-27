@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\serialization\Unit\Encoder;
 
 use Drupal\serialization\Encoder\JsonEncoder;
@@ -16,7 +14,7 @@ class JsonEncoderTest extends UnitTestCase {
   /**
    * Tests the supportsEncoding() method.
    */
-  public function testSupportsEncoding(): void {
+  public function testSupportsEncoding() {
     $encoder = new JsonEncoder();
 
     $this->assertTrue($encoder->supportsEncoding('json'));

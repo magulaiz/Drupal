@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Unit\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -64,9 +62,9 @@ class UserLocalTaskTest extends UnitTestCase {
   /**
    * Tests the derivatives generated for local tasks.
    *
-   * @covers \Drupal\user\Plugin\Derivative\UserLocalTask::getDerivativeDefinitions
+   * @covers \Drupal\user\Plugin\Derivative\UserLocalTask::getDerivativeDefinitions()
    */
-  public function testGetDerivativeDefinitions(): void {
+  public function testGetDerivativeDefinitions() {
     $expected = [
       'permissions_entity_bundle_of_id' => [
         'route_name' => 'entity.entity_bundle_of_id.entity_permissions_form',

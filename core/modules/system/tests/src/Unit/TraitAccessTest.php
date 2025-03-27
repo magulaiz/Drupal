@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Unit;
 
 use Drupal\Tests\UnitTestCase;
@@ -20,7 +18,7 @@ class TraitAccessTest extends UnitTestCase {
   /**
    * @coversNothing
    */
-  public function testSimpleStuff(): void {
+  public function testSimpleStuff() {
     $stuff = $this->getStuff();
     $this->assertSame($stuff, 'stuff', "Same old stuff");
   }

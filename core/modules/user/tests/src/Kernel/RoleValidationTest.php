@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
@@ -24,8 +22,6 @@ class RoleValidationTest extends ConfigEntityValidationTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->installConfig('user');
 
     $this->entity = Role::create([
       'id' => 'test',

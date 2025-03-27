@@ -2,21 +2,20 @@
 
 namespace Drupal\system\Plugin\Block;
 
-use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block to display the breadcrumbs.
+ *
+ * @Block(
+ *   id = "system_breadcrumb_block",
+ *   admin_label = @Translation("Breadcrumbs")
+ * )
  */
-#[Block(
-  id: "system_breadcrumb_block",
-  admin_label: new TranslatableMarkup("Breadcrumbs")
-)]
 class SystemBreadcrumbBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -39,7 +38,7 @@ class SystemBreadcrumbBlock extends BlockBase implements ContainerFactoryPluginI
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
+   *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface $breadcrumb_manager
@@ -71,13 +70,6 @@ class SystemBreadcrumbBlock extends BlockBase implements ContainerFactoryPluginI
    */
   public function build() {
     return $this->breadcrumbManager->build($this->routeMatch)->toRenderable();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function createPlaceholder(): bool {
-    return TRUE;
   }
 
 }

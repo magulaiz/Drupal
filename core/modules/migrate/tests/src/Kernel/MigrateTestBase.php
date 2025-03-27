@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\Core\Database\Database;
@@ -60,9 +58,6 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected $logger;
 
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = ['migrate'];
 
   /**
@@ -175,7 +170,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
       $this->migration = $migration;
     }
     if ($this instanceof MigrateDumpAlterInterface) {
-      $this->migrateDumpAlter($this);
+      static::migrateDumpAlter($this);
     }
 
     $this->prepareMigration($this->migration);
@@ -191,8 +186,12 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    */
   protected function executeMigrations(array $ids) {
     $manager = $this->container->get('plugin.manager.migration');
-    $instances = $manager->createInstances($ids);
-    array_walk($instances, [$this, 'executeMigration']);
+    array_walk($ids, function ($id) use ($manager) {
+      // This is possibly a base plugin ID and we want to run all derivatives.
+      $instances = $manager->createInstances($id);
+      $this->assertNotEmpty($instances, sprintf("No migrations created for id '%s'.", $id));
+      array_walk($instances, [$this, 'executeMigration']);
+    });
   }
 
   /**
@@ -251,7 +250,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   /**
    * Gets the migration plugin.
    *
-   * @param string $plugin_id
+   * @param $plugin_id
    *   The plugin ID of the migration to get.
    *
    * @return \Drupal\migrate\Plugin\Migration

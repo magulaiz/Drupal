@@ -1,14 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Archiver;
 
 use Drupal\KernelTests\Core\File\FileTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Provides archive specific assertions and helper properties for archive tests.
+ * Base class for archive tests that adds some additional archive specific
+ * assertions and helper properties.
  */
 abstract class ArchiverTestBase extends FileTestBase {
   use TestFileCreationTrait;

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -59,7 +57,7 @@ class LayoutBuilderToolbarTest extends WebDriverTestBase {
   /**
    * Tests the 'Back to site' link behaves with manage layout as admin page.
    */
-  public function testBackToSiteLink(): void {
+  public function testBackToSiteLink() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

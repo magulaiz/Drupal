@@ -3,14 +3,13 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html as HtmlUtility;
 
 /**
  * Provides a render element for a table.
  *
- * Note: Although this extends FormElementBase, it can be used outside the
+ * Note: Although this extends FormElement, it can be used outside the
  * context of a form.
  *
  * Properties:
@@ -23,98 +22,48 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  * - #empty: Text to display when no rows are present.
  * - #responsive: Indicates whether to add the drupal.tableresponsive library
  *   providing responsive tables.  Defaults to TRUE.
- * - #sticky: Indicates whether to make the table headers sticky at
- *   the top of the page. Defaults to FALSE.
- * - #footer: Table footer rows, in the same format as the #rows property.
- * - #caption: A localized string for the <caption> tag.
+ * - #sticky: Indicates whether to add the drupal.tableheader library that makes
+ *   table headers always visible at the top of the page. Defaults to FALSE.
  *
- * Usage example 1: A simple form with an additional information table which
- * doesn't include any other form field.
+ * Usage example:
  * @code
- * // Table header.
- * $header = [
- *   'name' => $this->t('Name'),
- *   'age' => $this->t('Age'),
- *   'email' => $this->t('Email'),
- * ];
- *
- * // Default data rows (these can be fetched from the database or any other
- * // source).
- * $default_rows = [
- *   ['name' => 'John', 'age' => 28, 'email' => 'john@example.com'],
- *   ['name' => 'Jane', 'age' => 25, 'email' => 'jane@example.com'],
- * ];
- *
- * // Prepare rows for the table element. We just display the information with
- * // #markup.
- * $rows = [];
- * foreach ($default_rows as $default_row) {
- *   $rows[] = [
- *     'name' => ['data' => ['#markup' => $default_row['name']]],
- *     'age' => ['data' => ['#markup' => $default_row['age']]],
- *     'email' => ['data' => ['#markup' => $default_row['email']]],
- *   ];
- * }
- *
- * // Now set the table element.
- * $form['information'] = [
- *   '#type' => 'table',
- *   '#header' => $header,
- *   '#rows' => $rows,  // Add the prepared rows here.
- *   '#empty' => $this->t('No entries available.'),
- * ];
- * @endcode
- *
- * Usage example 2: A table of form fields without the #rows property defined.
- * @code
- * // Set the contact element as a table render element with no #rows property.
- * // Next add five rows as sub-elements (or children) that will populate
- * // automatically the #rows property in preRenderTable().
- * $form['contacts'] = [
+ * $form['contacts'] = array(
  *   '#type' => 'table',
  *   '#caption' => $this->t('Sample Table'),
- *   '#header' => [$this->t('Name'), $this->t('Phone')],
- *   '#rows' => [],
- *   '#empty' => $this->t('No entries available.'),
- * ];
+ *   '#header' => array($this->t('Name'), $this->t('Phone')),
+ * );
  *
- * // Add arbitrarily four rows to the table. Each row contains two fields
- * // (name and phone). The preRenderTable() method will add each sub-element
- * // (or children) of the table element to the #rows property.
  * for ($i = 1; $i <= 4; $i++) {
- *    // Add foo and baz classes for each row.
- *   $form['contacts'][$i]['#attributes'] = ['class' => ['foo', 'baz']];
- *
- *   // Set the first column.
- *   $form['contacts'][$i]['name'] = [
+ *   $form['contacts'][$i]['#attributes'] = array('class' => array('foo', 'baz'));
+ *   $form['contacts'][$i]['name'] = array(
  *     '#type' => 'textfield',
  *     '#title' => $this->t('Name'),
  *     '#title_display' => 'invisible',
- *   ];
+ *   );
  *
- *    // Set the second column.
- *   $form['contacts'][$i]['phone'] = [
+ *   $form['contacts'][$i]['phone'] = array(
  *     '#type' => 'tel',
  *     '#title' => $this->t('Phone'),
  *     '#title_display' => 'invisible',
- *   ];
+ *   );
  * }
  *
- * // Add the fifth row as a colspan of two columns.
- * $form['contacts'][]['colspan_example'] = [
+ * $form['contacts'][]['colspan_example'] = array(
  *   '#plain_text' => 'Colspan Example',
- *   '#wrapper_attributes' => ['colspan' => 2, 'class' => ['foo', 'bar']],
- * ];
+ *   '#wrapper_attributes' => array('colspan' => 2, 'class' => array('foo', 'bar')),
+ * );
  * @endcode
  * @see \Drupal\Core\Render\Element\Tableselect
+ *
+ * @FormElement("table")
  */
-#[FormElement('table')]
-class Table extends FormElementBase {
+class Table extends FormElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#header' => [],
       '#rows' => [],
@@ -128,10 +77,10 @@ class Table extends FormElementBase {
       '#multiple' => TRUE,
       '#js_select' => TRUE,
       '#process' => [
-        [static::class, 'processTable'],
+        [$class, 'processTable'],
       ],
       '#element_validate' => [
-        [static::class, 'validateTable'],
+        [$class, 'validateTable'],
       ],
       // Properties for tabledrag support.
       // The value is a list of arrays that are passed to
@@ -141,7 +90,7 @@ class Table extends FormElementBase {
       '#tabledrag' => [],
       // Render properties.
       '#pre_render' => [
-        [static::class, 'preRenderTable'],
+        [$class, 'preRenderTable'],
       ],
       '#theme' => 'table',
     ];
@@ -151,8 +100,7 @@ class Table extends FormElementBase {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    // If #multiple is FALSE, the regular default value of radio buttons is
-    // used.
+    // If #multiple is FALSE, the regular default value of radio buttons is used.
     if (!empty($element['#tableselect']) && !empty($element['#multiple'])) {
       // Contrary to #type 'checkboxes', the default value of checkboxes in a
       // table is built from the array keys (instead of array values) of the
@@ -170,9 +118,7 @@ class Table extends FormElementBase {
   }
 
   /**
-   * Render API callback: Adds tableselect support to #type 'table'.
-   *
-   * This function is assigned as a #process callback.
+   * #process callback for #type 'table' to add tableselect support.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
@@ -264,9 +210,8 @@ class Table extends FormElementBase {
           $row['select'] += [
             '#type' => $element['#multiple'] ? 'checkbox' : 'radio',
             '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $element_parents)),
-            // @todo If rows happen to use numeric indexes instead of string
-            //   keys, this results in a first row with $key === 0, which is
-            //   always FALSE.
+            // @todo If rows happen to use numeric indexes instead of string keys,
+            //   this results in a first row with $key === 0, which is always FALSE.
             '#return_value' => $key,
             '#attributes' => $element['#attributes'],
             '#wrapper_attributes' => [
@@ -299,9 +244,7 @@ class Table extends FormElementBase {
   }
 
   /**
-   * Render API callback: Validates the #type 'table'.
-   *
-   * This function is assigned as a #element_validate callback.
+   * #element_validate callback for #type 'table'.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
@@ -329,9 +272,7 @@ class Table extends FormElementBase {
   }
 
   /**
-   * Render API callback: Transform children of an element of #type 'table'.
-   *
-   * This function is assigned as a #pre_render callback.
+   * #pre_render callback to transform children of an element of #type 'table'.
    *
    * This function converts sub-elements of an element of #type 'table' to be
    * suitable for table.html.twig:
@@ -341,58 +282,55 @@ class Table extends FormElementBase {
    *   corresponding first-level table row.
    *
    * Simple example usage:
-   *
    * @code
-   * $form['table'] = [
+   * $form['table'] = array(
    *   '#type' => 'table',
-   *   '#header' => [$this->t('Title'), ['data' => $this->t('Operations'), 'colspan' => '1']],
+   *   '#header' => array($this->t('Title'), array('data' => $this->t('Operations'), 'colspan' => '1')),
    *   // Optionally, to add tableDrag support:
-   *   '#tabledrag' => [
-   *     [
+   *   '#tabledrag' => array(
+   *     array(
    *       'action' => 'order',
    *       'relationship' => 'sibling',
    *       'group' => 'thing-weight',
-   *     ],
-   *   ],
-   * ];
+   *     ),
+   *   ),
+   * );
    * foreach ($things as $row => $thing) {
    *   $form['table'][$row]['#weight'] = $thing['weight'];
    *
-   *   $form['table'][$row]['title'] = [
+   *   $form['table'][$row]['title'] = array(
    *     '#type' => 'textfield',
    *     '#default_value' => $thing['title'],
-   *   ];
+   *   );
    *
    *   // Optionally, to add tableDrag support:
    *   $form['table'][$row]['#attributes']['class'][] = 'draggable';
-   *   $form['table'][$row]['weight'] = [
+   *   $form['table'][$row]['weight'] = array(
    *     '#type' => 'textfield',
-   *     '#title' => $this->t('Weight for @title', ['@title' => $thing['title']]),
+   *     '#title' => $this->t('Weight for @title', array('@title' => $thing['title'])),
    *     '#title_display' => 'invisible',
    *     '#size' => 4,
    *     '#default_value' => $thing['weight'],
-   *     '#attributes' => ['class' => ['thing-weight']],
+   *     '#attributes' => array('class' => array('thing-weight')),
    *   );
    *
    *   // The amount of link columns should be identical to the 'colspan'
    *   // attribute in #header above.
-   *   $form['table'][$row]['edit'] = [
+   *   $form['table'][$row]['edit'] = array(
    *     '#type' => 'link',
    *     '#title' => $this->t('Edit'),
    *     '#url' => Url::fromRoute('entity.test_entity.edit_form', ['test_entity' => $row]),
-   *   ];
+   *   );
    * }
    * @endcode
    *
    * @param array $element
-   *   A structured array containing two sub-levels of elements. Properties
-   *   used:
+   *   A structured array containing two sub-levels of elements. Properties used:
    *   - #tabledrag: The value is a list of $options arrays that are passed to
    *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
    *     $options array.
    *
    * @return array
-   *   Associative array of rendered child elements for a table.
    *
    * @see template_preprocess_table()
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
@@ -430,12 +368,13 @@ class Table extends FormElementBase {
     // Add sticky headers, if applicable.
     if (count($element['#header']) && $element['#sticky']) {
       $element['#attached']['library'][] = 'core/drupal.tableheader';
-      $element['#attributes']['class'][] = 'sticky-header';
+      // Add 'sticky-enabled' class to the table to identify it for JS.
+      // This is needed to target tables constructed by this function.
+      $element['#attributes']['class'][] = 'sticky-enabled';
     }
-    // If the table has headers and it should react responsively to columns
-    // hidden with the classes represented by the constants
-    // RESPONSIVE_PRIORITY_MEDIUM and RESPONSIVE_PRIORITY_LOW, add the
-    // tableresponsive behaviors.
+    // If the table has headers and it should react responsively to columns hidden
+    // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
+    // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
     if (count($element['#header']) && $element['#responsive']) {
       $element['#attached']['library'][] = 'core/drupal.tableresponsive';
       // Add 'responsive-enabled' class to the table to identify it for JS.

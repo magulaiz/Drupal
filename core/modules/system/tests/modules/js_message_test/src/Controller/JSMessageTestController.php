@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\js_message_test\Controller;
 
 /**
@@ -29,22 +27,6 @@ class JSMessageTestController {
    */
   public static function getMessagesSelectors() {
     return ['', '[data-drupal-messages-other]'];
-  }
-
-  /**
-   * Displays links to show messages via JavaScript with messages from backend.
-   *
-   * @return array
-   *   Render array for links.
-   */
-  public function messageLinksWithSystemMessages() {
-    // Add PHP rendered messages to the page.
-    $messenger = \Drupal::messenger();
-    $messenger->addStatus('PHP Status');
-    $messenger->addWarning('PHP Warning');
-    $messenger->addError('PHP Error');
-
-    return $this->messageLinks();
   }
 
   /**

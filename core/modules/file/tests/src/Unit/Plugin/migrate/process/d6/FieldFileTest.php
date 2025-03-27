@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\file\Unit\Plugin\migrate\process\d6;
 
 use Drupal\file\Plugin\migrate\process\d6\FieldFile;
@@ -19,7 +17,7 @@ class FieldFileTest extends UnitTestCase {
   /**
    * Tests that alt and title attributes are included in transformed values.
    */
-  public function testTransformAltTitle(): void {
+  public function testTransformAltTitle() {
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();
     $row = $this->prophesize(Row::class)->reveal();
     $migration = $this->prophesize(MigrationInterface::class)->reveal();

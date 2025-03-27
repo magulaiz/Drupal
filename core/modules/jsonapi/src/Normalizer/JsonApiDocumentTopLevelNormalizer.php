@@ -7,22 +7,13 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\jsonapi\JsonApiResource\Data;
 use Drupal\jsonapi\JsonApiResource\ErrorCollection;
-use Drupal\jsonapi\JsonApiResource\IncludedData;
-use Drupal\jsonapi\JsonApiResource\NullIncludedData;
 use Drupal\jsonapi\JsonApiResource\OmittedData;
-use Drupal\jsonapi\JsonApiResource\RelationshipData;
-use Drupal\jsonapi\JsonApiResource\ResourceIdentifier;
-use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\ResourceType\ResourceType;
-use Drupal\serialization\Normalizer\SchematicNormalizerTrait;
-use Drupal\serialization\Serializer\JsonSchemaProviderSerializerInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -44,7 +35,10 @@ use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
  */
 class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements DenormalizerInterface, NormalizerInterface {
 
-  use SchematicNormalizerTrait;
+  /**
+   * {@inheritdoc}
+   */
+  protected $supportedInterfaceOrClass = JsonApiDocumentTopLevel::class;
 
   /**
    * The entity type manager.
@@ -125,7 +119,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         try {
           $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
         }
-        catch (PluginNotFoundException) {
+        catch (PluginNotFoundException $e) {
           throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
         }
         // In order to maintain the order ($delta) of the relationships, we need
@@ -157,7 +151,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
             $reference_item += $relationship['data'][$delta]['meta'];
           }
           $canonical_ids[] = array_filter($reference_item, function ($key) {
-            return !str_starts_with($key, 'drupal_internal__');
+            return substr($key, 0, strlen('drupal_internal__')) !== 'drupal_internal__';
           }, ARRAY_FILTER_USE_KEY);
         }
 
@@ -178,7 +172,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
   /**
    * {@inheritdoc}
    */
-  public function doNormalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof JsonApiDocumentTopLevel);
     $data = $object->getData();
     $document['jsonapi'] = CacheableNormalization::permanent([
@@ -225,7 +219,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization
    *   The normalized document.
    *
-   * @todo Refactor this to use CacheableNormalization::aggregate in https://www.drupal.org/project/drupal/issues/3036284.
+   * @todo: refactor this to use CacheableNormalization::aggregate in https://www.drupal.org/project/drupal/issues/3036284.
    */
   protected function normalizeErrorDocument(JsonApiDocumentTopLevel $document, $format, array $context = []) {
     $normalized_values = array_map(function (HttpExceptionInterface $exception) use ($format, $context) {
@@ -253,7 +247,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization|\Drupal\jsonapi\Normalizer\Value\CacheableOmission
    *   The normalized omissions.
    *
-   * @todo Refactor this to use link collections in https://www.drupal.org/project/drupal/issues/3036279.
+   * @todo: refactor this to use link collections in https://www.drupal.org/project/drupal/issues/3036279.
    */
   protected function normalizeOmissionsLinks(OmittedData $omissions, $format, array $context = []) {
     $normalized_omissions = array_map(function (HttpExceptionInterface $exception) use ($format, $context) {
@@ -341,154 +335,8 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
   /**
    * {@inheritdoc}
    */
-  public function getNormalizationSchema(mixed $object, array $context = []): array {
-    // If we are providing a schema based only on an interface, we lack context
-    // to provide anything more than a ref to the JSON:API top-level schema.
-    $fallbackSchema = [
-      '$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA,
-    ];
-    if (is_string($object)) {
-      return $fallbackSchema;
-    }
-    assert($object instanceof JsonApiDocumentTopLevel);
-    if ($object->getData() instanceof OmittedData) {
-      // A top-level omitted data object is a bit weird but it will only contain
-      // information in the 'links' property, so we can fall back.
-      return $fallbackSchema;
-    }
-    $schema = [
-      'allOf' => [
-        ['$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA],
-      ],
-    ];
-
-    // Top-level JSON:API documents may contain top-level data or an error
-    // collection.
-    $data = $object->getData();
-
-    if ($data instanceof ErrorCollection) {
-      // There's not much else to state here, because errors are a known schema.
-      $schema['required'] = ['errors'];
-    }
-
-    // Relationship data - "resource identifier object(s)"
-    if ($data instanceof RelationshipData) {
-      if ($data->getCardinality() === 1) {
-        $schema['properties']['data'] = [
-          '$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA . '#/definitions/relationship',
-        ];
-      }
-      else {
-        $schema['properties']['data'] = [
-          'type' => 'array',
-          'items' => [
-            '$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA . '#/definitions/relationship',
-          ],
-          'unevaluatedItems' => FALSE,
-        ];
-        if ($data->getCardinality() !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-          $schema['properties']['data']['maxContains'] = $data->getCardinality();
-        }
-        // We can't do a minContains with the data available in this context.
-      }
-    }
-
-    if ($data instanceof IncludedData) {
-      if ($data instanceof NullIncludedData) {
-        $schema['properties']['included'] = [
-          'type' => 'array',
-          'maxContains' => 0,
-        ];
-      }
-      else {
-        $schema['properties']['included'] = [
-          // 'included' member is always an array.
-          'type' => 'array',
-          'items' => [
-            'oneOf' => $this->getSchemasForDataCollection($data->getData(), $context),
-          ],
-        ];
-      }
-    }
-
-    if ($data instanceof ResourceObjectData) {
-      if ($data->getCardinality() === 1) {
-        assert($data->count() === 1);
-        $schema['properties']['data'] = [
-          'oneOf' => [
-            ...$this->getSchemasForDataCollection($data->getData(), $context),
-            ['type' => 'null'],
-          ],
-        ];
-      }
-      else {
-        $schema['properties']['data'] = [
-          'type' => 'array',
-          'items' => [
-            'oneOf' => $this->getSchemasForDataCollection($data->getData(), $context),
-          ],
-        ];
-        if ($data->getCardinality() !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-          $schema['properties']['data']['maxContains'] = $data->getCardinality();
-        }
-      }
-    }
-
-    return $schema;
-  }
-
-  /**
-   * Retrieve an array of schemas for the resource types in a data object.
-   *
-   * @param \Drupal\jsonapi\JsonApiResource\Data $data
-   *   JSON:API data value objects.
-   * @param array $context
-   *   Normalization context.
-   *
-   * @return array
-   *   Schemas for all types represented in the collection.
-   */
-  protected function getSchemasForDataCollection(Data $data, array $context): array {
-    $schemas = [];
-    if ($data->count() === 0) {
-      return [
-        // We lack sufficient information about if the data would be a
-        // collection or a single resource, so allow either.
-        ['type' => ['array', 'null']],
-      ];
-    }
-    $members = $data->toArray();
-    assert($this->serializer instanceof JsonSchemaProviderSerializerInterface);
-    // Per the spec, data must either be comprised of a single instance or
-    // collection of resource objects OR resource identifiers, but not both.
-    foreach ($members as $member) {
-      $resourceType = $member->getResourceType();
-      if (array_key_exists($resourceType->getTypeName(), $schemas)) {
-        continue;
-      }
-      $schemas[$resourceType->getTypeName()] = $member instanceof ResourceIdentifier
-        ? [
-          'allOf' => [
-            ['$ref' => JsonApiSpec::SUPPORTED_SPECIFICATION_JSON_SCHEMA . '#/definitions/resourceIdentifier'],
-          ],
-          'properties' => [
-            'type' => [
-              'const' => $resourceType->getTypeName(),
-            ],
-          ],
-        ]
-        : $this->serializer->getJsonSchema($member, $context);
-    }
-    return array_values($schemas);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSupportedTypes(?string $format): array {
-    return [
-      JsonApiDocumentTopLevel::class => TRUE,
-    ];
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

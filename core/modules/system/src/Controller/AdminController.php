@@ -4,8 +4,7 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleExtensionList;
-use Drupal\system\ModuleAdminLinksHelper;
-use Drupal\user\ModulePermissionsLinkHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for admin section.
@@ -13,13 +12,29 @@ use Drupal\user\ModulePermissionsLinkHelper;
 class AdminController extends ControllerBase {
 
   /**
-   * AdminController constructor.
+   * The module extension list.
+   *
+   * @var \Drupal\Core\Extension\ModuleExtensionList
    */
-  public function __construct(
-    protected ModuleExtensionList $moduleExtensionList,
-    protected ModuleAdminLinksHelper $moduleAdminLinks,
-    protected ModulePermissionsLinkHelper $modulePermissionsLinks,
-  ) {
+  protected $moduleExtensionList;
+
+  /**
+   * AdminController constructor.
+   *
+   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
+   *   The module extension list.
+   */
+  public function __construct(ModuleExtensionList $extension_list_module) {
+    $this->moduleExtensionList = $extension_list_module;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('extension.list.module')
+    );
   }
 
   /**
@@ -36,11 +51,7 @@ class AdminController extends ControllerBase {
 
     foreach ($extensions as $module => $extension) {
       // Only display a section if there are any available tasks.
-      $admin_tasks = $this->moduleAdminLinks->getModuleAdminLinks($module);
-      if ($module_permissions_link = $this->modulePermissionsLinks->getModulePermissionsLink($module, $extension->info['name'])) {
-        $admin_tasks["user.admin_permissions.{$module}"] = $module_permissions_link;
-      }
-      if (!empty($admin_tasks)) {
+      if ($admin_tasks = system_get_module_admin_tasks($module, $extension->info)) {
         // Sort links by title.
         uasort($admin_tasks, ['\Drupal\Component\Utility\SortArray', 'sortByTitleElement']);
         // Move 'Configure permissions' links to the bottom of each section.

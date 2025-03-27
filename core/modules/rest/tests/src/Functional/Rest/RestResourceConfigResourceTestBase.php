@@ -1,15 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\rest\Functional\Rest;
 
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\rest\Entity\RestResourceConfig;
 
-/**
- * Resource test base for the RestResourceConfig entity.
- */
 abstract class RestResourceConfigResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**

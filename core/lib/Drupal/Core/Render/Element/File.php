@@ -3,7 +3,6 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 
 /**
@@ -19,28 +18,30 @@ use Drupal\Core\Render\Element;
  * The value of this form element will always be an array of
  * \Symfony\Component\HttpFoundation\File\UploadedFile objects, regardless of
  * whether #multiple is TRUE or FALSE
+ *
+ * @FormElement("file")
  */
-#[FormElement('file')]
-class File extends FormElementBase {
+class File extends FormElement {
 
   /**
    * {@inheritdoc}
    */
   public function getInfo() {
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#multiple' => FALSE,
       '#process' => [
-        [static::class, 'processFile'],
+        [$class, 'processFile'],
       ],
       '#size' => 60,
       '#pre_render' => [
-        [static::class, 'preRenderFile'],
+        [$class, 'preRenderFile'],
       ],
       '#theme' => 'input__file',
       '#theme_wrappers' => ['form_element'],
       '#value_callback' => [
-        [static::class, 'valueCallback'],
+        [$class, 'valueCallback'],
       ],
     ];
   }

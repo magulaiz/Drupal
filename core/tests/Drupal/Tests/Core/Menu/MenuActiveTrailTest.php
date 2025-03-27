@@ -1,16 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Menu\MenuActiveTrail;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Tests\UnitTestCase;
-use Drupal\TestTools\Random;
 use Drupal\Core\Routing\RouteObjectInterface;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,13 +64,6 @@ class MenuActiveTrailTest extends UnitTestCase {
   protected $lock;
 
   /**
-   * The mocked cache tags invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected CacheTagsInvalidatorInterface|MockObject $cacheTagsInvalidator;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -86,12 +74,11 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->menuLinkManager = $this->createMock('Drupal\Core\Menu\MenuLinkManagerInterface');
     $this->cache = $this->createMock('\Drupal\Core\Cache\CacheBackendInterface');
     $this->lock = $this->createMock('\Drupal\Core\Lock\LockBackendInterface');
-    $this->cacheTagsInvalidator = $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidatorInterface');
 
     $this->menuActiveTrail = new MenuActiveTrail($this->menuLinkManager, $this->currentRouteMatch, $this->cache, $this->lock);
 
     $container = new Container();
-    $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
+    $container->set('cache_tags.invalidator', $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidatorInterface'));
     \Drupal::setContainer($container);
   }
 
@@ -106,7 +93,7 @@ class MenuActiveTrailTest extends UnitTestCase {
    *     - menu_name: The active menu name.
    *     - expected_link: The expected active link for the given menu.
    */
-  public static function provider() {
+  public function provider() {
     $data = [];
 
     $mock_route = new Route('');
@@ -124,24 +111,24 @@ class MenuActiveTrailTest extends UnitTestCase {
     $empty_active_trail = [''];
 
     // No active link is returned when zero links match the current route.
-    $data[] = [$request, [], Random::machineName(), NULL, $empty_active_trail];
+    $data[] = [$request, [], $this->randomMachineName(), NULL, $empty_active_trail];
 
     // The first (and only) matching link is returned when one link matches the
     // current route.
-    $data[] = [$request, ['baby_llama_link_1' => $link_1], Random::machineName(), $link_1, $link_1_parent_ids];
+    $data[] = [$request, ['baby_llama_link_1' => $link_1], $this->randomMachineName(), $link_1, $link_1_parent_ids];
 
     // The first of multiple matching links is returned when multiple links
     // match the current route, where "first" is determined by sorting by key.
-    $data[] = [$request, ['baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2], Random::machineName(), $link_1, $link_1_parent_ids];
+    $data[] = [$request, ['baby_llama_link_1' => $link_1, 'baby_llama_link_2' => $link_2], $this->randomMachineName(), $link_1, $link_1_parent_ids];
 
     // No active link is returned in case of a 403.
     $request = new Request();
     $request->attributes->set('_exception_statuscode', 403);
-    $data[] = [$request, FALSE, Random::machineName(), NULL, $empty_active_trail];
+    $data[] = [$request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail];
 
     // No active link is returned when the route name is missing.
     $request = new Request();
-    $data[] = [$request, FALSE, Random::machineName(), NULL, $empty_active_trail];
+    $data[] = [$request, FALSE, $this->randomMachineName(), NULL, $empty_active_trail];
 
     return $data;
   }
@@ -152,11 +139,11 @@ class MenuActiveTrailTest extends UnitTestCase {
    * @covers ::getActiveLink
    * @dataProvider provider
    */
-  public function testGetActiveLink(Request $request, $links, $menu_name, $expected_link): void {
+  public function testGetActiveLink(Request $request, $links, $menu_name, $expected_link) {
     $this->requestStack->push($request);
     if ($links !== FALSE) {
       $this->menuLinkManager->expects($this->exactly(2))
-        ->method('loadLinksByRoute')
+        ->method('loadLinksbyRoute')
         ->with('baby_llama')
         ->willReturn($links);
     }
@@ -172,19 +159,19 @@ class MenuActiveTrailTest extends UnitTestCase {
    * @covers ::getActiveTrailIds
    * @dataProvider provider
    */
-  public function testGetActiveTrailIds(Request $request, $links, $menu_name, $expected_link, $expected_trail): void {
+  public function testGetActiveTrailIds(Request $request, $links, $menu_name, $expected_link, $expected_trail) {
     $expected_trail_ids = array_combine($expected_trail, $expected_trail);
 
     $this->requestStack->push($request);
     if ($links !== FALSE) {
       // We expect exactly two calls, one for the first call, and one after the
       // cache clearing below.
-      $this->menuLinkManager->expects($this->exactly(3))
-        ->method('loadLinksByRoute')
+      $this->menuLinkManager->expects($this->exactly(2))
+        ->method('loadLinksbyRoute')
         ->with('baby_llama')
         ->willReturn($links);
       if ($expected_link !== NULL) {
-        $this->menuLinkManager->expects($this->exactly(3))
+        $this->menuLinkManager->expects($this->exactly(2))
           ->method('getParentIds')
           ->willReturnMap([
             [$expected_link->getPluginId(), $expected_trail_ids],
@@ -196,21 +183,8 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($menu_name));
     $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($menu_name));
 
-    $this->cacheTagsInvalidator->expects($this->exactly(2))
-      ->method('invalidateTags')
-      ->willReturnCallback(fn($tags) =>
-        match($tags) {
-          ['config:system.menu.' . $menu_name] => NULL,
-          ['config:system.menu.' . $menu_name, 'config:system.menu.' . $menu_name, 'config:menu_list', 'menu_link_content_list'] => NULL,
-        }
-      );
     $this->menuActiveTrail->clear();
     $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds($menu_name));
-
-    // Test without menu name.
-    $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds(NULL));
-    $this->assertSame($expected_trail_ids, $this->menuActiveTrail->getActiveTrailIds(NULL));
-    $this->menuActiveTrail->clear();
   }
 
   /**
@@ -218,7 +192,7 @@ class MenuActiveTrailTest extends UnitTestCase {
    *
    * @covers ::getCid
    */
-  public function testGetCid(): void {
+  public function testGetCid() {
     $data = $this->provider()[1];
     /** @var \Symfony\Component\HttpFoundation\Request $request */
     $request = $data[0];
@@ -229,7 +203,7 @@ class MenuActiveTrailTest extends UnitTestCase {
     $this->requestStack->push($request);
 
     $this->menuLinkManager->expects($this->any())
-      ->method('loadLinksByRoute')
+      ->method('loadLinksbyRoute')
       ->with('baby_llama')
       ->willReturn($data[1]);
 

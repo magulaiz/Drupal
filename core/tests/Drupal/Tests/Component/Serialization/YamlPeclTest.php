@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Serialization;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
@@ -24,14 +22,14 @@ class YamlPeclTest extends YamlTestBase {
    * @covers ::decode
    * @dataProvider providerEncodeDecodeTests
    */
-  public function testEncodeDecode(array $data): void {
+  public function testEncodeDecode($data) {
     $this->assertEquals($data, YamlPecl::decode(YamlPecl::encode($data)));
   }
 
   /**
    * Ensures that php object support is disabled.
    */
-  public function testObjectSupportDisabled(): void {
+  public function testObjectSupportDisabled() {
     $object = new \stdClass();
     $object->foo = 'bar';
     $this->assertEquals(['O:8:"stdClass":1:{s:3:"foo";s:3:"bar";}'], YamlPecl::decode(YamlPecl::encode([$object])));
@@ -44,7 +42,7 @@ class YamlPeclTest extends YamlTestBase {
    * @covers ::decode
    * @dataProvider providerDecodeTests
    */
-  public function testDecode($string, $data): void {
+  public function testDecode($string, $data) {
     $this->assertEquals($data, YamlPecl::decode($string));
   }
 
@@ -53,7 +51,7 @@ class YamlPeclTest extends YamlTestBase {
    *
    * @covers ::encode
    */
-  public function testEncode(): void {
+  public function testEncode() {
     // cSpell:disable
     $this->assertEquals('---
 foo:
@@ -74,14 +72,14 @@ foo:
    * @covers ::applyBooleanCallbacks
    * @dataProvider providerBoolTest
    */
-  public function testApplyBooleanCallbacks($string, $expected): void {
+  public function testApplyBooleanCallbacks($string, $expected) {
     $this->assertEquals($expected, YamlPecl::applyBooleanCallbacks($string, 'bool', NULL));
   }
 
   /**
    * @covers ::getFileExtension
    */
-  public function testGetFileExtension(): void {
+  public function testGetFileExtension() {
     $this->assertEquals('yml', YamlPecl::getFileExtension());
   }
 
@@ -90,7 +88,7 @@ foo:
    *
    * @covers ::errorHandler
    */
-  public function testError(): void {
+  public function testError() {
     $this->expectException(InvalidDataTypeException::class);
     YamlPecl::decode('foo: [ads');
   }

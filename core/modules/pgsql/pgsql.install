@@ -10,7 +10,7 @@ use Drupal\Core\Database\Database;
 /**
  * Implements hook_requirements().
  */
-function pgsql_requirements(): array {
+function pgsql_requirements() {
   $requirements = [];
   // Test with PostgreSQL databases for the status of the pg_trgm extension.
   if (Database::isActiveConnection()) {
@@ -39,11 +39,4 @@ function pgsql_requirements(): array {
   }
 
   return $requirements;
-}
-
-/**
- * Implements hook_update_last_removed().
- */
-function pgsql_update_last_removed(): int {
-  return 10101;
 }

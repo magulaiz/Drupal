@@ -2,11 +2,7 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
-use Drupal\Component\Utility\FilterArray;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\ListDataDefinition;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -20,12 +16,13 @@ use Drupal\Core\TypedData\TypedDataInterface;
  * Note: The class cannot be called "List" as list is a reserved PHP keyword.
  *
  * @ingroup typed_data
+ *
+ * @DataType(
+ *   id = "list",
+ *   label = @Translation("List of items"),
+ *   definition_class = "\Drupal\Core\TypedData\ListDataDefinition"
+ * )
  */
-#[DataType(
-  id: "list",
-  label: new TranslatableMarkup("List of items"),
-  definition_class: ListDataDefinition::class,
-)]
 class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
 
   /**
@@ -93,7 +90,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       $strings[] = $item->getString();
     }
     // Remove any empty strings resulting from empty items.
-    return implode(', ', FilterArray::removeEmptyStrings($strings));
+    return implode(', ', array_filter($strings, 'mb_strlen'));
   }
 
   /**
@@ -171,7 +168,8 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function offsetExists($offset): bool {
+  #[\ReturnTypeWillChange]
+  public function offsetExists($offset) {
     // We do not want to throw exceptions here, so we do not use get().
     return isset($this->list[$offset]);
   }
@@ -179,21 +177,24 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function offsetUnset($offset): void {
+  #[\ReturnTypeWillChange]
+  public function offsetUnset($offset) {
     $this->removeItem($offset);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetGet($offset): mixed {
+  #[\ReturnTypeWillChange]
+  public function offsetGet($offset) {
     return $this->get($offset);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function offsetSet($offset, $value): void {
+  #[\ReturnTypeWillChange]
+  public function offsetSet($offset, $value) {
     if (!isset($offset)) {
       // The [] operator has been used.
       $this->appendItem($value);
@@ -217,7 +218,6 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    * Helper for creating a list item object.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
-   *   The new property instance.
    */
   protected function createItem($offset = 0, $value = NULL) {
     return $this->getTypedDataManager()->getPropertyInstance($this, $offset, $value);
@@ -233,14 +233,16 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function getIterator(): \ArrayIterator {
+  #[\ReturnTypeWillChange]
+  public function getIterator() {
     return new \ArrayIterator($this->list);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function count(): int {
+  #[\ReturnTypeWillChange]
+  public function count() {
     return count($this->list);
   }
 
@@ -302,13 +304,6 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       $this->list[$delta] = clone $item;
       $this->list[$delta]->setContext($delta, $this);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function last(): ?TypedDataInterface {
-    return $this->get($this->count() - 1);
   }
 
 }

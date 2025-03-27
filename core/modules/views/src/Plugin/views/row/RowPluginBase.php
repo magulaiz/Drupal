@@ -21,7 +21,7 @@ use Drupal\views\Views;
  * more information.
  *
  * Row plugins extend \Drupal\views\Plugin\views\row\RowPluginBase. They must
- * be attributed with \Drupal\views\Attribute\ViewsRow attribute, and
+ * be annotated with \Drupal\views\Annotation\ViewsRow annotation, and
  * they must be in namespace directory Plugin\views\row.
  *
  * @ingroup views_plugins
@@ -52,20 +52,17 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * The actual field used.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public string $base_field;
 
   /**
    * The field alias.
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   public string $field_alias;
 
   /**
    * Returns the usesFields property.
    *
    * @return bool
-   *   TRUE if fields are used by this row plugin, FALSE otherwise.
    */
   public function usesFields() {
     return $this->usesFields;
@@ -162,16 +159,14 @@ abstract class RowPluginBase extends PluginBase {
   /**
    * Allow the style to do stuff before each row is rendered.
    *
-   * @param array $result
+   * @param $result
    *   The full array of results from the query.
    */
   public function preRender($result) {}
 
   /**
-   * Renders a row object.
-   *
-   * This usually passes through to a theme template of some form, but not
-   * always.
+   * Render a row object. This usually passes through to a theme template
+   * of some form, but not always.
    *
    * @param object $row
    *   A single row of the query result, so an element of $view->result.

@@ -2,25 +2,17 @@
 
 namespace Drupal\Core\StreamWrapper;
 
-use Drupal\Core\Site\Settings;
-use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Provides a StreamWrapper manager.
  *
  * @see \Drupal\Core\StreamWrapper\StreamWrapperInterface
  */
-class StreamWrapperManager implements StreamWrapperManagerInterface {
+class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperManagerInterface {
 
-  /**
-   * Constructs a StreamWrapperManager object.
-   *
-   * @param \Psr\Container\ContainerInterface $container
-   *   The stream wrapper service locator.
-   */
-  public function __construct(
-    protected readonly ContainerInterface $container,
-  ) {}
+  use ContainerAwareTrait;
 
   /**
    * Contains stream wrapper info.
@@ -176,7 +168,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
   }
 
   /**
-   * Deregisters the tagged stream wrappers.
+   * Unregisters the tagged stream wrappers.
    *
    * Internal use only.
    */
@@ -250,36 +242,6 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
       $target = $this->getTarget($uri);
 
       if ($target !== FALSE) {
-
-        if (!in_array($scheme, Settings::get('file_sa_core_2023_005_schemes', []))) {
-          $class = $this->getClass($scheme);
-          $is_local = is_subclass_of($class, LocalStream::class);
-          if ($is_local) {
-            $target = str_replace(DIRECTORY_SEPARATOR, '/', $target);
-          }
-
-          $parts = explode('/', $target);
-          $normalized_parts = [];
-          while ($parts) {
-            $part = array_shift($parts);
-            if ($part === '' || $part === '.') {
-              continue;
-            }
-            elseif ($part === '..' && $is_local && $normalized_parts === []) {
-              $normalized_parts[] = $part;
-              break;
-            }
-            elseif ($part === '..') {
-              array_pop($normalized_parts);
-            }
-            else {
-              $normalized_parts[] = $part;
-            }
-          }
-
-          $target = implode('/', array_merge($normalized_parts, $parts));
-        }
-
         $uri = $scheme . '://' . $target;
       }
     }

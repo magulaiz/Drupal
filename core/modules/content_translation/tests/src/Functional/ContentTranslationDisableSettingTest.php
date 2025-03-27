@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -9,8 +7,6 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Test disabling content translation module.
  *
- * @covers \Drupal\language\Form\ContentLanguageSettingsForm
- * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationDisableSettingTest extends BrowserTestBase {
@@ -32,7 +28,7 @@ class ContentTranslationDisableSettingTest extends BrowserTestBase {
   /**
    * Tests that entity schemas are up-to-date after enabling translation.
    */
-  public function testDisableSetting(): void {
+  public function testDisableSetting() {
     // Define selectors.
     $group_checkbox = 'entity_types[menu_link_content]';
     $translatable_checkbox = 'settings[menu_link_content][menu_link_content][translatable]';

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Component\Plugin;
 
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
@@ -23,7 +21,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithValidArrayPluginDefinition(): void {
+  public function testGetPluginClassWithValidArrayPluginDefinition() {
     $plugin_class = Corn::class;
     $class = DefaultFactory::getPluginClass('corn', ['class' => $plugin_class]);
 
@@ -35,7 +33,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithValidObjectPluginDefinition(): void {
+  public function testGetPluginClassWithValidObjectPluginDefinition() {
     $plugin_class = Corn::class;
     $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
     $plugin_definition->expects($this->atLeastOnce())
@@ -51,7 +49,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithMissingClassWithArrayPluginDefinition(): void {
+  public function testGetPluginClassWithMissingClassWithArrayPluginDefinition() {
     $this->expectException(PluginException::class);
     $this->expectExceptionMessage('The plugin (corn) did not specify an instance class.');
     DefaultFactory::getPluginClass('corn', []);
@@ -62,7 +60,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithMissingClassWithObjectPluginDefinition(): void {
+  public function testGetPluginClassWithMissingClassWithObjectPluginDefinition() {
     $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)
       ->getMock();
     $this->expectException(PluginException::class);
@@ -75,7 +73,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithNotExistingClassWithArrayPluginDefinition(): void {
+  public function testGetPluginClassWithNotExistingClassWithArrayPluginDefinition() {
     $this->expectException(PluginException::class);
     $this->expectExceptionMessage('Plugin (carrot) instance class "Drupal\Tests\Component\Plugin\Fixtures\vegetable\Carrot" does not exist.');
     DefaultFactory::getPluginClass('carrot', ['class' => 'Drupal\Tests\Component\Plugin\Fixtures\vegetable\Carrot']);
@@ -86,7 +84,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithNotExistingClassWithObjectPluginDefinition(): void {
+  public function testGetPluginClassWithNotExistingClassWithObjectPluginDefinition() {
     $plugin_class = 'Drupal\Tests\Component\Plugin\Fixtures\vegetable\Carrot';
     $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
     $plugin_definition->expects($this->atLeastOnce())
@@ -101,7 +99,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithInterfaceWithArrayPluginDefinition(): void {
+  public function testGetPluginClassWithInterfaceWithArrayPluginDefinition() {
     $plugin_class = Corn::class;
     $class = DefaultFactory::getPluginClass('corn', ['class' => $plugin_class], VegetableInterface::class);
 
@@ -113,7 +111,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithInterfaceWithObjectPluginDefinition(): void {
+  public function testGetPluginClassWithInterfaceWithObjectPluginDefinition() {
     $plugin_class = Corn::class;
     $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
     $plugin_definition->expects($this->atLeastOnce())
@@ -129,7 +127,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithInterfaceAndInvalidClassWithArrayPluginDefinition(): void {
+  public function testGetPluginClassWithInterfaceAndInvalidClassWithArrayPluginDefinition() {
     $this->expectException(PluginException::class);
     $this->expectExceptionMessage('Plugin "corn" (Drupal\Tests\Component\Plugin\Fixtures\vegetable\Broccoli) must implement interface Drupal\Tests\Component\Plugin\Fixtures\vegetable\VegetableInterface.');
     DefaultFactory::getPluginClass('corn', ['class' => Broccoli::class], VegetableInterface::class);
@@ -140,7 +138,7 @@ class DefaultFactoryTest extends TestCase {
    *
    * @covers ::getPluginClass
    */
-  public function testGetPluginClassWithInterfaceAndInvalidClassWithObjectPluginDefinition(): void {
+  public function testGetPluginClassWithInterfaceAndInvalidClassWithObjectPluginDefinition() {
     $plugin_class = Broccoli::class;
     $plugin_definition = $this->getMockBuilder(PluginDefinitionInterface::class)->getMock();
     $plugin_definition->expects($this->atLeastOnce())

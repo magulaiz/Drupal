@@ -1,11 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\BuildTests\TestSiteApplication;
 
 use Drupal\BuildTests\Framework\BuildTestBase;
-use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -15,11 +12,7 @@ use Symfony\Component\Process\PhpExecutableFinder;
  */
 class InstallTest extends BuildTestBase {
 
-  public function testInstall(): void {
-    $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
-    if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {
-      $this->markTestSkipped();
-    }
+  public function testInstall() {
     $this->copyCodebase();
     $fs = new Filesystem();
     $fs->chmod($this->getWorkspaceDirectory() . '/sites/default', 0700, 0000);

@@ -97,8 +97,8 @@ interface ImageInterface {
    * Closes the image and saves the changes to a file.
    *
    * @param string|null $destination
-   *   (optional) Destination path where the image should be saved. If it is
-   *   empty the original image file will be overwritten.
+   *   (optional) Destination path where the image should be saved. If it is empty
+   *   the original image file will be overwritten.
    *
    * @return bool
    *   TRUE on success, FALSE on failure.
@@ -170,7 +170,8 @@ interface ImageInterface {
   public function scaleAndCrop($width, $height);
 
   /**
-   * Converts an image to the format specified by the extension.
+   * Instructs the toolkit to save the image in the format specified by the
+   * extension.
    *
    * @param string $extension
    *   The extension to convert to (for instance, 'jpeg' or 'png'). Allowed

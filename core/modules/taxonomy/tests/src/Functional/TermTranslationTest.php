@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Core\Url;
@@ -60,7 +58,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   /**
    * Tests translated breadcrumbs.
    */
-  public function testTranslatedBreadcrumbs(): void {
+  public function testTranslatedBreadcrumbs() {
     // Ensure non-translated breadcrumb is correct.
     $breadcrumb = [Url::fromRoute('<front>')->toString() => 'Home'];
     foreach ($this->terms as $term) {
@@ -94,7 +92,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   /**
    * Tests translation of terms are showed in the node.
    */
-  public function testTermsTranslation(): void {
+  public function testTermsTranslation() {
 
     // Set the display of the term reference field on the article content type
     // to "Check boxes/radio buttons".
@@ -107,13 +105,13 @@ class TermTranslationTest extends TaxonomyTestBase {
     $this->drupalLogin($this->drupalCreateUser(['create article content']));
 
     // Test terms are listed.
-    $this->drupalGet('node/add/article');
+    $this->drupalget('node/add/article');
     $this->assertSession()->pageTextContains('one');
     $this->assertSession()->pageTextContains('two');
     $this->assertSession()->pageTextContains('three');
 
     // Test terms translated are listed.
-    $this->drupalGet('hu/node/add/article');
+    $this->drupalget('hu/node/add/article');
     $this->assertSession()->pageTextContains('translatedOne');
     $this->assertSession()->pageTextContains('translatedTwo');
     $this->assertSession()->pageTextContains('translatedThree');
@@ -122,7 +120,7 @@ class TermTranslationTest extends TaxonomyTestBase {
   /**
    * Setup translated terms in a hierarchy.
    */
-  protected function setUpTerms(): void {
+  protected function setUpTerms() {
     $parent_vid = 0;
     foreach ($this->termTranslationMap as $name => $translation) {
 

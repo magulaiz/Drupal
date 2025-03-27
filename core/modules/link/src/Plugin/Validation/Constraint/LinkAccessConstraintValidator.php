@@ -18,7 +18,6 @@ class LinkAccessConstraintValidator extends ConstraintValidator implements Conta
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected $current_user;
 
   /**
@@ -43,13 +42,13 @@ class LinkAccessConstraintValidator extends ConstraintValidator implements Conta
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint): void {
+  public function validate($value, Constraint $constraint) {
     if (isset($value)) {
       try {
         $url = $value->getUrl();
       }
       // If the URL is malformed this constraint cannot check access.
-      catch (\InvalidArgumentException) {
+      catch (\InvalidArgumentException $e) {
         return;
       }
       // Disallow URLs if the current user doesn't have the 'link to any page'

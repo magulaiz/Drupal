@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * @endcode
  *
  * As a developer for alternative storage engines you register a service with
- * $your_backend.$original_service:
+ * $yourbackend.$original_service:
  *
  * @code
  * sqlite.custom_service:
@@ -36,7 +36,7 @@ class BackendCompilerPass implements CompilerPassInterface {
   /**
    * {@inheritdoc}
    */
-  public function process(ContainerBuilder $container): void {
+  public function process(ContainerBuilder $container) {
     $driver_backend = NULL;
     if ($container->hasParameter('default_backend')) {
       $default_backend = $container->getParameter('default_backend');
@@ -51,7 +51,7 @@ class BackendCompilerPass implements CompilerPassInterface {
         $default_backend = $container->get('database')->databaseType();
         $container->set('database', NULL);
       }
-      catch (\Exception) {
+      catch (\Exception $e) {
         // If Drupal is not installed or a test doesn't define database there
         // is nothing to override.
         return;

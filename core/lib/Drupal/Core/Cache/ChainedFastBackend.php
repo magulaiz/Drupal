@@ -12,9 +12,7 @@ namespace Drupal\Core\Cache;
  * item. The fast backend will also typically be inconsistent (will only see
  * changes from one web node). The slower backend will be something like Mysql,
  * Memcached or Redis, and will be used by all web nodes, thus making it
- * consistent, but also require a network round trip for each cache get. The
- * fast backend must however also use a consistent cache tag invalidation, for
- * example by using the cache tag checksum API.
+ * consistent, but also require a network round trip for each cache get.
  *
  * In addition to being useful for sites running on multiple web nodes, this
  * backend can also be useful for sites running on a single web node where the
@@ -142,7 +140,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
       try {
         $items = $this->fastBackend->getMultiple($cids, $allow_invalid);
       }
-      catch (\Exception) {
+      catch (\Exception $e) {
         $cids = $cids_copy;
         $items = [];
       }
@@ -166,9 +164,9 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
     if ($cids) {
       foreach ($this->consistentBackend->getMultiple($cids, $allow_invalid) as $item) {
         $cache[$item->cid] = $item;
-        if (!$allow_invalid || $item->valid) {
-          $this->fastBackend->set($item->cid, $item->data, $item->expire, $item->tags);
-        }
+        // Don't write the cache tags to the fast backend as any cache tag
+        // invalidation results in an invalidation of the whole fast backend.
+        $this->fastBackend->set($item->cid, $item->data, $item->expire);
       }
     }
 
@@ -181,7 +179,9 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
     $this->consistentBackend->set($cid, $data, $expire, $tags);
     $this->markAsOutdated();
-    $this->fastBackend->set($cid, $data, $expire, $tags);
+    // Don't write the cache tags to the fast backend as any cache tag
+    // invalidation results in an invalidation of the whole fast backend.
+    $this->fastBackend->set($cid, $data, $expire);
   }
 
   /**
@@ -190,6 +190,11 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
   public function setMultiple(array $items) {
     $this->consistentBackend->setMultiple($items);
     $this->markAsOutdated();
+    // Don't write the cache tags to the fast backend as any cache tag
+    // invalidation results in an invalidation of the whole fast backend.
+    foreach ($items as &$item) {
+      unset($item['tags']);
+    }
     $this->fastBackend->setMultiple($items);
   }
 
@@ -239,9 +244,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
     if ($this->consistentBackend instanceof CacheTagsInvalidatorInterface) {
       $this->consistentBackend->invalidateTags($tags);
     }
-    if ($this->fastBackend instanceof CacheTagsInvalidatorInterface) {
-      $this->fastBackend->invalidateTags($tags);
-    }
+    $this->markAsOutdated();
   }
 
   /**
@@ -292,15 +295,13 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
   protected function markAsOutdated() {
     // Clocks on a single server can drift. Multiple servers may have slightly
     // differing opinions about the current time. Given that, do not assume
-    // 'now' on this server is always later than our stored timestamp. Add 50ms
-    // to the current time each time we write it to the persistent cache, and
-    // make sure it is always at least 1ms ahead of the current time. This
-    // somewhat protects against clock drift, while also reducing the number of
-    // persistent cache writes to one every 50ms if this method is called
-    // multiple times during a request.
-    $compare = round(microtime(TRUE) + .001, 3);
-    if ($compare > $this->getLastWriteTimestamp()) {
-      $now = round(microtime(TRUE) + .050, 3);
+    // 'now' on this server is always later than our stored timestamp.
+    // Also add 1 millisecond, to ensure that caches written earlier in the same
+    // millisecond are invalidated. It is possible that caches will be later in
+    // the same millisecond and are then incorrectly invalidated, but that only
+    // costs one additional roundtrip to the persistent cache.
+    $now = round(microtime(TRUE) + .001, 3);
+    if ($now > $this->getLastWriteTimestamp()) {
       $this->lastWriteTimestamp = $now;
       $this->consistentBackend->set(self::LAST_WRITE_TIMESTAMP_PREFIX . $this->bin, $this->lastWriteTimestamp);
     }

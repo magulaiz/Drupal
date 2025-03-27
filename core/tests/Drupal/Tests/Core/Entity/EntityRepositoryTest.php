@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -66,7 +64,7 @@ class EntityRepositoryTest extends UnitTestCase {
    *
    * @covers ::getTranslationFromContext
    */
-  public function testGetTranslationFromContext(): void {
+  public function testGetTranslationFromContext() {
     $language = new Language(['id' => 'en']);
     $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)
       ->willReturn($language)

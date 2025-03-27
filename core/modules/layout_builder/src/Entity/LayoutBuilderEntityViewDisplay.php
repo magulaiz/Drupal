@@ -6,7 +6,6 @@ use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Entity\Entity\EntityViewDisplay as BaseEntityViewDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -14,7 +13,6 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Render\Element;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -31,7 +29,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
   use LayoutEntityHelperTrait;
   use SectionListTrait;
-  use StringTranslationTrait;
 
   /**
    * The entity field manager.
@@ -61,7 +58,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Toggle overridable layouts'), pluralize: FALSE, name: 'allowLayoutOverrides')]
   public function setOverridable($overridable = TRUE) {
     $this->setThirdPartySetting('layout_builder', 'allow_custom', $overridable);
     // Enable Layout Builder if it's not already enabled and overriding.
@@ -86,7 +82,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Enable Layout Builder'), pluralize: FALSE)]
   public function enableLayoutBuilder() {
     $this->setThirdPartySetting('layout_builder', 'enabled', TRUE);
     return $this;
@@ -95,7 +90,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Disable Layout Builder'), pluralize: FALSE)]
   public function disableLayoutBuilder() {
     $this->setOverridable(FALSE);
     $this->setThirdPartySetting('layout_builder', 'enabled', FALSE);
@@ -128,8 +122,9 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
 
-    $original_value = $this->getOriginal()?->isOverridable() ?? FALSE;
+    $original_value = isset($this->original) ? $this->original->isOverridable() : FALSE;
     $new_value = $this->isOverridable();
     if ($original_value !== $new_value) {
       $entity_type_id = $this->getTargetEntityTypeId();
@@ -143,9 +138,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       }
     }
 
-    parent::preSave($storage);
-
-    $already_enabled = $this->getOriginal()?->isLayoutBuilderEnabled() ?? FALSE;
+    $already_enabled = isset($this->original) ? $this->original->isLayoutBuilderEnabled() : FALSE;
     $set_enabled = $this->isLayoutBuilderEnabled();
     if ($already_enabled !== $set_enabled) {
       if ($set_enabled) {
@@ -166,19 +159,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function save(): int {
-    $return = parent::save();
-    if (!\Drupal::moduleHandler()->moduleExists('layout_builder_expose_all_field_blocks')) {
-      // Invalidate the block cache in order to regenerate field block
-      // definitions.
-      \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
-    }
-    return $return;
-  }
-
-  /**
    * Removes a layout section field if it is no longer needed.
    *
    * Because the field is shared across all view modes, the field will only be
@@ -192,9 +172,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    *   The name for the layout section field.
    */
   protected function removeSectionField($entity_type_id, $bundle, $field_name) {
-    /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */
-    $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
-    $query = $storage->getQuery()
+    $query = $this->entityTypeManager()->getStorage($this->getEntityTypeId())->getQuery()
       ->condition('targetEntityType', $this->getTargetEntityTypeId())
       ->condition('bundle', $this->getTargetBundle())
       ->condition('mode', $this->getMode(), '<>')
@@ -233,7 +211,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
       $field = FieldConfig::create([
         'field_storage' => $field_storage,
         'bundle' => $bundle,
-        'label' => $this->t('Layout'),
+        'label' => t('Layout'),
       ]);
       $field->setTranslatable(FALSE);
       $field->save();
@@ -323,6 +301,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   protected function buildSections(FieldableEntityInterface $entity) {
     $contexts = $this->getContextsForEntity($entity);
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3018782.
     $label = new TranslatableMarkup('@entity being viewed', [
       '@entity' => $entity->getEntityType()->getSingularLabel(),
     ]);
@@ -337,7 +316,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         $build[$delta] = $section->toRenderArray($contexts);
       }
     }
-    // The render array is built based on decisions made by SectionStorage
+    // The render array is built based on decisions made by @SectionStorage
     // plugins and therefore it needs to depend on the accumulated
     // cacheability of those decisions.
     $cacheability->applyTo($build);

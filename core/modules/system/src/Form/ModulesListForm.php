@@ -17,12 +17,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\Utility\Xss;
 
 /**
  * Provides module installation interface.
@@ -209,8 +207,7 @@ class ModulesListForm extends FormBase {
     foreach (Element::children($form['modules']) as $package) {
       $form['modules'][$package] += [
         '#type' => 'details',
-        // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-        '#title' => Markup::create(Xss::filterAdmin($this->t($package))),
+        '#title' => $this->t($package),
         '#open' => TRUE,
         '#theme' => 'system_modules_details',
         '#attributes' => ['class' => ['package-listing']],
@@ -247,7 +244,7 @@ class ModulesListForm extends FormBase {
    *   The list existing modules.
    * @param \Drupal\Core\Extension\Extension $module
    *   The module for which to build the form row.
-   * @param string $distribution
+   * @param $distribution
    *   The distribution.
    *
    * @return array
@@ -275,8 +272,7 @@ class ModulesListForm extends FormBase {
           ])
         )->toString();
     }
-    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
-    $row['description']['#markup'] = (string) $this->t($module->info['description']);
+    $row['description']['#markup'] = $this->t($module->info['description']);
     $row['version']['#markup'] = $module->info['version'];
 
     // Generate link for module's help page. Assume that if a hook_help()
@@ -328,8 +324,7 @@ class ModulesListForm extends FormBase {
 
     // Disable the checkbox for required modules.
     if (!empty($module->info['required'])) {
-      // Used when displaying modules that are required by the installation
-      // profile
+      // Used when displaying modules that are required by the installation profile
       $row['enable']['#disabled'] = TRUE;
       $row['#required_by'][] = $distribution . (!empty($module->info['explanation']) ? ' (' . $module->info['explanation'] . ')' : '');
     }
@@ -353,8 +348,7 @@ class ModulesListForm extends FormBase {
       ]);
     }
 
-    // Ensure this module is compatible with the currently installed version of
-    // PHP.
+    // Ensure this module is compatible with the currently installed version of PHP.
     if (version_compare(phpversion(), $module->info['php']) < 0) {
       $compatible = FALSE;
       $required = $module->info['php'] . (substr_count($module->info['php'], '.') < 2 ? '.*' : '');

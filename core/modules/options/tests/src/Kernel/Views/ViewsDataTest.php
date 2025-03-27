@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\options\Kernel\Views;
 
 use Drupal\field\Entity\FieldConfig;
@@ -50,7 +48,7 @@ class ViewsDataTest extends OptionsTestBase {
       'type' => 'list_string',
       'cardinality' => 1,
       'settings' => [
-        'allowed_values_function' => '\Drupal\options_test\OptionsAllowedValues::dynamicValues',
+        'allowed_values_function' => 'options_test_dynamic_values_callback',
       ],
     ]);
     $this->fieldStorage->save();
@@ -66,7 +64,7 @@ class ViewsDataTest extends OptionsTestBase {
   /**
    * Tests the option module's implementation of hook_field_views_data().
    */
-  public function testOptionsFieldViewsData(): void {
+  public function testOptionsFieldViewsData() {
     $field_data = \Drupal::service('views.views_data')->get('entity_test__test_options');
 
     // Check that the options module has properly overridden default views data.

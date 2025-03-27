@@ -1,11 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\file\Functional;
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\node\Entity\Node;
 use Drupal\file\Entity\File;
 use Drupal\entity_test\Entity\EntityTestConstraints;
@@ -19,7 +15,9 @@ use Drupal\user\Entity\Role;
 class FileListingTest extends FileFieldTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['views', 'file', 'image', 'entity_test'];
 
@@ -58,13 +56,13 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * Calculates total count of usages for a file.
    *
-   * @param array $usage
+   * @param $usage array
    *   Array of file usage information as returned from file_usage subsystem.
    *
    * @return int
    *   Total usage count.
    */
-  protected function sumUsages($usage): int {
+  protected function sumUsages($usage) {
     $count = 0;
     foreach ($usage as $module) {
       foreach ($module as $entity_type) {
@@ -80,7 +78,7 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * Tests file overview with different user permissions.
    */
-  public function testFileListingPages(): void {
+  public function testFileListingPages() {
     $file_usage = $this->container->get('file.usage');
     // Users without sufficient permissions should not see file listing.
     $this->drupalLogin($this->baseUser);
@@ -210,13 +208,13 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * Tests file listing usage page for entities with no canonical link template.
    */
-  public function testFileListingUsageNoLink(): void {
+  public function testFileListingUsageNoLink() {
     // Login with user with right permissions and test listing.
     $this->drupalLogin($this->adminUser);
 
     // Create a bundle and attach a File field to the bundle.
     $bundle = $this->randomMachineName();
-    EntityTestHelper::createBundle($bundle, NULL, 'entity_test_constraints');
+    entity_test_create_bundle($bundle, NULL, 'entity_test_constraints');
     $this->createFileField('field_test_file', 'entity_test_constraints', $bundle, [], ['file_extensions' => 'txt png']);
 
     // Create file to attach to entity.
@@ -249,7 +247,8 @@ class FileListingTest extends FileFieldTestBase {
     $this->drupalGet('admin/content/files/usage/' . $file->id());
 
     $this->assertSession()->statusCodeEquals(200);
-    // Entity name should be displayed.
+    // Entity name should be displayed, but not linked if Entity::toUrl
+    // throws an exception
     $this->assertSession()->pageTextContains($entity_name);
     $this->assertSession()->linkNotExists($entity_name, 'Linked entity name not added to file usage listing.');
     $this->assertSession()->linkExists($node->getTitle());
@@ -261,7 +260,7 @@ class FileListingTest extends FileFieldTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   A file entity.
    */
-  protected function createFile(): EntityInterface {
+  protected function createFile() {
     // Create a new file entity.
     $file = File::create([
       'uid' => 1,

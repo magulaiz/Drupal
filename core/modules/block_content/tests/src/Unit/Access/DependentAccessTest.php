@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block_content\Unit\Access;
 
 use Drupal\block_content\Access\AccessGroupAnd;
@@ -50,7 +48,7 @@ class DependentAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetFirst
    */
-  public function testSetAccessDependency($use_set_first): void {
+  public function testSetAccessDependency($use_set_first) {
     $testRefinable = new RefinableDependentAccessTraitTestClass();
 
     if ($use_set_first) {
@@ -77,7 +75,7 @@ class DependentAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetFirst
    */
-  public function testMergeNonGroup($use_set_first): void {
+  public function testMergeNonGroup($use_set_first) {
     $testRefinable = new RefinableDependentAccessTraitTestClass();
     if ($use_set_first) {
       $testRefinable->setAccessDependency($this->forbidden);
@@ -109,7 +107,7 @@ class DependentAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestSetFirst
    */
-  public function testMergeGroup($use_set_first): void {
+  public function testMergeGroup($use_set_first) {
     $andGroup = new AccessGroupAnd();
     $andGroup->addDependency($this->forbidden);
     $testRefinable = new RefinableDependentAccessTraitTestClass();
@@ -142,7 +140,7 @@ class DependentAccessTest extends UnitTestCase {
    * mergeAccessDependency() first. A call to either should behave the same on a
    * new RefinableDependentAccessInterface object.
    */
-  public static function providerTestSetFirst() {
+  public function providerTestSetFirst() {
     return [
       [TRUE],
       [FALSE],

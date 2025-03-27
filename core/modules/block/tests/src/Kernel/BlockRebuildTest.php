@@ -1,14 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
-use Drupal\block\Hook\BlockHooks;
 
 /**
  * Tests block_rebuild().
@@ -27,17 +24,6 @@ class BlockRebuildTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $configSchemaCheckerExclusions = [
-    // These blocks are intentionally put into invalid regions, so they will
-    // violate config schema.
-    // @see ::testRebuildInvalidBlocks()
-    'block.block.invalid_block1',
-    'block.block.invalid_block2',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -46,40 +32,45 @@ class BlockRebuildTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\block\Hook\BlockHooks::rebuild
+   * {@inheritdoc}
    */
-  public function testRebuildNoBlocks(): void {
-    $blockRebuild = new BlockHooks();
-    $blockRebuild->rebuild();
+  public static function setUpBeforeClass(): void {
+    parent::setUpBeforeClass();
+
+    // @todo Once block_rebuild() is refactored to auto-loadable code, remove
+    //   this require statement.
+    require_once static::getDrupalRoot() . '/core/modules/block/block.module';
+  }
+
+  /**
+   * @covers ::block_rebuild
+   */
+  public function testRebuildNoBlocks() {
+    block_rebuild();
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
   }
 
   /**
-   * @covers \Drupal\block\Hook\BlockHooks::rebuild
+   * @covers ::block_rebuild
    */
-  public function testRebuildNoInvalidBlocks(): void {
+  public function testRebuildNoInvalidBlocks() {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
 
-    $blockRebuild = new BlockHooks();
-    $blockRebuild->rebuild();
+    block_rebuild();
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
   }
 
   /**
-   * @covers \Drupal\block\Hook\BlockHooks::rebuild
+   * @covers ::block_rebuild
    */
-  public function testRebuildInvalidBlocks(): void {
+  public function testRebuildInvalidBlocks() {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
-    $block1 = $this->placeBlock('system_powered_by_block', [
-      'id' => 'invalid_block1',
-    ]);
-    $block2 = $this->placeBlock('system_powered_by_block', [
-      'id' => 'invalid_block2',
-    ]);
+    $block1 = $this->placeBlock('system_powered_by_block');
+    $block2 = $this->placeBlock('system_powered_by_block');
     $block2->disable()->save();
     // Use the config API directly to bypass Block::preSave().
     \Drupal::configFactory()->getEditable('block.block.' . $block1->id())->set('region', 'INVALID')->save();
@@ -94,8 +85,7 @@ class BlockRebuildTest extends KernelTestBase {
     $this->assertSame('INVALID', $block2->getRegion());
     $this->assertFalse($block2->status());
 
-    $blockRebuild = new BlockHooks();
-    $blockRebuild->rebuild();
+    block_rebuild();
 
     // Reload block entities.
     $block1 = Block::load($block1->id());
@@ -103,14 +93,7 @@ class BlockRebuildTest extends KernelTestBase {
 
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
-    $expected = [
-      'warning' => [
-        new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', [
-          '%info' => $block1->id(),
-          '%region' => 'INVALID',
-        ]),
-      ],
-    ];
+    $expected = ['warning' => [new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block1->id(), '%region' => 'INVALID'])]];
     $this->assertEquals($expected, $messages);
 
     $default_region = system_default_region('stark');

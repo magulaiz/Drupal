@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -18,7 +16,9 @@ class CacheContextOptimizationTest extends KernelTestBase {
   use UserCreationTrait;
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var string[]
    */
   protected static $modules = ['user', 'system'];
 
@@ -29,12 +29,13 @@ class CacheContextOptimizationTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installConfig(['user']);
+    $this->installSchema('system', ['sequences']);
   }
 
   /**
    * Ensures that 'user.permissions' cache context is able to define cache tags.
    */
-  public function testUserPermissionCacheContextOptimization(): void {
+  public function testUserPermissionCacheContextOptimization() {
     $user1 = $this->createUser();
     $this->assertEquals(1, $user1->id());
 
@@ -77,7 +78,7 @@ class CacheContextOptimizationTest extends KernelTestBase {
   /**
    * Ensures that 'user.roles' still works when it is optimized away.
    */
-  public function testUserRolesCacheContextOptimization(): void {
+  public function testUserRolesCacheContextOptimization() {
     $root_user = $this->createUser();
     $this->assertEquals(1, $root_user->id());
 
@@ -107,7 +108,8 @@ class CacheContextOptimizationTest extends KernelTestBase {
     // cache context, the element should have been changed because 'user.roles'
     // cache context defined a cache tag for user entity changes, which should
     // have bubbled up for the element when it was optimized away.
-    $authenticated_user->removeRole($role)->save();
+    $authenticated_user->removeRole($role);
+    $authenticated_user->save();
     $element = $test_element;
     $element['#markup'] = 'this should be visible';
     $output = \Drupal::service('renderer')->renderRoot($element);

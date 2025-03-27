@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
-use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate_drupal\NodeMigrateType;
 use Drupal\node\Entity\Node;
@@ -46,7 +43,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
   /**
    * The entity storage for node.
    *
-   * @var \Drupal\Core\Entity\RevisionableStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $nodeStorage;
 
@@ -65,6 +62,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('taxonomy_term');
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installSchema('node', ['node_access']);
+    $this->installSchema('system', ['sequences']);
 
     $this->createContent();
 
@@ -88,10 +86,10 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getFileMigrationInfo(): array {
+  protected function getFileMigrationInfo() {
     return [
       'path' => 'public://sites/default/files/cube.jpeg',
-      'size' => 3620,
+      'size' => '3620',
       'base_path' => 'public://',
       'plugin_id' => 'd7_file',
     ];
@@ -100,7 +98,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
   /**
    * Tests the complete node migration.
    */
-  public function testNodeCompleteMigration(): void {
+  public function testNodeCompleteMigration() {
     // Confirm there are only complete node migration map tables. This shows
     // that only the complete migration ran.
     $results = $this->nodeMigrateMapTableCount('7');
@@ -113,14 +111,14 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
       ->orderBy('vid')
       ->orderBy('langcode')
       ->execute()
-      ->fetchAll(FetchAs::Associative));
+      ->fetchAll(\PDO::FETCH_ASSOC));
     $this->assertEquals($this->expectedNodeFieldDataTable(), $db->select('node_field_data', 'nr')
       ->fields('nr')
       ->orderBy('nid')
       ->orderBy('vid')
       ->orderBy('langcode')
       ->execute()
-      ->fetchAll(FetchAs::Associative));
+      ->fetchAll(\PDO::FETCH_ASSOC));
 
     // Load and test each revision.
     $data = $this->expectedRevisionEntityData()[0];
@@ -162,7 +160,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
   /**
    * Tests rollback of the complete node migration.
    */
-  public function testRollbackNodeComplete(): void {
+  public function testRollbackNodeComplete() {
     $db = \Drupal::database();
     $node_types = [
       'article',
@@ -222,7 +220,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
    * @return array
    *   The expected table rows.
    */
-  protected function expectedNodeFieldDataTable(): array {
+  protected function expectedNodeFieldDataTable() {
     return [
       0 =>
         [
@@ -467,7 +465,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
    * @return array
    *   The table.
    */
-  protected function expectedNodeFieldRevisionTable(): array {
+  protected function expectedNodeFieldRevisionTable() {
     return [
       0 =>
         [
@@ -1005,9 +1003,9 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
    * @return array
    *   Selected properties and fields on the revision.
    */
-  protected function expectedRevisionEntityData(): array {
+  protected function expectedRevisionEntityData() {
     return [
-      [
+      $revision_data = [
         // Node 1, revision 1, en.
         0 =>
           [

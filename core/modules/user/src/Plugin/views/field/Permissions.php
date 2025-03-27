@@ -4,7 +4,6 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
@@ -14,8 +13,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Field handler to provide a list of permissions.
  *
  * @ingroup views_field_handlers
+ *
+ * @ViewsField("user_permissions")
  */
-#[ViewsField("user_permissions")]
 class Permissions extends PrerenderList {
 
   /**
@@ -38,7 +38,7 @@ class Permissions extends PrerenderList {
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin ID for the plugin instance.
+   *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -69,23 +69,17 @@ class Permissions extends PrerenderList {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $this->additional_fields['uid'] = ['table' => 'users_field_data', 'field' => 'uid'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function query() {
     $this->addAdditionalFields();
     $this->field_alias = $this->aliases['uid'];
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function preRender(&$values) {
     $this->items = [];
 
@@ -93,14 +87,11 @@ class Permissions extends PrerenderList {
 
     $rids = [];
     foreach ($values as $result) {
-      $user = $this->getEntity($result);
-      if ($user) {
-        $user_rids = $user->getRoles();
-        $uid = $this->getValue($result);
+      $user_rids = $this->getEntity($result)->getRoles();
+      $uid = $this->getValue($result);
 
-        foreach ($user_rids as $rid) {
-          $rids[$rid][] = $uid;
-        }
+      foreach ($user_rids as $rid) {
+        $rids[$rid][] = $uid;
       }
     }
 
@@ -120,9 +111,6 @@ class Permissions extends PrerenderList {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
   public function render_item($count, $item) {
     return $item['permission'];
   }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\menu_ui\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -52,7 +50,6 @@ class MenuUiNodeTypeTest extends KernelTestBase {
    * Tests node type-specific settings for Menu UI.
    */
   public function testContentTypeMenuSettings(): void {
-    $this->installEntitySchema('node');
     $this->installConfig(['node']);
     Menu::create(['id' => 'a', 'label' => 'Z'])->save();
     Menu::create(['id' => 'b', 'label' => 'X'])->save();

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Core\Config\FileStorage;
@@ -43,22 +41,22 @@ class FileStorageTest extends ConfigStorageTestBase {
     return Yaml::decode($data);
   }
 
-  protected function insert($name, $data): void {
+  protected function insert($name, $data) {
     file_put_contents($this->storage->getFilePath($name), $data);
   }
 
-  protected function update($name, $data): void {
+  protected function update($name, $data) {
     file_put_contents($this->storage->getFilePath($name), $data);
   }
 
-  protected function delete($name): void {
+  protected function delete($name) {
     unlink($this->storage->getFilePath($name));
   }
 
   /**
    * Tests the FileStorage::listAll method with a relative and absolute path.
    */
-  public function testListAll(): void {
+  public function testlistAll() {
     $expected_files = [
       'core.extension',
       'system.performance',
@@ -77,7 +75,7 @@ class FileStorageTest extends ConfigStorageTestBase {
   /**
    * Tests UnsupportedDataTypeConfigException.
    */
-  public function testUnsupportedDataTypeConfigException(): void {
+  public function testUnsupportedDataTypeConfigException() {
     $name = 'core.extension';
     $path = $this->storage->getFilePath($name);
     $this->expectException(UnsupportedDataTypeConfigException::class);

@@ -2,19 +2,18 @@
 
 namespace Drupal\field\Plugin\migrate\process\d6;
 
-use Drupal\Component\Utility\FilterArray;
-use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
  * Determines the allowed values translation for select lists.
+ *
+ * @MigrateProcessPlugin(
+ *   id = "d6_field_option_translation",
+ *   handle_multiples = TRUE
+ * )
  */
-#[MigrateProcess(
-  id: "d6_field_option_translation",
-  handle_multiples: TRUE,
-)]
 class FieldOptionTranslation extends ProcessPluginBase {
 
   /**
@@ -30,7 +29,7 @@ class FieldOptionTranslation extends ProcessPluginBase {
     if (isset($global_settings['allowed_values'])) {
       $list = explode("\n", $global_settings['allowed_values']);
       $list = array_map('trim', $list);
-      $list = FilterArray::removeEmptyStrings($list);
+      $list = array_filter($list, 'strlen');
       switch ($field_type) {
         case 'list_string':
         case 'list_integer':

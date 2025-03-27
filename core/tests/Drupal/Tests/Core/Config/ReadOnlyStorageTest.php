@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\MemoryStorage;
@@ -9,7 +7,6 @@ use Drupal\Core\Config\ReadOnlyStorage;
 use Drupal\Core\Config\StorageCopyTrait;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\TestTools\Random;
 
 /**
  * @coversDefaultClass \Drupal\Core\Config\ReadOnlyStorage
@@ -37,8 +34,6 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     // Set up a memory storage we can manipulate to set fixtures.
     $this->memory = new MemoryStorage();
     // Wrap the memory storage in the read-only storage to test it.
@@ -53,7 +48,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    *
    * @dataProvider readMethodsProvider
    */
-  public function testReadOperations($method, $arguments, $fixture): void {
+  public function testReadOperations($method, $arguments, $fixture) {
     $this->setRandomFixtureConfig($fixture);
 
     $expected = call_user_func_array([$this->memory, $method], $arguments);
@@ -67,7 +62,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * @return array
    *   The data.
    */
-  public static function readMethodsProvider() {
+  public function readMethodsProvider() {
     $fixture = [
       StorageInterface::DEFAULT_COLLECTION => ['config.a', 'config.b', 'other.a'],
     ];
@@ -93,7 +88,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    *
    * @dataProvider writeMethodsProvider
    */
-  public function testWriteOperations($method, $arguments, $fixture): void {
+  public function testWriteOperations($method, $arguments, $fixture) {
     $this->setRandomFixtureConfig($fixture);
 
     // Create an independent memory storage as a backup.
@@ -118,19 +113,19 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * @return array
    *   The data
    */
-  public static function writeMethodsProvider() {
+  public function writeMethodsProvider() {
     $fixture = [
       StorageInterface::DEFAULT_COLLECTION => ['config.a', 'config.b'],
     ];
 
     $data = [];
-    $data[] = ['write', ['config.a', (array) Random::getGenerator()->object()], $fixture];
-    $data[] = ['write', [Random::machineName(), (array) Random::getGenerator()->object()], $fixture];
+    $data[] = ['write', ['config.a', (array) $this->getRandomGenerator()->object()], $fixture];
+    $data[] = ['write', [$this->randomMachineName(), (array) $this->getRandomGenerator()->object()], $fixture];
     $data[] = ['delete', ['config.a'], $fixture];
-    $data[] = ['delete', [Random::machineName()], $fixture];
+    $data[] = ['delete', [$this->randomMachineName()], $fixture];
     $data[] = ['rename', ['config.a', 'config.b'], $fixture];
-    $data[] = ['rename', ['config.a', Random::machineName()], $fixture];
-    $data[] = ['rename', [Random::machineName(), Random::machineName()], $fixture];
+    $data[] = ['rename', ['config.a', $this->randomMachineName()], $fixture];
+    $data[] = ['rename', [$this->randomMachineName(), $this->randomMachineName()], $fixture];
     $data[] = ['deleteAll', [''], $fixture];
     $data[] = ['deleteAll', ['config'], $fixture];
     $data[] = ['deleteAll', ['other'], $fixture];
@@ -143,7 +138,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * @covers ::getCollectionName
    * @covers ::createCollection
    */
-  public function testCollections(): void {
+  public function testCollections() {
     $fixture = [
       StorageInterface::DEFAULT_COLLECTION => [$this->randomMachineName()],
       'A' => [$this->randomMachineName()],
@@ -165,7 +160,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * @covers ::encode
    * @covers ::decode
    */
-  public function testEncodeDecode(): void {
+  public function testEncodeDecode() {
     $array = (array) $this->getRandomGenerator()->object();
     $string = $this->getRandomGenerator()->string();
 
@@ -183,7 +178,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    * @param array $config
    *   The config keys, keyed by the collection.
    */
-  protected function setRandomFixtureConfig($config): void {
+  protected function setRandomFixtureConfig($config) {
     // Erase previous fixture.
     foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $this->memory->getAllCollectionNames()) as $collection) {
       $this->memory->createCollection($collection)->deleteAll();

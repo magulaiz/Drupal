@@ -50,7 +50,8 @@ class TwigEnvironment extends Environment {
   protected $twigCachePrefix = '';
 
   /**
-   * Creates a TwigEnvironment object, including its cache and storage.
+   * Constructs a TwigEnvironment object and stores cache and storage
+   * internally.
    *
    * @param string $root
    *   The app root.
@@ -194,7 +195,7 @@ class TwigEnvironment extends Environment {
    * @return string
    *   The template class name.
    */
-  public function getTemplateClass(string $name, ?int $index = NULL): string {
+  public function getTemplateClass(string $name, int $index = NULL): string {
     // We override this method to add caching because it gets called multiple
     // times when the same template is used more than once. For example, a page
     // rendering 50 nodes without any node template overrides will use the same

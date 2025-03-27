@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\field\Plugin\migrate\source\d6\FieldInstance;
@@ -9,8 +7,7 @@ use Drupal\field_discovery_test\FieldDiscoveryTestClass;
 use Drupal\migrate_drupal\FieldDiscoveryInterface;
 use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 
-// cspell:ignore filefield imagefield imagelink nodelink nodereference
-// cspell:ignore selectlist spamspan userreference
+// cspell:ignore filefield imagefield imagelink nodelink selectlist spamspan
 
 /**
  * Tests FieldDiscovery service against Drupal 6.
@@ -86,13 +83,12 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    *
    * @covers ::addAllFieldProcesses
    */
-  public function testAddAllFieldProcesses(): void {
+  public function testAddAllFieldProcesses() {
     $expected_process_keys = [
       'field_commander',
       'field_company',
       'field_company_2',
       'field_company_3',
-      'field_company_4',
       'field_sync',
       'field_multivalue',
       'field_test_text_single_checkbox',
@@ -128,7 +124,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    * @covers ::addAllFieldProcesses
    * @dataProvider addAllFieldProcessesAltersData
    */
-  public function testAddAllFieldProcessesAlters($field_plugin_method, $expected_process): void {
+  public function testAddAllFieldProcessesAlters($field_plugin_method, $expected_process) {
     $this->assertFieldProcess($this->fieldDiscovery, $this->migrationPluginManager, FieldDiscoveryInterface::DRUPAL_6, $field_plugin_method, $expected_process);
   }
 
@@ -138,7 +134,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    * @return array
    *   The data.
    */
-  public static function addAllFieldProcessesAltersData() {
+  public function addAllFieldProcessesAltersData() {
     return [
       'Field Formatter' => [
         'field_plugin_method' => 'alterFieldFormatterMigration',
@@ -221,7 +217,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    *
    * @covers ::addAllFieldProcesses
    */
-  public function testAddFields(): void {
+  public function testAddFields() {
     $this->migrateFields();
     $field_discovery = $this->container->get('migrate_drupal.field_discovery');
     $migration_plugin_manager = $this->container->get('plugin.manager.migration');
@@ -278,7 +274,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    *
    * @covers ::getAllFields
    */
-  public function testGetAllFields(): void {
+  public function testGetAllFields() {
     $field_discovery_test = new FieldDiscoveryTestClass($this->fieldPluginManager, $this->migrationPluginManager, $this->logger);
     $actual_fields = $field_discovery_test->getAllFields('6');
     $actual_node_types = array_keys($actual_fields['node']);
@@ -287,7 +283,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
     $this->assertSame(['employee', 'page', 'story', 'test_page', 'test_planet'], $actual_node_types);
     $this->assertCount(25, $actual_fields['node']['story']);
     foreach ($actual_fields['node'] as $bundle => $fields) {
-      foreach ($fields as $field_info) {
+      foreach ($fields as $field_name => $field_info) {
         $this->assertArrayHasKey('type', $field_info);
         $this->assertCount(22, $field_info);
         $this->assertEquals($bundle, $field_info['type_name']);
@@ -300,20 +296,18 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    *
    * @covers ::getSourcePlugin
    */
-  public function testGetSourcePlugin(): void {
+  public function testGetSourcePlugin() {
     $this->assertSourcePlugin('6', FieldInstance::class, [
-      'class' => 'Drupal\\field\\Plugin\\migrate\\source\\d6\\FieldInstance',
-      'provider' => 'field',
+      'requirements_met' => TRUE,
       'id' => 'd6_field_instance',
-      'providers' => [
+      'source_module' => 'content',
+      'class' => 'Drupal\\field\\Plugin\\migrate\\source\\d6\\FieldInstance',
+      'provider' => [
         0 => 'field',
         1 => 'migrate_drupal',
         2 => 'migrate',
         4 => 'core',
       ],
-      'source_module' => 'content',
-      'requirements_met' => TRUE,
-      'minimum_version' => NULL,
     ]);
   }
 

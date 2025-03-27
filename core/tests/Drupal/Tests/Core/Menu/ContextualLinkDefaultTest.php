@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\ContextualLinkDefault;
@@ -61,16 +59,15 @@ class ContextualLinkDefaultTest extends UnitTestCase {
     $this->stringTranslation = $this->createMock('Drupal\Core\StringTranslation\TranslationInterface');
   }
 
-  protected function setupContextualLinkDefault(): void {
+  protected function setupContextualLinkDefault() {
     $this->contextualLinkDefault = new ContextualLinkDefault($this->config, $this->pluginId, $this->pluginDefinition);
   }
 
   /**
    * @covers ::getTitle
    */
-  public function testGetTitle(): void {
+  public function testGetTitle() {
     $title = 'Example';
-    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $this->pluginDefinition['title'] = (new TranslatableMarkup($title, [], [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
@@ -84,9 +81,8 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getTitle
    */
-  public function testGetTitleWithContext(): void {
+  public function testGetTitleWithContext() {
     $title = 'Example';
-    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $this->pluginDefinition['title'] = (new TranslatableMarkup($title, [], ['context' => 'context'], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
@@ -100,9 +96,8 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getTitle
    */
-  public function testGetTitleWithTitleArguments(): void {
+  public function testGetTitleWithTitleArguments() {
     $title = 'Example @test';
-    // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $this->pluginDefinition['title'] = (new TranslatableMarkup($title, ['@test' => 'value'], [], $this->stringTranslation));
     $this->stringTranslation->expects($this->once())
       ->method('translateString')
@@ -117,7 +112,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getRouteName
    */
-  public function testGetRouteName($route_name = 'test_route_name'): void {
+  public function testGetRouteName($route_name = 'test_route_name') {
     $this->pluginDefinition['route_name'] = $route_name;
     $this->setupContextualLinkDefault();
 
@@ -127,7 +122,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getGroup
    */
-  public function testGetGroup($group_name = 'test_group'): void {
+  public function testGetGroup($group_name = 'test_group') {
     $this->pluginDefinition['group'] = $group_name;
     $this->setupContextualLinkDefault();
 
@@ -137,7 +132,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getOptions
    */
-  public function testGetOptions($options = ['key' => 'value']): void {
+  public function testGetOptions($options = ['key' => 'value']) {
     $this->pluginDefinition['options'] = $options;
     $this->setupContextualLinkDefault();
 
@@ -147,7 +142,7 @@ class ContextualLinkDefaultTest extends UnitTestCase {
   /**
    * @covers ::getWeight
    */
-  public function testGetWeight($weight = 5): void {
+  public function testGetWeight($weight = 5) {
     $this->pluginDefinition['weight'] = $weight;
     $this->setupContextualLinkDefault();
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\comment\Kernel\Views;
 
 use Drupal\comment\Entity\Comment;
@@ -53,19 +51,17 @@ class CommentFieldNameTest extends KernelTestBase {
   /**
    * Tests comment field name.
    */
-  public function testCommentFieldName(): void {
+  public function testCommentFieldName() {
     $renderer = $this->container->get('renderer');
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('comment');
+    $this->installSchema('system', ['sequences']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['filter']);
 
-    NodeType::create([
-      'type' => 'page',
-      'name' => 'Page',
-    ])->save();
+    NodeType::create(['type' => 'page'])->save();
     FieldStorageConfig::create([
       'type' => 'text_long',
       'entity_type' => 'comment',

@@ -2,11 +2,10 @@
 
 namespace Drupal\field\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
-// cspell:ignore cnfi nodeapi nsync
+// cspell:ignore nodeapi
 
 /**
  * Drupal 6 field instances source from database.
@@ -31,11 +30,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_field_instance",
+ *   source_module = "content"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_field_instance',
-  source_module: 'content',
-)]
 class FieldInstance extends DrupalSqlBase {
 
   /**

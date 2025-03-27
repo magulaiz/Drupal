@@ -4,15 +4,12 @@ namespace Drupal\node\Plugin\migrate\source\d6;
 
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\State\StateInterface;
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
-// cspell:ignore cnfi tnid
 
 /**
  * Drupal 6 node source from database.
@@ -44,11 +41,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ *
+ * @MigrateSource(
+ *   id = "d6_node",
+ *   source_module = "node"
+ * )
  */
-#[MigrateSource(
-  id: 'd6_node',
-  source_module: 'node',
-)]
 class Node extends DrupalSqlBase {
 
   /**
@@ -73,14 +71,14 @@ class Node extends DrupalSqlBase {
   /**
    * The module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\Core\Extension\ModuleHandler
    */
   protected $moduleHandler;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, StateInterface $state, EntityTypeManagerInterface $entity_type_manager, ModuleHandler $module_handler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration, $state, $entity_type_manager);
     $this->moduleHandler = $module_handler;
   }
@@ -88,7 +86,7 @@ class Node extends DrupalSqlBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, ?MigrationInterface $migration = NULL) {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
     return new static(
       $configuration,
       $plugin_id,
@@ -186,7 +184,7 @@ class Node extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    // Format = 0 can happen when the body field is hidden. Set the format to 1
+    // format = 0 can happen when the body field is hidden. Set the format to 1
     // to avoid migration map issues (since the body field isn't used anyway).
     if ($row->getSourceProperty('format') === '0') {
       $row->setSourceProperty('format', $this->filterDefaultFormat);
@@ -249,7 +247,7 @@ class Node extends DrupalSqlBase {
       foreach ($this->fieldInfo as $type => $fields) {
         foreach ($fields as $field => $info) {
           foreach ($info as $property => $value) {
-            if ($property == 'db_columns' || str_ends_with($property, '_settings')) {
+            if ($property == 'db_columns' || preg_match('/_settings$/', $property)) {
               $this->fieldInfo[$type][$field][$property] = unserialize($value);
             }
           }

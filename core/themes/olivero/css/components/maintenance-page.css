@@ -11,6 +11,7 @@
  */
 
 @media (min-width: 75rem) {
+
   .maintenance-page .site-header__initial {
     flex-shrink: 0;
     width: var(--content-left);

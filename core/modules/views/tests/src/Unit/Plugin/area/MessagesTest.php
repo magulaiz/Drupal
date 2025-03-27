@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
 use Drupal\Tests\UnitTestCase;
@@ -42,7 +40,7 @@ class MessagesTest extends UnitTestCase {
    * @covers ::defineOptions
    * @covers ::render
    */
-  public function testRender(): void {
+  public function testRender() {
     // The handler is configured to show with empty views by default, so should
     // appear.
     $this->assertSame(['#type' => 'status_messages'], $this->messagesHandler->render());

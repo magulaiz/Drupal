@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Template\Loader;
 
 use Drupal\Core\Template\Loader\ThemeRegistryLoader;
@@ -16,7 +14,7 @@ class ThemeRegistryLoaderTest extends UnitTestCase {
   /**
    * @covers ::findTemplate
    */
-  public function testLoaderReturnsFalseForExistsOnNonexistent(): void {
+  public function testLoaderReturnsFalseForExistsOnNonexistent() {
     $registry = $this->prophesize('Drupal\Core\Theme\Registry');
     $runtime = $this->prophesize('Drupal\Core\Utility\ThemeRegistry');
     $runtime->has('foo')

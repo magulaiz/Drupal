@@ -58,7 +58,7 @@
       $(once('media-library-menu-item', $menu.find('a')))
         .on('keypress', (e) => {
           // The AJAX link has the button role, so we need to make sure the link
-          // is also triggered when pressing the space bar.
+          // is also triggered when pressing the spacebar.
           if (e.which === 32) {
             e.preventDefault();
             e.stopPropagation();
@@ -76,7 +76,7 @@
             dialogType: 'ajax',
             progress: {
               type: 'fullscreen',
-              message: Drupal.t('Processing...'),
+              message: Drupal.t('Please wait...'),
             },
           });
 
@@ -193,7 +193,7 @@
           dialogType: 'ajax',
           progress: {
             type: 'fullscreen',
-            message: loadingAnnouncement || Drupal.t('Processing...'),
+            message: loadingAnnouncement || Drupal.t('Please wait...'),
           },
         });
 
@@ -309,31 +309,21 @@
         $('.js-media-library-selected-count').html(selectItemsText);
       }
 
-      function checkEnabled() {
-        updateSelectionCount(settings.media_library.selection_remaining);
-        if (
-          currentSelection.length === settings.media_library.selection_remaining
-        ) {
-          disableItems($mediaItems.not(':checked'));
-          enableItems($mediaItems.filter(':checked'));
-        } else {
-          enableItems($mediaItems);
-        }
-      }
       // Update the selection array and the hidden form field when a media item
       // is selected.
       $(once('media-item-change', $mediaItems)).on('change', (e) => {
         const id = e.currentTarget.value;
 
         // Update the selection.
+        const position = currentSelection.indexOf(id);
         if (e.currentTarget.checked) {
           // Check if the ID is not already in the selection and add if needed.
-          if (!currentSelection.includes(id)) {
+          if (position === -1) {
             currentSelection.push(id);
           }
-        } else if (currentSelection.includes(id)) {
+        } else if (position !== -1) {
           // Remove the ID when it is in the current selection.
-          currentSelection.splice(currentSelection.indexOf(id), 1);
+          currentSelection.splice(position, 1);
         }
 
         const mediaLibraryModalSelection = document.querySelector(
@@ -355,7 +345,7 @@
             item.value = currentSelection.join();
           });
       });
-      checkEnabled();
+
       // The hidden selection form field changes when the selection is updated.
       $(
         once(
@@ -363,7 +353,17 @@
           $form.find('#media-library-modal-selection'),
         ),
       ).on('change', (e) => {
-        checkEnabled();
+        updateSelectionCount(settings.media_library.selection_remaining);
+
+        // Prevent users from selecting more items than allowed.
+        if (
+          currentSelection.length === settings.media_library.selection_remaining
+        ) {
+          disableItems($mediaItems.not(':checked'));
+          enableItems($mediaItems.filter(':checked'));
+        } else {
+          enableItems($mediaItems);
+        }
       });
 
       // Apply the current selection to the media library view. Changing the
@@ -381,7 +381,7 @@
       if (!once('media-library-selection-info', 'html').length) {
         return;
       }
-      window.addEventListener('dialog:aftercreate', () => {
+      $(window).on('dialog:aftercreate', () => {
         // Since the dialog HTML is not part of the context, we can't use
         // context here.
         const $buttonPane = $(
@@ -409,7 +409,7 @@
       if (!once('media-library-clear-selection', 'html').length) {
         return;
       }
-      window.addEventListener('dialog:afterclose', () => {
+      $(window).on('dialog:afterclose', () => {
         Drupal.MediaLibrary.currentSelection = [];
       });
     },

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\datetime_range\Kernel\Views;
 
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
@@ -32,7 +30,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
    *
    * @var string
    */
-  protected static $fieldType = 'daterange';
+  protected static $field_type = 'daterange';
 
   /**
    * {@inheritdoc}
@@ -59,7 +57,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     static::$date = $this->getUTCEquivalentOfUserNowAsTimestamp();
 
     // Change field storage to date-only.
-    $storage = FieldStorageConfig::load('node.' . static::$fieldName);
+    $storage = FieldStorageConfig::load('node.' . static::$field_name);
     $storage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE);
     $storage->save();
 
@@ -105,9 +103,9 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     // Add end date filter to the test_filter_datetime view.
     /** @var \Drupal\views\Entity\View $view */
     $view = \Drupal::entityTypeManager()->getStorage('view')->load('test_filter_datetime');
-    $field_end = static::$fieldName . '_end_value';
+    $field_end = static::$field_name . '_end_value';
     $display = $view->getDisplay('default');
-    $filter_end_date = $display['display_options']['filters'][static::$fieldName . '_value'];
+    $filter_end_date = $display['display_options']['filters'][static::$field_name . '_value'];
     $filter_end_date['id'] = $field_end;
     $filter_end_date['field'] = $field_end;
 
@@ -118,10 +116,10 @@ class FilterDateTest extends DateTimeHandlerTestBase {
   /**
    * Tests offsets with date-only fields.
    */
-  public function testDateOffsets(): void {
+  public function testDateOffsets() {
     $view = Views::getView('test_filter_datetime');
-    $field_start = static::$fieldName . '_value';
-    $field_end = static::$fieldName . '_end_value';
+    $field_start = static::$field_name . '_value';
+    $field_end = static::$field_name . '_end_value';
 
     // Test simple operations.
     $view->initHandlers();

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\editor\Functional\Rest;
 
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
@@ -10,7 +8,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
- * Resource test base for Editor entity.
+ * ResourceTestBase for Editor entity.
  */
 abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
 
@@ -63,19 +61,16 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
     $camelids = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
-      'image_upload' => [
-        'status' => FALSE,
-      ],
     ]);
     $camelids
       ->setImageUploadSettings([
-        'status' => TRUE,
+        'status' => FALSE,
         'scheme' => 'public',
         'directory' => 'inline-images',
-        'max_size' => NULL,
+        'max_size' => '',
         'max_dimensions' => [
-          'width' => NULL,
-          'height' => NULL,
+          'width' => '',
+          'height' => '',
         ],
       ])
       ->save();
@@ -99,10 +94,10 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
       'editor' => 'ckeditor5',
       'format' => 'llama',
       'image_upload' => [
-        'status' => TRUE,
+        'status' => FALSE,
         'scheme' => 'public',
         'directory' => 'inline-images',
-        'max_size' => NULL,
+        'max_size' => '',
         'max_dimensions' => [
           'width' => NULL,
           'height' => NULL,

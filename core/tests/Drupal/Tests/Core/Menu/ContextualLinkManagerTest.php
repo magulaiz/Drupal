@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Component\Plugin\Exception\PluginException;
@@ -13,7 +11,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\ContextualLinkDefault;
 use Drupal\Core\Menu\ContextualLinkManager;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\Argument;
+use PHPUnit\Framework\Constraint\Count;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -46,7 +44,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\Prophecy\Prophecy\ObjectProphecy
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
@@ -68,14 +66,16 @@ class ContextualLinkManagerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $language_manager = $this->createMock(LanguageManagerInterface::class);
     $language_manager->expects($this->any())
       ->method('getCurrentLanguage')
       ->willReturn(new Language(['id' => 'en']));
 
-    $this->moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
+    $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
+    $this->moduleHandler->expects($this->any())
+      ->method('getModuleDirectories')
+      ->willReturn([]);
+
     $this->pluginDiscovery = $this->createMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->cacheBackend = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
     $this->accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
@@ -83,7 +83,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
 
     $this->contextualLinkManager = new ContextualLinkManager(
       $this->createMock(ControllerResolverInterface::class),
-      $this->moduleHandler->reveal(),
+      $this->moduleHandler,
       $this->cacheBackend,
       $language_manager,
       $this->accessManager,
@@ -92,6 +92,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
     );
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\ContextualLinkManager', 'discovery');
+    $property->setAccessible(TRUE);
     $property->setValue($this->contextualLinkManager, $this->pluginDiscovery);
   }
 
@@ -100,7 +101,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Menu\ContextualLinkManager::getContextualLinkPluginsByGroup()
    */
-  public function testGetContextualLinkPluginsByGroup(): void {
+  public function testGetContextualLinkPluginsByGroup() {
     $definitions = [
       'test_plugin1' => [
         'id' => 'test_plugin1',
@@ -139,7 +140,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
   /**
    * Tests the getContextualLinkPluginsByGroup method with a prefilled cache.
    */
-  public function testGetContextualLinkPluginsByGroupWithCache(): void {
+  public function testGetContextualLinkPluginsByGroupWithCache() {
     $definitions = [
       'test_plugin1' => [
         'id' => 'test_plugin1',
@@ -174,7 +175,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Menu\ContextualLinkManager::processDefinition()
    */
-  public function testProcessDefinitionWithoutRoute(): void {
+  public function testProcessDefinitionWithoutRoute() {
     $definition = [
       'class' => '\Drupal\Core\Menu\ContextualLinkDefault',
       'group' => 'example',
@@ -189,7 +190,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Menu\ContextualLinkManager::processDefinition()
    */
-  public function testProcessDefinitionWithoutGroup(): void {
+  public function testProcessDefinitionWithoutGroup() {
     $definition = [
       'class' => '\Drupal\Core\Menu\ContextualLinkDefault',
       'route_name' => 'example',
@@ -204,7 +205,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Menu\ContextualLinkManager::getContextualLinksArrayByGroup()
    */
-  public function testGetContextualLinksArrayByGroup(): void {
+  public function testGetContextualLinksArrayByGroup() {
     $definitions = [
       'test_plugin1' => [
         'id' => 'test_plugin1',
@@ -243,10 +244,12 @@ class ContextualLinkManagerTest extends UnitTestCase {
       ->method('checkNamedRoute')
       ->willReturn(AccessResult::allowed());
 
-    $this->moduleHandler->alter('contextual_links_plugins', Argument::cetera())
-      ->shouldBeCalledOnce();
-    $this->moduleHandler->alter('contextual_links', Argument::size(2), 'group1', ['key' => 'value'])
-      ->shouldBeCalledOnce();
+    $this->moduleHandler->expects($this->exactly(2))
+      ->method('alter')
+      ->withConsecutive(
+        ['contextual_links_plugins'],
+        ['contextual_links', new Count(2), 'group1', ['key' => 'value']],
+      );
 
     $result = $this->contextualLinkManager->getContextualLinksArrayByGroup('group1', ['key' => 'value']);
     $this->assertCount(2, $result);
@@ -264,7 +267,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Menu\ContextualLinkManager::getContextualLinksArrayByGroup()
    */
-  public function testGetContextualLinksArrayByGroupAccessCheck(): void {
+  public function testGetContextualLinksArrayByGroupAccessCheck() {
     $definitions = [
       'test_plugin1' => [
         'id' => 'test_plugin1',
@@ -307,7 +310,7 @@ class ContextualLinkManagerTest extends UnitTestCase {
   /**
    * Tests the plugins alter hook.
    */
-  public function testPluginDefinitionAlter(): void {
+  public function testPluginDefinitionAlter() {
     $definitions['test_plugin'] = [
       'id' => 'test_plugin',
       'class' => ContextualLinkDefault::class,
@@ -322,8 +325,9 @@ class ContextualLinkManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
 
-    $this->moduleHandler->alter('contextual_links_plugins', $definitions)
-      ->shouldBeCalledOnce();
+    $this->moduleHandler->expects($this->once())
+      ->method('alter')
+      ->with('contextual_links_plugins', $definitions);
 
     $this->contextualLinkManager->getDefinition('test_plugin');
   }

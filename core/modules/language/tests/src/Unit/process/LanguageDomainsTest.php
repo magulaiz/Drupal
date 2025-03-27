@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\language\Unit\process;
 
 use Drupal\language\Plugin\migrate\process\LanguageDomains;
@@ -12,6 +10,11 @@ use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
  * @group language
  */
 class LanguageDomainsTest extends MigrateProcessTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $backupGlobalsBlacklist = ['base_url'];
 
   /**
    * {@inheritdoc}
@@ -39,7 +42,7 @@ class LanguageDomainsTest extends MigrateProcessTestCase {
   /**
    * @covers ::transform
    */
-  public function testTransform(): void {
+  public function testTransform() {
     $source = [
       ['language' => 'en', 'domain' => ''],
       ['language' => 'fr', 'domain' => 'fr.example.com'],

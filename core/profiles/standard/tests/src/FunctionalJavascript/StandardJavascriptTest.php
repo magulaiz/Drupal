@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\standard\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -22,7 +20,7 @@ class StandardJavascriptTest extends WebDriverTestBase {
   /**
    * Tests BigPipe accelerates particular Standard installation profile routes.
    */
-  public function testBigPipe(): void {
+  public function testBigPipe() {
     $this->drupalLogin($this->drupalCreateUser([
       'access content',
       'post comments',
@@ -35,13 +33,15 @@ class StandardJavascriptTest extends WebDriverTestBase {
       ->setPublished();
     $node->save();
 
-    // Front page: Five placeholders.
+    // Front page: one placeholder, for messages.
     $this->drupalGet('');
-    $this->assertBigPipePlaceholderReplacementCount(5);
+    $this->assertBigPipePlaceholderReplacementCount(1);
 
-    // Node page: Six placeholders:
+    // Node page: 2 placeholders:
+    // 1. messages
+    // 2. comment form
     $this->drupalGet($node->toUrl());
-    $this->assertBigPipePlaceholderReplacementCount(6);
+    $this->assertBigPipePlaceholderReplacementCount(2);
   }
 
   /**

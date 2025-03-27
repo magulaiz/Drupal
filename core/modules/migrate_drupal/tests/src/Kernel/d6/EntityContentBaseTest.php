@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\field\Entity\FieldConfig;
@@ -59,11 +57,10 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests overwriting all mapped properties in the destination entity.
-   *
-   * This is the default behavior.
+   * Tests overwriting all mapped properties in the destination entity (default
+   * behavior).
    */
-  public function testOverwriteAllMappedProperties(): void {
+  public function testOverwriteAllMappedProperties() {
     $this->executeMigration('d6_user');
     /** @var \Drupal\user\UserInterface $account */
     $account = User::load(2);
@@ -73,11 +70,10 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests overwriting selected properties in the destination entity.
-   *
-   * The selected properties are specified in the destination configuration.
+   * Tests overwriting selected properties in the destination entity, specified
+   * in the destination configuration.
    */
-  public function testOverwriteProperties(): void {
+  public function testOverwriteProperties() {
     // Execute the migration in migrate_overwrite_test, which documents how
     // property overwrites work.
     $this->executeMigration('users');
@@ -95,7 +91,7 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
   /**
    * Tests that translation destination fails for untranslatable entities.
    */
-  public function testUntranslatable(): void {
+  public function testUntranslatable() {
     $this->enableModules(['language_test']);
     $this->installEntitySchema('no_language_entity_test');
 
@@ -119,7 +115,7 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
     // Match the expected message. Can't use default argument types, because
     // we need to convert to string from TranslatableMarkup.
     $argument = Argument::that(function ($msg) {
-      return str_contains((string) $msg, htmlentities('The "no_language_entity_test" entity type does not support translations.'));
+      return strpos((string) $msg, htmlentities('The "no_language_entity_test" entity type does not support translations.')) !== FALSE;
     });
     $message->display($argument, Argument::any())
       ->shouldBeCalled();

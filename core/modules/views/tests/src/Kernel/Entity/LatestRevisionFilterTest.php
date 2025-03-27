@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\node\Entity\Node;
@@ -30,14 +28,11 @@ class LatestRevisionFilterTest extends ViewsKernelTestBase {
   /**
    * Tests the 'Latest revision' filter.
    */
-  public function testLatestRevisionFilter(): void {
+  public function testLatestRevisionFilter() {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installSchema('node', ['node_access']);
-    NodeType::create([
-      'type' => 'article',
-      'name' => 'Article',
-    ])->save();
+    NodeType::create(['type' => 'article'])->save();
 
     // Create a node that goes through various default/pending revision stages.
     $node = Node::create([

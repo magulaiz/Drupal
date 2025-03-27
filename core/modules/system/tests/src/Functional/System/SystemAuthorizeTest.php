@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
@@ -9,13 +7,14 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests the authorize.php script and related API.
  *
- * @group legacy
  * @group system
  */
 class SystemAuthorizeTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['system_test'];
 
@@ -47,14 +46,14 @@ class SystemAuthorizeTest extends BrowserTestBase {
    *
    * @see system_authorized_init()
    */
-  public function drupalGetAuthorizePHP($page_title = 'system-test-auth'): void {
+  public function drupalGetAuthorizePHP($page_title = 'system-test-auth') {
     $this->drupalGet('system-test/authorize-init/' . $page_title);
   }
 
   /**
    * Tests the FileTransfer hooks.
    */
-  public function testFileTransferHooks(): void {
+  public function testFileTransferHooks() {
     $page_title = $this->randomMachineName(16);
     $this->drupalGetAuthorizePHP($page_title);
     $this->assertSession()->titleEquals("$page_title | Drupal");
@@ -67,23 +66,6 @@ class SystemAuthorizeTest extends BrowserTestBase {
     // Test that \Drupal\Core\Render\BareHtmlPageRenderer adds assets as
     // expected to the first page of the authorize.php script.
     $this->assertSession()->responseContains('core/misc/states.js');
-  }
-
-  /**
-   * Tests error handling in authorize.php.
-   */
-  public function testError(): void {
-    $settings_filename = $this->siteDirectory . '/settings.php';
-    chmod($settings_filename, 0777);
-    $settings_php = file_get_contents($settings_filename);
-    $settings_php .= "\ndefine('SIMPLETEST_COLLECT_ERRORS', FALSE);\n";
-    $settings_php .= "\ntrigger_error('Test warning', E_USER_WARNING);\n";
-    file_put_contents($settings_filename, $settings_php);
-
-    $this->drupalGetAuthorizePHP();
-
-    $this->assertSession()->pageTextContains('User warning: Test warning');
-    $this->assertSession()->pageTextMatches('@line \d+ of sites/simpletest@');
   }
 
 }

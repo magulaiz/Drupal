@@ -1,26 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\Component\Utility\Html;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
-
-// cspell:ignore xyabz
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 
 /**
  * Tests entity reference selection plugins.
  *
  * @group entity_reference
- * @group #slow
  */
 class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
 
-  use EntityReferenceFieldCreationTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * Bundle of 'entity_test_no_label' entity.
@@ -69,24 +64,24 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
 
     // Create a new node-type.
     NodeType::create([
-      'type' => $node_type = $this->randomMachineName(),
+      'type' => $node_type = mb_strtolower($this->randomMachineName()),
       'name' => $this->randomString(),
     ])->save();
 
     // Create an entity reference field targeting 'entity_test_no_label'
     // entities.
-    $field_name = $this->randomMachineName();
+    $field_name = mb_strtolower($this->randomMachineName());
     $this->createEntityReferenceField('node', $node_type, $field_name, $this->randomString(), 'entity_test_no_label');
     $field_config = FieldConfig::loadByName('node', $node_type, $field_name);
     $this->selectionHandler = $this->container->get('plugin.manager.entity_reference_selection')->getSelectionHandler($field_config);
 
     // Generate a bundle name to be used with 'entity_test_no_label'.
-    $this->bundle = $this->randomMachineName();
+    $this->bundle = mb_strtolower($this->randomMachineName());
 
     // Create 6 entities to be referenced by the field.
     foreach (static::$labels as $name) {
       $storage->create([
-        'id' => $this->randomMachineName(),
+        'id' => mb_strtolower($this->randomMachineName()),
         'name' => $name,
         'type' => $this->bundle,
       ])->save();
@@ -94,7 +89,8 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
   }
 
   /**
-   * Tests referenceable entities with no target entity type 'label' key.
+   * Tests values returned by SelectionInterface::getReferenceableEntities()
+   * when the target entity type has no 'label' key.
    *
    * @param mixed $match
    *   The input text to be checked.
@@ -110,10 +106,8 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
    *   The total number (unlimited) of entities to be retrieved.
    *
    * @dataProvider providerTestCases
-   *
-   * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface::getReferenceableEntities()
    */
-  public function testReferenceablesWithNoLabelKey($match, $match_operator, $limit, $count_limited, array $items, $count_all): void {
+  public function testReferenceablesWithNoLabelKey($match, $match_operator, $limit, $count_limited, array $items, $count_all) {
     // Test ::getReferenceableEntities().
     $referenceables = $this->selectionHandler->getReferenceableEntities($match, $match_operator, $limit);
 
@@ -143,9 +137,8 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
    * Provides test cases for ::testReferenceablesWithNoLabelKey() test.
    *
    * @return array[]
-   *   An array of test cases.
    */
-  public static function providerTestCases() {
+  public function providerTestCases() {
     return [
       // All referenceables, no limit. Expecting 9 items.
       [NULL, 'CONTAINS', 0, 9, static::$labels, 9],

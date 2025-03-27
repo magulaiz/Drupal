@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTestComputedField;
@@ -52,7 +49,7 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     $this->grantPermissionsToTestedRole(['administer entity_test content']);
 
     switch ($method) {
@@ -89,17 +86,17 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument(): array {
+  protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/entity_test_computed_field/entity_test_computed_field/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     $author = User::load(0);
     return [
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => JsonApiSpec::SUPPORTED_SPECIFICATION_PERMALINK],
+            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
           ],
         ],
-        'version' => JsonApiSpec::SUPPORTED_SPECIFICATION_VERSION,
+        'version' => '1.0',
       ],
       'links' => [
         'self' => ['href' => $self_url],
@@ -111,12 +108,11 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
           'self' => ['href' => $self_url],
         ],
         'attributes' => [
-          'created' => (new \DateTime())->setTimestamp((int) $this->entity->get('created')->value)->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'created' => (new \DateTime())->setTimestamp($this->entity->get('created')->value)->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
           'name' => 'Llama',
           'drupal_internal__id' => 1,
           'computed_string_field' => NULL,
           'computed_test_cacheable_string_field' => 'computed test cacheable string field',
-          'computed_test_cacheable_integer_field' => 0,
         ],
         'relationships' => [
           'computed_reference_field' => [
@@ -147,12 +143,12 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument(): array {
+  protected function getPostDocument() {
     return [
       'data' => [
         'type' => 'entity_test_computed_field--entity_test_computed_field',
         'attributes' => [
-          'name' => 'Drama llama',
+          'name' => 'Dramallama',
         ],
       ],
     ];
@@ -161,7 +157,7 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSparseFieldSets(): array {
+  protected function getSparseFieldSets() {
     // EntityTest's owner field name is `user_id`, not `uid`, which breaks
     // nested sparse fieldset tests.
     return array_diff_key(parent::getSparseFieldSets(), array_flip([
@@ -170,22 +166,16 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
     ]));
   }
 
-  /**
-   * Retrieves the expected cache contexts for the response.
-   */
-  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
     $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
     if ($sparse_fieldset === NULL || in_array('computed_test_cacheable_string_field', $sparse_fieldset)) {
-      $cache_contexts = Cache::mergeContexts($cache_contexts, ['url.query_args']);
+      $cache_contexts = Cache::mergeContexts($cache_contexts, ['url.query_args:computed_test_cacheable_string_field']);
     }
 
     return $cache_contexts;
   }
 
-  /**
-   * Retrieves the expected cache tags for the response.
-   */
-  protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheTags(array $sparse_fieldset = NULL) {
     $expected_cache_tags = parent::getExpectedCacheTags($sparse_fieldset);
     if ($sparse_fieldset === NULL || in_array('computed_test_cacheable_string_field', $sparse_fieldset)) {
       $expected_cache_tags = Cache::mergeTags($expected_cache_tags, ['field:computed_test_cacheable_string_field']);

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -20,7 +18,9 @@ use Drupal\migrate\Plugin\migrate\id_map\Sql;
 class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterface {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['migrate', 'system'];
 
@@ -77,7 +77,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
   /**
    * Tests migration interruptions.
    */
-  public function testMessagesNotTeed(): void {
+  public function testMessagesNotTeed() {
     // We don't ask for messages to be teed, so don't expect any.
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
@@ -87,7 +87,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
   /**
    * Tests migration interruptions.
    */
-  public function testMessagesTeed(): void {
+  public function testMessagesTeed() {
     // Ask to receive any messages sent to the idmap.
     \Drupal::service('event_dispatcher')->addListener(MigrateEvents::IDMAP_MESSAGE,
       [$this, 'mapMessageRecorder']);
@@ -104,7 +104,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
    * This method returns an iterator of StdClass objects. Check that these
    * objects have the expected keys.
    */
-  public function testGetMessages(): void {
+  public function testGetMessages() {
     $id = $this->migration->getPluginId();
     $expected_message = (object) [
       'src_name' => 'source_message',
@@ -132,7 +132,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
    * @param string $name
    *   The event name.
    */
-  public function mapMessageRecorder(MigrateIdMapMessageEvent $event, $name): void {
+  public function mapMessageRecorder(MigrateIdMapMessageEvent $event, $name) {
     if ($event->getLevel() == MigrationInterface::MESSAGE_NOTICE ||
         $event->getLevel() == MigrationInterface::MESSAGE_INFORMATIONAL) {
       $type = 'status';
@@ -147,7 +147,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
   /**
    * {@inheritdoc}
    */
-  public function display($message, $type = 'status'): void {
+  public function display($message, $type = 'status') {
     $this->messages[] = $message;
   }
 

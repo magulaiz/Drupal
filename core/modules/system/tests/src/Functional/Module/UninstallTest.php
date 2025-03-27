@@ -1,16 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\Entity\Role;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests the uninstallation of modules.
@@ -20,7 +17,9 @@ use Drupal\user\RoleInterface;
 class UninstallTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['module_test', 'user', 'views', 'node'];
 
@@ -32,20 +31,19 @@ class UninstallTest extends BrowserTestBase {
   /**
    * Tests the hook_modules_uninstalled() of the user module.
    */
-  public function testUserPermsUninstalled(): void {
+  public function testUserPermsUninstalled() {
     // Uninstalls the module_test module, so hook_modules_uninstalled()
     // is executed.
     $this->container->get('module_installer')->uninstall(['module_test']);
 
     // Are the perms defined by module_test removed?
-    $roles = array_filter(Role::loadMultiple(), fn(RoleInterface $role) => $role->hasPermission('module_test perm'));
-    $this->assertEmpty($roles, 'Permissions were all removed.');
+    $this->assertEmpty(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
   }
 
   /**
    * Tests the Uninstall page and Uninstall confirmation page.
    */
-  public function testUninstallPage(): void {
+  public function testUninstallPage() {
     $account = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($account);
 
@@ -157,7 +155,7 @@ class UninstallTest extends BrowserTestBase {
     // cleared during the uninstall.
     \Drupal::cache()->set('uninstall_test', 'test_uninstall_page', Cache::PERMANENT);
     $cached = \Drupal::cache()->get('uninstall_test');
-    $this->assertEquals('test_uninstall_page', $cached->data, "Cache entry found: $cached->data");
+    $this->assertEquals('test_uninstall_page', $cached->data, new FormattableMarkup('Cache entry found: @bin', ['@bin' => $cached->data]));
 
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
@@ -170,7 +168,7 @@ class UninstallTest extends BrowserTestBase {
     // Make sure we get an error message when we try to confirm uninstallation
     // of an empty list of modules.
     $this->drupalGet('admin/modules/uninstall/confirm');
-    $this->assertSession()->pageTextContains('The selected modules could not be uninstalled, either due to a website problem or due to the uninstall confirmation form timing out.');
+    $this->assertSession()->pageTextContains('The selected modules could not be uninstalled, either due to a website problem or due to the uninstall confirmation form timing out. Please try again.');
 
     // Make sure confirmation page is accessible only during uninstall process.
     $this->drupalGet('admin/modules/uninstall/confirm');
@@ -187,7 +185,7 @@ class UninstallTest extends BrowserTestBase {
   /**
    * Tests that a module which fails to install can still be uninstalled.
    */
-  public function testFailedInstallStatus(): void {
+  public function testFailedInstallStatus() {
     $account = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($account);
 
@@ -196,7 +194,7 @@ class UninstallTest extends BrowserTestBase {
       $this->container->get('module_installer')->install(['module_installer_config_test']);
       $this->fail($message);
     }
-    catch (EntityMalformedException) {
+    catch (EntityMalformedException $e) {
       // Expected exception; just continue testing.
     }
 

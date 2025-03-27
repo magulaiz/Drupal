@@ -56,11 +56,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * The field storage definitions for all base fields of the entity type.
    *
    * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No
-   * replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3240278
    */
   protected $fieldStorageDefinitions;
 
@@ -121,15 +116,8 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * Gets the field storage definitions.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
-   *   The array of field storage definitions, keyed by field name.
-   *
-   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No
-   * replacement is provided.
-   *
-   * @see https://www.drupal.org/node/3240278
    */
   protected function getFieldStorageDefinitions() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. No replacement is provided. See https://www.drupal.org/node/3240278', E_USER_DEPRECATED);
     if (!isset($this->fieldStorageDefinitions)) {
       $this->fieldStorageDefinitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityType->id());
     }
@@ -245,7 +233,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     if ($revision_table) {
       $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
       $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
-      $data[$revision_table]['table']['entity revision'] = TRUE;
 
       $views_revision_base_table = $revision_table;
       if ($revision_data_table) {
@@ -324,68 +311,64 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // Load all typed data definitions of all fields. This should cover each of
     // the entity base, revision, data tables.
     $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($this->entityType->id());
-
-    $field_storage_definitions = array_map(function (FieldDefinitionInterface $definition) {
-      return $definition->getFieldStorageDefinition();
-    }, $field_definitions);
-
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    $table_mapping = $this->storage->getTableMapping($field_storage_definitions);
-    // Fetch all fields that can appear in both the base table and the data
-    // table.
-    $duplicate_fields = array_intersect_key($entity_keys, array_flip(['id', 'revision', 'bundle']));
-    // Iterate over each table we have so far and collect field data for each.
-    // Based on whether the field is in the field_definitions provided by the
-    // entity field manager.
-    // @todo We should better just rely on information coming from the entity
-    //   storage.
-    // @todo https://www.drupal.org/node/2337511
-    foreach ($table_mapping->getTableNames() as $table) {
-      foreach ($table_mapping->getFieldNames($table) as $field_name) {
-        // To avoid confusing duplication in the user interface, for fields
-        // that are on both base and data tables, only add them on the data
-        // table (same for revision vs. revision data).
-        if ($data_table && ($table === $base_table || $table === $revision_table) && in_array($field_name, $duplicate_fields)) {
-          continue;
+    if ($table_mapping = $this->storage->getTableMapping($field_definitions)) {
+      // Fetch all fields that can appear in both the base table and the data
+      // table.
+      $duplicate_fields = array_intersect_key($entity_keys, array_flip(['id', 'revision', 'bundle']));
+      // Iterate over each table we have so far and collect field data for each.
+      // Based on whether the field is in the field_definitions provided by the
+      // entity field manager.
+      // @todo We should better just rely on information coming from the entity
+      //   storage.
+      // @todo https://www.drupal.org/node/2337511
+      foreach ($table_mapping->getTableNames() as $table) {
+        foreach ($table_mapping->getFieldNames($table) as $field_name) {
+          // To avoid confusing duplication in the user interface, for fields
+          // that are on both base and data tables, only add them on the data
+          // table (same for revision vs. revision data).
+          if ($data_table && ($table === $base_table || $table === $revision_table) && in_array($field_name, $duplicate_fields)) {
+            continue;
+          }
+          $this->mapFieldDefinition($table, $field_name, $field_definitions[$field_name], $table_mapping, $data[$table]);
         }
-        $this->mapFieldDefinition($table, $field_name, $field_definitions[$field_name], $table_mapping, $data[$table]);
       }
-    }
 
-    foreach ($field_storage_definitions as $field_storage_definition) {
-      if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
-        $table = $table_mapping->getDedicatedDataTableName($field_storage_definition);
+      foreach ($field_definitions as $field_definition) {
+        if ($table_mapping->requiresDedicatedTableStorage($field_definition->getFieldStorageDefinition())) {
+          $table = $table_mapping->getDedicatedDataTableName($field_definition->getFieldStorageDefinition());
 
-        $data[$table]['table']['group'] = $this->entityType->getLabel();
-        $data[$table]['table']['provider'] = $this->entityType->getProvider();
-        $data[$table]['table']['join'][$views_base_table] = [
-          'left_field' => $entity_id_key,
-          'field' => 'entity_id',
-          'extra' => [
-            ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
-          ],
-        ];
-
-        if ($revisionable) {
-          $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage_definition);
-
-          $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
-          $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
-          $data[$revision_table]['table']['join'][$views_revision_base_table] = [
-            'left_field' => $revision_field,
+          $data[$table]['table']['group'] = $this->entityType->getLabel();
+          $data[$table]['table']['provider'] = $this->entityType->getProvider();
+          $data[$table]['table']['join'][$views_base_table] = [
+            'left_field' => $entity_id_key,
             'field' => 'entity_id',
             'extra' => [
               ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
             ],
           ];
+
+          if ($revisionable) {
+            $revision_table = $table_mapping->getDedicatedRevisionTableName($field_definition->getFieldStorageDefinition());
+
+            $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
+            $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
+            $data[$revision_table]['table']['join'][$views_revision_base_table] = [
+              'left_field' => $revision_field,
+              'field' => 'entity_id',
+              'extra' => [
+                ['field' => 'deleted', 'value' => 0, 'numeric' => TRUE],
+              ],
+            ];
+          }
         }
       }
-    }
-    if (($uid_key = $entity_keys['uid'] ?? '')) {
-      $data[$data_table][$uid_key]['filter']['id'] = 'user_name';
-    }
-    if ($revision_table && ($revision_uid_key = $this->entityType->getRevisionMetadataKeys()['revision_user'] ?? '')) {
-      $data[$revision_table][$revision_uid_key]['filter']['id'] = 'user_name';
+      if (($uid_key = $entity_keys['uid'] ?? '')) {
+        $data[$data_table][$uid_key]['filter']['id'] = 'user_name';
+      }
+      if ($revision_table && ($revision_uid_key = $this->entityType->getRevisionMetadataKeys()['revision_user'] ?? '')) {
+        $data[$revision_table][$revision_uid_key]['filter']['id'] = 'user_name';
+      }
     }
 
     // Add the entity type key to each table generated.
@@ -443,9 +426,9 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @param string $field_name
    *   The name of the field to handle.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition.
+   *   The field definition defined in Entity::baseFieldDefinitions()
    * @param \Drupal\Core\Entity\Sql\TableMappingInterface $table_mapping
-   *   The table mapping information.
+   *   The table mapping information
    * @param array $table_data
    *   A reference to a specific entity table (for example data_table) inside
    *   the views data.
@@ -453,7 +436,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected function mapFieldDefinition($table, $field_name, FieldDefinitionInterface $field_definition, TableMappingInterface $table_mapping, &$table_data) {
     // Create a dummy instance to retrieve property definitions.
     $field_column_mapping = $table_mapping->getColumnNames($field_name);
-    $field_schema = $field_definition->getFieldStorageDefinition()->getSchema();
+    $field_schema = $this->getFieldStorageDefinitions()[$field_name]->getSchema();
 
     $field_definition_type = $field_definition->getType();
     // Add all properties to views table data. We need an entry for each
@@ -526,7 +509,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         break;
 
       case 'language':
-        $views_field['field']['id'] = 'field_language';
+        $views_field['field']['id'] = 'field';
         $views_field['argument']['id'] = 'language';
         $views_field['filter']['id'] = 'language';
         $views_field['sort']['id'] = 'standard';
@@ -661,10 +644,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
           'id' => 'standard',
         ];
         $views_field['field']['id'] = 'field';
-        // Provide an argument plugin that has a meaningful titleQuery()
-        // implementation getting the entity label.
-        $views_field['argument']['id'] = 'entity_target_id';
-        $views_field['argument']['target_entity_type_id'] = $entity_type_id;
+        $views_field['argument']['id'] = 'numeric';
         $views_field['filter']['id'] = 'numeric';
         $views_field['sort']['id'] = 'standard';
       }

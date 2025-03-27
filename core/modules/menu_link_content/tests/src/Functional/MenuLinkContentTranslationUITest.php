@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\menu_link_content\Functional;
 
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
@@ -20,7 +18,9 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   protected $defaultCacheContexts = ['languages:language_interface', 'session', 'theme', 'url.path', 'url.query_args', 'user.permissions', 'user.roles:authenticated'];
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'language',
@@ -41,20 +41,19 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     $this->entityTypeId = 'menu_link_content';
     $this->bundle = 'menu_link_content';
     parent::setUp();
-    $this->doSetup();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions(): array {
+  protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), ['administer menu']);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getAdministratorPermissions(): array {
+  protected function getAdministratorPermissions() {
     return array_merge(parent::getAdministratorPermissions(), ['administer themes', 'view the administration theme']);
   }
 
@@ -72,7 +71,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Ensure that a translate link can be found on the menu edit form.
    */
-  public function testTranslationLinkOnMenuEditForm(): void {
+  public function testTranslationLinkOnMenuEditForm() {
     $this->drupalGet('admin/structure/menu/manage/tools');
     $this->assertSession()->linkNotExists('Translate');
 
@@ -89,7 +88,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests that translation page inherits admin status of edit page.
    */
-  public function testTranslationLinkTheme(): void {
+  public function testTranslationLinkTheme() {
     $this->drupalLogin($this->administrator);
     $entityId = $this->createEntity([], 'en');
 
@@ -110,9 +109,10 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doTestTranslationEdit(): void {
+  protected function doTestTranslationEdit() {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
+    $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -9,36 +7,33 @@ namespace Drupal\FunctionalTests\Installer;
  *
  * @group Installer
  */
-class InstallerExistingConfigNoConfigTest extends InstallerConfigDirectoryTestBase {
+class InstallerExistingConfigNoConfigTest extends InstallerExistingConfigTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * {@inheritdoc}
-   */
   protected $profile = 'no_config_profile';
 
   /**
    * Final installer step: Configure site.
    */
-  protected function setUpSite(): void {
+  protected function setUpSite() {
     // There are errors therefore there is nothing to do here.
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getConfigLocation(): string {
-    return __DIR__ . '/../../../fixtures/config_install/testing_config_install_no_config';
+  protected function getConfigTarball() {
+    return __DIR__ . '/../../../fixtures/config_install/testing_config_install_no_config.tar.gz';
   }
 
   /**
    * Tests that profiles with an empty config/sync directory do not work.
    */
-  public function testConfigSync(): void {
+  public function testConfigSync() {
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
     $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');
     $this->assertSession()->pageTextContains('This import is empty and if applied would delete all of your configuration, so has been rejected.');

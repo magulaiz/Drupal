@@ -15,6 +15,11 @@ class DataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
+  protected $supportedInterfaceOrClass = Data::class;
+
+  /**
+   * {@inheritdoc}
+   */
   public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof Data);
     $cacheable_normalizations = array_map(function ($resource) use ($format, $context) {
@@ -28,10 +33,8 @@ class DataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function getSupportedTypes(?string $format): array {
-    return [
-      Data::class => TRUE,
-    ];
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

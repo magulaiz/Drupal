@@ -3,16 +3,15 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\StringTranslation\ByteSizeMarkup;
-use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ResultRow;
 
 /**
  * Render a numeric value as a size.
  *
  * @ingroup views_field_handlers
+ *
+ * @ViewsField("file_size")
  */
-#[ViewsField("file_size")]
 class FileSize extends FieldPluginBase {
 
   /**
@@ -53,7 +52,7 @@ class FileSize extends FieldPluginBase {
 
         case 'formatted':
         default:
-          return ByteSizeMarkup::create((int) $value);
+          return format_size($value);
       }
     }
     else {

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
@@ -27,7 +25,7 @@ class ThemeUpdateTest extends BrowserTestBase {
    * separate file, so this test also ensures that the file is correctly loaded
    * when needed.
    */
-  public function testThemeUpdates(): void {
+  public function testThemeUpdates() {
     \Drupal::service('module_installer')->install(['test_module_required_by_theme']);
     $this->rebuildAll();
     \Drupal::state()->set('test_theme_depending_on_modules.system_info_alter', ['dependencies' => ['test_module_required_by_theme', 'stark']]);
@@ -47,7 +45,7 @@ class ThemeUpdateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doSelectionTest(): void {
+  protected function doSelectionTest() {
     // Ensure that the theme's post update appears as expected.
     $this->assertSession()->responseContains('test_theme_depending_on_modules theme');
     $this->assertSession()->responseContains('Install a dependent module.');

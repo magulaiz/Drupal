@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Functional\Rest;
 
 use Drupal\Core\Cache\Cache;
@@ -9,17 +7,13 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use GuzzleHttp\RequestOptions;
-use PHPUnit\Framework\Attributes\Before;
 
-/**
- * Resource test base for taxonomy term entity.
- */
 abstract class TermResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['content_translation', 'path', 'taxonomy'];
+  protected static $modules = ['taxonomy', 'path'];
 
   /**
    * {@inheritdoc}
@@ -37,16 +31,6 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
    * @var \Drupal\taxonomy\TermInterface
    */
   protected $entity;
-
-  /**
-   * Marks some tests as skipped because XML cannot be deserialized.
-   */
-  #[Before]
-  public function termResourceTestBaseSkipTests(): void {
-    if (static::$format === 'xml' && $this->name() === 'testPatchPath') {
-      $this->markTestSkipped('Deserialization of the XML format is not supported.');
-    }
-  }
 
   /**
    * {@inheritdoc}
@@ -236,6 +220,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
         ],
       ],
       'revision_user' => [],
+      'revision_log_message' => [],
       'revision_translation_affected' => [
         [
           'value' => TRUE,
@@ -256,12 +241,12 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
       ],
       'name' => [
         [
-          'value' => 'Drama llama',
+          'value' => 'Dramallama',
         ],
       ],
       'description' => [
         [
-          'value' => 'Drama llamas are the coolest camelids.',
+          'value' => 'Dramallamas are the coolest camelids.',
           'format' => NULL,
         ],
       ],
@@ -297,7 +282,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
    *
    * @see \Drupal\Tests\rest\Functional\EntityResource\Node\NodeResourceTestBase::testPatchPath()
    */
-  public function testPatchPath(): void {
+  public function testPatchPath() {
     $this->initAuthentication();
     $this->provisionEntityResource();
     $this->setUpAuthorization('GET');
@@ -346,13 +331,13 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
    *
    * @dataProvider providerTestGetTermWithParent
    */
-  public function testGetTermWithParent(array $parent_term_ids): void {
+  public function testGetTermWithParent(array $parent_term_ids) {
     // Create all possible parent terms.
     Term::create(['vid' => Vocabulary::load('camelids')->id()])
       ->setName('Lamoids')
       ->save();
     Term::create(['vid' => Vocabulary::load('camelids')->id()])
-      ->setName('Camels')
+      ->setName('Wimoids')
       ->save();
 
     // Modify the entity under test to use the provided parent terms.
@@ -372,10 +357,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     $this->assertSame($expected, $actual);
   }
 
-  /**
-   * Data provider for ::testGetTermWithParent().
-   */
-  public static function providerTestGetTermWithParent() {
+  public function providerTestGetTermWithParent() {
     return [
       'root parent: [0] (= no parent)' => [
         [0],

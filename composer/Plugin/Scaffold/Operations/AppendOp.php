@@ -41,15 +41,11 @@ class AppendOp extends AbstractOperation {
 
   /**
    * An indicator of whether the file we are appending to is managed or not.
-   *
-   * @var bool
    */
   protected $managed;
 
   /**
    * An indicator of whether we are allowed to append to a non-scaffolded file.
-   *
-   * @var bool
    */
   protected $forceAppend;
 
@@ -63,21 +59,16 @@ class AppendOp extends AbstractOperation {
   /**
    * Constructs an AppendOp.
    *
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath|null $prepend_path
-   *   (optional) The relative path to the prepend file.
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath|null $append_path
-   *   (optional) The relative path to the append file.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $prepend_path
+   *   The relative path to the prepend file.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $append_path
+   *   The relative path to the append file.
    * @param bool $force_append
-   *   (optional) TRUE if is okay to append to a file that was not scaffolded.
-   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath|null $default_path
-   *   (optional) The relative path to the default data.
+   *   TRUE if is okay to append to a file that was not scaffolded.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $default_path
+   *   The relative path to the default data.
    */
-  public function __construct(
-    ?ScaffoldFilePath $prepend_path = NULL,
-    ?ScaffoldFilePath $append_path = NULL,
-    $force_append = FALSE,
-    ?ScaffoldFilePath $default_path = NULL,
-  ) {
+  public function __construct(ScaffoldFilePath $prepend_path = NULL, ScaffoldFilePath $append_path = NULL, $force_append = FALSE, ScaffoldFilePath $default_path = NULL) {
     $this->forceAppend = $force_append;
     $this->prepend = $prepend_path;
     $this->append = $append_path;
@@ -199,7 +190,7 @@ class AppendOp extends AbstractOperation {
    * @param string $contents
    *   The contents of the target file.
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $data_path
-   *   The path to the data to append or prepend.
+   *   The path to the data to append or prepend
    *
    * @return bool
    *   'TRUE' if the append/prepend data already exists in contents.
@@ -210,7 +201,7 @@ class AppendOp extends AbstractOperation {
     }
     $data = file_get_contents($data_path->fullPath());
 
-    return str_contains($contents, $data);
+    return strpos($contents, $data) !== FALSE;
   }
 
 }

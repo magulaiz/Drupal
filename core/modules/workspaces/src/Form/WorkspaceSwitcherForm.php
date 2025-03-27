@@ -5,7 +5,6 @@ namespace Drupal\workspaces\Form;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\workspaces\WorkspaceAccessException;
 use Drupal\workspaces\WorkspaceManagerInterface;
@@ -14,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form that activates a different workspace.
  */
-class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterface {
+class WorkspaceSwitcherForm extends FormBase implements WorkspaceFormInterface {
 
   /**
    * The workspace manager.
@@ -140,7 +139,7 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
       $this->workspaceManager->setActiveWorkspace($workspace);
       $this->messenger->addMessage($this->t('%workspace_label is now the active workspace.', ['%workspace_label' => $workspace->label()]));
     }
-    catch (WorkspaceAccessException) {
+    catch (WorkspaceAccessException $e) {
       $this->messenger->addError($this->t('You do not have access to activate the %workspace_label workspace.', ['%workspace_label' => $workspace->label()]));
     }
   }

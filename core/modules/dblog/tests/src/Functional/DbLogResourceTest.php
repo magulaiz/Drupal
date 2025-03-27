@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Component\Serialization\Json;
@@ -85,8 +83,7 @@ class DbLogResourceTest extends ResourceTestBase {
       "The 'restful get dblog' permission is required.",
       $response,
       ['4xx-response', 'http_response'],
-      ['user.permissions'],
-      'UNCACHEABLE (request policy)'
+      ['user.permissions']
     );
 
     // Create a user account that has the required permissions to read
@@ -123,7 +120,7 @@ class DbLogResourceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method): void {
+  protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['restful get dblog']);

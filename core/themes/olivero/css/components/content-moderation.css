@@ -24,6 +24,7 @@
 }
 
 @media (min-width: 43.75rem) {
+
   .entity-moderation-form {
     flex-direction: row;
   }
@@ -40,6 +41,7 @@
 }
 
 @media (min-width: 43.75rem) {
+
   .entity-moderation-form__item:last-child {
     align-self: flex-end;
   }
@@ -54,6 +56,7 @@
 }
 
 @supports (width: max-content) {
+
   .layout--content-narrow .entity-moderation-form,
   .layout--pass--content-narrow > * .entity-moderation-form,
   .layout--content-medium .entity-moderation-form,
@@ -63,6 +66,7 @@
 }
 
 @media (min-width: 43.75rem) {
+
   .layout--content-narrow .entity-moderation-form,
   .layout--pass--content-narrow > * .entity-moderation-form,
   .layout--content-medium .entity-moderation-form,
@@ -74,6 +78,7 @@
 }
 
 @media (min-width: 62.5rem) {
+
   .layout--content-narrow .entity-moderation-form,
   .layout--pass--content-narrow > * .entity-moderation-form,
   .layout--content-medium .entity-moderation-form,
@@ -84,6 +89,7 @@
 }
 
 @media (min-width: 90rem) {
+
   .layout--content-narrow .entity-moderation-form,
   .layout--pass--content-narrow > * .entity-moderation-form,
   .layout--content-medium .entity-moderation-form,

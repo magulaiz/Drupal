@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Kernel\Migrate\d6;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -38,6 +36,7 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase im
     $this->installEntitySchema('node');
     $this->installConfig(['node']);
     $this->installSchema('node', ['node_access']);
+    $this->installSchema('system', ['sequences']);
     $this->executeMigration('language');
     $this->executeMigration('d6_field_instance_label_description_translation');
   }
@@ -45,7 +44,7 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase im
   /**
    * {@inheritdoc}
    */
-  public static function migrateDumpAlter(KernelTestBase $test): void {
+  public static function migrateDumpAlter(KernelTestBase $test) {
     $db = Database::getConnection('default', 'migrate');
     // Alter the database to test the migration is successful when a translated
     // field is deleted but the translation data for that field remains in both
@@ -59,7 +58,7 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase im
   /**
    * Tests migration of field label and description translations.
    */
-  public function testFieldInstanceLabelDescriptionTranslationMigration(): void {
+  public function testFieldInstanceLabelDescriptionTranslationMigration() {
     $language_manager = $this->container->get('language_manager');
 
     // Tests fields on 'story' node type.

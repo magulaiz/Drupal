@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Component\Serialization\Yaml;
@@ -9,22 +7,22 @@ use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
-use Drupal\TestTools\Extension\InfoWriterTrait;
 
 /**
  * Tests the update script access and functionality.
  *
  * @group Update
- * @group #slow
  */
 class UpdateScriptTest extends BrowserTestBase {
-  use InfoWriterTrait;
+
   use RequirementsPageTrait;
 
   protected const HANDBOOK_MESSAGE = 'Review the suggestions for resolving this incompatibility to repair your installation, and then re-run update.php.';
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
     'update_script_test',
@@ -77,7 +75,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Tests access to the update script.
    */
-  public function testUpdateAccess(): void {
+  public function testUpdateAccess() {
     // Try accessing update.php without the proper permission.
     $regular_user = $this->drupalCreateUser();
     $this->drupalLogin($regular_user);
@@ -108,17 +106,12 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->drupalGet('/update-script-test/database-updates-menu-item');
     $this->assertSession()->linkExists('Run database updates');
 
-    // Access the update page as administrator.
-    $this->drupalLogin($this->createUser([
-      'administer software updates',
-      'access site in maintenance mode',
-      'administer themes',
-    ]));
+    // Access the update page as user 1.
+    $this->drupalLogin($this->rootUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->assertSession()->statusCodeEquals(200);
 
-    // Check that a link to the update page is accessible to users with proper
-    // permissions.
+    // Check that a link to the update page is accessible to user 1.
     $this->drupalGet('/update-script-test/database-updates-menu-item');
     $this->assertSession()->linkExists('Run database updates');
   }
@@ -126,7 +119,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Tests that requirements warnings and errors are correctly displayed.
    */
-  public function testRequirements(): void {
+  public function testRequirements() {
     $update_script_test_config = $this->config('update_script_test.settings');
     $this->drupalLogin($this->updateUser);
 
@@ -258,7 +251,7 @@ class UpdateScriptTest extends BrowserTestBase {
     $folder_path = \Drupal::getContainer()->getParameter('site.path') . "/{$extension_type}s/$extension_machine_names[0]";
     $file_path = "$folder_path/$extension_machine_names[0].info.yml";
     mkdir($folder_path, 0777, TRUE);
-    $this->writeInfoFile($file_path, $base_info + $correct_info);
+    file_put_contents($file_path, Yaml::encode($base_info + $correct_info));
     $this->enableExtensions($extension_type, $extension_machine_names, [$extension_name]);
     $this->assertInstalledExtensionsConfig($extension_type, $extension_machine_names);
 
@@ -268,13 +261,13 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertUpdateWithNoErrors([$test_error_text], $extension_type, $extension_machine_names);
 
     // Change the values in the info.yml and confirm updating is not possible.
-    $this->writeInfoFile($file_path, $base_info + $breaking_info);
+    file_put_contents($file_path, Yaml::encode($base_info + $breaking_info));
     $this->drupalGet($this->statusReportUrl);
     $this->assertErrorOnUpdates([$test_error_text], $extension_type, $extension_machine_names, $test_error_urls);
 
     // Fix the values in the info.yml file and confirm updating is possible
     // again.
-    $this->writeInfoFile($file_path, $base_info + $correct_info);
+    file_put_contents($file_path, Yaml::encode($base_info + $correct_info));
     $this->drupalGet($this->statusReportUrl);
     $this->assertUpdateWithNoErrors([$test_error_text], $extension_type, $extension_machine_names);
   }
@@ -282,7 +275,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Date provider for testExtensionCompatibilityChange().
    */
-  public static function providerExtensionCompatibilityChange() {
+  public function providerExtensionCompatibilityChange() {
     $incompatible_module_message = "The following module is installed, but it is incompatible with Drupal " . \Drupal::VERSION . ":";
     $incompatible_theme_message = "The following theme is installed, but it is incompatible with Drupal " . \Drupal::VERSION . ":";
     return [
@@ -350,7 +343,6 @@ class UpdateScriptTest extends BrowserTestBase {
    * @dataProvider providerMissingExtension
    */
   public function testMissingExtension(array $core, array $contrib): void {
-    $this->markTestSkipped('Skipped due to major version-specific logic. See https://www.drupal.org/project/drupal/issues/3359322');
     $this->drupalLogin(
       $this->drupalCreateUser(
         [
@@ -505,7 +497,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Tests that orphan schemas are handled properly.
    */
-  public function testOrphanedSchemaEntries(): void {
+  public function testOrphanedSchemaEntries() {
     $this->drupalLogin($this->updateUser);
 
     // Insert a bogus value into the system.schema key/value storage for a
@@ -536,8 +528,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // But verify that we warn the admin about this situation.
     $this->assertSession()->elementTextEquals('xpath', '//div[@aria-label="Warning message"]', 'Warning message Module update_test_0 has an entry in the system.schema key/value storage, but is not installed. More information about this error.');
 
-    // Finally, try with both kinds of orphans and make sure we get both
-    // warnings.
+    // Finally, try with both kinds of orphans and make sure we get both warnings.
     \Drupal::service('update.update_hook_registry')->setInstalledVersion('my_already_removed_module', 8000);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
     $this->updateRequirementsProblem();
@@ -555,9 +546,9 @@ class UpdateScriptTest extends BrowserTestBase {
    * Data provider for ::testMissingExtension().
    *
    * @return array[]
-   *   Set of test cases to pass to the test method.
+   *   Set of testcases to pass to the test method.
    */
-  public static function providerMissingExtension(): array {
+  public function providerMissingExtension(): array {
     return [
       'core only' => [
         'core' => [
@@ -653,7 +644,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Tests the effect of using the update script on the theme system.
    */
-  public function testThemeSystem(): void {
+  public function testThemeSystem() {
     // Since visiting update.php triggers a rebuild of the theme system from an
     // unusual maintenance mode environment, we check that this rebuild did not
     // put any incorrect information about the themes into the database.
@@ -667,7 +658,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Tests update.php when there are no updates to apply.
    */
-  public function testNoUpdateFunctionality(): void {
+  public function testNoUpdateFunctionality() {
     // Click through update.php with 'administer software updates' permission.
     $this->drupalLogin($this->updateUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
@@ -698,7 +689,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Tests update.php after performing a successful update.
    */
-  public function testSuccessfulUpdateFunctionality(): void {
+  public function testSuccessfulUpdateFunctionality() {
     $initial_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
     $this->assertNull($initial_maintenance_mode, 'Site is not in maintenance mode.');
     $this->runUpdates($initial_maintenance_mode);
@@ -742,7 +733,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Tests update.php while in maintenance mode.
    */
-  public function testMaintenanceModeUpdateFunctionality(): void {
+  public function testMaintenanceModeUpdateFunctionality() {
     $this->container->get('state')
       ->set('system.maintenance_mode', TRUE);
     $initial_maintenance_mode = $this->container->get('state')
@@ -757,7 +748,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Tests performing updates with update.php in a multilingual environment.
    */
-  public function testSuccessfulMultilingualUpdateFunctionality(): void {
+  public function testSuccessfulMultilingualUpdateFunctionality() {
     // Add some custom languages.
     foreach (['aa', 'bb'] as $language_code) {
       ConfigurableLanguage::create([
@@ -794,8 +785,7 @@ class UpdateScriptTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    // Visit status report page and ensure, that link to update.php has no path
-    // prefix set.
+    // Visit status report page and ensure, that link to update.php has no path prefix set.
     $this->drupalGet('en/admin/reports/status', ['external' => TRUE]);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkByHrefExists('/update.php');
@@ -811,16 +801,15 @@ class UpdateScriptTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Updates were attempted.');
     $this->assertSession()->linkExists('logged');
     $this->assertSession()->linkExists('Administration pages');
-    $this->assertSession()->linkExists('Status report');
     $this->assertSession()->elementNotExists('xpath', '//main//a[contains(@href, "update.php")]');
-    $this->clickLink('Status report');
+    $this->clickLink('Administration pages');
     $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
    * Tests maintenance mode link on update.php.
    */
-  public function testMaintenanceModeLink(): void {
+  public function testMaintenanceModeLink() {
     $full_admin_user = $this->drupalCreateUser([
       'administer software updates',
       'access administration pages',
@@ -848,7 +837,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Helper function to run updates via the browser.
    */
-  protected function runUpdates($maintenance_mode): void {
+  protected function runUpdates($maintenance_mode) {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
     $schema_version = $update_registry->getInstalledVersion('update_script_test');

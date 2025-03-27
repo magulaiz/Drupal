@@ -13,17 +13,14 @@ namespace Drupal\Core\Entity;
  * editing.
  *
  * @see \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityChangedConstraint
- *
- * @ingroup entity_type_characteristics
  */
 interface EntityChangedInterface extends EntityInterface {
 
   /**
    * Gets the timestamp of the last entity change for the current translation.
    *
-   * @return int|null
-   *   The timestamp of the last entity save operation. Some entities allow a
-   *   NULL value indicating the changed time is unknown.
+   * @return int
+   *   The timestamp of the last entity save operation.
    */
   public function getChangedTime();
 

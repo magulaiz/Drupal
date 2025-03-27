@@ -1,14 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\source;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
-use Drupal\TestTools\Random;
-
-// cspell:ignore mlid plid tsid
 
 /**
  * Tests the menu link source plugin.
@@ -27,7 +22,7 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public function providerSource() {
     $tests = [];
 
     // The source data.
@@ -280,7 +275,7 @@ class MenuLinkTest extends MigrateSqlSourceTestBase {
     ];
 
     // Add long link title attributes to source data.
-    $title = Random::getGenerator()->string('500');
+    $title = $this->getRandomGenerator()->string('500');
     $tests[0]['source_data']['menu_links'][0]['options']['attributes']['title'] = $title;
 
     // Build the expected results.

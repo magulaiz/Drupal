@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\migrate\Unit;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
+use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -59,8 +59,6 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     $this->database = $this->getDatabase([]);
   }
 
@@ -70,7 +68,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @param array $map
    *   The row to save.
    */
-  protected function saveMap(array $map): void {
+  protected function saveMap(array $map) {
     $table = 'migrate_map_sql_idmap_test';
 
     $schema = $this->database->schema();
@@ -134,7 +132,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *   - rollback_action
    *   - hash
    */
-  protected function idMapDefaults(): array {
+  protected function idMapDefaults() {
     $defaults = [
       'source_row_status' => MigrateIdMapInterface::STATUS_IMPORTED,
       'rollback_action' => MigrateIdMapInterface::ROLLBACK_DELETE,
@@ -161,7 +159,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - saving new to nonempty tables work.
    * - updating work.
    */
-  public function testSaveIdMapping(): void {
+  public function testSaveIdMapping() {
     $source = [
       'source_id_property' => 'source_value',
     ];
@@ -195,7 +193,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the SQL ID map set message method.
    */
-  public function testSetMessage(): void {
+  public function testSetMessage() {
     $message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
     $id_map = $this->getIdMap();
     $id_map->setMessage($message);
@@ -205,7 +203,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the clear messages method.
    */
-  public function testClearMessages(): void {
+  public function testClearMessages() {
     $message = 'Hello world.';
     $expected_results = [0, 1, 2, 3];
     $id_map = $this->getIdMap();
@@ -225,7 +223,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the getRowsNeedingUpdate method for rows that need an update.
    */
-  public function testGetRowsNeedingUpdate(): void {
+  public function testGetRowsNeedingUpdate() {
     $id_map = $this->getIdMap();
     $row_statuses = [
       MigrateIdMapInterface::STATUS_IMPORTED,
@@ -281,7 +279,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the SQL ID map message count method by counting and saving messages.
    */
-  public function testMessageCount(): void {
+  public function testMessageCount() {
     $message = 'Hello world.';
     $expected_results = [0, 1, 2, 3];
     $id_map = $this->getIdMap();
@@ -297,7 +295,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the SQL ID map save message method.
    */
-  public function testMessageSave(): void {
+  public function testMessageSave() {
     $message = 'Hello world.';
     $original_values = [
       1 => ['message' => $message, 'level' => MigrationInterface::MESSAGE_ERROR],
@@ -306,22 +304,10 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       4 => ['message' => $message, 'level' => MigrationInterface::MESSAGE_INFORMATIONAL],
     ];
     $expected_results = [
-      '7ad742edb7e866caa78ced1e4455d2e9cbd8adb2074e7c323d21b4e67732e755' => [
-        'message' => $message,
-        'level' => MigrationInterface::MESSAGE_ERROR,
-      ],
-      '2d3ec2b0c547e819346e6ae03f881fd9f5c978ff3cbe29dfb807d40735e53703' => [
-        'message' => $message,
-        'level' => MigrationInterface::MESSAGE_WARNING,
-      ],
-      '12a042f72cad9a2a8c7715df0c7695d762975f0687d87f5d480725dae1432a6f' => [
-        'message' => $message,
-        'level' => MigrationInterface::MESSAGE_NOTICE,
-      ],
-      'd9d1fd27a2447ace48f47a2e9ff649673f67b446d9381a7963c949fc083f8791' => [
-        'message' => $message,
-        'level' => MigrationInterface::MESSAGE_INFORMATIONAL,
-      ],
+      '7ad742edb7e866caa78ced1e4455d2e9cbd8adb2074e7c323d21b4e67732e755' => ['message' => $message, 'level' => MigrationInterface::MESSAGE_ERROR],
+      '2d3ec2b0c547e819346e6ae03f881fd9f5c978ff3cbe29dfb807d40735e53703' => ['message' => $message, 'level' => MigrationInterface::MESSAGE_WARNING],
+      '12a042f72cad9a2a8c7715df0c7695d762975f0687d87f5d480725dae1432a6f' => ['message' => $message, 'level' => MigrationInterface::MESSAGE_NOTICE],
+      'd9d1fd27a2447ace48f47a2e9ff649673f67b446d9381a7963c949fc083f8791' => ['message' => $message, 'level' => MigrationInterface::MESSAGE_INFORMATIONAL],
     ];
     $id_map = $this->getIdMap();
 
@@ -360,7 +346,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the getRowBySource method.
    */
-  public function testGetRowBySource(): void {
+  public function testGetRowBySource() {
     $this->getDatabase([]);
     $row = [
       'sourceid1' => 'source_id_value_1',
@@ -372,8 +358,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $row = [
       'sourceid1' => 'source_id_value_3',
       'sourceid2' => 'source_id_value_4',
-      'source_ids_hash' => $this->getIdMap()
-        ->getSourceIdsHash(['source_id_property' => 'source_id_value_3', 'sourceid2' => 'source_id_value_4']),
+      'source_ids_hash' => $this->getIdMap()->getSourceIdsHash(['source_id_property' => 'source_id_value_3', 'sourceid2' => 'source_id_value_4']),
       'destid1' => 'destination_id_value_2',
     ] + $this->idMapDefaults();
     $this->saveMap($row);
@@ -398,7 +383,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function lookupDestinationIdMappingDataProvider() {
+  public function lookupDestinationIdMappingDataProvider() {
     return [
       [1, 1],
       [2, 2],
@@ -417,7 +402,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider lookupDestinationIdMappingDataProvider
    */
-  public function testLookupDestinationIdMapping($num_source_fields, $num_destination_fields): void {
+  public function testLookupDestinationIdMapping($num_source_fields, $num_destination_fields) {
     // Adjust the migration configuration according to the number of source and
     // destination fields.
     $this->sourceIds = [];
@@ -486,7 +471,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests lookupDestinationIds().
    */
-  public function testLookupDestinationIds(): void {
+  public function testLookupDestinationIds() {
     // Simple map with one source and one destination ID.
     $id_map = $this->setupRows(['nid'], ['nid'], [
       [1, 101],
@@ -534,11 +519,9 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     // Lookup by partial associative list.
     $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds(['nid' => 1]));
     $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2]));
-    $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2, 'language' => NULL]));
     $this->assertEquals([], $id_map->lookupDestinationIds(['nid' => 99]));
-    $this->assertEquals(
-      [[101, 'en'], [101, 'fr'], [101, 'de']],
-      $id_map->lookupDestinationIds(['nid' => 1, 'language' => NULL]));
+    $this->assertEquals([[101, 'en'], [101, 'fr'], [101, 'de']], $id_map->lookupDestinationIds(['nid' => 1, 'language' => NULL]));
+    $this->assertEquals([[102, 'en']], $id_map->lookupDestinationIds(['nid' => 2, 'language' => NULL]));
     // Out-of-order partial associative list.
     $this->assertEquals([[101, 'en'], [102, 'en']], $id_map->lookupDestinationIds(['language' => 'en']));
     $this->assertEquals([[101, 'fr']], $id_map->lookupDestinationIds(['language' => 'fr']));
@@ -572,7 +555,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the getRowByDestination method.
    */
-  public function testGetRowByDestination(): void {
+  public function testGetRowByDestination() {
     $row = [
       'sourceid1' => 'source_id_value_1',
       'sourceid2' => 'source_id_value_2',
@@ -618,7 +601,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function lookupSourceIdMappingDataProvider() {
+  public function lookupSourceIdMappingDataProvider() {
     return [
       [1, 1],
       [2, 2],
@@ -637,43 +620,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider lookupSourceIdMappingDataProvider
    */
-  public function testLookupSourceIdMapping($num_source_fields, $num_destination_fields): void {
-    $source_id_property_prefix = 'source_id_property_';
-    $this->doTestLookupSourceIdMapping($num_source_fields, $num_destination_fields, $source_id_property_prefix);
-  }
-
-  /**
-   * Performs the source ID test on source and destination fields.
-   *
-   * This performs same test as ::testLookupSourceIdMapping, except with source
-   * property names including spaces and special characters not allowed in SQL
-   * column aliases.
-   *
-   * @param int $num_source_fields
-   *   Number of source fields to test.
-   * @param int $num_destination_fields
-   *   Number of destination fields to test.
-   *
-   * @dataProvider lookupSourceIdMappingDataProvider
-   */
-  public function testLookupSourceIdMappingNonSqlCharacters($num_source_fields, $num_destination_fields): void {
-    $source_id_property_prefix = '$ource id property * ';
-    $this->doTestLookupSourceIdMapping($num_source_fields, $num_destination_fields, $source_id_property_prefix);
-  }
-
-  /**
-   * Performs the source ID test on source and destination fields.
-   *
-   * @param int $num_source_fields
-   *   Number of source fields to test.
-   * @param int $num_destination_fields
-   *   Number of destination fields to test.
-   * @param string $source_id_property_prefix
-   *   Prefix for the source ID properties.
-   *
-   * @dataProvider lookupSourceIdMappingDataProvider
-   */
-  public function doTestLookupSourceIdMapping(int $num_source_fields, int $num_destination_fields, string $source_id_property_prefix): void {
+  public function testLookupSourceIdMapping($num_source_fields, $num_destination_fields) {
     // Adjust the migration configuration according to the number of source and
     // destination fields.
     $this->sourceIds = [];
@@ -684,8 +631,8 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     for ($i = 1; $i <= $num_source_fields; $i++) {
       $row["sourceid$i"] = "source_id_value_$i";
       $source_ids_values = [$row["sourceid$i"]];
-      $expected_result[$source_id_property_prefix . $i] = "source_id_value_$i";
-      $this->sourceIds[$source_id_property_prefix . $i] = [];
+      $expected_result["source_id_property_$i"] = "source_id_value_$i";
+      $this->sourceIds["source_id_property_$i"] = [];
     }
     $destination_id_values = [];
     $nonexistent_id_values = [];
@@ -709,7 +656,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests currentDestination() and currentSource().
    */
-  public function testCurrentDestinationAndSource(): void {
+  public function testCurrentDestinationAndSource() {
     // Simple map with one source and one destination ID.
     $id_map = $this->setupRows(['nid'], ['nid'], [
       [1, 101],
@@ -743,7 +690,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - One import.
    * - Multiple imports.
    */
-  public function testImportedCount(): void {
+  public function testImportedCount() {
     $id_map = $this->getIdMap();
     // Add a single failed row and assert zero imported rows.
     $source = ['source_id_property' => 'source_value_failed'];
@@ -775,7 +722,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - One processed row.
    * - Multiple processed rows.
    */
-  public function testProcessedCount(): void {
+  public function testProcessedCount() {
     $id_map = $this->getIdMap();
     // Assert zero rows have been processed before adding rows.
     $this->assertSame(0, $id_map->processedCount());
@@ -811,7 +758,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function updateCountDataProvider() {
+  public function updateCountDataProvider() {
     return [
       [0],
       [1],
@@ -827,7 +774,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider updateCountDataProvider
    */
-  public function testUpdateCount($num_update_rows): void {
+  public function testUpdateCount($num_update_rows) {
     for ($i = 0; $i < 5; $i++) {
       $row = $this->idMapDefaults();
       $row['sourceid1'] = "source_id_value_$i";
@@ -859,7 +806,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function errorCountDataProvider() {
+  public function errorCountDataProvider() {
     return [
       [0],
       [1],
@@ -875,7 +822,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider errorCountDataProvider
    */
-  public function testErrorCount($num_error_rows): void {
+  public function testErrorCount($num_error_rows) {
     for ($i = 0; $i < 5; $i++) {
       $row = $this->idMapDefaults();
       $row['sourceid1'] = "source_id_value_$i";
@@ -899,7 +846,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests setting a row source_row_status to STATUS_NEEDS_UPDATE.
    */
-  public function testSetUpdate(): void {
+  public function testSetUpdate() {
     $id_map = $this->getIdMap();
     $row_statuses = [
       MigrateIdMapInterface::STATUS_IMPORTED,
@@ -939,7 +886,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       $id_map->setUpdate([]);
       $this->assertFalse(FALSE, 'MigrateException not thrown, when source identifiers were provided to update.');
     }
-    catch (MigrateException) {
+    catch (MigrateException $e) {
       $this->assertTrue(TRUE, "MigrateException thrown, when source identifiers were not provided to update.");
     }
   }
@@ -947,7 +894,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests prepareUpdate().
    */
-  public function testPrepareUpdate(): void {
+  public function testPrepareUpdate() {
     $id_map = $this->getIdMap();
     $row_statuses = [
       MigrateIdMapInterface::STATUS_IMPORTED,
@@ -993,7 +940,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - One error.
    * - Multiple errors.
    */
-  public function testDestroy(): void {
+  public function testDestroy() {
     $id_map = $this->getIdMap();
     // Initialize the ID map.
     $id_map->getDatabase();
@@ -1016,7 +963,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the getQualifiedMapTable method with a prefixed database.
    */
-  public function testGetQualifiedMapTablePrefix(): void {
+  public function testGetQualifiedMapTablePrefix() {
     $connection_options = [
       'database' => ':memory:',
       'prefix' => 'prefix',
@@ -1040,7 +987,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * - Sql::key()
    * - Sql::current()
    */
-  public function testIterators(): void {
+  public function testIterators() {
     for ($i = 0; $i < 3; $i++) {
       $row = $this->idMapDefaults();
       $row['sourceid1'] = "source_id_value_$i";
@@ -1060,7 +1007,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   The contents of an ID map.
    */
-  private function getIdMapContents(): array {
+  private function getIdMapContents() {
     $result = $this->database
       ->select('migrate_map_sql_idmap_test', 't')
       ->fields('t')
@@ -1079,7 +1026,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
   /**
    * Tests the delayed creation of the "map" and "message" migrate tables.
    */
-  public function testMapTableCreation(): void {
+  public function testMapTableCreation() {
     $id_map = $this->getIdMap();
     $map_table_name = $id_map->mapTableName();
     $message_table_name = $id_map->messageTableName();
@@ -1111,7 +1058,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider getHighestIdDataProvider
    */
-  public function testGetHighestId(array $destination_ids, array $rows, $expected): void {
+  public function testGetHighestId(array $destination_ids, array $rows, $expected) {
     $this->database = $this->getDatabase([]);
     $this->sourceIds = $destination_ids;
     $this->destinationIds = $destination_ids;
@@ -1145,10 +1092,10 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function getHighestIdDataProvider() {
+  public function getHighestIdDataProvider() {
     return [
       'Destination ID type integer' => [
-        'destination_ids' => [
+        'dest_ids' => [
           'nid' => [
             'type' => 'integer',
           ],
@@ -1162,7 +1109,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
         'expected' => 5,
       ],
       'Destination ID types integer and string' => [
-        'destination_ids' => [
+        'dest_ids' => [
           'nid' => [
             'type' => 'integer',
           ],
@@ -1192,7 +1139,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    *
    * @dataProvider getHighestIdInvalidDataProvider
    */
-  public function testGetHighestIdInvalid(array $destination_ids): void {
+  public function testGetHighestIdInvalid(array $destination_ids) {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage('To determine the highest migrated ID the first ID must be an integer');
     $this->destinationIds = $destination_ids;
@@ -1210,17 +1157,17 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function getHighestIdInvalidDataProvider() {
+  public function getHighestIdInvalidDataProvider() {
     return [
       'Destination ID type string' => [
-        'destination_ids' => [
+        'ids' => [
           'language' => [
             'type' => 'string',
           ],
         ],
       ],
       'Destination ID types int (not integer) and string' => [
-        'destination_ids' => [
+        'ids' => [
           'nid' => [
             'type' => 'int',
           ],
@@ -1230,6 +1177,22 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
         ],
       ],
     ];
+  }
+
+  /**
+   * Tests deprecation message from Sql::getMigrationPluginManager().
+   *
+   * @group legacy
+   */
+  public function testGetMigrationPluginManagerDeprecation() {
+    $container = new ContainerBuilder();
+    $migration_plugin_manager = $this->createMock(MigrationPluginManager::class);
+    $container->set('plugin.manager.migration', $migration_plugin_manager);
+    \Drupal::setContainer($container);
+
+    $this->expectDeprecation('deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306');
+    $id_map = $this->getIdMap();
+    $id_map->getMigrationPluginManager();
   }
 
 }

@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
 
-use Drupal\block\Plugin\DisplayVariant\BlockPageVariant;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
@@ -44,8 +41,8 @@ class BlockPageVariantTest extends UnitTestCase {
    * @param array $definition
    *   The plugin definition array.
    *
-   * @return \Drupal\block\Plugin\DisplayVariant\BlockPageVariant
-   *   A test display variant plugin.
+   * @return \Drupal\block\Plugin\DisplayVariant\BlockPageVariant|\PHPUnit\Framework\MockObject\MockObject
+   *   A mocked display variant plugin.
    */
   public function setUpDisplayVariant($configuration = [], $definition = []) {
 
@@ -63,13 +60,13 @@ class BlockPageVariantTest extends UnitTestCase {
     $this->blockRepository = $this->createMock('Drupal\block\BlockRepositoryInterface');
     $this->blockViewBuilder = $this->createMock('Drupal\Core\Entity\EntityViewBuilderInterface');
 
-    return new BlockPageVariant($configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, ['config:block_list']);
+    return $this->getMockBuilder('Drupal\block\Plugin\DisplayVariant\BlockPageVariant')
+      ->setConstructorArgs([$configuration, 'test', $definition, $this->blockRepository, $this->blockViewBuilder, ['config:block_list']])
+      ->addMethods(['getRegionNames'])
+      ->getMock();
   }
 
-  /**
-   * Provides data to testBuild().
-   */
-  public static function providerBuild() {
+  public function providerBuild() {
     $blocks_config = [
       'block1' => [
         // region, is main content block, is messages block, is title block
@@ -204,7 +201,7 @@ class BlockPageVariantTest extends UnitTestCase {
    *
    * @dataProvider providerBuild
    */
-  public function testBuild(array $blocks_config, $visible_block_count, array $expected_render_array): void {
+  public function testBuild(array $blocks_config, $visible_block_count, array $expected_render_array) {
     $display_variant = $this->setUpDisplayVariant();
     $display_variant->setMainContent(['#markup' => 'Hello kittens!']);
 
@@ -239,7 +236,7 @@ class BlockPageVariantTest extends UnitTestCase {
    *
    * @covers ::build
    */
-  public function testBuildWithoutMainContent(): void {
+  public function testBuildWithoutMainContent() {
     $display_variant = $this->setUpDisplayVariant();
     $this->blockRepository->expects($this->once())
       ->method('getVisibleBlocksPerRegion')

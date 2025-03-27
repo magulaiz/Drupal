@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\Discovery;
 
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -30,7 +28,7 @@ class YamlDiscoveryTest extends TestCase {
   /**
    * Tests if filename is output for a broken YAML file.
    */
-  public function testFilenameForBrokenYml(): void {
+  public function testFilenameForBrokenYml() {
     vfsStreamWrapper::register();
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);

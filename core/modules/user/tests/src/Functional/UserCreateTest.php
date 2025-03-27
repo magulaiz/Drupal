@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Test\AssertMailTrait;
@@ -21,7 +19,9 @@ class UserCreateTest extends BrowserTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['image'];
 
@@ -31,14 +31,15 @@ class UserCreateTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests user creation and display from the administration interface.
+   * Create a user through the administration interface and ensure that it
+   * displays in the user list.
    */
-  public function testUserAdd(): void {
+  public function testUserAdd() {
     $user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($user);
 
-    $this->assertEquals(\Drupal::time()->getRequestTime(), $user->getCreatedTime(), 'Creating a user sets default "created" timestamp.');
-    $this->assertEquals(\Drupal::time()->getRequestTime(), $user->getChangedTime(), 'Creating a user sets default "changed" timestamp.');
+    $this->assertEquals(REQUEST_TIME, $user->getCreatedTime(), 'Creating a user sets default "created" timestamp.');
+    $this->assertEquals(REQUEST_TIME, $user->getChangedTime(), 'Creating a user sets default "changed" timestamp.');
 
     // Create a field.
     $field_name = 'test_field';
@@ -63,7 +64,7 @@ class UserCreateTest extends BrowserTestBase {
       'description' => 'Your virtual face or picture.',
       'required' => FALSE,
       'settings' => [
-        'file_extensions' => 'png gif jpg jpeg webp',
+        'file_extensions' => 'png gif jpg jpeg',
         'file_directory' => 'pictures',
         'max_filesize' => '30 KB',
         'alt_field' => 0,

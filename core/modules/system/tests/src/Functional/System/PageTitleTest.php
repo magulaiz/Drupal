@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Utility\Html;
@@ -17,7 +15,9 @@ use Drupal\Tests\BrowserTestBase;
 class PageTitleTest extends BrowserTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['node', 'test_page_test', 'form_test', 'block'];
 
@@ -26,12 +26,8 @@ class PageTitleTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'starterkit_theme';
 
-  /**
-   * The test user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
   protected $contentUser;
+  protected $savedTitle;
 
   /**
    * Implement setUp().
@@ -56,7 +52,7 @@ class PageTitleTest extends BrowserTestBase {
   /**
    * Tests the handling of HTML in node titles.
    */
-  public function testTitleTags(): void {
+  public function testTitleTags() {
     $title = "string with <em>HTML</em>";
     // Generate node content.
     $edit = [
@@ -78,7 +74,7 @@ class PageTitleTest extends BrowserTestBase {
   /**
    * Tests if the title of the site is XSS proof.
    */
-  public function testTitleXSS(): void {
+  public function testTitleXSS() {
     // Set some title with JavaScript and HTML chars to escape.
     $title = '</title><script type="text/javascript">alert("Title XSS!");</script> & < > " \' ';
     $title_filtered = Html::escape($title);
@@ -119,7 +115,7 @@ class PageTitleTest extends BrowserTestBase {
    *
    * @see \Drupal\test_page_test\Controller\Test
    */
-  public function testRoutingTitle(): void {
+  public function testRoutingTitle() {
     // Test the '#title' render array attribute.
     $this->drupalGet('test-render-title');
 

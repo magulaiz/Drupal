@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\File;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Site\Settings;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -46,7 +45,7 @@ class HtaccessTest extends KernelTestBase {
   /**
    * @covers ::write
    */
-  public function testHtaccessSave(): void {
+  public function testHtaccessSave() {
     // Prepare test directories.
     $private = Settings::get('file_public_path') . '/test/private';
     $stream = 'public://test/stream';
@@ -103,11 +102,11 @@ class HtaccessTest extends KernelTestBase {
    */
   protected function assertFilePermissions(string $uri, int $expected): void {
     $actual = fileperms($uri) & 0777;
-    $this->assertSame($actual, $expected, sprintf('%s file permissions %s are identical to %s.',
-      $uri,
-      0 . decoct($actual),
-      0 . decoct($expected),
-    ));
+    $this->assertSame($actual, $expected, new FormattableMarkup('@uri file permissions @actual are identical to @expected.', [
+      '@uri' => $uri,
+      '@actual' => 0 . decoct($actual),
+      '@expected' => 0 . decoct($expected),
+    ]));
   }
 
 }

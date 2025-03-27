@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -19,7 +17,9 @@ use Drupal\views\Views;
 class TaxonomyTermViewTest extends TaxonomyTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['taxonomy', 'views'];
 
@@ -57,7 +57,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
 
     // Create a vocabulary and add two term reference fields to article nodes.
 
-    $this->fieldName1 = $this->randomMachineName();
+    $this->fieldName1 = mb_strtolower($this->randomMachineName());
 
     $handler_settings = [
       'target_bundles' => [
@@ -65,7 +65,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
       ],
       'auto_create' => TRUE,
     ];
-    $this->createEntityReferenceField('node', 'article', $this->fieldName1, '', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->createEntityReferenceField('node', 'article', $this->fieldName1, NULL, 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
@@ -84,7 +84,7 @@ class TaxonomyTermViewTest extends TaxonomyTestBase {
   /**
    * Tests that the taxonomy term view is working properly.
    */
-  public function testTaxonomyTermView(): void {
+  public function testTaxonomyTermView() {
     // Create terms in the vocabulary.
     $term = $this->createTerm();
 

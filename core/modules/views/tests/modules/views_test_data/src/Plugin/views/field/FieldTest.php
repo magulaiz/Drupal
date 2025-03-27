@@ -1,17 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\views_test_data\Plugin\views\field;
 
-use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * A test field handler.
+ * @ViewsField("test_field")
  */
-#[ViewsField("test_field")]
 class FieldTest extends FieldPluginBase {
 
 
@@ -36,7 +32,6 @@ class FieldTest extends FieldPluginBase {
    * Returns the testValue property.
    *
    * @return string
-   *   The value of the test.
    */
   public function getTestValue() {
     return $this->testValue;

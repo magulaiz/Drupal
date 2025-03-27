@@ -1,15 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\block_content\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
-// cspell:ignore objectid objectindex plid
-
 /**
- * Tests i18n content block translations source plugin.
+ * Tests i18n custom block translations source plugin.
  *
  * @covers \Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation
  *
@@ -25,11 +21,11 @@ class BlockCustomTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public function providerSource() {
     $tests = [];
 
     // The source data.
-    $tests[0]['source_data']['block_custom'] = [
+    $tests[0]['database']['block_custom'] = [
       [
         'bid' => 1,
         'body' => 'box 1 body',
@@ -50,7 +46,7 @@ class BlockCustomTranslationTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    $tests[0]['source_data']['i18n_string'] = [
+    $tests[0]['database']['i18n_string'] = [
       [
         'lid' => 1,
         'objectid' => 1,
@@ -85,7 +81,7 @@ class BlockCustomTranslationTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    $tests[0]['source_data']['locales_target'] = [
+    $tests[0]['database']['locales_target'] = [
       [
         'lid' => 1,
         'language' => 'fr',
@@ -112,7 +108,7 @@ class BlockCustomTranslationTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    $tests[0]['source_data']['system'] = [
+    $tests[0]['database']['system'] = [
       [
         'type' => 'module',
         'name' => 'system',
@@ -121,7 +117,7 @@ class BlockCustomTranslationTest extends MigrateSqlSourceTestBase {
       ],
     ];
 
-    $tests[0]['expected_data'] = [
+    $tests[0]['expected_results'] = [
       [
         'lid' => '1',
         'property' => 'title',

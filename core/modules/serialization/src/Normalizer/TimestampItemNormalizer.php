@@ -8,15 +8,18 @@ use Drupal\Core\TypedData\Plugin\DataType\Timestamp;
 /**
  * Converts values for TimestampItem to and from common formats.
  *
- * Overrides FieldItemNormalizer to use
- * \Drupal\serialization\Normalizer\TimestampNormalizer
+ * Overrides FieldItemNormalizer to use \Drupal\serialization\Normalizer\TimestampNormalizer
  *
  * Overrides FieldItemNormalizer to
  * - during normalization, add the 'format' key to assist consumers
- * - during denormalization, use
- *   \Drupal\serialization\Normalizer\TimestampNormalizer
+ * - during denormalization, use \Drupal\serialization\Normalizer\TimestampNormalizer
  */
 class TimestampItemNormalizer extends FieldItemNormalizer {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $supportedInterfaceOrClass = TimestampItem::class;
 
   /**
    * {@inheritdoc}
@@ -37,15 +40,6 @@ class TimestampItemNormalizer extends FieldItemNormalizer {
       $context['datetime_allowed_formats'] = [$data['format']];
     }
     return ['value' => $this->serializer->denormalize($data['value'], Timestamp::class, NULL, $context)];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSupportedTypes(?string $format): array {
-    return [
-      TimestampItem::class => TRUE,
-    ];
   }
 
 }

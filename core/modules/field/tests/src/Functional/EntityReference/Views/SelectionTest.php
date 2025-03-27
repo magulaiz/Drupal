@@ -1,16 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Functional\EntityReference\Views;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Site\Settings;
-use Drupal\entity_test\EntityTestHelper;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 use Drupal\views\Views;
 
 /**
@@ -20,7 +17,7 @@ use Drupal\views\Views;
  */
 class SelectionTest extends BrowserTestBase {
 
-  use EntityReferenceFieldCreationTrait;
+  use EntityReferenceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -69,10 +66,6 @@ class SelectionTest extends BrowserTestBase {
       $this->nodes[$node->id()] = $node;
     }
 
-    // Ensure the bundle to which the field is attached actually exists, or we
-    // will get config validation errors.
-    EntityTestHelper::createBundle('test_bundle');
-
     // Create an entity reference field.
     $handler_settings = [
       'view' => [
@@ -87,7 +80,7 @@ class SelectionTest extends BrowserTestBase {
   /**
    * Tests that the Views selection handles the views output properly.
    */
-  public function testAutocompleteOutput(): void {
+  public function testAutocompleteOutput() {
     // Reset any internal static caching.
     \Drupal::service('entity_type.manager')->getStorage('node')->resetCache();
 

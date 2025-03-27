@@ -1,10 +1,7 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\FunctionalJavascriptTests\Tests;
 
-use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
@@ -47,10 +44,8 @@ class DrupalSelenium2DriverTest extends WebDriverTestBase {
   /**
    * Tests uploading remote files.
    */
-  public function testGetRemoteFilePath(): void {
+  public function testGetRemoteFilePath() {
     $web_driver = $this->getSession()->getDriver();
-    $this->assertInstanceOf(Selenium2Driver::class, $web_driver);
-
     $file_system = \Drupal::service('file_system');
     $entity = EntityTest::create();
     $entity->save();

@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\Core\ParamConverter;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\RevisionableStorageInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\ParamConverter\EntityRevisionParamConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
@@ -51,7 +49,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   /**
    * @covers ::applies
    */
-  public function testNonApplyingRoute(): void {
+  public function testNonApplyingRoute() {
     $route = new Route('/test');
     $this->assertFalse($this->converter->applies([], 'test_revision', $route));
   }
@@ -59,7 +57,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   /**
    * @covers ::applies
    */
-  public function testApplyingRoute(): void {
+  public function testApplyingRoute() {
     $route = $this->getTestRoute();
     $this->assertTrue($this->converter->applies($route->getOption('parameters')['test_revision'], 'test_revision', $route));
   }
@@ -71,8 +69,8 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
    *
    * @covers ::convert
    */
-  public function testConvert($value, array $definition, array $defaults, $expected_result): void {
-    $storage = $this->prophesize(RevisionableStorageInterface::class);
+  public function testConvert($value, array $definition, array $defaults, $expected_result) {
+    $storage = $this->prophesize(EntityStorageInterface::class);
     $storage->loadRevision('valid_id')->willReturn((object) ['revision_id' => 'valid_id']);
     $storage->loadRevision('invalid_id')->willReturn(NULL);
 
@@ -88,7 +86,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
   /**
    * Provides test data for testConvert.
    */
-  public static function providerTestConvert() {
+  public function providerTestConvert() {
     $data = [];
     // Existing entity type.
     $data[] = ['valid_id', ['type' => 'entity_revision:entity_test'], ['test_revision' => 'valid_id'], (object) ['revision_id' => 'valid_id']];
@@ -105,7 +103,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
    *
    * @covers ::convert
    */
-  public function testConvertWithInvalidEntityType(): void {
+  public function testConvertWithInvalidEntityType() {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $entity_type_manager->getStorage('invalid_entity_type_id')->willThrow(new InvalidPluginDefinitionException('invalid_entity_type_id'));
     $entity_repository = $this->prophesize(EntityRepositoryInterface::class);
@@ -120,7 +118,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
    *
    * @covers ::convert
    */
-  public function testConvertWithInvalidType(): void {
+  public function testConvertWithInvalidType() {
     $this->expectException(ParamNotConvertedException::class);
     $this->expectExceptionMessage('The type definition "entity_revision_{entity_type_id}" is invalid. The expected format is "entity_revision:<entity_type_id>".');
     $this->converter->convert('valid_id', ['type' => 'entity_revision_{entity_type_id}'], 'foo', ['foo' => 'valid_id']);
@@ -131,7 +129,7 @@ class EntityRevisionParamConverterTest extends UnitTestCase {
    *
    * @covers ::convert
    */
-  public function testConvertWithInvalidDynamicEntityType(): void {
+  public function testConvertWithInvalidDynamicEntityType() {
     $this->expectException(ParamNotConvertedException::class);
     $this->expectExceptionMessage('The "foo" parameter was not converted because the "invalid_entity_type_id" parameter is missing.');
     $this->converter->convert('valid_id', ['type' => 'entity_revision:{invalid_entity_type_id}'], 'foo', ['foo' => 'valid_id']);

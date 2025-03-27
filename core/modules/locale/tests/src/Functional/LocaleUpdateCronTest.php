@@ -1,12 +1,9 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\Tests\Traits\Core\CronRunTrait;
-use Drupal\locale\Hook\LocaleHooks;
 
 /**
  * Tests for using cron to update project interface translations.
@@ -16,6 +13,8 @@ use Drupal\locale\Hook\LocaleHooks;
 class LocaleUpdateCronTest extends LocaleUpdateBase {
 
   use CronRunTrait;
+
+  protected $batchOutput = [];
 
   /**
    * {@inheritdoc}
@@ -41,7 +40,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
   /**
    * Tests interface translation update using cron.
    */
-  public function testUpdateCron(): void {
+  public function testUpdateCron() {
     // Set a flag to let the locale_test module replace the project data with a
     // set of test projects.
     \Drupal::state()->set('locale.test_projects_alter', TRUE);
@@ -61,7 +60,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     // Prepare for test: Simulate new translations being available.
     // Change the last updated timestamp of a translation file.
     $contrib_module_two_uri = 'public://local/contrib_module_two-8.x-2.0-beta4.de._po';
-    touch(\Drupal::service('file_system')->realpath($contrib_module_two_uri), \Drupal::time()->getRequestTime());
+    touch(\Drupal::service('file_system')->realpath($contrib_module_two_uri), REQUEST_TIME);
 
     // Prepare for test: Simulate that the file has not been checked for a long
     // time. Set the last_check timestamp to zero.
@@ -80,8 +79,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Execute locale cron tasks to add tasks to the queue.
-    $localeCron = new LocaleHooks();
-    $localeCron->cron();
+    locale_cron();
 
     // Check whether no tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
@@ -97,26 +95,22 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Execute locale cron tasks to add tasks to the queue.
-    $localeCron->cron();
+    locale_cron();
 
     // Check whether tasks are added to the queue.
-    // Expected tasks:
-    // - locale_translation_batch_version_check
-    // - locale_translation_batch_status_check
-    // - locale_translation_batch_status_finished.
     $queue = \Drupal::queue('locale_translation', TRUE);
-    $this->assertEquals(3, $queue->numberOfItems(), 'Queue holds tasks for one project.');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue holds tasks for one project.');
     $item = $queue->claimItem();
     $queue->releaseItem($item);
     $this->assertEquals('contrib_module_two', $item->data[1][0], 'Queue holds tasks for contrib module one.');
 
     // Test: Run cron for a second time and check if tasks are not added to
     // the queue twice.
-    $localeCron->cron();
+    locale_cron();
 
     // Check whether no more tasks are added to the queue.
     $queue = \Drupal::queue('locale_translation', TRUE);
-    $this->assertEquals(3, $queue->numberOfItems(), 'Queue holds tasks for one project.');
+    $this->assertEquals(2, $queue->numberOfItems(), 'Queue holds tasks for one project.');
 
     // Ensure last checked is updated to a greater time than the initial value.
     sleep(1);

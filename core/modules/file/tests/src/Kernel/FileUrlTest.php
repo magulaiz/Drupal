@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\Core\File\FileSystemInterface;
 
 /**
- * Tests the file URL.
+ * Tests the file url.
  *
  * @group file
  */
@@ -16,7 +14,7 @@ class FileUrlTest extends FileManagedUnitTestBase {
   /**
    * Tests public files with a different host name from settings.
    */
-  public function testFilesUrlWithDifferentHostName(): void {
+  public function testFilesUrlWithDifferentHostName() {
     $test_base_url = 'http://www.example.com/cdn';
     $this->setSetting('file_public_base_url', $test_base_url);
     $filepath = \Drupal::service('file_system')->createFilename('test.txt', '');

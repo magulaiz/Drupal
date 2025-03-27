@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\contact\Kernel\Views;
 
 use Drupal\contact\Entity\ContactForm;
@@ -31,12 +29,12 @@ class ContactFieldsTest extends KernelTestBase {
   /**
    * Tests the views data generation.
    */
-  public function testViewsData(): void {
+  public function testViewsData() {
     $this->installConfig(['contact']);
     FieldStorageConfig::create([
       'type' => 'text',
       'entity_type' => 'contact_message',
-      'field_name' => $field_name = $this->randomMachineName(),
+      'field_name' => $field_name = strtolower($this->randomMachineName()),
     ])->save();
 
     ContactForm::create([

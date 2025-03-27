@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
@@ -19,9 +17,9 @@ class PageViewTest extends NodeTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests editing a node by users with various access permissions.
+   * Tests an anonymous and unpermissioned user attempting to edit the node.
    */
-  public function testPageView(): void {
+  public function testPageView() {
     // Create a node to view.
     $node = $this->drupalCreateNode();
     $this->assertNotEmpty(Node::load($node->id()), 'Node created.');

@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\field\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -16,7 +15,7 @@ abstract class FieldTestBase extends BrowserTestBase {
   /**
    * Generate random values for a field_test field.
    *
-   * @param int $cardinality
+   * @param $cardinality
    *   Number of values to generate.
    *
    * @return array
@@ -38,14 +37,14 @@ abstract class FieldTestBase extends BrowserTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to test.
-   * @param string $field_name
-   *   The name of the field to test.
-   * @param array $expected_values
+   * @param $field_name
+   *   The name of the field to test
+   * @param $expected_values
    *   The array of expected values.
-   * @param string $langcode
+   * @param $langcode
    *   (Optional) The language code for the values. Defaults to
    *   \Drupal\Core\Language\LanguageInterface::LANGCODE_DEFAULT.
-   * @param string $column
+   * @param $column
    *   (Optional) The name of the column to check. Defaults to 'value'.
    */
   public function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_DEFAULT, $column = 'value') {
@@ -61,7 +60,7 @@ abstract class FieldTestBase extends BrowserTestBase {
     $values = $field->getValue();
     $this->assertSameSize($expected_values, $values, 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
-      $this->assertEquals($value, $values[$key][$column], "Value $value was saved correctly.");
+      $this->assertEquals($value, $values[$key][$column], new FormattableMarkup('Value @value was saved correctly.', ['@value' => $value]));
     }
   }
 

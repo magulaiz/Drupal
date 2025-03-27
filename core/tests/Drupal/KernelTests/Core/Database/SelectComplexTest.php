@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\RowCountException;
-use Drupal\Core\Database\Statement\FetchAs;
 use Drupal\user\Entity\User;
 
 /**
@@ -18,14 +16,16 @@ use Drupal\user\Entity\User;
 class SelectComplexTest extends DatabaseTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = ['system', 'user', 'node_access_test', 'field'];
 
   /**
    * Tests simple JOIN statements.
    */
-  public function testDefaultJoin(): void {
+  public function testDefaultJoin() {
     $query = $this->connection->select('test_task', 't');
     $people_alias = $query->join('test', 'p', '[t].[pid] = [p].[id]');
     $name_field = $query->addField($people_alias, 'name', 'name');
@@ -41,7 +41,7 @@ class SelectComplexTest extends DatabaseTestBase {
     foreach ($result as $record) {
       $num_records++;
       $this->assertGreaterThanOrEqual($last_priority, $record->$priority_field);
-      $this->assertNotSame('Ringo', $record->$name_field, 'Person without a task not selected.');
+      $this->assertNotSame('Ringo', $record->$name_field, 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }
 
@@ -51,7 +51,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests LEFT OUTER joins.
    */
-  public function testLeftOuterJoin(): void {
+  public function testLeftOuterJoin() {
     $query = $this->connection->select('test', 'p');
     $people_alias = $query->leftJoin('test_task', 't', '[t].[pid] = [p].[id]');
     $name_field = $query->addField('p', 'name', 'name');
@@ -62,7 +62,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $result = $query->execute();
 
     $num_records = 0;
-    $last_name = '0';
+    $last_name = 0;
 
     // Verify that the results are returned in the correct order.
     foreach ($result as $record) {
@@ -76,7 +76,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests GROUP BY clauses.
    */
-  public function testGroupBy(): void {
+  public function testGroupBy() {
     $query = $this->connection->select('test_task', 't');
     $count_field = $query->addExpression('COUNT([task])', 'num');
     $task_field = $query->addField('t', 'task');
@@ -108,7 +108,7 @@ class SelectComplexTest extends DatabaseTestBase {
     ];
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEquals($count, $records[$task], "Correct number of '$task' records found.");
+      $this->assertEquals($count, $records[$task], new FormattableMarkup("Correct number of '@task' records found.", ['@task' => $task]));
     }
 
     $this->assertEquals(6, $num_records, 'Returned the correct number of total rows.');
@@ -117,7 +117,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests GROUP BY and HAVING clauses together.
    */
-  public function testGroupByAndHaving(): void {
+  public function testGroupByAndHaving() {
     $query = $this->connection->select('test_task', 't');
     $count_field = $query->addExpression('COUNT([task])', 'num');
     $task_field = $query->addField('t', 'task');
@@ -143,7 +143,7 @@ class SelectComplexTest extends DatabaseTestBase {
     ];
 
     foreach ($correct_results as $task => $count) {
-      $this->assertEquals($count, $records[$task], "Correct number of '$task' records found.");
+      $this->assertEquals($count, $records[$task], new FormattableMarkup("Correct number of '@task' records found.", ['@task' => $task]));
     }
 
     $this->assertEquals(1, $num_records, 'Returned the correct number of total rows.');
@@ -154,7 +154,7 @@ class SelectComplexTest extends DatabaseTestBase {
    *
    * The SQL clause varies with the database.
    */
-  public function testRange(): void {
+  public function testRange() {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -167,7 +167,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests whether the range property of a select clause can be undone.
    */
-  public function testRangeUndo(): void {
+  public function testRangeUndo() {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -181,21 +181,19 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests distinct queries.
    */
-  public function testDistinct(): void {
+  public function testDistinct() {
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'task');
-    $query->orderBy('task');
     $query->distinct();
-    $query_result = $query->execute()->fetchAll(FetchAs::Column);
+    $query_result = $query->countQuery()->execute()->fetchField();
 
-    $expected_result = ['code', 'eat', 'found new band', 'perform at superbowl', 'sing', 'sleep'];
-    $this->assertEquals($query_result, $expected_result, 'Returned the correct result.');
+    $this->assertEquals(6, $query_result, 'Returned the correct number of rows.');
   }
 
   /**
    * Tests that we can generate a count query from a built query.
    */
-  public function testCountQuery(): void {
+  public function testCountQuery() {
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
     $age_field = $query->addField('test', 'age', 'age');
@@ -215,7 +213,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests having queries.
    */
-  public function testHavingCountQuery(): void {
+  public function testHavingCountQuery() {
     $query = $this->connection->select('test')
       ->extend(PagerSelectExtender::class)
       ->groupBy('age')
@@ -229,7 +227,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that countQuery removes 'all_fields' statements and ordering clauses.
    */
-  public function testCountQueryRemovals(): void {
+  public function testCountQueryRemovals() {
     $query = $this->connection->select('test');
     $query->fields('test');
     $query->orderBy('name');
@@ -259,7 +257,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that countQuery properly removes fields and expressions.
    */
-  public function testCountQueryFieldRemovals(): void {
+  public function testCountQueryFieldRemovals() {
     // countQuery should remove all fields and expressions, so this can be
     // tested by adding a non-existent field and expression: if it ends
     // up in the query, an error will be thrown. If not, it will return the
@@ -277,7 +275,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that we can generate a count query from a query with distinct.
    */
-  public function testCountQueryDistinct(): void {
+  public function testCountQueryDistinct() {
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'task');
     $query->distinct();
@@ -290,7 +288,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that we can generate a count query from a query with GROUP BY.
    */
-  public function testCountQueryGroupBy(): void {
+  public function testCountQueryGroupBy() {
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'pid');
     $query->groupBy('pid');
@@ -315,7 +313,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Confirms that we can properly nest conditional clauses.
    */
-  public function testNestedConditions(): void {
+  public function testNestedConditions() {
     // This query should translate to:
     // "SELECT job FROM {test} WHERE name = 'Paul' AND (age = 26 OR age = 27)"
     // That should find only one record. Yes it's a non-optimal way of writing
@@ -332,7 +330,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Confirms we can join on a single table twice with a dynamic alias.
    */
-  public function testJoinTwice(): void {
+  public function testJoinTwice() {
     $query = $this->connection->select('test')->fields('test');
     $alias = $query->join('test', 'test', '[test].[job] = [%alias].[job]');
     $query->addField($alias, 'name', 'other_name');
@@ -346,7 +344,9 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that we can join on a query.
    */
-  public function testJoinSubquery(): void {
+  public function testJoinSubquery() {
+    $this->installSchema('system', 'sequences');
+
     $account = User::create([
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',
@@ -384,7 +384,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that rowCount() throws exception on SELECT query.
    */
-  public function testSelectWithRowCount(): void {
+  public function testSelectWithRowCount() {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $result = $query->execute();
@@ -392,7 +392,7 @@ class SelectComplexTest extends DatabaseTestBase {
       $result->rowCount();
       $exception = FALSE;
     }
-    catch (RowCountException) {
+    catch (RowCountException $e) {
       $exception = TRUE;
     }
     $this->assertTrue($exception, 'Exception was thrown');
@@ -401,7 +401,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that join conditions can use Condition objects.
    */
-  public function testJoinConditionObject(): void {
+  public function testJoinConditionObject() {
     // Same test as testDefaultJoin, but with a Condition object.
     $query = $this->connection->select('test_task', 't');
     $join_cond = ($this->connection->condition('AND'))->where('[t].[pid] = [p].[id]');
@@ -419,7 +419,7 @@ class SelectComplexTest extends DatabaseTestBase {
       $num_records++;
       // Verify that the results are returned in the correct order.
       $this->assertGreaterThanOrEqual($last_priority, $record->$priority_field);
-      $this->assertNotSame('Ringo', $record->$name_field, 'Person without a task not selected.');
+      $this->assertNotSame('Ringo', $record->$name_field, 'Taskless person not selected.');
       $last_priority = $record->$priority_field;
     }
 

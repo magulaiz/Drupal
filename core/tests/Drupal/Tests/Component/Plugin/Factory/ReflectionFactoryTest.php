@@ -1,6 +1,11 @@
 <?php
 
-declare(strict_types=1);
+/**
+ * @file
+ * Contains \Drupal\Tests\Component\Plugin\Factory\ReflectionFactoryTest.
+ *
+ * Also contains Argument* classes used as data for testing.
+ */
 
 namespace Drupal\Tests\Component\Plugin\Factory;
 
@@ -25,7 +30,7 @@ class ReflectionFactoryTest extends TestCase {
    *   - $plugin_definition parameter to getInstanceArguments().
    *   - $configuration parameter to getInstanceArguments().
    */
-  public static function providerGetInstanceArguments() {
+  public function providerGetInstanceArguments() {
     return [
       [
         ['arguments_plugin_id'],
@@ -80,7 +85,7 @@ class ReflectionFactoryTest extends TestCase {
    * @covers ::createInstance
    * @dataProvider providerGetInstanceArguments
    */
-  public function testCreateInstance($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {
+  public function testCreateInstance($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration) {
     // Create a mock DiscoveryInterface which can return our plugin definition.
     $mock_discovery = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryInterface')
       ->onlyMethods(['getDefinition', 'getDefinitions', 'hasDefinition'])
@@ -105,11 +110,12 @@ class ReflectionFactoryTest extends TestCase {
    * @covers ::getInstanceArguments
    * @dataProvider providerGetInstanceArguments
    */
-  public function testGetInstanceArguments($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration): void {
+  public function testGetInstanceArguments($expected, $reflector_name, $plugin_id, $plugin_definition, $configuration) {
     $reflection_factory = $this->getMockBuilder('Drupal\Component\Plugin\Factory\ReflectionFactory')
       ->disableOriginalConstructor()
       ->getMock();
     $get_instance_arguments_ref = new \ReflectionMethod($reflection_factory, 'getInstanceArguments');
+    $get_instance_arguments_ref->setAccessible(TRUE);
 
     // Special case for plugin class without a constructor.
     // getInstanceArguments() throws an exception if there's no constructor.

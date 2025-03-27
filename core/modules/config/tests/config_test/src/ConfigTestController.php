@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\config_test;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -29,7 +27,7 @@ class ConfigTestController extends ControllerBase {
   /**
    * Enables a ConfigTest object.
    *
-   * @param \Drupal\config_test\Entity\ConfigTest $config_test
+   * @param \Drupal\config_test\ConfigTest $config_test
    *   The ConfigTest object to enable.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -43,7 +41,7 @@ class ConfigTestController extends ControllerBase {
   /**
    * Disables a ConfigTest object.
    *
-   * @param \Drupal\config_test\Entity\ConfigTest $config_test
+   * @param \Drupal\config_test\ConfigTest $config_test
    *   The ConfigTest object to disable.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse

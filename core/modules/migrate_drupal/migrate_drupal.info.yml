@@ -5,4 +5,3 @@ package: Migration
 version: VERSION
 dependencies:
   - drupal:migrate
-  - drupal:phpass

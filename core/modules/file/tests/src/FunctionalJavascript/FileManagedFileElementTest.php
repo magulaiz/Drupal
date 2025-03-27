@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\file\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -54,7 +52,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
   /**
    * Tests the managed_file element type.
    */
-  public function testManagedFile(): void {
+  public function testManagedFile() {
     // Perform the tests with all permutations of $form['#tree'],
     // $element['#extended'], and $element['#multiple'].
     $filename = \Drupal::service('file_system')->tempnam('temporary://', "testManagedFile") . '.txt';
