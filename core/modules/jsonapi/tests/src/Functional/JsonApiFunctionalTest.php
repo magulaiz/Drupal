@@ -37,7 +37,6 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
    * Tests the GET method.
    */
   public function testRead(): void {
-    $this->setWaitForTerminate();
     $this->createDefaultContent(61, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE);
     // Unpublish the last entity, so we can check access.
     $this->nodes[60]->setUnpublished()->save();
@@ -521,6 +520,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertCount(0, $collection_output['data']);
 
     // Request in maintenance mode returns valid JSON.
+    $this->setWaitForTerminate();
     $this->container->get('state')->set('system.maintenance_mode', TRUE);
     $response = $this->drupalGet('/jsonapi/taxonomy_term/tags');
     $this->assertSession()->statusCodeEquals(503);
