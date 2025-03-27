@@ -434,16 +434,16 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     // have the same name than a token.
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalGet($url);
-    $edit = [
+    $edit1 = [
       'new_storage_type' => 'formatted_text',
     ];
-    $this->submitForm($edit, 'Continue');
-    $edit = [
+    $this->submitForm($edit1, 'Continue');
+    $edit2 = [
       'field_name' => 'body',
       'group_field_options_wrapper' => 'text_long',
       'label' => $this->randomMachineName(),
     ];
-    $this->submitForm($edit, 'Continue');
+    $this->submitForm($edit2, 'Continue');
 
     $this->assertSession()->pageTextContains('Illegal combination: The machine-readable name combined to the fields prefix is already used by a token.');
 
@@ -455,16 +455,16 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     // have the same name than a token.
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalGet($url);
-    $edit = [
+    $edit1 = [
       'new_storage_type' => 'formatted_text',
     ];
-    $this->submitForm($edit, 'Continue');
-    $edit = [
+    $this->submitForm($edit1, 'Continue');
+    $edit2 = [
       'field_name' => 'mary',
       'group_field_options_wrapper' => 'text_long',
       'label' => $this->randomMachineName(),
     ];
-    $this->submitForm($edit, 'Continue');
+    $this->submitForm($edit2, 'Continue');
 
     $this->assertSession()->pageTextContains('Illegal combination: The machine-readable name combined to the fields prefix is already used by a token.');
   }
