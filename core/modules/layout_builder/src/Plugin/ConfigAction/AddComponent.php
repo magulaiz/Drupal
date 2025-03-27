@@ -58,9 +58,6 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
     $entity = $this->configManager->loadConfigEntityByName($configName);
     assert($entity instanceof SectionListInterface);
 
-    if ($section >= $entity->count()) {
-      throw new ConfigActionException("Cannot use that section, as that delta can't be found.");
-    }
     $sectionObject = $entity->getSection($section);
     $configuration = $value['component'];
     if (array_key_exists('region', $configuration) && is_array($configuration['region'])) {
