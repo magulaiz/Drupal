@@ -80,8 +80,15 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
 /**
  * Uninstall the sdc module if installed.
  */
-function system_post_update_sdc_uninstall() {
+function system_post_update_sdc_uninstall(): void {
   if (\Drupal::moduleHandler()->moduleExists('sdc')) {
     \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
   }
+}
+
+/**
+ * Rebuild the container to fix HTML in RSS feeds.
+ */
+function system_post_update_remove_rss_cdata_subscriber(): void {
+  // Empty update to trigger container rebuild.
 }

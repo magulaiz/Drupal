@@ -34,6 +34,11 @@ class ViewsLocalTaskTest extends UnitTestCase {
    */
   protected $viewStorage;
 
+  /**
+   * The base definition for the test plugin.
+   *
+   * @var array
+   */
   protected $baseDefinition = [
     'class' => '\Drupal\views\Plugin\Menu\LocalTask\ViewsLocalTask',
     'deriver' => '\Drupal\views\Plugin\Derivative\ViewsLocalTask',
@@ -383,6 +388,11 @@ class ViewsLocalTaskTest extends UnitTestCase {
  */
 class TestViewsLocalTask extends ViewsLocalTask {
 
+  /**
+   * The view result.
+   *
+   * @var array
+   */
   protected $result;
 
   /**

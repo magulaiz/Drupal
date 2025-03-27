@@ -103,8 +103,14 @@ class XmlEncoderTest extends UnitTestCase {
 
 }
 
+/**
+ * Test class used for the encoding test.
+ */
 class TestObject {
 
+  /**
+   * Return the characters "A".
+   */
   public function getA() {
     return 'A';
   }
