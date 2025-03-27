@@ -63,13 +63,16 @@ final class LayoutForm extends FormBase {
 
   /**
    * Handles switching the configuration type selector.
+   *
+   * @return array
+   *   An associative array containing the structure of the form.
    */
-  public function addMoreAjax($form, FormStateInterface $form_state) {
+  public function enableEditMode($form, FormStateInterface $form_state): array {
     if ($form_state::hasAnyErrors()) {
       return $form;
     }
 
-    $this->handleFormElementsVisibility($form, FALSE);
+    $this->handleFormElementsVisibility($form);
     return $form;
   }
 
@@ -90,11 +93,11 @@ final class LayoutForm extends FormBase {
 
     $form['actions'] = [
       'enable_edition' => [
-        '#name' => 'enable_edition',
         '#type' => 'submit',
         '#value' => $this->t('Enable Edit mode'),
+        '#name' => 'enable_edition',
         '#ajax' => [
-          'callback' => '::addMoreAjax',
+          'callback' => '::enableEditMode',
           'wrapper' => 'js-config-form-wrapper',
           'effect' => 'fade',
         ],
@@ -102,10 +105,11 @@ final class LayoutForm extends FormBase {
       'submit' => [
         '#type' => 'submit',
         '#value' => $this->t('Save'),
+        '#name' => 'save',
       ],
     ] + $this->buildActionsElement([]);
 
-    $this->handleFormElementsVisibility($form);
+    $this->handleFormElementsVisibility($form, FALSE);
 
     return $form;
   }
@@ -113,12 +117,26 @@ final class LayoutForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $button = $form_state->getTriggeringElement();
-    if ($button['#name'] && $button['#name'] !== 'enable_edition') {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    //$form_state->setRebuild();
+    $user_input = $form_state->getUserInput();
+    if (isset($user_input['save'])) {
+      $this->save($form, $form_state);
+    }
+    $a = 3;
+  }
+
+  /**
+   * Saves the Layout changes.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function save(array &$form, FormStateInterface $form_state): void {
       $this->sectionStorage->save();
       $this->saveTasks($form_state, new TranslatableMarkup('Saved navigation blocks'));
-    }
   }
 
   /**
@@ -126,13 +144,15 @@ final class LayoutForm extends FormBase {
    *
    * @param array $form
    *   An associative array containing the structure of the form.
+   * @param bool $edit_mode_enabled
+   *   Boolean indicating whether the Navigation layout edit mode is enabled.
    */
-  protected function handleFormElementsVisibility(array &$form, $edit_mode_enabled = TRUE): array {
+  protected function handleFormElementsVisibility(array &$form, bool $edit_mode_enabled = TRUE): array {
     foreach (Element::children($form['actions']) as $action) {
       $edit_action_access = isset($form['actions'][$action]['#name']) && $form['actions'][$action]['#name'] === 'enable_edition';
-      $form['actions'][$action]['#access'] = $edit_mode_enabled ? $edit_action_access : !$edit_action_access;
+      $form['actions'][$action]['#access'] = $edit_mode_enabled ? !$edit_action_access : $edit_action_access;
     }
-    $form['layout_builder']['#access'] = !$edit_mode_enabled;
+    $form['layout_builder']['#access'] = $edit_mode_enabled;
     return $form;
   }
 
