@@ -890,7 +890,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
                     }
                   }
 
-                  // The revision translation affected field can be TRUE or NULL.
+                  // The revision translation affected field can be TRUE or
+                  // NULL.
                   if ($field_name == $revision_translation_affected_field) {
                     if (isset($values[$id][$field_name][$langcode]) && ($values[$id][$field_name][$langcode] === '0')) {
                       $values[$id][$field_name][$langcode] = NULL;
@@ -1648,7 +1649,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       $embedded_tables = [];
       $is_default_revision = FALSE;
-      // Not sure about the change on the next line. It fixes the EntityDuplicateTest.
+      // Not sure about the change on the next line. It fixes the
+      // EntityDuplicateTest.
       if ($this->jsonStorageCurrentRevisionTable && ($entity->isDefaultRevision() || ($entity->getRevisionId() == $entity->getLoadedRevisionId()))) {
         $embedded_tables[] = ['table' => $this->jsonStorageCurrentRevisionTable, 'update action' => 'replace'];
         $is_default_revision = TRUE;
@@ -1948,7 +1950,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $non_revisionable_translatable_field_names = [];
         $non_revisionable_non_translatable_field_names = [];
         foreach ($this->fieldStorageDefinitions as $field_name => $field_definition) {
-          if (!$field_definition->isRevisionable() && !in_array($field_name, [$this->idKey, $this->revisionKey, $this->uuidKey, $this->bundleKey], TRUE)) {
+          if (!$field_definition->isRevisionable() &&
+            !in_array($field_name, [$this->idKey, $this->revisionKey, $this->uuidKey, $this->bundleKey], TRUE)) {
             if ($field_definition->isTranslatable()) {
               $non_revisionable_translatable_field_names[] = $field_name;
             }
@@ -1962,7 +1965,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $entity_data = $this->database->getConnection()->selectCollection($prefixed_table)->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
           [
-            'projection' => [$this->jsonStorageAllRevisionsTable => 1, $this->jsonStorageLatestRevisionTable => 1, $this->jsonStorageCurrentRevisionTable => 1],
+            'projection' => [
+              $this->jsonStorageAllRevisionsTable => 1,
+              $this->jsonStorageLatestRevisionTable => 1,
+              $this->jsonStorageCurrentRevisionTable => 1,
+            ],
             'session' => $this->database->getMongodbSession(),
           ],
         );

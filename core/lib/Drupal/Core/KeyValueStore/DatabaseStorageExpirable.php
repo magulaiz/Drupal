@@ -47,7 +47,8 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     if ($this->connection->driver() == 'mongodb') {
       $prefixed_table = $this->connection->getPrefix() . $this->table;
       $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
-        ['collection' => [
+        [
+          'collection' => [
             '$eq' => $this->collection,
           ],
           'expire' => [
@@ -141,7 +142,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           [
             'collection' => [
-              '$eq' => (string) $this->collection
+              '$eq' => (string) $this->collection,
             ],
             'expire' => [
               '$gt' => new UTCDateTime($this->time->getRequestTime() * 1000),
@@ -150,7 +151,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
           [
             'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
             'session' => $this->connection->getMongodbSession(),
-          ]
+          ],
         );
 
         $statement = new Statement($this->connection, $cursor, ['name', 'value']);

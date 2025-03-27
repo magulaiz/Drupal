@@ -280,7 +280,7 @@ class Condition implements ConditionInterface, \Countable {
             [
               $connection->escapeField($condition['field']),
               $condition['operator'],
-              $connection->escapeField($condition['field2'])
+              $connection->escapeField($condition['field2']),
             ],
           ));
           continue;
