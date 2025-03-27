@@ -332,12 +332,12 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
     }
     // Else create a fresh runtime object.
     if (empty($display)) {
-      // @todo this causes another `load` call which will be null.
-      $display = $this->getFormDisplay(
-        $entity_type,
-        $bundle,
-        $default_fallback ? $form_mode : EntityDisplayBase::CUSTOM_MODE
-      );
+      $display = $storage->create([
+        'targetEntityType' => $entity_type,
+        'bundle' => $bundle,
+        'mode' => $default_fallback ? $form_mode : EntityDisplayBase::CUSTOM_MODE,
+        'status' => TRUE,
+      ]);
     }
 
     // Let the display know which form mode was originally requested.
