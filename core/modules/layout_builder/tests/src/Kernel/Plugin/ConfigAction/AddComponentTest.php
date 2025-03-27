@@ -6,12 +6,10 @@ namespace Drupal\Tests\layout_builder\Kernel\Plugin\ConfigAction;
 
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Plugin\Context\ContextDefinition;
-use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
-use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 
 /**
  * @coversDefaultClass \Drupal\layout_builder\Plugin\ConfigAction\AddComponent
@@ -38,7 +36,7 @@ class AddComponentTest extends KernelTestBase {
    *
    * @var \Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage
    */
-  protected $plugin;
+  private readonly DefaultsSectionStorage $plugin;
 
   /**
    * The config action manager.
@@ -58,9 +56,7 @@ class AddComponentTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installConfig(['layout_builder_defaults_test']);
 
-    $definition = (new SectionStorageDefinition())
-      ->addContextDefinition('display', EntityContextDefinition::fromEntityTypeId('entity_view_display'))
-      ->addContextDefinition('view_mode', new ContextDefinition('string'));
+    $definition = $this->container->get(SectionStorageManagerInterface::class)->getDefinition('defaults');
     $this->plugin = DefaultsSectionStorage::create($this->container, [], 'defaults', $definition);
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
