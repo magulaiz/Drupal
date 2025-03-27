@@ -1,6 +1,6 @@
 navigation.settings:
   title: Navigation Settings
-  description: Configure different settings for the Navigation module.
+  description: 'Configure different settings for the Navigation module.'
   route_name: navigation.settings
   weight: 10
   parent: system.admin_config_ui
