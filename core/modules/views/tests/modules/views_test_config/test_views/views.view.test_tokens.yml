@@ -1,6 +1,8 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.plain_text
 id: test_tokens
 label: 'Test tokens'
 module: views
