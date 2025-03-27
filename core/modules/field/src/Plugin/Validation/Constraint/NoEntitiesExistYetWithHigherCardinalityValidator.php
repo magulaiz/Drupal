@@ -56,19 +56,19 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
       return;
     }
 
-    // We cannot check this constraint if the field storage does not exist.
-    $fieldStorageConfig = $this->entityTypeManager->getStorage('field_storage_config')
-      ->load($constraint->entityType . '.' . $constraint->fieldName);
-    if ($fieldStorageConfig === NULL) {
-      return;
-    }
-
     $object = $this->context->getObject();
     assert($object instanceof TypedDataInterface);
 
     $entity_type = TypeResolver::resolveExpression($constraint->entityType, $object);
     $field_name = TypeResolver::resolveExpression($constraint->fieldName, $object);
 
+    // We cannot check this constraint if the field storage does not exist.
+    $fieldStorageConfig = $this->entityTypeManager->getStorage('field_storage_config')
+      ->load($entity_type . '.' . $field_name);
+    if ($fieldStorageConfig === NULL) {
+      return;
+    }
+ 
     $max_delta_alias = 'max_delta';
     $result = $this->entityTypeManager->getStorage($entity_type)
       ->getAggregateQuery()
