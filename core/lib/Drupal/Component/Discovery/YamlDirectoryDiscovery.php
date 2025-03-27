@@ -8,6 +8,7 @@ use Drupal\Component\Serialization\Yaml;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Discovers multiple YAML files in a set of directories.
@@ -16,6 +17,7 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
 
   use MessengerTrait;
   use LoggerChannelTrait;
+  use StringTranslationTrait;
 
   /**
    * Defines the key in the discovered data where the file path is stored.
@@ -99,8 +101,8 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
         $componentid = $this->getIdentifier($file, $data);
 
         if (isset($duplicates[$componentid])) {
-          $this->messenger()->addWarning('Duplicate component found: ' . $componentid);
-          $this->getLogger('YamlDirectoryDiscovery')->warning('Duplicate component found: ' . $componentid);
+          $this->messenger()->addWarning($this->t('Duplicate component found: @componentid', ['@componentid' => $componentid]));
+          $this->getLogger('YamlDirectoryDiscovery')->warning('Duplicate component found: @componentid', ['@componentid' => $componentid]);
         }
         $duplicates[$componentid] = $componentid;
 
