@@ -223,13 +223,6 @@ class AssetResolver implements AssetResolverInterface {
       foreach ($definition['css'] as $options) {
         $options += $default_options;
 
-        // @todo Only modify the group if it's a theme library being added as
-        //   as a dependency. However, there is no way to know if a theme
-        //   library was added via a dependency at this point.
-        if ($library === 'sdc_theme_test/css_load_order_dependent') {
-          $options['group'] = CSS_AGGREGATE_DEFAULT;
-        }
-
         // Copy the asset library license information to each file.
         $options['license'] = $definition['license'];
 
