@@ -6,6 +6,7 @@ use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Provides a Single-Directory Component render element.
@@ -73,6 +74,22 @@ class ComponentElement extends RenderElementBase {
       '#template' => $inline_template,
       '#context' => $props,
     ];
+
+    if (!isset($element["#attributes"])) {
+      return $element;
+    }
+
+    // If the attributes are an array, convert them to an Attribute object as
+    // \Drupal\Core\Template\Atribute::merge() expects an Attribute object.
+    if (is_array($element["#attributes"])) {
+      $element["#attributes"] = new Attribute($element["#attributes"]);
+    }
+
+    // Merge ['#attributes'] with the ['#props']['attributes'].
+    $element["#props"]["attributes"] = empty($element["#props"]["attributes"])
+        ? $element["#attributes"]
+        : $element["#props"]["attributes"]->merge($element["#attributes"]);
+
     return $element;
   }
 
