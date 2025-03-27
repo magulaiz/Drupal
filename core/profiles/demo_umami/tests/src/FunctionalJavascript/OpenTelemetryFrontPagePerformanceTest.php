@@ -77,7 +77,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 1,
       'ScriptCount' => 1,
       'ScriptBytes' => 11850,
-      'StylesheetCount' => 4,
+      'StylesheetCount' => 2,
       'StylesheetBytes' => 40000,
     ];
     $this->assertMetrics($expected, $performance_data);

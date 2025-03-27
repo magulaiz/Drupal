@@ -65,7 +65,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 4,
       'ScriptCount' => 2,
       'ScriptBytes' => 123850,
-      'StylesheetCount' => 4,
+      'StylesheetCount' => 2,
       'StylesheetBytes' => 42500,
     ];
     $this->assertMetrics($expected, $performance_data);
