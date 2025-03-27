@@ -25,7 +25,6 @@ body.is-fixed .container {
 }
 
 .page-wrapper {
-  max-width: var(--max-bg-color);
   background: var(--color--white);
 }
 
