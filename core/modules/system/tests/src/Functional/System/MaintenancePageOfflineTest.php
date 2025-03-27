@@ -96,7 +96,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Service unavailable');
     $this->assertSession()->responseContains('<h1 class="title test-theme"');
     // A fatal error message and a backtrace should be hidden.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextNotContains('Access denied for user');
     $this->assertSession()->responseNotContains('<pre class="backtrace">');
 
@@ -109,7 +109,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Service unavailable');
     $this->assertSession()->responseContains('<h1 class="title test-theme"');
     // A fatal error message and a backtrace should be shown.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextContains('Access denied for user');
     $this->assertSession()->responseContains('<pre class="backtrace">');
 
@@ -123,7 +123,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Service unavailable');
     $this->assertSession()->responseContains('<h1 class="title"');
     // A fatal error message and a backtrace should be hidden.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextNotContains('Access denied for user');
     $this->assertSession()->responseNotContains('<pre class="backtrace">');
 
@@ -137,7 +137,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Service unavailable');
     $this->assertSession()->responseContains('<h1 class="title"');
     // A fatal error message and a backtrace should be shown.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextContains('Access denied for user');
     $this->assertSession()->responseContains('<pre class="backtrace">');
   }
@@ -163,7 +163,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Service unavailable');
     $this->assertSession()->responseContains('<h1 class="title test-theme"');
     // A fatal error message and a backtrace should be hidden.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextNotContains('Missing $settings[\'hash_salt\'] in settings.php');
     $this->assertSession()->responseNotContains('<pre class="backtrace">');
 
@@ -176,7 +176,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Service unavailable');
     $this->assertSession()->responseContains('<h1 class="title test-theme"');
     // A fatal error message and a backtrace should be shown.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextContains('Missing $settings[\'hash_salt\'] in settings.php');
     $this->assertSession()->responseContains('<pre class="backtrace">');
 
@@ -190,7 +190,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Service unavailable');
     $this->assertSession()->responseContains('<h1 class="title"');
     // A fatal error message and a backtrace should be hidden.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextNotContains('Missing $settings[\'hash_salt\'] in settings.php');
     $this->assertSession()->responseNotContains('<pre class="backtrace">');
 
@@ -204,7 +204,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Service unavailable');
     $this->assertSession()->responseContains('<h1 class="title"');
     // A fatal error message and a backtrace should be shown.
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextContains('Missing $settings[\'hash_salt\'] in settings.php');
     $this->assertSession()->responseContains('<pre class="backtrace">');
   }
