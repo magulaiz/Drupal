@@ -2,8 +2,11 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -290,6 +293,65 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
       ]);
     }
     return $entity_form_display;
+  }
+
+  public function collectFormDisplay(FieldableEntityInterface $entity, $form_mode, $default_fallback = TRUE): EntityFormDisplayInterface {
+    $entity_type = $entity->getEntityTypeId();
+    $bundle = $entity->bundle();
+    $storage = $this->entityTypeManager->getStorage('entity_form_display');
+
+    $this->moduleHandler->alter(
+      [$entity_type . '_form_mode', 'entity_form_mode'],
+      $form_mode,
+      $entity
+    );
+
+    // Check the existence and status of:
+    // - the display for the form mode,
+    // - the 'default' display.
+    // @todo we only have 2 candidate IDs, should we just call `getFormDisplay`
+    //   and if the result `isNew` we check for $default_fallback and call it
+    //   again?
+    if ($form_mode != 'default') {
+      $candidate_ids[] = $entity_type . '.' . $bundle . '.' . $form_mode;
+    }
+    if ($default_fallback) {
+      $candidate_ids[] = $entity_type . '.' . $bundle . '.default';
+    }
+    $results = $storage->getQuery()
+      ->condition('id', $candidate_ids)
+      ->condition('status', TRUE)
+      ->execute();
+
+    // Load the first valid candidate display, if any.
+    foreach ($candidate_ids as $candidate_id) {
+      if (isset($results[$candidate_id])) {
+        $display = $storage->load($candidate_id);
+        break;
+      }
+    }
+    // Else create a fresh runtime object.
+    if (empty($display)) {
+      // @todo this causes another `load` call which will be null.
+      $display = $this->getFormDisplay(
+        $entity_type,
+        $bundle,
+        $default_fallback ? $form_mode : EntityDisplayBase::CUSTOM_MODE
+      );
+    }
+
+    // Let the display know which form mode was originally requested.
+    $display->originalMode = $form_mode;
+
+    // Let modules alter the display.
+    $display_context = [
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
+      'form_mode' => $form_mode,
+    ];
+    $this->moduleHandler->alter('entity_form_display', $display, $display_context);
+
+    return $display;
   }
 
 }

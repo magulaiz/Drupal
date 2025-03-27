@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+
 /**
  * Provides an interface for an entity display repository.
  */
@@ -188,5 +190,7 @@ interface EntityDisplayRepositoryInterface {
    * @see \Drupal\Core\Entity\EntityStorageInterface::load()
    */
   public function getFormDisplay($entity_type, $bundle, $form_mode = self::DEFAULT_DISPLAY_MODE);
+
+  public function collectFormDisplay(FieldableEntityInterface $entity, $form_mode, $default_fallback = TRUE): EntityFormDisplayInterface;
 
 }
