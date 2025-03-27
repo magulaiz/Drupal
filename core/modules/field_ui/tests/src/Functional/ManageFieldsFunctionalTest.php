@@ -228,8 +228,29 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
-    // Reset the field prefix so we can test properly.
+    // Try again to create field_tags when field_suffix is "_tags"
+    // and field name is "field".
+    // Reset the field prefix and field_suffix so we can test properly.
     $this->config('field_ui.settings')->set('field_prefix', '')->save();
+    $this->config('field_ui.settings')->set('field_suffix', '_tags')->save();
+
+    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
+    $this->drupalGet($url);
+    $edit = [
+      'new_storage_type' => 'boolean',
+    ];
+    $this->submitForm($edit, 'Continue');
+    $edit = [
+      'label' => $this->randomMachineName(),
+      'field_name' => 'field',
+    ];
+    $this->submitForm($edit, 'Continue');
+
+    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+
+    // Reset the field prefix and field_suffix so we can test properly.
+    $this->config('field_ui.settings')->set('field_prefix', '')->save();
+    $this->config('field_ui.settings')->set('field_suffix', '')->save();
 
     $label = 'Disallowed field';
     $edit1 = [
