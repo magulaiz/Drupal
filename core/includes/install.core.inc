@@ -1027,7 +1027,7 @@ function install_full_redirect_url($install_state): string {
  * @param array $install_state
  *   An array of information about the current installation state.
  */
-function install_display_output($output, $install_state): void {
+function install_display_output($output, $install_state): never {
   // Ensure the maintenance theme is initialized.
   // The regular initialization call in install_begin_request() may not be
   // reached in case of an early installer error.
@@ -2428,7 +2428,6 @@ function install_config_import_batch(): array {
     }
     install_display_output(['#title' => t('Configuration validation')], $install_state);
   }
-  return [];
 }
 
 /**
