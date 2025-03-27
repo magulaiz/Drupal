@@ -1463,7 +1463,7 @@ function install_retrieve_file($uri, $destination) {
  * @param string $uri
  *   The URI to contact.
  *
- * @return string
+ * @return bool
  *   TRUE if the URI was contacted successfully, FALSE if not.
  */
 function install_check_localization_server($uri): bool {
