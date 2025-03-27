@@ -141,6 +141,10 @@ class ComponentElement extends RenderElementBase {
   /**
    * Merge element attributes with props attributes.
    *
+   * #attributes property is an universal property of the Render API, used by
+   * many Drupal mechanisms from Core and Contrib, so we need to inject the
+   * values in template.
+   *
    * @param array $element
    *   The render element.
    */
@@ -149,7 +153,7 @@ class ComponentElement extends RenderElementBase {
       return;
     }
 
-    // If the attributes are an array, convert them to an Attribute object as
+    // If attributes value is an array, convert it to an Attribute object as
     // \Drupal\Core\Template\Atribute::merge() expects an Attribute object.
     $element_attributes = is_array($element["#attributes"]) ? new Attribute($element["#attributes"]) : $element["#attributes"];
 

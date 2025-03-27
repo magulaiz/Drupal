@@ -258,6 +258,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
    * Ensures the element and prop attributes are merged properly.
    */
   protected function checkElementAttributesAndPropAttributesMerging(): void {
+    // Test no attributes.
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_theme_test:my-card',
@@ -266,10 +267,10 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       ],
     ];
     $crawler = $this->renderComponentRenderArray($build);
-
     $this->assertEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"]'), $crawler->outerHtml());
     $this->assertEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][bar="fpo"]'), $crawler->outerHtml());
 
+    // Test for just prop attributes.
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_theme_test:my-card',
@@ -281,9 +282,9 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       ],
     ];
     $crawler = $this->renderComponentRenderArray($build);
-
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"]'), $crawler->outerHtml());
 
+    // Test for prop attributes and element attributes as Attribute object.
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_theme_test:my-card',
@@ -298,9 +299,9 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       ]),
     ];
     $crawler = $this->renderComponentRenderArray($build);
-
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"][bar="foo"]'), $crawler->outerHtml());
 
+    // Test for no prop attributes and element attributes as Attribute object.
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_theme_test:my-card',
@@ -312,9 +313,9 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       ]),
     ];
     $crawler = $this->renderComponentRenderArray($build);
-
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][bar="foo"]'), $crawler->outerHtml());
 
+    // Test for prop attributes and element attributes as Attribute array.
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_theme_test:my-card',
@@ -329,9 +330,9 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       ],
     ];
     $crawler = $this->renderComponentRenderArray($build);
-
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][foo="bar"][bar="foo"]'), $crawler->outerHtml());
 
+    // Test for no prop attributes and element attributes as Attribute array.
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_theme_test:my-card',
@@ -343,9 +344,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       ],
     ];
     $crawler = $this->renderComponentRenderArray($build);
-
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper [data-component-id="sdc_theme_test:my-card"][bar="foo"]'), $crawler->outerHtml());
-
   }
 
   /**
