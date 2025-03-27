@@ -40,7 +40,7 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
     assert(is_array($plugin_definition));
     return new static(
       $container->get(ConfigManagerInterface::class),
-      $container->get('uuid'),
+      $container->get(UuidInterface::class),
       $plugin_id,
     );
   }
