@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   This API is experimental.
  */
-final class ConfigLayoutBuilderDeriver extends DeriverBase implements ContainerDeriverInterface {
+final class AddComponentDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   use StringTranslationTrait;
 

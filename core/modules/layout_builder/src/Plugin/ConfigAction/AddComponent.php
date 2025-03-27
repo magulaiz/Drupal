@@ -9,7 +9,7 @@ use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\layout_builder\Plugin\ConfigAction\Deriver\ConfigLayoutBuilderDeriver;
+use Drupal\layout_builder\Plugin\ConfigAction\Deriver\AddComponentDeriver;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\layout_builder\SectionComponent;
@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[ConfigAction(
   id: 'add_layout_component',
   admin_label: new TranslatableMarkup('Add component to layout'),
-  deriver: ConfigLayoutBuilderDeriver::class,
+  deriver: AddComponentDeriver::class,
 )]
 final class AddComponent implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
