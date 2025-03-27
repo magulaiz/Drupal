@@ -222,7 +222,6 @@ class AssetResolver implements AssetResolverInterface {
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       foreach ($definition['css'] as $options) {
         $options += $default_options;
-
         // Copy the asset library license information to each file.
         $options['license'] = $definition['license'];
 

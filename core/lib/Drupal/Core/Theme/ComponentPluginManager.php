@@ -187,10 +187,7 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
       TRUE
     );
     if ($css_file) {
-      $library['css']['component'][$css_file] = [
-        // Without casting to a string, Twig rendering breaks due to integer.
-        'group' => (string) CSS_AGGREGATE_THEME,
-      ];
+      $library['css']['component'][$css_file] = [];
     }
     $js_file = $this->findAsset(
       $component_directory,
