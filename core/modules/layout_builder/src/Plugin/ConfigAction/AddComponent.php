@@ -81,7 +81,7 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
 
     // If the position is higher than the number of components, just put it last
     // instead of failing.
-    $position = max($position, count($section->getComponentsByRegion($value['region'])));
+    $position = min($position, count($section->getComponentsByRegion($value['region'])));
     $additional = $value['additional'] ?? [];
     // Unset all array keys that aren't part of the component configuration itself.
     $unset = ['section', 'position', 'uuid', 'default_region', 'region', 'additional'];
