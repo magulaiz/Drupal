@@ -10,6 +10,7 @@ navigation_block.admin_display:
   parent: system.admin_config_ui
   description: 'Manage navigation blocks.'
   route_name: layout_builder.navigation.view
+  weight: 10
 
 # Navigation User default links.
 navigation.user_links.user.page:
