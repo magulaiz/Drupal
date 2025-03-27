@@ -131,6 +131,9 @@ class FieldStorageAddForm extends FormBase {
       ->getGroupedDefinitions($this->fieldTypePluginManager->getEntityTypeUiDefinitions($this->entityTypeId), 'label', 'id');
     foreach ($grouped_definitions as $category => $field_types) {
       foreach ($field_types as $name => $field_type) {
+        if (!is_string($field_type['category']) || !$this->fieldTypeCategoryManager->hasDefinition($field_type['category'])) {
+          throw new \Exception("Invalid field category {$field_type['category']} for field type $name.");
+        }
         $definition = ['unique_identifier' => $name] + $field_type;
         $category_info = $this->fieldTypeCategoryManager
           ->createInstance($field_type['category'], $definition);
