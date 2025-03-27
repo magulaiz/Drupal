@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
+use Drupal\Core\Utility\Token;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,7 +39,7 @@ class FieldStorageAddForm extends FormBase {
    */
   protected $bundle;
 
-  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected FieldTypePluginManagerInterface $fieldTypePluginManager, ConfigFactoryInterface $configFactory, protected EntityFieldManagerInterface $entityFieldManager, protected PrivateTempStore $tempStore, protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager) {
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected FieldTypePluginManagerInterface $fieldTypePluginManager, ConfigFactoryInterface $configFactory, protected EntityFieldManagerInterface $entityFieldManager, protected PrivateTempStore $tempStore, protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager, protected ?Token $token) {
     $this->setConfigFactory($configFactory);
   }
 
@@ -53,6 +54,7 @@ class FieldStorageAddForm extends FormBase {
       $container->get('entity_field.manager'),
       $container->get('tempstore.private')->get('field_ui'),
       $container->get('plugin.manager.field.field_type_category'),
+      $container->get('token'),
     );
   }
 
@@ -271,6 +273,9 @@ class FieldStorageAddForm extends FormBase {
       ],
       '#required' => FALSE,
     ];
+    if (!is_null($this->token)) {
+      $form['new_storage_wrapper']['field_name']['#machine_name']['token_check'] = [$this, 'fieldNameIsAToken'];
+    }
 
     $form['actions']['submit']['#validate'][] = '::validateFieldType';
 
@@ -545,6 +550,32 @@ class FieldStorageAddForm extends FormBase {
 
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
     return isset($field_storage_definitions[$field_name]);
+  }
+
+  /**
+   * Checks if a field machine name is a token.
+   *
+   * @param string $value
+   *   The machine name, not prefixed.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return bool
+   *   Whether or not the field machine name is a token.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3254575
+   */
+  protected function fieldNameIsAToken(string $value, FormStateInterface $form_state): bool {
+    // Add the field prefix.
+    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
+
+    $form_state_storage = $form_state->getStorage();
+    if (!isset($form_state_storage['entity_type_id'])) {
+      return FALSE;
+    }
+
+    $tokens = $this->token->getInfo();
+    return isset($tokens['tokens'][$form_state_storage['entity_type_id']][$field_name]);
   }
 
   /**
