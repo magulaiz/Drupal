@@ -432,17 +432,19 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     // The token [node:body] already exists but body is not a field name.
     // We're expecting an error when trying to create a new field which would
     // have the same name than a token.
+    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
+    $this->drupalGet($url);
+    $edit = [
+      'new_storage_type' => 'formatted_text',
+    ];
+    $this->submitForm($edit, 'Continue');
     $edit = [
       'field_name' => 'body',
       'label' => $this->randomMachineName(),
-      'new_storage_type' => 'formatted_text',
     ];
-    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
-    $this->drupalGet($url);
     $this->submitForm($edit, 'Continue');
 
     $this->assertSession()->pageTextContains('Illegal combination: The machine-readable name combined to the fields prefix is already used by a token.');
-    $this->assertSession()->addressEquals($url);
 
     // Reset the field prefix so we can test properly.
     $this->config('field_ui.settings')->set('field_prefix', 'sum')->save();
@@ -450,17 +452,19 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     // The token [node:summary] already exists but summary is not a field name.
     // We're expecting an error when trying to create a new field which would
     // have the same name than a token.
+    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
+    $this->drupalGet($url);
+    $edit = [
+      'new_storage_type' => 'formatted_text',
+    ];
+    $this->submitForm($edit, 'Continue');
     $edit = [
       'field_name' => 'mary',
       'label' => $this->randomMachineName(),
-      'new_storage_type' => 'formatted_text',
     ];
-    $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
-    $this->drupalGet($url);
     $this->submitForm($edit, 'Continue');
 
     $this->assertSession()->pageTextContains('Illegal combination: The machine-readable name combined to the fields prefix is already used by a token.');
-    $this->assertSession()->addressEquals($url);
   }
 
 }
