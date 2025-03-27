@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class ComponentRenderTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['system', 'sdc_test'];
 
   /**
