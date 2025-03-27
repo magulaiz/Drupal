@@ -52,6 +52,9 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
     $section = $value['section'];
     $position = $value['position'];
 
+    assert(is_int($section));
+    assert(is_int($position));
+
     $entity = $this->configManager->loadConfigEntityByName($configName);
     assert($entity instanceof SectionListInterface);
 
