@@ -68,7 +68,7 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
     if ($fieldStorageConfig === NULL) {
       return;
     }
- 
+
     $max_delta_alias = 'max_delta';
     $result = $this->entityTypeManager->getStorage($entity_type)
       ->getAggregateQuery()
