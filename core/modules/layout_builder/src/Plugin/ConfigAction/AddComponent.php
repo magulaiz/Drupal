@@ -81,12 +81,9 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
       $position = $countComponentsInRegion;
     }
     $additional = $value['additional'] ?? [];
-    unset($configuration['section']);
-    unset($configuration['position']);
-    unset($configuration['uuid']);
-    unset($configuration['default_region']);
-    unset($configuration['region']);
-    unset($configuration['additional']);
+    // Unset all array keys that aren't part of the component configuration itself.
+    $unset = ['section', 'position', 'uuid', 'default_region', 'region', 'additional'];
+    $configuration = array_diff_key($configuration, array_flip($unset));
 
     $component = [
       'uuid' => $value['uuid'],
