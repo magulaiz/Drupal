@@ -89,10 +89,7 @@
             // dynamic summary wrapped in <span>. To set the vertical tab title,
             // we only want to copy the summary title, which is the first child
             // node.
-            const title =
-              $summary.length && $summary[0].childNodes.length
-                ? $summary[0].firstChild.textContent
-                : '';
+            const title = $summary[0]?.firstChild?.textContent || '';
             const verticalTab = new Drupal.verticalTab({
               title,
               details: $that,
