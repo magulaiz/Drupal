@@ -277,6 +277,11 @@ class MachineName extends Textfield {
       if (call_user_func($function, $element['#value'], $element, $form_state)) {
         $form_state->setError($element, t('The machine-readable name is already in use. It must be unique.'));
       }
+      if (isset($element['#machine_name']['token_check'])) {
+        if (call_user_func($element['#machine_name']['token_check'], $element['#value'], $form_state)) {
+          $form_state->setError($element, t('Illegal combination: The machine-readable name combined to the fields prefix is already used by a token.'));
+        }
+      }
     }
   }
 
