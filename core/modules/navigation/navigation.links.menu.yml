@@ -1,5 +1,5 @@
 navigation.settings:
-  title: Navigation Settings
+  title: Navigation settings
   description: 'Configure different settings for the Navigation module.'
   route_name: navigation.settings
   weight: 10
