@@ -90,13 +90,6 @@ class FieldStorageAddForm extends FormBase {
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
 
-    $ui_definitions = $this->fieldTypePluginManager->getEntityTypeUiDefinitions($entity_type_id);
-    if ($selected_field_type === 'comment' && !array_key_exists($selected_field_type, $ui_definitions)) {
-      // Redirect to the FieldStorageAddController.
-      $controller_resolver = \Drupal::service('controller_resolver');
-      $controller = $controller_resolver->getControllerFromDefinition('\Drupal\field_ui\Controller\FieldStorageAddController::getFieldSelectionLinks');
-      return $controller($entity_type_id, $bundle);
-    }
     $unique_definitions = [];
     $grouped_definitions = $this->fieldTypePluginManager
       ->getGroupedDefinitions($this->fieldTypePluginManager->getEntityTypeUiDefinitions($this->entityTypeId), 'label', 'id');
