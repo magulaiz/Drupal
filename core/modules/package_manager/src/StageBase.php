@@ -475,6 +475,13 @@ abstract class StageBase implements LoggerAwareInterface {
    *   a failed commit operation.
    */
   public function apply(?int $timeout = 600): void {
+    // In direct-write mode, changes are made directly to the running code base,
+    // so there is nothing to do.
+    if ($this->isDirectWrite()) {
+      $this->logger?->info($this->t('Direct-write is enabled. Changes have been made to the running code base.'));
+      return;
+    }
+
     $this->checkOwnership();
 
     $active_dir = $this->pathFactory->create($this->pathLocator->getProjectRoot());
@@ -492,12 +499,7 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->failureMarker->write($this, $this->getFailureMarkerMessage());
 
     try {
-      if ($this->isDirectWrite()) {
-        $this->logger?->info($this->t('Direct-write is enabled. Changes have been made to the running code base.'));
-      }
-      else {
-        $this->committer->commit($stage_dir, $active_dir, $excluded_paths, NULL, $timeout);
-      }
+      $this->committer->commit($stage_dir, $active_dir, $excluded_paths, NULL, $timeout);
     }
     catch (InvalidArgumentException | PreconditionException $e) {
       // The commit operation has not started yet, so we can clear the failure
@@ -568,15 +570,16 @@ abstract class StageBase implements LoggerAwareInterface {
    * @throws \Drupal\Core\TempStore\TempStoreException
    */
   public function destroy(bool $force = FALSE, ?TranslatableMarkup $message = NULL): void {
+    // If we're in direct-write mode, we don't want to destroy anything.
+    if ($this->isDirectWrite()) {
+      return;
+    }
+
     if (!$force) {
       $this->checkOwnership();
     }
     if ($this->isApplying()) {
       throw new StageException($this, 'Cannot destroy the stage directory while it is being applied to the active directory.');
-    }
-    // If we're in direct-write mode, we don't want to destroy anything.
-    if ($this->isDirectWrite()) {
-      return;
     }
 
     // If the stage directory exists, queue it to be automatically cleaned up
