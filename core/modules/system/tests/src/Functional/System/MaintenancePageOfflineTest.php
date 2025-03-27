@@ -45,7 +45,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
    * @param bool $valid_hash_salt
    *   TRUE if a hash_salt should be valid.
    */
-  protected function prepareCaseSettings($maintenance_theme, $error_level, $active_database = TRUE, $valid_hash_salt = TRUE) {
+  protected function prepareCaseSettings($maintenance_theme, $error_level, $active_database = TRUE, $valid_hash_salt = TRUE): void {
     $settings = [];
     if (!empty($maintenance_theme)) {
       $settings['settings']['maintenance_theme'] = (object) [
@@ -81,7 +81,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
    * Tests if the maintenance offline page is served when settings.php
    * contains invalid database settings.
    */
-  public function testInvalidDatabaseSettings() {
+  public function testInvalidDatabaseSettings(): void {
     // Open a frontpage without any error.
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
@@ -148,7 +148,7 @@ class MaintenancePageOfflineTest extends BrowserTestBase {
    * Tests if the maintenance offline page is served when settings.php
    * originally did have a hash_salt defined, which is emptied out afterwards.
    */
-  public function testRemovedHashSalt() {
+  public function testRemovedHashSalt(): void {
     // Open a frontpage without any error.
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
