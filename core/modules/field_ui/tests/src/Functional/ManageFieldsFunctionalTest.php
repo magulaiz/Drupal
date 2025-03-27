@@ -440,6 +440,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->submitForm($edit, 'Continue');
     $edit = [
       'field_name' => 'body',
+      'group_field_options_wrapper' => 'text_long',
       'label' => $this->randomMachineName(),
     ];
     $this->submitForm($edit, 'Continue');
@@ -460,6 +461,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->submitForm($edit, 'Continue');
     $edit = [
       'field_name' => 'mary',
+      'group_field_options_wrapper' => 'text_long',
       'label' => $this->randomMachineName(),
     ];
     $this->submitForm($edit, 'Continue');
