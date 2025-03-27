@@ -8,6 +8,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\jsonapi\Query\OffsetPage;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\WaitTerminateTestTrait;
 
 /**
  * General functional test class.
@@ -17,6 +18,8 @@ use Drupal\node\Entity\Node;
  * @internal
  */
 class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
+
+  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -34,6 +37,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
    * Tests the GET method.
    */
   public function testRead(): void {
+    $this->setWaitForTerminate();
     $this->createDefaultContent(61, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE);
     // Unpublish the last entity, so we can check access.
     $this->nodes[60]->setUnpublished()->save();
