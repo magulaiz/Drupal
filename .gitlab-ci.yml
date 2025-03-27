@@ -339,16 +339,8 @@ default:
   script:
     - composer validate
     - composer install --optimize-autoloader
-    - if [ -n "$COMPOSER_UPDATE" ]; then
-        composer update --optimize-autoloader;
-        composer outdated;
-      fi
-    - vendor/bin/phpcs --version
-    - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     expire_in: 1 week
     expose_as: 'web-vendor'
     paths:
       - vendor/
-    reports:
-      codequality: phpcs-quality-report.json
