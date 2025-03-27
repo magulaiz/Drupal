@@ -8,6 +8,7 @@ use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
+use Drupal\entity_test\EntityTestHelper;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
@@ -39,6 +40,11 @@ class AddComponentTest extends KernelTestBase {
    */
   protected $plugin;
 
+  /**
+   * The config action manager.
+   *
+   * @var \Drupal\Core\Config\Action\ConfigActionManager
+   */
   private readonly ConfigActionManager $configActionManager;
 
   /**
@@ -47,7 +53,7 @@ class AddComponentTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    entity_test_create_bundle('bundle_with_extra_fields');
+    EntityTestHelper::createBundle('bundle_with_extra_fields');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
     $this->installConfig(['layout_builder_defaults_test']);
