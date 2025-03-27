@@ -50,6 +50,8 @@ class ComponentElement extends RenderElementBase {
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentDataException
    */
   public function preRenderComponent(array $element): array {
+    $this->mergeElementAttributesToPropAttributes($element);
+
     $props = $element['#props'];
     $props_alter_callbacks = $element['#propsAlter'];
     // This callback can be used to prepare the context. For instance to replace
@@ -74,21 +76,6 @@ class ComponentElement extends RenderElementBase {
       '#template' => $inline_template,
       '#context' => $props,
     ];
-
-    if (!isset($element["#attributes"])) {
-      return $element;
-    }
-
-    // If the attributes are an array, convert them to an Attribute object as
-    // \Drupal\Core\Template\Atribute::merge() expects an Attribute object.
-    if (is_array($element["#attributes"])) {
-      $element["#attributes"] = new Attribute($element["#attributes"]);
-    }
-
-    // Merge ['#attributes'] with the ['#props']['attributes'].
-    $element["#props"]["attributes"] = empty($element["#props"]["attributes"])
-        ? $element["#attributes"]
-        : $element["#props"]["attributes"]->merge($element["#attributes"]);
 
     return $element;
   }
@@ -149,6 +136,27 @@ class ComponentElement extends RenderElementBase {
     }
     $template .= '{% endembed %}' . PHP_EOL;
     return $template;
+  }
+
+  /**
+   * Merge element attributes with props attributes.
+   *
+   * @param array $element
+   *   The render element.
+   */
+  private function mergeElementAttributesToPropAttributes(array &$element): void {
+    if (!isset($element["#attributes"])) {
+      return;
+    }
+
+    // If the attributes are an array, convert them to an Attribute object as
+    // \Drupal\Core\Template\Atribute::merge() expects an Attribute object.
+    $element_attributes = is_array($element["#attributes"]) ? new Attribute($element["#attributes"]) : $element["#attributes"];
+
+    // Merge ['#attributes'] with the ['#props']['attributes'].
+    $element["#props"]["attributes"] = empty($element["#props"]["attributes"])
+        ? $element_attributes
+        : $element["#props"]["attributes"]->merge($element_attributes);
   }
 
   /**
