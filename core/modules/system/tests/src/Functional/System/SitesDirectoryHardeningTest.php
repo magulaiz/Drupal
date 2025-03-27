@@ -91,8 +91,10 @@ class SitesDirectoryHardeningTest extends BrowserTestBase {
    *   An array of system requirements.
    */
   protected function checkSystemRequirements() {
+    // Loading the install file ensures that the required requirements constants
+    // are loaded too.
     \Drupal::moduleHandler()->loadInclude('system', 'install');
-    return system_requirements('runtime');
+    return \Drupal::moduleHandler()->invoke('system', 'runtime_requirements');
   }
 
   /**
