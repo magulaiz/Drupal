@@ -45,6 +45,9 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest {
     $this->switchToWorkspace($stage);
   }
 
+  /**
+   * Tests the Workspaces view bulk form integration.
+   */
   public function testBulkForm(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // @todo Fix this test for MongoDB.

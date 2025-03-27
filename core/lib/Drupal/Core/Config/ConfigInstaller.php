@@ -10,6 +10,9 @@ use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * The config installer.
+ */
 class ConfigInstaller implements ConfigInstallerInterface {
 
   /**

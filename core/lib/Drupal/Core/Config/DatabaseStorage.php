@@ -171,7 +171,12 @@ class DatabaseStorage implements StorageInterface {
         $list = $statement->execute()->fetchAllKeyed();
       }
       else {
-        $list = $this->connection->query('SELECT [name], [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] IN ( :names[] )', [':collection' => $this->collection, ':names[]' => $names], $this->options)->fetchAllKeyed();
+        $list = $this->connection
+          ->query('SELECT [name], [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] IN ( :names[] )', [
+            ':collection' => $this->collection,
+            ':names[]' => $names,
+          ], $this->options)
+          ->fetchAllKeyed();
       }
       foreach ($list as &$data) {
         $data = $this->decode($data);

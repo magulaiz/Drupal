@@ -62,7 +62,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
     // vocabulary is in place to meet the view dependencies.
     $vocabulary = Vocabulary::create([
       'name' => 'test_exposed_checkboxes',
-      'vid' => 'tags',
+      'vid' => 'test_exposed_checkboxes',
       'nodes' => ['article' => 'article'],
     ]);
     $vocabulary->save();

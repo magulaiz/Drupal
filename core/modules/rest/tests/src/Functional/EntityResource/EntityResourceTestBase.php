@@ -273,6 +273,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @see ::createEntity()
    *
    * @return array
+   *   An array structure as returned by ::getExpectedNormalizedEntity().
    */
   abstract protected function getExpectedNormalizedEntity();
 
@@ -282,6 +283,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @see ::testPost
    *
    * @return array
+   *   An array structure as returned by ::getNormalizedPostEntity().
    */
   abstract protected function getNormalizedPostEntity();
 
@@ -294,6 +296,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @see ::testPatch
    *
    * @return array
+   *   An array structure as returned by ::getNormalizedPostEntity().
    */
   protected function getNormalizedPatchEntity() {
     return $this->getNormalizedPostEntity();
@@ -378,6 +381,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @see ::testGet
    *
    * @return string[]
+   *   The expected cache tags.
    */
   protected function getExpectedCacheTags() {
     $expected_cache_tags = [
@@ -396,6 +400,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @see ::testGet
    *
    * @return string[]
+   *   The expected cache contexts.
    */
   protected function getExpectedCacheContexts() {
     return [

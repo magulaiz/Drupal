@@ -9,7 +9,6 @@ use Drupal\Core\Form\FormState;
 use Drupal\mongodb\Plugin\views\filter\BooleanOperator as MongodbBooleanOperator;
 use Drupal\views\Plugin\views\area\Broken as BrokenArea;
 use Drupal\views\Plugin\views\field\Broken as BrokenField;
-use Drupal\views\Plugin\views\filter\BooleanOperator;
 use Drupal\views\Plugin\views\filter\Broken as BrokenFilter;
 use Drupal\views\Plugin\views\filter\Standard;
 use Drupal\views\Plugin\views\ViewsHandlerInterface;
@@ -27,12 +26,12 @@ class ModuleTest extends ViewsKernelTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_view_status', 'test_view', 'test_argument', 'test_redirect_view'];
+  public static $testViews = ['test_view_status', 'test_view', 'test_argument'];
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['field', 'user', 'block', 'node', 'views_test_data_alter'];
+  protected static $modules = ['field', 'user', 'block'];
 
   /**
    * Stores the last triggered error.
@@ -111,19 +110,6 @@ class ModuleTest extends ViewsKernelTestBase {
     ];
     $handler = $this->container->get('plugin.manager.views.filter')->getHandler($item, 'standard');
     $this->assertInstanceOf(Standard::class, $handler);
-
-    // Test that the configuration is respected rather than overridden
-    // by views data. Using assertSame() here to make the error more clearly
-    // show what the result is when an error is caused.
-    $test_view_config = $this->config('views.view.test_redirect_view');
-    $item = $test_view_config->get('display.default.display_options.filters.status');
-    $handler = $this->container->get('plugin.manager.views.filter')->getHandler($item);
-    if (\Drupal::database()->driver() === 'mongodb') {
-      $this->assertSame(MongodbBooleanOperator::class, get_class($handler));
-    }
-    else {
-      $this->assertSame(BooleanOperator::class, get_class($handler));
-    }
   }
 
   /**

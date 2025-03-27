@@ -9,6 +9,9 @@ use Drupal\Core\Database\DatabaseException;
 use MongoDB\BSON\UTCDateTime;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * Defines the storage handler class for batches.
+ */
 class BatchStorage implements BatchStorageInterface {
 
   /**
