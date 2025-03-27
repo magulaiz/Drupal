@@ -70,7 +70,7 @@ class AddComponentTest extends KernelTestBase {
    */
   public function testAddComponent(): void {
     $this->configActionManager->applyAction(
-      'addComponent',
+      'addComponentToLayout',
       'core.entity_view_display.entity_test.bundle_with_extra_fields.default',
       [
         'section' => 0,
@@ -113,7 +113,7 @@ class AddComponentTest extends KernelTestBase {
    */
   public function testAddComponentAtFirstPosition(): void {
     $this->configActionManager->applyAction(
-      'addComponent',
+      'addComponentToLayout',
       'core.entity_view_display.entity_test.bundle_with_extra_fields.default',
       [
         'section' => 0,
@@ -152,7 +152,7 @@ class AddComponentTest extends KernelTestBase {
    */
   public function testAddComponentAtSecondPosition(): void {
     $this->configActionManager->applyAction(
-      'addComponent',
+      'addComponentToLayout',
       'core.entity_view_display.entity_test.bundle_with_extra_fields.default',
       [
         'section' => 0,
@@ -191,7 +191,7 @@ class AddComponentTest extends KernelTestBase {
    */
   public function testAddComponentToLayoutWithNoRegionDefined(): void {
     $this->configActionManager->applyAction(
-      'addComponent',
+      'addComponentToLayout',
       'core.entity_view_display.entity_test.bundle_with_extra_fields.default',
       [
         'section' => 0,
