@@ -49,16 +49,16 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
    * {@inheritdoc}
    */
   public function apply(string $configName, mixed $value): void {
-    $section = $value['section'];
+    $section_delta = $value['section'];
     $position = $value['position'];
 
-    assert(is_int($section));
+    assert(is_int($section_delta));
     assert(is_int($position));
 
     $entity = $this->configManager->loadConfigEntityByName($configName);
     assert($entity instanceof SectionListInterface);
 
-    $sectionObject = $entity->getSection($section);
+    $section = $entity->getSection($section_delta);
     $configuration = $value['component'];
     if (array_key_exists('region', $configuration) && is_array($configuration['region'])) {
       // Since the recipe author might not know ahead of time what layout the
@@ -67,7 +67,7 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
       // If the section layout id is not in the map, they should supply the
       // name of a fallback region. If all that fails, give up with an
       // exception.
-      $value['region'] = $configuration['region'][$sectionObject->getLayoutId()] ??
+      $value['region'] = $configuration['region'][$section->getLayoutId()] ??
         $configuration['default_region'] ??
         throw new ConfigActionException("Cannot determine which region of the section to place this component into, because no default region was provided.");
     }
@@ -81,7 +81,7 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
 
     // If the position is higher than the number of components, just put it last
     // instead of failing.
-    $countComponentsInRegion = count($sectionObject->getComponentsByRegion($value['region']));
+    $countComponentsInRegion = count($section->getComponentsByRegion($value['region']));
     if ($position > $countComponentsInRegion) {
       $position = $countComponentsInRegion;
     }
@@ -98,8 +98,8 @@ final class AddComponent implements ConfigActionPluginInterface, ContainerFactor
       'additional' => $additional,
     ];
     $sectionComponent = SectionComponent::fromArray($component);
-    $sectionObject->insertComponent($position, $sectionComponent);
-    $entity->setSection($section, $sectionObject);
+    $section->insertComponent($position, $sectionComponent);
+    $entity->setSection($section_delta, $section);
     $entity->save();
   }
 
