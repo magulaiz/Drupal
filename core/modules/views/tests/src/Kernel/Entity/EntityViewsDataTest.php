@@ -233,7 +233,16 @@ class EntityViewsDataTest extends KernelTestBase {
 
       // Ensure the join information is set up properly.
       $this->assertCount(1, $base_views_data['table']['join']);
-      $this->assertEquals(['entity_test_mul_property_data' => ['left_field' => 'id', 'field' => 'id', 'type' => 'INNER']], $base_views_data['table']['join']);
+      $this->assertEquals(
+        [
+          'entity_test_mul_property_data' => [
+            'left_field' => 'id',
+            'field' => 'id',
+            'type' => 'INNER',
+          ],
+        ],
+        $base_views_data['table']['join'],
+      );
       $this->assertFalse(isset($data['revision_table']));
       $this->assertFalse(isset($data['revision_data_table']));
     }

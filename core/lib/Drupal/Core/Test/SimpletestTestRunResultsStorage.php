@@ -155,8 +155,8 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
         ->condition('test_id', (int) $test_run->id());
       $max_message_id_subquery->addExpressionMax('message_id', 'max_message_id');
 
-      // Run a select query to return 'last_prefix' from {simpletest_test_id} and
-      // 'test_class' from {simpletest}.
+      // Run a select query to return 'last_prefix' from {simpletest_test_id}
+      // and 'test_class' from {simpletest}.
       $select = $this->connection->select($max_message_id_subquery, 'st_sub');
       $select->join('simpletest', 'st', $select->joinCondition()->compare('st.message_id', 'st_sub.max_message_id'));
       $select->join('simpletest_test_id', 'sttid', $select->joinCondition()->compare('st.test_id', 'sttid.test_id'));

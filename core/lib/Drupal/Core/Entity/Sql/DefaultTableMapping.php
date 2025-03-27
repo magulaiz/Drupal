@@ -556,11 +556,11 @@ class DefaultTableMapping implements TableMappingInterface {
         }
       }
       else {
-        // Since a field may be stored in more than one table, we inspect tables
-        // in order of relevance: the data table if present is the main place
-        // where field data is stored, otherwise the base table is responsible for
-        // storing field data. Revision metadata is an exception as it's stored
-        // only in the revision table.
+        // Since a field may be stored in more than one table, we inspect
+        // tables in order of relevance: the data table if present is the main
+        // place where field data is stored, otherwise the base table is
+        // responsible for storing field data. Revision metadata is an
+        // exception as it's stored only in the revision table.
         $table_names = array_filter([
           $this->dataTable,
           $this->baseTable,

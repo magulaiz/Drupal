@@ -518,8 +518,8 @@ class FieldFieldTest extends ViewsKernelTestBase {
         $id_key => 'id',
         'revision_id' => 'revision_id',
         'name' => 'name',
-        'field_test' => 'field_test'
-      ]
+        'field_test' => 'field_test',
+      ],
     );
   }
 

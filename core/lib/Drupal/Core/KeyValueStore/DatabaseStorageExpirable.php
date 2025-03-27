@@ -47,7 +47,14 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     if ($this->connection->driver() == 'mongodb') {
       $prefixed_table = $this->connection->getPrefix() . $this->table;
       $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
-        ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)], 'name' => ['$eq' => (string) $key]],
+        ['collection' => [
+            '$eq' => $this->collection,
+          ],
+          'expire' => [
+            '$gt' => new UTCDateTime($this->time->getRequestTime() * 1000),
+          ],
+          'name' => ['$eq' => (string) $key],
+        ],
         [
           'projection' => ['_id' => 1],
           'session' => $this->connection->getMongodbSession(),
@@ -85,7 +92,15 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         }
         $prefixed_table = $this->connection->getPrefix() . $this->table;
         $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
-          ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)], 'name' => ['$in' => $keys]],
+          [
+            'collection' => [
+              '$eq' => $this->collection,
+            ],
+            'expire' => [
+              '$gt' => new UTCDateTime($this->time->getRequestTime() * 1000),
+            ],
+            'name' => ['$in' => $keys],
+          ],
           [
             'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
             'session' => $this->connection->getMongodbSession(),
@@ -124,7 +139,14 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
         $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
-          ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)]],
+          [
+            'collection' => [
+              '$eq' => (string) $this->collection
+            ],
+            'expire' => [
+              '$gt' => new UTCDateTime($this->time->getRequestTime() * 1000),
+            ],
+          ],
           [
             'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
             'session' => $this->connection->getMongodbSession(),

@@ -540,7 +540,8 @@ abstract class Database {
     // parse_url(). Get the host names and replace them with a placeholder
     // hostname and run parse_url() again.
     if ($url_components === FALSE) {
-      // The host names are the ones between the character "@" and the character "/".
+      // The host names are the ones between the character "@" and the
+      // character "/".
       preg_match('/\@(.*)\//', $url, $matches);
       if (isset($matches[1])) {
         $hosts = $matches[1];

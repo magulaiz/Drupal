@@ -175,7 +175,15 @@ abstract class CastedIntFieldJoinTestBase extends DriverSpecificKernelTestBase {
     $this->assertStringContainsString("views_test_data.uid = CAST(users4.uid AS $this->castingType)", $condition->__toString());
     $this->assertStringContainsString('"users4"."name" = :db_condition_placeholder_0', $condition->__toString());
     $this->assertStringContainsString('"users4"."name" IN (:db_condition_placeholder_1, :db_condition_placeholder_2, :db_condition_placeholder_3)', $condition->__toString());
-    $this->assertSame(array_values($condition->arguments()), [$random_name_1, $random_name_2, $random_name_3, $random_name_4]);
+    $this->assertSame(
+      array_values($condition->arguments()),
+      [
+        $random_name_1,
+        $random_name_2,
+        $random_name_3,
+        $random_name_4,
+      ],
+    );
   }
 
   /**

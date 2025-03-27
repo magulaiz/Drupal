@@ -6,7 +6,6 @@ namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormState;
-use Drupal\mongodb\Plugin\views\filter\BooleanOperator as MongodbBooleanOperator;
 use Drupal\views\Plugin\views\area\Broken as BrokenArea;
 use Drupal\views\Plugin\views\field\Broken as BrokenField;
 use Drupal\views\Plugin\views\filter\Broken as BrokenFilter;

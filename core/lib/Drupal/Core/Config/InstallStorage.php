@@ -285,7 +285,8 @@ class InstallStorage extends FileStorage {
    *   items.
    */
   protected function getDatabaseDriverOverrideDirectory(string $directory, Extension $extension): string {
-    // The overridden config items are in  the database drivers override directory
+    // The overridden config items are in  the database drivers override
+    // directory.
     $dir = $this->databaseDriverOverrideDirectory . '/' . $extension->getName();
 
     if (str_ends_with($directory, self::CONFIG_INSTALL_DIRECTORY)) {

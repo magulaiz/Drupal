@@ -44,7 +44,7 @@ class CommentViewsData extends EntityViewsData {
     $data[$data_table]['created']['title'] = $this->t('Post date');
     $data[$data_table]['created']['help'] = $this->t('Date and time of when the comment was created.');
 
-    $data[$data_table]['created_fulldata'] = [
+    $data[$data_table]['created_fulldate'] = [
       'title' => $this->t('Created date'),
       'help' => $this->t('Date in the form of CCYYMMDD.'),
       'argument' => [
@@ -101,7 +101,7 @@ class CommentViewsData extends EntityViewsData {
     $data[$data_table]['changed']['title'] = $this->t('Updated date');
     $data[$data_table]['changed']['help'] = $this->t('Date and time of when the comment was last updated.');
 
-    $data[$data_table]['changed_fulldata'] = [
+    $data[$data_table]['changed_fulldate'] = [
       'title' => $this->t('Changed date'),
       'help' => $this->t('Date in the form of CCYYMMDD.'),
       'argument' => [

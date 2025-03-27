@@ -145,13 +145,30 @@ class DatabaseBackend implements CacheBackendInterface {
         $cursor = $this->connection->getConnection()->selectCollection($prefixed_table)->find(
           ['cid' => ['$in' => array_keys($cid_mapping)]],
           [
-            'projection' => ['cid' => 1, 'data' => 1, 'created' => 1, 'expire' => 1, 'serialized' => 1, 'tags' => 1, 'checksum' => 1, '_id' => 0],
+            'projection' => [
+              'cid' => 1,
+              'data' => 1,
+              'created' => 1,
+              'expire' => 1,
+              'serialized' => 1,
+              'tags' => 1,
+              'checksum' => 1,
+              '_id' => 0,
+            ],
             'sort' => ['cid' => 1],
             'session' => $this->connection->getMongodbSession(),
           ]
         );
 
-        $statement = new Statement($this->connection, $cursor, ['cid', 'data', 'created', 'expire', 'serialized', 'tags', 'checksum']);
+        $statement = new Statement($this->connection, $cursor, [
+          'cid',
+          'data',
+          'created',
+          'expire',
+          'serialized',
+          'tags',
+          'checksum',
+        ]);
         $result = $statement->execute()->fetchAll();
       }
       else {
@@ -653,8 +670,8 @@ class DatabaseBackend implements CacheBackendInterface {
     ];
 
     if ($this->connection->driver() == 'mongodb') {
-      // The date field cannot be transformed to a real date field, because it can
-      // be set to infinity with the value -1.
+      // The date field cannot be transformed to a real date field, because it
+      // can be set to infinity with the value -1.
       $schema['fields']['serialized'] = [
         'description' => 'A flag to indicate whether content is serialized (TRUE) or not (FALSE).',
         'type' => 'bool',

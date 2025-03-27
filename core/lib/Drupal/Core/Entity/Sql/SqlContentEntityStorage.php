@@ -559,8 +559,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // field assign the value as suiting. This avoids unnecessary array
         // hierarchies and saves memory here.
         foreach ($record as $name => $value) {
-          // Handle columns named [field_name]__[column_name] (e.g for field types
-          // that store several properties).
+          // Handle columns named [field_name]__[column_name] (e.g for field
+          // types that store several properties).
           if (in_array($name, $embedded_table_names, TRUE)) {
             // Add the embedded table data to the values array.
             $values_embedded_tables[$id][$name] = $value;
@@ -701,7 +701,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // key as the base table holds only the default language.
       $base_fields = array_diff($table_mapping->getFieldNames($this->baseTable), [$this->langcodeKey]);
 
-      $revisioned_fields = array_diff($table_mapping->getFieldNames($this->jsonStorageAllRevisionsTable), [$this->idKey, $this->uuidKey]);
+      $revisioned_fields = array_diff(
+        $table_mapping->getFieldNames($this->jsonStorageAllRevisionsTable),
+        [
+          $this->idKey,
+          $this->uuidKey,
+        ],
+      );
 
       // If there are no data fields then only revisioned fields are needed
       // else both data fields and revisioned fields are needed to map the
@@ -722,7 +728,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // key as the base table holds only the default language.
       $base_fields = array_diff($table_mapping->getFieldNames($this->baseTable), [$this->langcodeKey]);
 
-      $revisioned_fields = array_diff($table_mapping->getFieldNames($this->jsonStorageCurrentRevisionTable), [$this->idKey, $this->uuidKey]);
+      $revisioned_fields = array_diff(
+        $table_mapping->getFieldNames($this->jsonStorageCurrentRevisionTable),
+        [
+          $this->idKey,
+          $this->uuidKey,
+        ],
+      );
 
       // If there are no data fields then only revisioned fields are needed
       // else both data fields and revisioned fields are needed to map the
@@ -743,7 +755,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // key as the base table holds only the default language.
       $base_fields = array_diff($table_mapping->getFieldNames($this->baseTable), [$this->langcodeKey]);
 
-      $translations_fields = array_diff($table_mapping->getFieldNames($this->jsonStorageTranslationsTable), [$this->idKey, $this->uuidKey]);
+      $translations_fields = array_diff(
+        $table_mapping->getFieldNames($this->jsonStorageTranslationsTable),
+        [
+          $this->idKey,
+          $this->uuidKey,
+        ],
+      );
 
       // If there are no data fields then only revisioned fields are needed
       // else both data fields and revisioned fields are needed to map the
@@ -1341,8 +1359,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // The ID field is provided by entity, so remove it.
         unset($entity_revision_fields[$this->idKey]);
 
-        // Remove all fields from the base table that are also fields by the same
-        // name in the revision table.
+        // Remove all fields from the base table that are also fields by the
+        // same name in the revision table.
         $entity_field_keys = array_flip($entity_fields);
         foreach ($entity_revision_fields as $name) {
           if (isset($entity_field_keys[$name])) {
@@ -1351,8 +1369,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
         $query->fields('revision', $entity_revision_fields);
 
-        // Compare revision ID of the base and revision table, if equal then this
-        // is the default revision.
+        // Compare revision ID of the base and revision table, if equal then
+        // this is the default revision.
         $query->addExpression('CASE [base].[' . $this->revisionKey . '] WHEN [revision].[' . $this->revisionKey . '] THEN 1 ELSE 0 END', 'isDefaultRevision');
       }
 
@@ -1592,8 +1610,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
       }
 
-      // Get the current revision ID, so that it can be set correctly in the base
-      // table.
+      // Get the current revision ID, so that it can be set correctly in the
+      // base table.
       $current_revision_id = NULL;
       if ($this->entityType->isRevisionable() && !$entity->isDefaultRevision()) {
         $entity_id = $entity->id();
@@ -1781,8 +1799,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $shared_table_fields = FALSE;
         $dedicated_table_fields = [];
 
-        // Collect the name of fields to be written in dedicated tables and check
-        // whether shared table records need to be updated.
+        // Collect the name of fields to be written in dedicated tables and
+        // check whether shared table records need to be updated.
         foreach ($names as $name) {
           $storage_definition = $this->fieldStorageDefinitions[$name];
           if ($table_mapping->allowsSharedTableStorage($storage_definition)) {
@@ -1842,9 +1860,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             ->insert($this->baseTable)
             ->fields((array) $record)
             ->execute();
-          // Even if this is a new entity the ID key might have been set, in which
-          // case we should not override the provided ID. An ID key that is not set
-          // to any value is interpreted as NULL (or DEFAULT) and thus overridden.
+          // Even if this is a new entity the ID key might have been set, in
+          // which case we should not override the provided ID. An ID key that
+          // is not set to any value is interpreted as NULL (or DEFAULT) and
+          // thus overridden.
           if (!isset($record->{$this->idKey})) {
             $record->{$this->idKey} = $insert_id;
           }
@@ -1915,7 +1934,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     try {
       // Only do this if the entity is revisionable.
       if ($this->entityType->isRevisionable()) {
-        // Make sure that the entity_id is of the correct type (integer or string).
+        // Make sure that the entity_id is of the correct type (integer or
+        // string).
         $base_table_entity_id_data = $this->database->tableInformation()->getTableField($this->baseTable, $this->idKey);
         if (isset($base_table_entity_id_data['type']) && in_array($base_table_entity_id_data['type'], ['int', 'serial'])) {
           $entity_id = (int) $entity_id;
@@ -1953,7 +1973,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         if (isset($entity_data->{$this->jsonStorageCurrentRevisionTable})) {
           $current_revision_data = (array) $entity_data->{$this->jsonStorageCurrentRevisionTable};
           foreach ($current_revision_data as $revision) {
-            // Get the current revision id for setting the default revision field.
+            // Get the current revision id for setting the default revision
+            // field.
             if (isset($revision->{$this->revisionKey})) {
               $current_revision_id = $revision->{$this->revisionKey};
             }
@@ -3185,7 +3206,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         if (is_array($dedicated_table_rows)) {
           foreach ($dedicated_table_rows as $dedicated_table_row) {
             if (!isset($entities[$dedicated_table_row['revision_id']])) {
-              // Create entity with the right revision id and entity id combination.
+              // Create entity with the right revision id and entity id
+              // combination.
               $dedicated_table_row['entity_type'] = $this->entityTypeId;
               // @todo Replace this by an entity object created via an entity
               // factory, see https://www.drupal.org/node/1867228.
@@ -3224,7 +3246,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
         foreach ($item_query->execute() as $item_row) {
           if (!isset($entities[$item_row['revision_id']])) {
-            // Create entity with the right revision id and entity id combination.
+            // Create entity with the right revision id and entity id
+            // combination.
             $item_row['entity_type'] = $this->entityTypeId;
             // @todo Replace this by an entity object created via an entity
             //   factory. https://www.drupal.org/node/1867228.

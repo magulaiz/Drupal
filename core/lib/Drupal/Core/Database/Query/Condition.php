@@ -275,7 +275,14 @@ class Condition implements ConditionInterface, \Countable {
         elseif (isset($condition['field2'])) {
           // The key field2 is only set when we are comparing 2 fields with each
           // other.
-          $condition_fragments[] = trim(implode(' ', [$connection->escapeField($condition['field']), $condition['operator'], $connection->escapeField($condition['field2'])]));
+          $condition_fragments[] = trim(implode(
+            ' ',
+            [
+              $connection->escapeField($condition['field']),
+              $condition['operator'],
+              $connection->escapeField($condition['field2'])
+            ],
+          ));
           continue;
         }
         elseif (!isset($condition['operator'])) {

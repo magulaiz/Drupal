@@ -1288,10 +1288,6 @@ class Schema extends DatabaseSchema {
    *
    * @param string $table
    *   The table to be altered.
-   *
-   * @returns bool
-   *   Returns TRUE when the given table has a primary key or FALSE when it does
-   *   not.
    */
   public function primaryKeyExists(string $table): bool {
     $base_table_name = $this->tableInformation->getTableBaseTable($table);

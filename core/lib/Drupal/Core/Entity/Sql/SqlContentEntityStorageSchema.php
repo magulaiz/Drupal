@@ -456,15 +456,14 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
 
       // Create dedicated field tables.
-      // $table_mapping = $this->getTableMapping($entity_type, $this->fieldStorageDefinitions);
       $table_mapping = $this->getTableMapping($entity_type);
       foreach ($this->fieldStorageDefinitions as $field_storage_definition) {
         if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
           $this->createDedicatedTableSchema($field_storage_definition);
         }
         elseif ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
-          // The shared tables are already fully created, but we need to save the
-          // per-field schema definitions for later use.
+          // The shared tables are already fully created, but we need to save
+          // the per-field schema definitions for later use.
           $this->createSharedTableSchema($field_storage_definition, TRUE);
         }
       }
@@ -483,8 +482,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           $this->createDedicatedTableSchema($field_storage_definition);
         }
         elseif ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
-          // The shared tables are already fully created, but we need to save the
-          // per-field schema definitions for later use.
+          // The shared tables are already fully created, but we need to save
+          // the per-field schema definitions for later use.
           $this->createSharedTableSchema($field_storage_definition, TRUE);
         }
       }
@@ -824,7 +823,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           $current_revision_table = $this->storage->getJsonStorageCurrentRevisionTable();
           $dedicated_current_revision_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $current_revision_table);
           $dedicated_current_revision_new_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $current_revision_table, TRUE);
-          // Check if there already exists a table with that name. If so, then delete it.
+          // Check if there already exists a table with that name. If so, then
+          // delete it.
           if ($this->database->schema()->tableExists($dedicated_current_revision_new_table)) {
             $this->database->schema()->dropTable($dedicated_current_revision_new_table);
           }
@@ -833,7 +833,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           $latest_revision_table = $this->storage->getJsonStorageLatestRevisionTable();
           $dedicated_latest_revision_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $latest_revision_table);
           $dedicated_latest_revision_new_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $latest_revision_table, TRUE);
-          // Check if there already exists a table with that name. If so, then delete it.
+          // Check if there already exists a table with that name. If so, then
+          // delete it.
           if ($this->database->schema()->tableExists($dedicated_latest_revision_new_table)) {
             $this->database->schema()->dropTable($dedicated_latest_revision_new_table);
           }
@@ -947,7 +948,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           $dedicated_base_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $base_table);
           $dedicated_base_new_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $base_table, TRUE);
 
-          // Delete the old archived table before renaming or the renaming will fail. Two tables cannot have the same name.
+          // Delete the old archived table before renaming or the renaming
+          // will fail. Two tables cannot have the same name.
           if ($this->database->schema()->tableExists($dedicated_base_new_table)) {
             $this->database->schema()->dropTable($dedicated_base_new_table);
           }
@@ -1032,8 +1034,9 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           $field_table_name = $table_mapping->getFieldTableName($storage_definition->getName());
 
           if ($this->database->supportsTransactionalDDL()) {
-            // If the database supports transactional DDL, we can go ahead and rely
-            // on it. If not, we will have to rollback manually if something fails.
+            // If the database supports transactional DDL, we can go ahead and
+            // rely on it. If not, we will have to rollback manually if
+            // something fails.
             $transaction = $this->database->startTransaction();
           }
 
@@ -1265,9 +1268,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
 
       if ($this->database->driver() == 'mongodb') {
-        // Not sure why the next method has been removed.
-        // $this->processBaseTable($entity_type, $schema[$tables['base_table']]);
-
         if (isset($tables['all_revisions_table'])) {
           $this->processJsonStorageRevisionsTable($entity_type, $schema[$tables['all_revisions_table']]);
         }
@@ -2941,9 +2941,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       unset($data_schema['indexes']);
 
       if ($entity_type->isRevisionable()) {
-        // Adding an index for every field can create too many indexes on a single
-        // table. For MongoDB the maximum is 64.
-        // $data_schema['indexes']['primary_key'] = ['entity_id', 'revision_id', 'deleted', 'delta', 'langcode'];
+        // Adding an index for every field can create too many indexes on a
+        // single table. For MongoDB the maximum is 64.
+        // $data_schema['indexes']['primary_key'] = ['entity_id',
+        // 'revision_id', 'deleted', 'delta', 'langcode'];
         $data_schema['fields']['revision_id']['not null'] = TRUE;
         $data_schema['fields']['revision_id']['description'] = 'The entity revision id this data is attached to';
 
@@ -2963,17 +2964,19 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         ];
       }
       elseif ($entity_type->isTranslatable()) {
-        // Adding an index for every field can create too many indexes on a single
-        // table. For MongoDB the maximum is 64.
-        // $data_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta', 'langcode'];
+        // Adding an index for every field can create too many indexes on a
+        // single table. For MongoDB the maximum is 64.
+        // $data_schema['indexes']['primary_key'] = ['entity_id', 'deleted',
+        // 'delta', 'langcode'];
         $data_schema['description'] = "Translations storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
         return [$table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->storage->getJsonStorageTranslationsTable()) => $data_schema];
       }
       else {
-        // Adding an index for every field can create too many indexes on a single
-        // table. For MongoDB the maximum is 64.
-        // $data_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta'];
+        // Adding an index for every field can create too many indexes on a
+        // single table. For MongoDB the maximum is 64.
+        // $data_schema['indexes']['primary_key'] = ['entity_id', 'deleted',
+        // 'delta'];
         $data_schema['description'] = "Storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
         return [$table_mapping->getJsonStorageDedicatedTableName($storage_definition, $entity_type->getBaseTable()) => $data_schema];
