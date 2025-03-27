@@ -5,15 +5,50 @@ declare(strict_types=1);
 namespace Drupal\Tests\package_manager\Kernel;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Queue\QueueFactory;
+use Drupal\package_manager\Event\PostApplyEvent;
+use Drupal\package_manager\Event\PreApplyEvent;
+use Drupal\package_manager\Event\StageEvent;
 use Drupal\package_manager\PathLocator;
 use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 use PhpTuf\ComposerStager\API\Core\CommitterInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @group package_manager
  */
-class DirectWriteTest extends PackageManagerKernelTestBase {
+class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubscriberInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents(): array {
+    return [
+      PreApplyEvent::class => 'assertNotDirectWrite',
+      PostApplyEvent::class => 'assertNotDirectWrite',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container): void {
+    parent::register($container);
+    $container->get(EventDispatcherInterface::class)->addSubscriber($this);
+  }
+
+
+  /**
+   * Event listener that asserts the stage is not in direct-write mode.
+   *
+   * @param \Drupal\package_manager\Event\StageEvent $event
+   *   The stage event.
+   */
+  public function assertNotDirectWrite(StageEvent $event): void {
+    $this->assertFalse($event->stage->isDirectWrite());
+  }
 
   /**
    * Tests that direct-write does not work if it is globally disabled.
