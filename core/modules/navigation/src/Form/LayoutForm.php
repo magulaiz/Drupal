@@ -117,13 +117,11 @@ final class LayoutForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    //$form_state->setRebuild();
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $user_input = $form_state->getUserInput();
     if (isset($user_input['save'])) {
       $this->save($form, $form_state);
     }
-    $a = 3;
   }
 
   /**
@@ -135,8 +133,8 @@ final class LayoutForm extends FormBase {
    *   The current state of the form.
    */
   public function save(array &$form, FormStateInterface $form_state): void {
-      $this->sectionStorage->save();
-      $this->saveTasks($form_state, new TranslatableMarkup('Saved navigation blocks'));
+    $this->sectionStorage->save();
+    $this->saveTasks($form_state, new TranslatableMarkup('Saved navigation blocks'));
   }
 
   /**
