@@ -483,27 +483,36 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   List of implementation callables.
    */
   protected function getCombinedListeners(string $main_hook, string ...$extra_hooks): array {
-    $extra_listeners_by_hook = $extra_hooks
-      ? array_filter(array_map(
-        $this->getHookListeners(...),
-        array_combine($extra_hooks, $extra_hooks),
-      ))
-      : [];
+    $main_hook_listeners = $this->getFlatHookListeners($main_hook);
+    if (!$extra_hooks) {
+      // No additional hooks were provided in the call.
+      return $main_hook_listeners;
+    }
+    $extra_listeners_by_hook = [];
+    foreach ($extra_hooks as $extra_hook) {
+      $extra_listeners_by_hook[$extra_hook] = $this->getFlatHookListeners($extra_hook);
+    }
+    $extra_listeners_by_hook = array_filter($extra_listeners_by_hook);
     if (!$extra_listeners_by_hook) {
-      // No extra hooks were provided in the call, or none of them has any
-      // listeners.
-      return $this->getFlatHookListeners($main_hook);
+      // None of the extra hooks has any listeners.
+      // The listeners for the main hook are already correctly ordered.
+      return $main_hook_listeners;
     }
     // Combine the listeners from all hooks that are part of the ->alter() call.
-    // At first they need to be grouped by module.
-    $listeners_by_module = $this->getHookListeners($main_hook);
-    foreach ($extra_listeners_by_hook as $extra_listeners_by_module) {
-      foreach ($extra_listeners_by_module as $module => $extra_listeners) {
-        foreach ($extra_listeners as $extra_listener) {
-          $listeners_by_module[$module][] = $extra_listener;
-        }
+    $listeners_by_hook = [
+      $main_hook => $main_hook_listeners,
+      ...$extra_listeners_by_hook,
+    ];
+    // Group the listeners by module.
+    $listeners_by_module = [];
+    foreach ($listeners_by_hook as $hook => $listeners) {
+      foreach ($listeners as $i => $listener) {
+        $module = $this->modulesByHook[$hook][$i];
+        $listeners_by_module[$module][] = $listener;
       }
     }
+    // Order the modules by module list order and using
+    // hook_module_implements_alter().
     $modules = array_keys($listeners_by_module);
     $modules = $this->reOrderModulesForAlter($modules, $main_hook);
     // Convert the list into a different structure to pass to the hook order
