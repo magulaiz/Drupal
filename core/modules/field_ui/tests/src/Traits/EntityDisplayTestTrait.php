@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\Traits;
 
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
@@ -19,7 +21,7 @@ trait EntityDisplayTestTrait {
    * @param string $type
    *   The type of field to create. Defaults to 'test_field'.
    */
-  protected function addDefaultTestFields(array $field_names, $type = 'test_field') {
+  protected function addDefaultTestFields(array $field_names, $type = 'test_field'): void {
     foreach ($field_names as $field_name) {
       $field_storage = FieldStorageConfig::create([
         'field_name' => $field_name,
@@ -46,7 +48,7 @@ trait EntityDisplayTestTrait {
    * @param string $type
    *   A formatter or widget ID to use that has dynamic dependencies.
    */
-  protected function configureAndTestMultipleFieldComponentDependencies(array $dependent_fields, EntityDisplayInterface $display, $type) {
+  protected function configureAndTestMultipleFieldComponentDependencies(array $dependent_fields, EntityDisplayInterface $display, $type): void {
     foreach ($dependent_fields as $field_name => $dependency) {
       $display->setComponent($field_name, [
         'type' => $type,

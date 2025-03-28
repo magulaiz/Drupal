@@ -135,7 +135,7 @@ class EntityFormDisplayTest extends KernelTestBase {
   /**
    * Tests the dependencies of field components within an entity display object.
    */
-  public function testMultipleFieldComponentDependencies() {
+  public function testMultipleFieldComponentDependencies(): void {
     // Set up two field components, each dependent on different arbitrary
     // modules that should not already be dependencies otherwise.
     $dependent_fields = [
