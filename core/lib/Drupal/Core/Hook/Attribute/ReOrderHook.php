@@ -10,6 +10,9 @@ use Drupal\Core\Hook\OrderInterface;
 /**
  * Set the order of an already existing implementation.
  *
+ * The effect of this attribute is independent from the specific class or method
+ * on which it is placed.
+ *
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
@@ -19,14 +22,15 @@ class ReOrderHook implements HookAttributeInterface {
    * Constructs a ReOrderHook object.
    *
    * @param string $hook
-   *   The hook parameter of the #Hook being modified.
+   *   The hook for which to reorder a listener method.
    * @param class-string $class
-   *   The class the implementation to modify is in.
+   *   The class of the targeted hook listener.
    * @param string $method
-   *   The method name of the #Hook being modified. If the hook attribute is
-   *   on a class and does not have method set, then use __invoke.
+   *   The method name of the targeted hook listener.
+   *   If the class instance itself is the listener, this should be '__invoke'.
    * @param \Drupal\Core\Hook\OrderInterface $order
-   *   Set the order of the implementation.
+   *   Specifies a new position for the targeted hook listener relative to other
+   *   listeners.
    */
   public function __construct(
     public string $hook,
