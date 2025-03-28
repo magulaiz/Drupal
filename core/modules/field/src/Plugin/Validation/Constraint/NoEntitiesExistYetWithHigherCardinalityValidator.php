@@ -88,7 +88,8 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
     // @todo Remove in Drupal 12.
     try {
       $result = $query->execute();
-    } catch (DatabaseExceptionWrapper $exception) {
+    }
+    catch (DatabaseExceptionWrapper) {
       return;
     }
 
