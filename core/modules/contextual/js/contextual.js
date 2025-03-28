@@ -3,7 +3,7 @@
  * Attaches behaviors for the Contextual module.
  */
 
-(function ($, Drupal, drupalSettings, _, Backbone, JSON, storage) {
+(function ($, Drupal, drupalSettings, JSON, storage) {
   const options = $.extend(
     drupalSettings.contextual,
     // Merge strings on top of drupalSettings so that they are not mutable.
@@ -19,16 +19,14 @@
   const cachedPermissionsHash = storage.getItem(
     'Drupal.contextual.permissionsHash',
   );
-  const permissionsHash = drupalSettings.user.permissionsHash;
+  const { permissionsHash } = drupalSettings.user;
   if (cachedPermissionsHash !== permissionsHash) {
     if (typeof permissionsHash === 'string') {
-      _.chain(storage)
-        .keys()
-        .each((key) => {
-          if (key.startsWith('Drupal.contextual.')) {
-            storage.removeItem(key);
-          }
-        });
+      Object.keys(storage).forEach((key) => {
+        if (key.startsWith('Drupal.contextual.')) {
+          storage.removeItem(key);
+        }
+      });
     }
     storage.setItem('Drupal.contextual.permissionsHash', permissionsHash);
   }
@@ -86,7 +84,7 @@
    */
   function initContextual($contextual, html) {
     const $region = $contextual.closest('.contextual-region');
-    const contextual = Drupal.contextual;
+    const { contextual } = Drupal;
 
     $contextual
       // Update the placeholder to contain its rendered contextual links.
@@ -188,7 +186,7 @@
           data: { 'ids[]': uncachedIDs, 'tokens[]': uncachedTokens },
           dataType: 'json',
           success(results) {
-            _.each(results, (html, contextualID) => {
+            Object.entries(results).forEach(([contextualID, html]) => {
               // Store the metadata.
               storage.setItem(`Drupal.contextual.${contextualID}`, html);
               // If the rendered contextual links are empty, then the current
@@ -278,12 +276,4 @@
   $(document).on('drupalContextualLinkAdded', (event, data) => {
     Drupal.ajax.bindAjaxLinks(data.$el[0]);
   });
-})(
-  jQuery,
-  Drupal,
-  drupalSettings,
-  _,
-  Backbone,
-  window.JSON,
-  window.sessionStorage,
-);
+})(jQuery, Drupal, drupalSettings, window.JSON, window.sessionStorage);
