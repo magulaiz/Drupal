@@ -87,30 +87,33 @@ class MigrationPluginManager extends BaseMigrationPluginManager {
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
-    // If the migration has no tags, we don't need to enforce the source_module
-    // annotation property.
-    if (empty($definition['migration_tags'])) {
-      return;
-    }
+    $source_id = $definition['source']['plugin'];
+    $source_definition = $this->sourceManager->getDefinition($source_id);
+    // If the source plugin uses annotations, then the 'provider' key is the
+    // array of providers and the 'providers' key is not defined.
+    $providers = $source_definition['providers'] ?? $source_definition['provider'];
 
     // Check if the migration has any of the tags that trigger source_module
     // enforcement.
-    $applied_tags = array_intersect($this->getEnforcedSourceModuleTags(), $definition['migration_tags']);
-    if ($applied_tags) {
-      // Confirm that source_module is defined for Drupal sourced migrations.
-      // If source_module is not defined in the migration then check for it in
-      // the source plugin. Throw an exception if the source plugin has
-      // migrate_drupal as a provider but does not define a source_module.
-      if (empty($definition['source']['source_module'])) {
-        $source_id = $definition['source']['plugin'];
-        $source_definition = $this->sourceManager->getDefinition($source_id);
-        // If the source plugin uses annotations, then the 'provider' key is the
-        // array of providers and the 'providers' key is not defined.
-        $providers = $source_definition['providers'] ?? $source_definition['provider'];
-        if (in_array('migrate_drupal', $providers, TRUE) && empty($source_definition['source_module'])) {
-          throw new BadPluginDefinitionException($source_id, 'source_module');
-        }
-      }
+    $needs_source_module = in_array('migrate_drupal', $providers, TRUE)
+      && !empty(array_intersect(
+        $definition['migration_tags'],
+        $this->getEnforcedSourceModuleTags(),
+      ));
+
+    $has_source_module = !empty($definition['source']['source_module']);
+    if (!$has_source_module) {
+      // If source_module is not defined in the migration, then check for it in
+      // the source plugin.
+      $has_source_module = !empty($source_definition['source_module']);
+    }
+
+    if ($needs_source_module && !$has_source_module) {
+      throw new BadPluginDefinitionException($source_id, 'source_module');
+    }
+
+    if (!$needs_source_module && $has_source_module) {
+      @trigger_error("Setting the source_module property without the expected tags is deprecated in drupal:11.2.0 and will trigger an error in drupal:12.0.0. See https://www.drupal.org/node/3306373", E_USER_DEPRECATED);
     }
   }
 
