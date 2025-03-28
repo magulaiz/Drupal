@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\field\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Schema\TypeResolver;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -70,11 +71,20 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
     }
 
     $max_delta_alias = 'max_delta';
-    $result = $this->entityTypeManager->getStorage($entity_type)
+    $query = $this->entityTypeManager->getStorage($entity_type)
       ->getAggregateQuery()
       ->accessCheck(FALSE)
-      ->aggregate($field_name . '.%delta', 'MAX', NULL, $max_delta_alias)
-      ->execute();
+      ->aggregate($field_name . '.%delta', 'MAX', NULL, $max_delta_alias);
+
+    // When the schema for the entity does not exist the query will throw an
+    // exception. This should only happen in tests.
+    // @see https://www.drupal.org/node/3475719
+    // @todo Remove in Drupal 12.
+    try {
+      $result = $query->execute();
+    } catch (DatabaseExceptionWrapper $exception) {
+      return;
+    }
 
     $max_delta = 0;
     if (is_array($result) && !empty($result)) {
