@@ -38,6 +38,7 @@ class NodePermissions implements ContainerInjectionInterface {
    *
    * @return array
    *   The node type permissions.
+   *
    * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   public function nodeTypePermissions() {
