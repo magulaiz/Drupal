@@ -129,7 +129,7 @@ class PerformanceForm extends ConfigFormBase {
     ];
 
     $directory = 'assets://';
-    $is_writable = is_dir($directory) && is_writable($directory);
+    $is_writable = is_dir($directory) && \Drupal::service('file_system')->isWritable($directory);
     $disabled = !$is_writable;
     $disabled_message = '';
     if (!$is_writable) {
