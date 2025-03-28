@@ -359,9 +359,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   The View being updated.
    */
   public function updateGroupingLabelElement(ViewEntityInterface $view): bool {
-    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type, $key, $display_id) use ($view) {
+    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type) use ($view) {
       $changed = FALSE;
-      if ($this->addGroupingLabelElement($handler, $handler_type)) {
+      if ($this->addGroupingLabelElement($handler, $handler_type, $view)) {
         $changed = TRUE;
       }
       return $changed;
@@ -375,11 +375,12 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   A display handler.
    * @param string $handler_type
    *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View being updated.
    *
    * @return bool
    *   Whether the handler was updated.
    */
-
   public function addGroupingLabelElement(array &$handler, string $handler_type, ViewEntityInterface $view): bool {
     $changed = FALSE;
 
@@ -399,4 +400,5 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
 
     return $changed;
   }
+
 }
