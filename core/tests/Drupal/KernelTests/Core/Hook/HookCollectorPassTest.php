@@ -169,7 +169,7 @@ class HookCollectorPassTest extends KernelTestBase {
       'Drupal\hook_order_last_alphabetically\Hook\TestHookFirst::hookFirst',
       'Drupal\hook_order_first_alphabetically\Hook\TestHookFirst::hookFirst',
     ];
-    $calls = $module_handler->invokeAll('custom_hook_test_hook_first', [[]]);
+    $calls = $module_handler->invokeAll('custom_hook_test_hook_first');
     $this->assertEquals($expected_calls, $calls);
   }
 
@@ -187,7 +187,7 @@ class HookCollectorPassTest extends KernelTestBase {
       'Drupal\hook_order_last_alphabetically\Hook\TestHookAfter::hookAfter',
       'Drupal\hook_order_first_alphabetically\Hook\TestHookAfter::hookAfter',
     ];
-    $calls = $module_handler->invokeAll('custom_hook_test_hook_after', [[]]);
+    $calls = $module_handler->invokeAll('custom_hook_test_hook_after');
     $this->assertEquals($expected_calls, $calls);
   }
 
@@ -205,7 +205,7 @@ class HookCollectorPassTest extends KernelTestBase {
       'Drupal\hook_second_order_last_alphabetically\Hook\TestHookAfterClassMethod::hookAfterClassMethod',
       'Drupal\hook_second_order_first_alphabetically\Hook\TestHookAfterClassMethod::hookAfterClassMethod',
     ];
-    $calls = $module_handler->invokeAll('custom_hook_test_hook_after_class_method', [[]]);
+    $calls = $module_handler->invokeAll('custom_hook_test_hook_after_class_method');
     $this->assertEquals($expected_calls, $calls);
   }
 
@@ -223,7 +223,7 @@ class HookCollectorPassTest extends KernelTestBase {
       'Drupal\hook_order_last_alphabetically\Hook\TestHookBefore::hookBefore',
       'Drupal\hook_order_first_alphabetically\Hook\TestHookBefore::hookBefore',
     ];
-    $calls = $module_handler->invokeAll('custom_hook_test_hook_before', [[]]);
+    $calls = $module_handler->invokeAll('custom_hook_test_hook_before');
     $this->assertEquals($expected_calls, $calls);
   }
 
@@ -265,7 +265,7 @@ class HookCollectorPassTest extends KernelTestBase {
       'Drupal\hook_order_last_alphabetically\Hook\TestHookLast::hookLast',
       'Drupal\hook_order_first_alphabetically\Hook\TestHookLast::hookLast',
     ];
-    $calls = $module_handler->invokeAll('custom_hook_test_hook_last', [[]]);
+    $calls = $module_handler->invokeAll('custom_hook_test_hook_last');
     $this->assertEquals($expected_calls, $calls);
   }
 
@@ -281,7 +281,7 @@ class HookCollectorPassTest extends KernelTestBase {
     $expected_calls = [
       'Drupal\hook_test_remove\Hook\TestHookRemove::hookDoRun',
     ];
-    $calls = $module_handler->invokeAll('custom_hook1', [[]]);
+    $calls = $module_handler->invokeAll('custom_hook1');
     $this->assertEquals($expected_calls, $calls);
   }
 
@@ -297,7 +297,7 @@ class HookCollectorPassTest extends KernelTestBase {
       'Drupal\hook_order_first_alphabetically\Hook\TestHookReOrderHookFirst::customHookOverride',
       'Drupal\hook_order_last_alphabetically\Hook\TestHookReOrderHookLast::customHookOverride',
     ];
-    $calls = $module_handler->invokeAll('custom_hook_override', [[]]);
+    $calls = $module_handler->invokeAll('custom_hook_override');
     $this->assertEquals($expected_calls, $calls);
   }
 

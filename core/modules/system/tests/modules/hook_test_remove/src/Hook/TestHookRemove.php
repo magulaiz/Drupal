@@ -16,7 +16,7 @@ class TestHookRemove {
    * This hook should not be run because the next hook replaces it.
    */
   #[Hook('custom_hook1')]
-  public function hookDoNotRun(array $call): string {
+  public function hookDoNotRun(): string {
     // This hook should not run.
     return __METHOD__;
   }
@@ -30,7 +30,7 @@ class TestHookRemove {
     class: TestHookRemove::class,
     method: 'hookDoNotRun'
   )]
-  public function hookDoRun(array $call): string {
+  public function hookDoRun(): string {
     // This hook should run.
     return __METHOD__;
   }
