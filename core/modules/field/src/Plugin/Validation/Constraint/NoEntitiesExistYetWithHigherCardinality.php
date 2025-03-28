@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 use Drupal\Core\Validation\Attribute\Constraint;
 
 /**
- * Checks if a plugin exists and optionally implements a particular interface.
+ * Checks if an entity with a higher cardinality than specified exists.
  */
 #[Constraint(
   id: 'NoEntitiesExistYetWithHigherCardinality',
@@ -18,11 +18,12 @@ use Drupal\Core\Validation\Attribute\Constraint;
 class NoEntitiesExistYetWithHigherCardinality extends SymfonyConstraint {
 
   /**
-   * The error message if a plugin does not implement the expected interface.
+   * The error message if an entity with a higher cardinality exists.
    *
    * @var string
    */
   public string $message = "The field '@field_name' of entity type '@entity_type' has more entries (@max_delta) than the cardinality (@cardinality) allows.";
+
   /**
    * The entity type to check.
    *
