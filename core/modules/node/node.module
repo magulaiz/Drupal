@@ -349,9 +349,26 @@ function template_preprocess_node(&$variables): void {
   //   $variables['content'] is more flexible and consistent.
   $submitted_configurable = $node->getFieldDefinition('created')->isDisplayConfigurable('view') || $node->getFieldDefinition('uid')->isDisplayConfigurable('view');
   if (!$skip_custom_preprocessing || !$submitted_configurable) {
-    $variables['date'] = \Drupal::service('renderer')->render($variables['elements']['created']);
+    $renderer = \Drupal::service('renderer');
+    $variables['date'] = $renderer->render($variables['elements']['created']);
     unset($variables['elements']['created']);
-    $variables['author_name'] = \Drupal::service('renderer')->render($variables['elements']['uid']);
+
+    // @todo The todo above still remains true and we should get rid of the
+    //   author name preprocessing in favor of being able to configure these
+    //   base fields on the view display. But for the time being we manually
+    //   call a formatter so that the author name access check works.
+    $field_definition = Node::baseFieldDefinitions(\Drupal::entityTypeManager()->getDefinition('node'))['uid'];
+    $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
+    $formatter = $field_formatter_manager->getInstance([
+      'configuration' => [
+        'type' => 'entity_reference_label',
+        'settings' => ['link' => FALSE],
+      ],
+      'field_definition' => $field_definition,
+      'view_mode' => $variables['view_mode'],
+    ]);
+    $author_name = $formatter->viewElements($node->get('uid'), $node->language()->getId());
+    $variables['author_name'] = $renderer->render($author_name);
     unset($variables['elements']['uid']);
   }
 
