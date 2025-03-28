@@ -70,6 +70,12 @@ class NoEntitiesExistYetWithHigherCardinalityValidator extends ConstraintValidat
       return;
     }
 
+    if ($fieldStorageConfig->hasCustomStorage()) {
+      // If the field storage has custom storage, we cannot check this
+      // constraint.
+      return;
+    }
+
     $max_delta_alias = 'max_delta';
     $query = $this->entityTypeManager->getStorage($entity_type)
       ->getAggregateQuery()
