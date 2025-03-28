@@ -5,6 +5,8 @@
  * Post update functions for Field module.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -18,19 +20,15 @@ function field_removed_post_updates(): array {
 }
 
 /**
- * Resave all entity view/form displays with recalculated dependencies.
+ * Recalculate entity form display dependencies.
  */
-function field_post_update_resave_all_entity_view_or_form_displays(): void {
+function field_post_update_recalculate_entity_form_display_dependencies(?array &$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_form_display');
+}
 
-  $entity_type_manager = \Drupal::entityTypeManager();
-
-  /** @var \Drupal\Core\Entity\Display\EntityFormDisplayInterface $entity_form_display */
-  foreach ($entity_type_manager->getStorage('entity_form_display')->loadMultiple() as $entity_form_display) {
-    $entity_form_display->save();
-  }
-
-  /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $entity_view_display */
-  foreach ($entity_type_manager->getStorage('entity_view_display')->loadMultiple() as $entity_view_display) {
-    $entity_view_display->save();
-  }
+/**
+ * Recalculate entity view display dependencies.
+ */
+function field_post_update_recalculate_entity_view_display_dependencies(?array &$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display');
 }

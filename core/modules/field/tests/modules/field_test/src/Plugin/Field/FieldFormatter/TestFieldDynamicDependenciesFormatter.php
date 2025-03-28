@@ -49,7 +49,7 @@ class TestFieldDynamicDependenciesFormatter extends FormatterBase {
     $summary = [];
     $summary[] = $this->t('@setting: @value', [
       '@setting' => 'dependent_module',
-      '@value' => $this->getSetting('dependent_module'),
+      '@value' => $this->getSetting('dependent_module') ?? '',
     ]);
     return $summary;
   }
