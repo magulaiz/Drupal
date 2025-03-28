@@ -2,46 +2,35 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\DependencyInjection\AutowireTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\BundlePermissionHandlerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\Entity\NodeType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides dynamic permissions for nodes of different types.
  */
 class NodePermissions implements ContainerInjectionInterface {
+
+  use AutowireTrait;
   use BundlePermissionHandlerTrait;
   use StringTranslationTrait;
 
   /**
-   * The node type storage.
-   *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
-   */
-  protected $nodeTypeStorage;
-
-  /**
    * Constructs a new NodePermissions object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager = NULL) {
-    if ($entity_type_manager == NULL) {
-      $entity_type_manager = \Drupal::entityTypeManager();
+  public function __construct(
+    protected ?EntityTypeManagerInterface $entityTypeManager = NULL,
+  ) {
+    if ($entityTypeManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $entityTypeManager argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3451667', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
     }
-    $this->nodeTypeStorage = $entity_type_manager->getStorage('node_type');
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('entity_type.manager'));
   }
 
   /**
@@ -49,12 +38,11 @@ class NodePermissions implements ContainerInjectionInterface {
    *
    * @return array
    *   The node type permissions.
-   *
    * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   public function nodeTypePermissions() {
     return $this->generatePermissions(
-      $this->nodeTypeStorage->loadMultiple(),
+      $this->entityTypeManager->getStorage('node_type')->loadMultiple(),
       [$this, 'buildPermissions']
     );
   }
