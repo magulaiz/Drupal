@@ -1,6 +1,6 @@
 file_upload:
   label: 'File upload'
-  description: 'Field to upload any type of files.'
+  description: 'Create media type with the ability to upload assets'
   weight: -15
   libraries:
     - file/drupal.file-icon

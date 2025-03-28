@@ -17,11 +17,11 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
  */
 #[FieldType(
   id: "daterange",
-  label: new TranslatableMarkup("Date range"),
+  label: new TranslatableMarkup("Datetime range"),
   description: [
-    new TranslatableMarkup("Ideal for storing durations that consist of start and end dates (and times)"),
-    new TranslatableMarkup("Choose between setting both date and time, or date only, for each duration"),
-    new TranslatableMarkup("The system automatically validates that the end date (and time) is later than the start, and both fields are completed"),
+    new TranslatableMarkup("A start and end, each using the Datetime format"),
+    new TranslatableMarkup("Two Datetime values: start and end"),
+    new TranslatableMarkup("Example: 2001-01-14T09:00:00 to 2001-01-14T17:00:00"),
   ],
   category: "date_time",
   default_widget: "daterange_default",

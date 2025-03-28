@@ -15,11 +15,11 @@ use Drupal\Core\TypedData\DataDefinition;
  */
 #[FieldType(
   id: "datetime",
-  label: new TranslatableMarkup("Date"),
+  label: new TranslatableMarkup("Datetime"),
   description: [
-    new TranslatableMarkup("Ideal when date and time needs to be input by users, like event dates and times"),
-    new TranslatableMarkup("Date or date and time stored in a readable string format"),
-    new TranslatableMarkup("Easy to read and understand for humans"),
+    new TranslatableMarkup("Human-readable string format"),
+    new TranslatableMarkup("Input requires: date"),
+    new TranslatableMarkup("Example: 2001-01-14T00:00:00"),
   ],
   category: "date_time",
   default_widget: "datetime_default",

@@ -131,7 +131,7 @@ class MediaHooks {
     // Set the default formatter for media in entity reference fields to be the
     // "Rendered entity" formatter.
     if (!empty($options['media'])) {
-      $options['media']['description'] = $this->t('Field to reference media. Allows uploading and selecting from uploaded media.');
+      $options['media']['description'] = $this->t('Create media type with the ability to upload or link assets');
       $options['media']['weight'] = -25;
       $options['media']['category'] = FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
       $options['media']['entity_view_display']['type'] = 'entity_reference_entity_view';
