@@ -2,7 +2,7 @@
 
 namespace Drupal\field\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\node\Plugin\migrate\source\d6\ViewModeBase;
 
 // cspell:ignore cnfi
@@ -15,7 +15,7 @@ use Drupal\node\Plugin\migrate\source\d6\ViewModeBase;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_field_instance_per_view_mode',
   source_module: 'content',
 )]

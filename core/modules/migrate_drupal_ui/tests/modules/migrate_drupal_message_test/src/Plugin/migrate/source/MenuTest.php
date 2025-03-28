@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\migrate_drupal_message_test\Plugin\migrate\source;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\system\Plugin\migrate\source\Menu;
 
 /**
  * Source plugin with a source id removed from the array returned by fields().
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_menu_test',
   source_module: 'menu',
 )]

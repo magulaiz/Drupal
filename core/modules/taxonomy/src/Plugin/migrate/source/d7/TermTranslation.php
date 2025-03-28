@@ -2,8 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 
 /**
  * Drupal 7 i18n taxonomy terms source from database.
@@ -14,7 +14,7 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_taxonomy_term_translation',
   source_module: 'i18n_taxonomy',
 )]

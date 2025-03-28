@@ -2,8 +2,8 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 // cspell:ignore trid
@@ -43,7 +43,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @todo Support term_relation, term_synonym table if possible.
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_taxonomy_term',
   source_module: 'taxonomy',
 )]

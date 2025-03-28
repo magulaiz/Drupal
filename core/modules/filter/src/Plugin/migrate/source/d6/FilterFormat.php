@@ -2,9 +2,9 @@
 
 namespace Drupal\filter\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
-use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
  * Drupal 6 filter source from database.
@@ -14,7 +14,7 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_filter_format',
   source_module: 'filter',
 )]

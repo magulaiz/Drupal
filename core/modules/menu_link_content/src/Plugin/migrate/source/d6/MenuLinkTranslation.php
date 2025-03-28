@@ -3,8 +3,8 @@
 namespace Drupal\menu_link_content\Plugin\migrate\source\d6;
 
 use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait;
 
 // cspell:ignore mlid
@@ -12,7 +12,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\I18nQueryTrait;
 /**
  * Drupal 6 i18n menu link translations source from database.
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_menu_link_translation',
   source_module: 'i18nmenu',
 )]

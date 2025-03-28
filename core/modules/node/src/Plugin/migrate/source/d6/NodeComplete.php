@@ -2,7 +2,7 @@
 
 namespace Drupal\node\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 
 /**
  * Drupal 6 all node revisions source, including translation revisions.
@@ -12,7 +12,7 @@ use Drupal\migrate\Attribute\MigrateSource;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_node_complete',
   source_module: 'node',
 )]

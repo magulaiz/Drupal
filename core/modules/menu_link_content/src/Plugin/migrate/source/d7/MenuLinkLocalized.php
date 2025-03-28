@@ -3,15 +3,15 @@
 namespace Drupal\menu_link_content\Plugin\migrate\source\d7;
 
 use Drupal\menu_link_content\Plugin\migrate\source\MenuLink;
-use Drupal\migrate\Attribute\MigrateSource;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 
 // cspell:ignore mlid tsid
 
 /**
  * Drupal 7 localized menu link translations source from database.
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_menu_link_localized',
   source_module: 'i18n_menu',
 )]

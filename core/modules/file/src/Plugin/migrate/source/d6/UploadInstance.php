@@ -2,9 +2,9 @@
 
 namespace Drupal\file\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
-use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 // cspell:ignore uploadsize
 
@@ -16,7 +16,7 @@ use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_upload_instance',
   source_module: 'upload',
 )]

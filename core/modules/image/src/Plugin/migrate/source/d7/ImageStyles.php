@@ -2,9 +2,9 @@
 
 namespace Drupal\image\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
-use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 // cspell:ignore isid
 
@@ -16,7 +16,7 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_image_styles',
   source_module: 'image',
 )]

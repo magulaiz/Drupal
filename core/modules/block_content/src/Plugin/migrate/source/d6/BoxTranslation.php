@@ -3,7 +3,7 @@
 namespace Drupal\block_content\Plugin\migrate\source\d6;
 
 use Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation as D7BlockCustomTranslation;
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 
 /**
  * Drupal 6 i18n content block translations source from database.
@@ -13,7 +13,7 @@ use Drupal\migrate\Attribute\MigrateSource;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_box_translation',
   source_module: 'i18nblocks',
 )]
