@@ -170,6 +170,8 @@ YAML,
     $container->getDefinition('module_handler')
       ->setArgument(0, '%app.root%')
       ->setArgument(1, '%container.modules%');
+    $container->getDefinition('container.namespaces')
+      ->setArgument(0, '%container.namespaces%');
 
     // To discover per-test case config schema YAML files, work around the
     // static file cache in \Drupal\Core\Extension\ExtensionDiscovery. There is
