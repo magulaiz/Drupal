@@ -565,7 +565,7 @@ class FieldStorageAddForm extends FormBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3254575
    */
-  protected function fieldNameIsAToken(string $value, FormStateInterface $form_state): bool {
+  public function fieldNameIsAToken(string $value, FormStateInterface $form_state): bool {
     // Add the field prefix.
     $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
 
