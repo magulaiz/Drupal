@@ -68,7 +68,7 @@ class TimestampFormatterWithTimeDiffViewsTest extends WebDriverTestBase {
 
     // Wait up to 2 seconds to make sure the 'right now' time difference was
     // refreshed.
-    $this->assertJsCondition("document.querySelector('.entity-$delta time').textContent >= '$time_diff'", 5000);
+    $this->assertJsCondition("document.querySelector('.entity-$delta time').textContent >= '$time_diff'");
   }
 
   /**
