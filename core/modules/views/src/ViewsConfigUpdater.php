@@ -134,8 +134,103 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       if ($this->processRememberRolesUpdate($handler, $handler_type)) {
         $changed = TRUE;
       }
+      if ($this->updateTableAlignmentClasses($view)) {
+        $changed = TRUE;
+      }
       return $changed;
     });
+  }
+
+  /**
+   * Adds a label to views which don't have one.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function addLabelIfMissing(ViewEntityInterface $view): bool {
+    if (!$view->get('label')) {
+      $view->set('label', $view->id());
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Changes the alignment css class name for table styles.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function updateTableAlignmentClasses(ViewEntityInterface $view): bool {
+    $displays = $view->get('display');
+    $return = FALSE;
+    foreach ($displays as $display_id => $display) {
+      if ($display['display_plugin'] === 'table') {
+        foreach ($display['display_options']['fields'] as $field) {
+          if (isset($field['align'])) {
+            $displays[$display_id]['display_options']['fields']['align'] = str_replace('views-align-', '', $field['align']);
+            $return = TRUE;
+          }
+        }
+      }
+    }
+    $deprecations_triggered = &$this->triggeredDeprecations['3436855'][$view->id()];
+    if ($this->deprecationsEnabled && $return && !$deprecations_triggered) {
+      $deprecations_triggered = TRUE;
+      @trigger_error(sprintf('The update to convert the align table style options for view "%s" is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3515029', $view->id()), E_USER_DEPRECATED);
+    }
+    $view->set('display', $displays);
+    return $return;
+  }
+
+  /**
+   * Add lazy load options to all responsive_image type field configurations.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsResponsiveImageLazyLoadFieldUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
+      return $this->processResponsiveImageLazyLoadFieldHandler($handler, $handler_type, $view);
+    });
+  }
+
+  /**
+   * Processes responsive_image type fields.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View being updated.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processResponsiveImageLazyLoadFieldHandler(array &$handler, string $handler_type, ViewEntityInterface $view): bool {
+    $changed = FALSE;
+
+    // Add any missing settings for lazy loading.
+    if (($handler_type === 'field')
+      && isset($handler['plugin_id'], $handler['type'])
+      && $handler['plugin_id'] === 'field'
+      && $handler['type'] === 'responsive_image'
+      && !isset($handler['settings']['image_loading'])) {
+      $handler['settings']['image_loading'] = ['attribute' => 'eager'];
+      $changed = TRUE;
+    }
+
+    return $changed;
   }
 
   /**
