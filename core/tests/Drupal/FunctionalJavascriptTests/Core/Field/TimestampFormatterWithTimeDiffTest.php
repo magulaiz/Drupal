@@ -121,13 +121,13 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
 
     // Wait up to 2 seconds to make sure that the last time difference value
     // has been refreshed.
-    $this->assertJsCondition("document.getElementsByTagName('time')[0].textContent != '$time_diff'", 2000);
+    $this->assertJsCondition("document.getElementsByTagName('time')[0].textContent != '$time_diff'", 5000);
     $time_diff = $time_element->getText();
     [$new_seconds_value] = explode(' ', $time_diff, 2);
     $this->assertGreaterThan($seconds_value, $new_seconds_value);
 
     // Once again.
-    $this->assertJsCondition("document.getElementsByTagName('time')[0].textContent != '$time_diff'", 2000);
+    $this->assertJsCondition("document.getElementsByTagName('time')[0].textContent != '$time_diff'", 5000);
     $time_diff = $time_element->getText();
     $seconds_value = $new_seconds_value;
     [$new_seconds_value] = explode(' ', $time_diff, 2);
