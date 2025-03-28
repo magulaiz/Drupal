@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\field_test\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'test_field_widget_dynamic_dependencies' widget.
- *
- * @FieldWidget(
- *   id = "test_field_widget_dynamic_dependencies",
- *   label = @Translation("Test widget with dynamic dependencies"),
- *   field_types = {
- *     "test_field",
- *   },
- *   weight = 0
- * )
  */
+#[FieldWidget(
+  id: 'test_field_widget_dynamic_dependencies',
+  label: new TranslatableMarkup('Test widget with dynamic dependencies'),
+  field_types: ['test_field'],
+  weight: 0,
+)]
 class TestFieldWidgetDynamicDependencies extends WidgetBase {
 
   /**

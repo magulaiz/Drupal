@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\field_test\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Plugin implementation of the 'field_test_dynamic_dependencies' formatter.
- *
- * @FieldFormatter(
- *   id = "field_test_dynamic_dependencies",
- *   label = @Translation("Dynamic dependencies test"),
- *   field_types = {
- *     "test_field",
- *   },
- *   weight = 0
- * )
  */
+#[FieldFormatter(
+  id: 'field_test_dynamic_dependencies',
+  label: new TranslatableMarkup('Dynamic dependencies test'),
+  field_types: ['test_field'],
+  weight: 0,
+)]
 class TestFieldDynamicDependenciesFormatter extends FormatterBase {
 
   /**
