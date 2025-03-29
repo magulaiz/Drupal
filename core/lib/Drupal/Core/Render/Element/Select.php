@@ -188,6 +188,8 @@ class Select extends FormElementBase {
         return $input;
       }
     }
+
+    return NULL;
   }
 
   /**

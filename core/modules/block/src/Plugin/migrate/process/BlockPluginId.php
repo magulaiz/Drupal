@@ -110,6 +110,8 @@ class BlockPluginId extends ProcessPluginBase implements ContainerFactoryPluginI
     else {
       return $value;
     }
+
+    return NULL;
   }
 
 }
