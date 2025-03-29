@@ -213,7 +213,7 @@ JS;
     // Confirm there are no longer any warnings.
     $assert_session->waitForElementRemoved('css', '[data-drupal-messages] [role="alert"]');
     $page->pressButton('Save configuration');
-    $assert_session->responseContains('Added text format <em class="placeholder">ckeditor5</em>.');
+    $this->assertTrue($assert_session->waitForText('Added text format <em class="placeholder">ckeditor5</em>.'));
   }
 
   /**
@@ -713,7 +713,7 @@ JS;
     $editor = $page->find('css', '.ck-content');
     $editor->setValue('Very important information');
     $page->pressButton('Save');
-    $this->assertSession()->responseContains('Very important information');
+    $this->assertTrue($this->assertSession()->waitForText('Very important information'));
 
     // Test that changes only in source are saved.
     $this->drupalGet('node/1/edit');
@@ -723,7 +723,7 @@ JS;
     $editor = $page->find('css', '.ck-source-editing-area textarea');
     $editor->setValue('Text hidden in the source');
     $page->pressButton('Save');
-    $this->assertSession()->responseContains('Text hidden in the source');
+    $this->assertTrue($this->assertSession()->waitForText('Text hidden in the source'));
   }
 
 }

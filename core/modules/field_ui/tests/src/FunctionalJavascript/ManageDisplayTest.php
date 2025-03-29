@@ -343,7 +343,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $this->assertEquals($current_setting_value, $setting_value, 'The setting was updated.');
 
     // Assert that hook_field_widget_settings_summary_alter() is called.
-    $assert_session->responseContains('field_test_field_widget_settings_summary_alter');
+    $this->assertTrue($assert_session->waitForText('field_test_field_widget_settings_summary_alter'));
 
     $field_test_settings->click();
     $assert_session->assertExpectedAjaxRequest(1);
