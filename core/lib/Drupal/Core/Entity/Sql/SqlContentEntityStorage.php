@@ -1924,8 +1924,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         foreach ($all_revisions as $revision) {
           if (isset($revision[$revision_key])) {
             if (!empty($workspace_associated_revisions)) {
-              // When we have workspace associated revision when should match the
-              // entity ids and the revision ids.
+              // When we have workspace associated revision when should match
+              // the entity ids and the revision ids.
               if (in_array($revision[$revision_key], array_keys($workspace_associated_revisions)) && in_array($entity_id, array_values($workspace_associated_revisions)) && ($revision[$revision_key] > $latest_revision_id)) {
                 $latest_revision_id = $revision[$revision_key];
               }
