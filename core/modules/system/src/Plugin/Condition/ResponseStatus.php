@@ -121,7 +121,7 @@ class ResponseStatus extends ConditionPluginBase implements ContainerFactoryPlug
    */
   public function getCacheContexts(): array {
     $contexts = parent::getCacheContexts();
-    $contexts[] = 'url.path';
+    $contexts[] = 'status_code';
     return $contexts;
   }
 
