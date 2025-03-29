@@ -558,7 +558,6 @@ class ModuleHandler implements ModuleHandlerInterface {
         assert(!array_diff(array_keys($modules_by_identifier), $identifiers));
       }
     }
-    $identifiers = array_values(array_unique($identifiers));
     return array_map(
       static fn (string $identifier) => $listeners_by_identifier[$identifier],
       $identifiers,
