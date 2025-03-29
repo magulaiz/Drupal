@@ -174,8 +174,6 @@ YAML,
       ->setArgument(1, '%container.modules%');
     $container->getDefinition('container.namespaces')
       ->setArgument(0, '%container.namespaces%');
-    $container->getDefinition('container.namespaces')
-      ->setArgument(0, '%container.namespaces%');
 
     // To discover per-test case config schema YAML files, work around the
     // static file cache in \Drupal\Core\Extension\ExtensionDiscovery. There is
