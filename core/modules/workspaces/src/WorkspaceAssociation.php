@@ -354,6 +354,11 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
 
     $entity_type = $storage->getEntityType();
     $table_mapping = $storage->getTableMapping();
+
+    // Return an empty when there is no workspace revision metadata key.
+    if (!isset($entity_type->get('revision_metadata_keys')['workspace'])) {
+      return [];
+    }
     $workspace_field = $table_mapping->getColumnNames($entity_type->get('revision_metadata_keys')['workspace'])['target_id'];
     $id_field = $table_mapping->getColumnNames($entity_type->getKey('id'))['value'];
     $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
