@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,6 +67,19 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       $this->mink = NULL;
       throw $e;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultDriverInstance() {
+    $driver = parent::getDefaultDriverInstance();
+    // Set an implicit wait of 10 seconds.
+    // @see https://www.selenium.dev/documentation/webdriver/waits/
+    if ($driver instanceof Selenium2Driver) {
+      $driver->setTimeouts(['implicit' => 10000]);
+    }
+    return $driver;
   }
 
   /**
