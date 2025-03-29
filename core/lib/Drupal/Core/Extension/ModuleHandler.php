@@ -464,7 +464,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $hooks = is_array($type)
         ? array_map(static fn (string $type) => $type . '_alter', $type)
         : [$type . '_alter'];
-      $this->alterEventListeners[$cid] = $this->getCombinedListeners(...$hooks);
+      $this->alterEventListeners[$cid] = $this->getCombinedListeners($hooks);
     }
     foreach ($this->alterEventListeners[$cid] as $listener) {
       $listener($data, $context1, $context2);
@@ -474,78 +474,64 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * Builds a list of listeners for an alter hook.
    *
-   * @param string $main_hook
-   *   The primary alter hook, e.g. 'form_alter'.
-   * @param string ...$extra_hooks
-   *   Additional alter hooks, e.g. 'form_FORM_ID_alter'.
+   * @param list<string> $hooks
+   *   The hooks passed to the ->alter() call.
    *
    * @return list<callable>
    *   List of implementation callables.
    */
-  protected function getCombinedListeners(string $main_hook, string ...$extra_hooks): array {
-    $main_hook_listeners = $this->getFlatHookListeners($main_hook);
-    if (!$extra_hooks) {
-      // No additional hooks were provided in the call.
-      return $main_hook_listeners;
+  protected function getCombinedListeners(array $hooks): array {
+    // Get implementation lists for each hook.
+    $listener_lists = array_map($this->getFlatHookListeners(...), $hooks);
+    // Remove empty lists.
+    $listener_lists = array_filter($listener_lists);
+    if (!$listener_lists) {
+      // No implementations exist.
+      return [];
     }
-    $extra_listeners_by_hook = [];
-    foreach ($extra_hooks as $extra_hook) {
-      $extra_listeners_by_hook[$extra_hook] = $this->getFlatHookListeners($extra_hook);
+    if (array_keys($listener_lists) === [0]) {
+      // Only the main hook has implementations.
+      return $listener_lists[0];
     }
-    $extra_listeners_by_hook = array_filter($extra_listeners_by_hook);
-    if (!$extra_listeners_by_hook) {
-      // None of the extra hooks has any listeners.
-      // The listeners for the main hook are already correctly ordered.
-      return $main_hook_listeners;
-    }
-    // Collect the listeners from each hook.
-    $listeners_by_hook = [
-      $main_hook => $main_hook_listeners,
-      ...$extra_listeners_by_hook,
-    ];
+    // Collect the lists from each hook.
     // Group the listeners by module.
-    $listeners_by_module = [];
-    foreach ($listeners_by_hook as $hook => $listeners) {
-      foreach ($listeners as $index => $listener) {
-        $module = $this->modulesByHook[$hook][$index];
-        $listeners_by_module[$module][] = $listener;
-      }
-    }
-    // Order the modules by module list order and using
-    // hook_module_implements_alter().
-    $modules = array_keys($listeners_by_module);
-    $modules = $this->reOrderModulesForAlter($modules, $main_hook);
-    // Convert the list into a different structure to pass to the hook order
-    // operations.
     $listeners_by_identifier = [];
     $modules_by_identifier = [];
-    $identifiers = [];
-    foreach ($modules as $module) {
-      foreach ($listeners_by_module[$module] ?? [] as $listener) {
+    $identifiers_by_module = [];
+    foreach ($listener_lists as $i_hook => $listeners) {
+      $hook = $hooks[$i_hook];
+      foreach ($listeners as $i_listener => $listener) {
+        $module = $this->modulesByHook[$hook][$i_listener];
         $identifier = is_array($listener)
           ? get_class($listener[0]) . '::' . $listener[1]
           : ProceduralCall::class . '::' . $listener;
-        // Detect if the implementation is already part of the list.
-        // In general, a method can implement more than one hook. However, if
-        // both of these hooks are part of the same ->alter() call, that is
-        // almost always by mistake.
-        if ($other_module = $modules_by_identifier[$identifier] ?? NULL) {
+        $other_module = $modules_by_identifier[$identifier] ?? NULL;
+        if ($other_module !== NULL) {
           $this->triggerErrorForDuplicateAlterHookListener(
-            [$main_hook, ...$extra_hooks],
+            $hooks,
             $module,
             $other_module,
             $listener,
             $identifier,
           );
-          // Don't add an identifier more than once.
+          // Don't add the same listener more than once.
           continue;
         }
         $listeners_by_identifier[$identifier] = $listener;
         $modules_by_identifier[$identifier] = $module;
-        $identifiers[] = $identifier;
+        $identifiers_by_module[$module][] = $identifier;
       }
     }
-    foreach ([$main_hook, ...$extra_hooks] as $hook) {
+    // Order the modules by module list order and using
+    // hook_module_implements_alter().
+    $modules = array_keys($identifiers_by_module);
+    $modules = $this->reOrderModulesForAlter($modules, $hooks[0]);
+    // Create a flat list of identifiers, using the new module order.
+    $identifiers = array_merge(...array_map(
+      fn (string $module) => $identifiers_by_module[$module],
+      $modules,
+    ));
+    foreach ($hooks as $hook) {
       foreach ($this->getHookOrderingRules($hook) as $rule) {
         $rule->apply($identifiers, $modules_by_identifier);
         // Order operations must not:
