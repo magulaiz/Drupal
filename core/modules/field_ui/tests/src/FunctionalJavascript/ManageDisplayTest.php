@@ -318,9 +318,9 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Check whether widget weights are respected.
     $this->assertFieldSelectOptions($field_test_type, [
       'test_field_widget',
-      'test_field_widget_dynamic_dependencies',
       'test_field_widget_multilingual',
       'test_field_widget_multiple',
+      'test_field_widget_dynamic_dependencies',
     ]);
 
     $field_test_type->setValue('test_field_widget_multiple');
@@ -403,14 +403,14 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Checks if the select elements contain the specified options.
     $this->assertFieldSelectOptions($field_test_type, [
       'test_field_widget',
-      'test_field_widget_dynamic_dependencies',
       'test_field_widget_multilingual',
       'test_field_widget_multiple',
+      'test_field_widget_dynamic_dependencies',
     ]);
     $this->assertFieldSelectOptions($field_onewidgetfield_type, [
       'test_field_widget',
-      'test_field_widget_dynamic_dependencies',
       'test_field_widget_multilingual',
+      'test_field_widget_dynamic_dependencies',
     ]);
 
     $field_test_drag_handle->dragTo($target);

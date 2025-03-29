@@ -18,7 +18,7 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
   id: 'test_field_widget_dynamic_dependencies',
   label: new TranslatableMarkup('Test widget with dynamic dependencies'),
   field_types: ['test_field'],
-  weight: 0,
+  weight: 20,
 )]
 class TestFieldWidgetDynamicDependencies extends WidgetBase {
 
