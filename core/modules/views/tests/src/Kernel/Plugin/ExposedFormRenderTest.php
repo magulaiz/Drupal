@@ -64,6 +64,13 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
       'name' => 'Article',
     ])->save();
 
+    if (\Drupal::database()->driver() === 'mongodb') {
+      $table = 'node';
+    }
+    else {
+      $table = 'node_field_data';
+    }
+
     $view = Views::getView('test_exposed_form_buttons');
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('filters', [
@@ -71,7 +78,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
         'exposed' => TRUE,
         'field' => 'type',
         'id' => 'type',
-        'table' => 'node_field_data',
+        'table' => $table,
         'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',
@@ -87,7 +94,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
         'exposed' => TRUE,
         'field' => 'type',
         'id' => 'type_with_default_value',
-        'table' => 'node_field_data',
+        'table' => $table,
         'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',
@@ -104,7 +111,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
         'exposed' => TRUE,
         'field' => 'type',
         'id' => 'multiple_types',
-        'table' => 'node_field_data',
+        'table' => $table,
         'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',
@@ -120,7 +127,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
         'exposed' => TRUE,
         'field' => 'type',
         'id' => 'multiple_types_with_default_value',
-        'table' => 'node_field_data',
+        'table' => $table,
         'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',

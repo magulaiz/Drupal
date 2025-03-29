@@ -63,6 +63,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installEntitySchema('user');
     $this->setUpCurrentUser();
 
     $this->installSchema('node', ['node_access']);

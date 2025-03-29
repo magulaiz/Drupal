@@ -7,6 +7,8 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\UTCDateTime;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHandler;
 
@@ -16,6 +18,15 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\AbstractSessionHand
 class SessionHandler extends AbstractSessionHandler implements \SessionHandlerInterface, \SessionUpdateTimestampHandlerInterface {
 
   use DependencySerializationTrait;
+
+  /**
+   * Indicator for the existence of the database table.
+   *
+   * This variable is only used by the database driver for MongoDB.
+   *
+   * @var bool
+   */
+  protected $tableExists = FALSE;
 
   /**
    * Constructs a new SessionHandler instance.
@@ -47,14 +58,32 @@ class SessionHandler extends AbstractSessionHandler implements \SessionHandlerIn
   public function doRead(#[\SensitiveParameter] string $sessionId): string {
     $data = '';
     if (!empty($sessionId)) {
-      try {
-        // Read the session data from the database.
-        $query = $this->connection
-          ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sessionId)]);
-        $data = (string) $query->fetchField();
+      // Read the session data from the database.
+      if ($this->connection->driver() == 'mongodb') {
+        $prefixed_table = $this->connection->getPrefix() . 'sessions';
+        $result = $this->connection->getConnection()->selectCollection($prefixed_table)->findOne(
+          ['sid' => ['$eq' => Crypt::hashBase64($sessionId)]],
+          [
+            'projection' => ['session' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        );
+
+        // Get the session data.
+        if (isset($result->session) && ($result->session instanceof Binary)) {
+          $data = $result->session->getData();
+        }
       }
-      // Swallow the error if the table hasn't been created yet.
-      catch (\Exception) {
+      else {
+        try {
+          // Read the session data from the database.
+          $query = $this->connection
+            ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sessionId)]);
+          $data = (string) $query->fetchField();
+        }
+        // Swallow the error if the table hasn't been created yet.
+        catch (\Exception) {
+        }
       }
     }
     return $data;
@@ -64,6 +93,12 @@ class SessionHandler extends AbstractSessionHandler implements \SessionHandlerIn
    * {@inheritdoc}
    */
   public function doWrite(#[\SensitiveParameter] string $sessionId, string $data): bool {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table need to exists. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $try_again = FALSE;
     $request = $this->requestStack->getCurrentRequest();
     $fields = [
@@ -115,6 +150,12 @@ class SessionHandler extends AbstractSessionHandler implements \SessionHandlerIn
    */
   protected function doDestroy(#[\SensitiveParameter] string $sessionId): bool {
     try {
+      if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+        // For MongoDB the table need to exists. Otherwise MongoDB creates one
+        // without the correct validation.
+        $this->tableExists = $this->ensureTableExists();
+      }
+
       // Delete session data.
       $this->connection->delete('sessions')
         ->condition('sid', Crypt::hashBase64($sessionId))
@@ -136,9 +177,19 @@ class SessionHandler extends AbstractSessionHandler implements \SessionHandlerIn
     // for three weeks before deleting them, you need to set gc_maxlifetime
     // to '1814400'. At that value, only after a user doesn't log in after
     // three weeks (1814400 seconds) will their session be removed.
+    $timestamp = $this->time->getRequestTime() - $lifetime;
+    if ($this->connection->driver() == 'mongodb') {
+      $timestamp = new UTCDateTime($timestamp * 1000);
+
+      if (!$this->tableExists) {
+        // For MongoDB the table need to exists. Otherwise MongoDB creates one
+        // without the correct validation.
+        $this->tableExists = $this->ensureTableExists();
+      }
+    }
     try {
       return $this->connection->delete('sessions')
-        ->condition('timestamp', $this->time->getRequestTime() - $lifetime, '<')
+        ->condition('timestamp', $timestamp, '<')
         ->execute();
     }
     // Swallow the error if the table hasn't been created yet.
@@ -213,6 +264,10 @@ class SessionHandler extends AbstractSessionHandler implements \SessionHandlerIn
         ],
       ],
     ];
+
+    if ($this->connection->driver() == 'mongodb') {
+      $schema['fields']['timestamp']['type'] = 'date';
+    }
 
     return $schema;
   }

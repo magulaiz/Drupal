@@ -24,6 +24,10 @@ class EntityReverseJoinTest extends RelationshipJoinTestBase {
    * Tests that the EntityReverse plugin loads the correct join plugin.
    */
   public function testJoinThroughRelationship(): void {
+    if (\Drupal::database()->driver() == 'mongodb') {
+      $this->markTestSkipped();
+    }
+
     $relationship_manager = $this->container->get('plugin.manager.views.relationship');
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');

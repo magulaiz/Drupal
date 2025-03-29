@@ -49,6 +49,24 @@ class ContentModerationTestViewsHooks {
         ],
       ];
     }
+
+    // MongoDB uses the base table instead of the data table.
+    if (isset($data['users'])) {
+      $data['users']['uid_revision_test'] = [
+        'help' => 'Relate the content revision to the user who created it.',
+        'real field' => 'uid',
+        'relationship' => [
+          'title' => 'Content revision authored',
+          'help' => 'Relate the content revision to the user who created it. This relationship will create one record for each content revision item created by the user.',
+          'id' => 'standard',
+          'base' => 'node',
+          'base field' => 'uid',
+          'relationship field' => 'node_current_revision.uid',
+          'field' => 'uid',
+          'label' => 'node revisions',
+        ],
+      ];
+    }
   }
 
 }

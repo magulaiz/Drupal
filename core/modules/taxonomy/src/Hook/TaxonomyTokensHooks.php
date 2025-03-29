@@ -127,7 +127,7 @@ class TaxonomyTokensHooks {
 
           case 'node-count':
             $query = \Drupal::database()->select('taxonomy_index');
-            $query->condition('tid', $term->id());
+            $query->condition('tid', (int) $term->id());
             $query->addTag('term_node_count');
             $count = $query->countQuery()->execute()->fetchField();
             $replacements[$original] = $count;

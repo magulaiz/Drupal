@@ -112,6 +112,11 @@ class EntityRepositoryTest extends KernelTestBase {
     $revision->save();
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
     $this->assertEntityType($active, $entity_type_id);
+
+    // Check that the method getLoadedRevisionId() always returns an integer
+    // value.
+    $this->assertIsInt($revision->getLoadedRevisionId());
+    $this->assertIsInt($active->getLoadedRevisionId());
     $this->assertSame($revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface $revision2 */

@@ -202,13 +202,26 @@ class BulkDeleteTest extends FieldKernelTestBase {
     // Check that the actual stored content did not change during delete.
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $storage->getTableMapping();
-    $table = $table_mapping->getDedicatedDataTableName($field_storage);
-    $column = $table_mapping->getFieldColumnName($field_storage, 'value');
-    $result = Database::getConnection()->select($table, 't')
-      ->fields('t')
-      ->execute();
-    foreach ($result as $row) {
-      $this->assertEquals($row->{$column}, $this->entities[$row->entity_id]->{$field_name}->value);
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $dedicated_table_name = $table_mapping->getJsonStorageDedicatedTableName($field_storage, 'entity_test');
+      $column = $table_mapping->getFieldColumnName($field_storage, 'value');
+      $result = Database::getConnection()->select('entity_test', 't')
+        ->fields('t', ['id', $dedicated_table_name])
+        ->execute();
+      foreach ($result as $row) {
+        $dedicated_table_row = reset($row->{$dedicated_table_name});
+        $this->assertEquals($this->entities[$row->id]->{$field_name}->value, $dedicated_table_row[$column]);
+      }
+    }
+    else {
+      $table = $table_mapping->getDedicatedDataTableName($field_storage);
+      $column = $table_mapping->getFieldColumnName($field_storage, 'value');
+      $result = Database::getConnection()->select($table, 't')
+        ->fields('t')
+        ->execute();
+      foreach ($result as $row) {
+        $this->assertEquals($row->{$column}, $this->entities[$row->entity_id]->{$field_name}->value);
+      }
     }
 
     // There are 0 entities of this bundle with non-deleted data.
@@ -216,7 +229,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', $bundle)
-      ->condition("$field_name.deleted", 0)
+      ->condition("$field_name.deleted", FALSE)
       ->execute();
     $this->assertEmpty($found, 'No entities found after deleting');
 
@@ -226,7 +239,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->getQuery()
       ->accessCheck(FALSE)
       ->condition('type', $bundle)
-      ->condition("$field_name.deleted", 1)
+      ->condition("$field_name.deleted", TRUE)
       ->sort('id')
       ->execute();
     $this->assertCount(10, $found, 'Correct number of entities found after deleting');
@@ -311,15 +324,26 @@ class BulkDeleteTest extends FieldKernelTestBase {
     $storage = \Drupal::entityTypeManager()->getStorage($this->entityTypeId);
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $storage->getTableMapping();
-    $deleted_table_name = $table_mapping->getDedicatedDataTableName($deleted_field_storage, TRUE);
-    $active_table_name = $table_mapping->getDedicatedDataTableName($field_storage);
+
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $deleted_table_name = $table_mapping->getJsonStorageDedicatedTableName($field_storage, 'entity_test', TRUE);
+      $active_table_name = $table_mapping->getJsonStorageDedicatedTableName($field_storage, 'entity_test');
+    }
+    else {
+      $deleted_table_name = $table_mapping->getDedicatedDataTableName($deleted_field_storage, TRUE);
+      $active_table_name = $table_mapping->getDedicatedDataTableName($field_storage);
+    }
 
     field_purge_batch(50);
 
     // Ensure the new field still has its table and the deleted one has been
     // removed.
-    $this->assertTrue(\Drupal::database()->schema()->tableExists($active_table_name));
-    $this->assertFalse(\Drupal::database()->schema()->tableExists($deleted_table_name));
+    $this->assertTrue(\Drupal::database()
+      ->schema()
+      ->tableExists($active_table_name));
+    $this->assertFalse(\Drupal::database()
+      ->schema()
+      ->tableExists($deleted_table_name));
 
     // The field has been removed from the system.
     $fields = \Drupal::entityTypeManager()
@@ -331,15 +355,17 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ]);
     $this->assertCount(0, $fields, 'The field is gone');
 
-    // Verify there are still 10 entries in the main table.
-    $count = \Drupal::database()
-      ->select('entity_test__' . $field_name, 'f')
-      ->fields('f', ['entity_id'])
-      ->condition('bundle', $bundle)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-    $this->assertEquals(10, $count);
+    if (Database::getConnection()->driver() != 'mongodb') {
+      // Verify there are still 10 entries in the main table.
+      $count = \Drupal::database()
+        ->select('entity_test__' . $field_name, 'f')
+        ->fields('f', ['entity_id'])
+        ->condition('bundle', $bundle)
+        ->countQuery()
+        ->execute()
+        ->fetchField();
+      $this->assertEquals(10, $count);
+    }
   }
 
   /**
@@ -373,7 +399,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       $found = \Drupal::entityQuery('entity_test')
         ->accessCheck(FALSE)
         ->condition('type', $bundle)
-        ->condition($field_name . '.deleted', 1)
+        ->condition($field_name . '.deleted', TRUE)
         ->execute();
       $this->assertCount($count, $found, 'Correct number of entities found after purging 2');
     }

@@ -70,7 +70,7 @@ class HistoryHooks {
    */
   #[Hook('node_delete')]
   public function nodeDelete(EntityInterface $node): void {
-    \Drupal::database()->delete('history')->condition('nid', $node->id())->execute();
+    \Drupal::database()->delete('history')->condition('nid', (int) $node->id())->execute();
   }
 
   /**
@@ -80,7 +80,7 @@ class HistoryHooks {
   public function userCancel($edit, UserInterface $account, $method): void {
     switch ($method) {
       case 'user_cancel_reassign':
-        \Drupal::database()->delete('history')->condition('uid', $account->id())->execute();
+        \Drupal::database()->delete('history')->condition('uid', (int) $account->id())->execute();
         break;
     }
   }
@@ -90,7 +90,7 @@ class HistoryHooks {
    */
   #[Hook('user_delete')]
   public function userDelete($account): void {
-    \Drupal::database()->delete('history')->condition('uid', $account->id())->execute();
+    \Drupal::database()->delete('history')->condition('uid', (int) $account->id())->execute();
   }
 
 }

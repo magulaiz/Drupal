@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\EventSubscriber;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeEvent;
 use Drupal\Core\Entity\EntityTypeEvents;
@@ -140,6 +141,14 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that renaming base tables adapts the views.
    */
   public function testBaseTableRename(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // For MongoDB to support views with the layout for relational databases,
+      // it has to transform it during loading. Supporting the changing of the
+      // base table name is then no longer possible. I also do not see why you
+      // ever what to change the base table name.
+      $this->markTestSkipped();
+    }
+
     $this->renameBaseTable();
     $this->applyEntityUpdates('entity_test_update');
 
@@ -165,6 +174,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that renaming data tables adapts the views.
    */
   public function testDataTableRename(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     $this->updateEntityTypeToTranslatable(TRUE);
 
     $entity_storage = $this->entityTypeManager->getStorage('view');
@@ -199,6 +213,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that renaming revision tables adapts the views.
    */
   public function testRevisionBaseTableRename(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     $this->updateEntityTypeToRevisionable(TRUE);
 
     /** @var \Drupal\views\Entity\View $view */
@@ -232,6 +251,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that renaming revision tables adapts the views.
    */
   public function testRevisionDataTableRename(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     $this->updateEntityTypeToRevisionableAndTranslatable(TRUE);
 
     /** @var \Drupal\views\Entity\View $view */
@@ -266,6 +290,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that adding data tables adapts the views.
    */
   public function testDataTableAddition(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     $this->updateEntityTypeToTranslatable(TRUE);
 
     /** @var \Drupal\views\Entity\View $view */
@@ -288,6 +317,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that enabling revisions doesn't do anything.
    */
   public function testRevisionEnabling(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     $this->updateEntityTypeToRevisionable(TRUE);
 
     /** @var \Drupal\views\Entity\View $view */
@@ -308,6 +342,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that removing revision support disables the view.
    */
   public function testRevisionDisabling(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     $this->updateEntityTypeToRevisionable(TRUE);
     $this->updateEntityTypeToNotRevisionable(TRUE);
 
@@ -327,6 +366,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests a bunch possible entity definition table updates.
    */
   public function testVariousTableUpdates(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     // We want to test the following permutations of entity definition updates:
     // base <-> base + translation
     // base + translation <-> base + translation + revision
@@ -445,6 +489,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests some possible entity table updates for a revision view.
    */
   public function testVariousTableUpdatesForRevisionView(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     // Base + revision <-> base + translation + revision
     $this->updateEntityTypeToRevisionable(TRUE);
 
@@ -480,6 +529,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests the case when a view could not be updated automatically.
    */
   public function testViewSaveException(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     $this->renameBaseTable();
     \Drupal::state()->set('entity_test_update.throw_view_exception', 'test_view_entity_test');
     $this->applyEntityUpdates('entity_test_update');
@@ -519,6 +573,11 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that broken views are handled gracefully.
    */
   public function testBrokenView(): void {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Read the explanation by the method: testBaseTableRename().
+      $this->markTestSkipped();
+    }
+
     $view_id = 'test_view_entity_test';
     $this->state->set('views_test_config.broken_view', $view_id);
     $this->updateEntityTypeToTranslatable(TRUE);

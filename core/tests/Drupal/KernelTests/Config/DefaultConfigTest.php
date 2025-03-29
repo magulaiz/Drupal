@@ -110,6 +110,11 @@ class DefaultConfigTest extends KernelTestBase {
     $extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
     $optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
 
+    // The database driver override of the default config storage.
+    $database_driver_extension_path = \Drupal::service('extension.path.resolver')->getPath('module', \Drupal::database()->getProvider());
+    $database_driver_extension_config_storage = new FileStorage($database_driver_extension_path . '/config/overrides/' . $name . '/install', StorageInterface::DEFAULT_COLLECTION);
+    $database_driver_optional_config_storage = new FileStorage($database_driver_extension_path . '/config/overrides/' . $name . '/optional', StorageInterface::DEFAULT_COLLECTION);
+
     if (empty($optional_config_storage->listAll()) && empty($extension_config_storage->listAll())) {
       $this->markTestSkipped("$name has no configuration to test");
     }
@@ -130,10 +135,10 @@ class DefaultConfigTest extends KernelTestBase {
     $this->container->get('theme_installer')->install(array_unique($themes_to_install));
 
     // Test configuration in the extension's config/install directory.
-    $this->doTestsOnConfigStorage($extension_config_storage, $name, $type);
+    $this->doTestsOnConfigStorage($extension_config_storage, $database_driver_extension_config_storage, $name, $type);
 
     // Test configuration in the extension's config/optional directory.
-    $this->doTestsOnConfigStorage($optional_config_storage, $name, $type);
+    $this->doTestsOnConfigStorage($optional_config_storage, $database_driver_optional_config_storage, $name, $type);
   }
 
   /**
@@ -187,12 +192,14 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @param \Drupal\Core\Config\StorageInterface $default_config_storage
    *   The default config storage to test.
+   * @param \Drupal\Core\Config\StorageInterface $override_config_storage
+   *   The database driver override config storage to test.
    * @param string $extension
    *   The extension that is being tested.
    * @param string $type
    *   The extension type to test.
    */
-  protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, $extension, string $type = 'module'): void {
+  protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, StorageInterface $override_config_storage, $extension, string $type = 'module'): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = $this->container->get('config.manager');
 
@@ -220,7 +227,12 @@ class DefaultConfigTest extends KernelTestBase {
           // applied.
           $config_factory->getEditable($config_name)->save();
         }
-        $result = $config_manager->diff($default_config_storage, $active_config_storage, $config_name);
+        if ($override_config_storage->exists($config_name)) {
+          $result = $config_manager->diff($override_config_storage, $active_config_storage, $config_name);
+        }
+        else {
+          $result = $config_manager->diff($default_config_storage, $active_config_storage, $config_name);
+        }
         // ::assertConfigDiff will throw an exception if the configuration is
         // different.
         $this->assertNull($this->assertConfigDiff($result, $config_name, static::$skippedConfig));

@@ -323,7 +323,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function getLoadedRevisionId() {
-    return $this->loadedRevisionId;
+    return !is_null($this->loadedRevisionId) ? (int) $this->loadedRevisionId : NULL;
   }
 
   /**
@@ -1023,6 +1023,22 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     else {
       throw new \InvalidArgumentException("The specified translation ($langcode) cannot be removed.");
     }
+  }
+
+  /**
+   * Get the translation langcodes that have been removed from the entity.
+   *
+   * @return array
+   *   The list of translation langcodes.
+   */
+  public function getRemovedTranslationLangcodes() {
+    $removed = [];
+    foreach ($this->translations as $langcode => $translation) {
+      if ($translation['status'] === static::TRANSLATION_REMOVED) {
+        $removed[] = $langcode;
+      }
+    }
+    return $removed;
   }
 
   /**

@@ -116,6 +116,10 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    * Tests querying.
    */
   public function testQuery(): void {
+    if (\Drupal::database()->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support entity queries with relationships.');
+    }
+
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
     // This returns the 0th entity as that's the only one pointing to the 0th
     // account.
@@ -231,6 +235,10 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
    * @dataProvider providerTestInvalidFieldName
    */
   public function testInvalidFieldName(string $field_name): void {
+    if (\Drupal::database()->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support entity queries with relationships.');
+    }
+
     $this->expectException(QueryException::class);
     $this->expectExceptionMessage("'non_existent_field_name' not found");
 
