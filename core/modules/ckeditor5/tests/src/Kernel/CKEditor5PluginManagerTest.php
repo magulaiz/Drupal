@@ -164,12 +164,16 @@ YAML,
     ] + $this->container->getParameterBag()->all()));
     $container->setDefinitions($this->container->getDefinitions());
 
-    // The exception to the above elegance: re-resolve the '%app_root%' param.
+    // The exception to the above elegance: re-resolve the '%app_root%',
+    // '%container.modules%', and '%container.namespaces%' params.
     // @see \Symfony\Component\DependencyInjection\Compiler\ResolveParameterPlaceHoldersPass
+    // @see \Symfony\Component\DependencyInjection\Compiler\ResolveEnvPlaceholdersPass
     // @see \Drupal\Core\DrupalKernel::guessApplicationRoot()
     $container->getDefinition('module_handler')
       ->setArgument(0, '%app.root%')
       ->setArgument(1, '%container.modules%');
+    $container->getDefinition('container.namespaces')
+      ->setArgument(0, '%container.namespaces%');
     $container->getDefinition('container.namespaces')
       ->setArgument(0, '%container.namespaces%');
 
