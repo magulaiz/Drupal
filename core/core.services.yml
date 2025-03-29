@@ -117,8 +117,8 @@ services:
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }
-  cache_context.status_code:
-    class: Drupal\Core\Cache\Context\StatusCodeCacheContext
+  cache_context.exception_status_code:
+    class: Drupal\Core\Cache\Context\ExceptionStatusCodeCacheContext
     arguments: ['@request_stack']
     tags:
       - { name: cache.context }

@@ -5,11 +5,11 @@ namespace Drupal\Core\Cache\Context;
 use Drupal\Core\Cache\CacheableMetadata;
 
 /**
- * Defines the StatusCodeCacheContext service, for "per status code" caching.
+ * Defines the ExceptionStatusCodeCacheContext service.
  *
- * Cache context ID: 'status_code'.
+ * Cache context ID: 'exception_status_code'.
  */
-class StatusCodeCacheContext extends RequestStackCacheContextBase {
+class ExceptionStatusCodeCacheContext extends RequestStackCacheContextBase {
 
   /**
    * {@inheritdoc}
@@ -26,7 +26,9 @@ class StatusCodeCacheContext extends RequestStackCacheContextBase {
     if ($exception) {
       return (string) $exception->getStatusCode();
     }
-    return '200';
+    // If there's no exception status code, usually a 200, return '0' because we
+    // don't know what might be set by response subscribers.
+    return '0';
   }
 
   /**
