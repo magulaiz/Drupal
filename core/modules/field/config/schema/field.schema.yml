@@ -54,12 +54,8 @@ field.storage.*.*:
       sequence:
         type: sequence
         label: 'Indexes'
-        # Type ignore is used since index is a flexible value that can be set
-        # by provided field storage. It also depends on the backing storage.
-        # Currently it is impossible to determine the shape and value of the
-        # index.
         sequence:
-          type: ignore
+          type: array
           label: 'Index'
     persist_with_no_fields:
       type: boolean
