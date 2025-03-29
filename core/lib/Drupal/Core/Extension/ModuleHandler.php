@@ -498,7 +498,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       // The listeners for the main hook are already correctly ordered.
       return $main_hook_listeners;
     }
-    // Combine the listeners from all hooks that are part of the ->alter() call.
+    // Collect the listeners from each hook.
     $listeners_by_hook = [
       $main_hook => $main_hook_listeners,
       ...$extra_listeners_by_hook,
