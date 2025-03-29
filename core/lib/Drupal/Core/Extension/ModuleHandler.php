@@ -348,8 +348,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function invokeAllWith(string $hook, callable $callback): void {
-    foreach ($this->getFlatHookListeners($hook) as $i => $listener) {
-      $module = $this->modulesByHook[$hook][$i];
+    foreach ($this->getFlatHookListeners($hook) as $index => $listener) {
+      $module = $this->modulesByHook[$hook][$index];
       $callback($listener, $module);
     }
   }
@@ -506,8 +506,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     // Group the listeners by module.
     $listeners_by_module = [];
     foreach ($listeners_by_hook as $hook => $listeners) {
-      foreach ($listeners as $i => $listener) {
-        $module = $this->modulesByHook[$hook][$i];
+      foreach ($listeners as $index => $listener) {
+        $module = $this->modulesByHook[$hook][$index];
         $listeners_by_module[$module][] = $listener;
       }
     }
@@ -696,8 +696,8 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected function getHookListeners(string $hook): array {
     if (!isset($this->invokeMap[$hook])) {
       $this->invokeMap[$hook] = [];
-      foreach ($this->getFlatHookListeners($hook) as $i => $listener) {
-        $module = $this->modulesByHook[$hook][$i];
+      foreach ($this->getFlatHookListeners($hook) as $index => $listener) {
+        $module = $this->modulesByHook[$hook][$index];
         $this->invokeMap[$hook][$module][] = $listener;
       }
     }
