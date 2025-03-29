@@ -713,6 +713,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @return list<callable>
    *   A list of hook implementation callables.
+   *
+   * @internal
    */
   protected function getFlatHookListeners(string $hook): array {
     if (!isset($this->listenersByHook[$hook])) {
