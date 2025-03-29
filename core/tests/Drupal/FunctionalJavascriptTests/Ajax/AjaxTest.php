@@ -44,7 +44,7 @@ class AjaxTest extends WebDriverTestBase {
     $this->drupalGet('ajax-test/dialog');
     $assert->pageTextNotContains('Current theme: stable9');
     $this->clickLink('Link 8 (ajax)');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest();
 
     $assert->pageTextContains('Current theme: stable9');
     $assert->pageTextNotContains('Current theme: claro');
@@ -72,7 +72,7 @@ class AjaxTest extends WebDriverTestBase {
 
     // Click on the AJAX link.
     $this->clickLink('Link 8 (ajax)');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest();
 
     // Test that the fake library is still set after the AJAX call.
     $ajax_page_state = $session->evaluateScript("drupalSettings.ajaxPageState");
@@ -88,7 +88,7 @@ class AjaxTest extends WebDriverTestBase {
     // Click on the AJAX link again, and the libraries should still not contain
     // the fake library.
     $this->clickLink('Link 8 (ajax)');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest();
     $ajax_page_state = $session->evaluateScript("drupalSettings.ajaxPageState");
     $this->assertStringNotContainsString($fake_library, UrlHelper::uncompressQueryParameter($ajax_page_state['libraries']));
   }
@@ -172,7 +172,7 @@ JS;
     // Ensure that a non-Drupal Ajax request triggers the expected events, in
     // the correct order, a single time.
     $session->executeScript('jQuery.get(Drupal.url("core/COPYRIGHT.txt"))');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest();
     $assert->elementTextEquals('css', '#test_global_events_log', $expected_event_order);
     $assert->elementTextEquals('css', '#test_global_events_log2', $expected_event_order);
 
@@ -184,7 +184,7 @@ JS;
     // initiated with Drupal.Ajax(), and these elements already contain the
     // text that was added above.
     $session->executeScript('jQuery.get(Drupal.url("ajax-test/global-events/clear-log"))');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest();
     $assert->elementTextEquals('css', '#test_global_events_log', str_repeat($expected_event_order, 2));
     $assert->elementTextEquals('css', '#test_global_events_log2', str_repeat($expected_event_order, 2));
 
@@ -199,7 +199,7 @@ JS;
     //   by the response's command ensures that the events weren't triggered
     //   additional times before the response commands were executed.
     $this->click('#test_global_events_drupal_ajax_link');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest();
     $assert->elementTextEquals('css', '#test_global_events_log', $expected_event_order);
     $assert->elementTextEquals('css', '#test_global_events_log2', str_repeat($expected_event_order, 3));
   }
@@ -306,13 +306,13 @@ JS;
 
     $this->assertNotNull($select = $this->assertSession()->elementExists('css', '#edit-select'));
     $select->setValue('green');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-select', $has_focus_id);
 
     $this->assertNotNull($checkbox = $this->assertSession()->elementExists('css', '#edit-checkbox'));
     $checkbox->check();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-checkbox', $has_focus_id);
 
@@ -323,7 +323,7 @@ JS;
     // Test textfield with 'blur' event listener.
     $textfield1->setValue('Kittens say purr');
     $textfield2->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
@@ -331,7 +331,7 @@ JS;
     // FALSE.
     $textfield2->setValue('Llamas say hi');
     $textfield3->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
@@ -339,7 +339,7 @@ JS;
     $textfield3->focus();
     $textfield3->setValue('Wasps buzz');
     $textfield3->blur();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-3', $has_focus_id);
   }

@@ -99,7 +99,7 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
     foreach ($options as $option_key => $option_label) {
       $enter_element_name = $label_element_name = "field_storage[subform][settings][allowed_values][table][$i][item][label]";
       $page->fillField($label_element_name, $option_label);
-      $this->assertSession()->assertWaitOnAjaxRequest();
+      $this->assertSession()->assertExpectedAjaxRequest();
       $key_element_name = "field_storage[subform][settings][allowed_values][table][$i][item][key]";
 
       // Add keys if not string option list.
@@ -111,7 +111,7 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
         $enter_element_name = $key_element_name;
         $this->assertHasFocusByAttribute('name', $key_element_name);
         $page->fillField($key_element_name, $option_key);
-        $this->assertSession()->assertWaitOnAjaxRequest();
+        $this->assertSession()->assertExpectedAjaxRequest();
       }
       else {
         $this->assertFalse($assert->fieldExists($key_element_name)->isVisible());
@@ -197,7 +197,7 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
 
     // Delete an item.
     $page->pressButton('remove_row_button__1');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->assertOrder(['Second', 'First', ''], $is_string_option);
     $page->pressButton('Save');
 

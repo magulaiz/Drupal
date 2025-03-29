@@ -84,11 +84,11 @@ class PaginationAJAXTest extends WebDriverTestBase {
     // Set the number of items displayed per page to 5 using the exposed pager.
     $page->selectFieldOption('edit-items-per-page', '5');
     $page->pressButton('Filter');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
 
     // Change 'Updated' sorting from descending to ascending.
     $page->clickLink('Updated');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
 
     // Use the pager by clicking on the links and test if we see the expected
     // number of rows on each page. For easy targeting the titles of the pager
@@ -99,7 +99,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
     $this->assertStringContainsString('Node 1 content default_value', $rows[0]->getHtml());
 
     $this->clickLink('Go to page 2');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
     $this->assertStringContainsString('Node 6 content default_value', $rows[0]->getHtml());
@@ -110,28 +110,28 @@ class PaginationAJAXTest extends WebDriverTestBase {
     $this->assertEquals('?status=All&type=All&title=&items_per_page=5&order=changed&sort=asc&page=2', $link->getAttribute('href'));
 
     $this->clickLink('Go to page 3');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(1, $rows);
     $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
 
     // Navigate back to the first page.
     $this->clickLink('Go to first page');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
     $this->assertStringContainsString('Node 1 content default_value', $rows[0]->getHtml());
 
     // Navigate using the 'next' link.
     $this->clickLink('Go to next page');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
     $this->assertStringContainsString('Node 6 content default_value', $rows[0]->getHtml());
 
     // Navigate using the 'last' link.
     $this->clickLink('Go to last page');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(1, $rows);
     $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
@@ -168,11 +168,11 @@ class PaginationAJAXTest extends WebDriverTestBase {
     // Set the number of items displayed per page to 5 using the exposed pager.
     $page->selectFieldOption('edit-items-per-page', '5');
     $page->pressButton('Filter');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
 
     // Change 'Updated' sorting from descending to ascending.
     $page->clickLink('Updated');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
 
     // Use the pager by clicking on the links and test if we see the expected
     // number of rows on each page. For easy targeting the titles of the pager
@@ -183,7 +183,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
     $this->assertStringContainsString('Node 1 content default_value', $rows[0]->getHtml());
 
     $this->clickLink('Go to page 2');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(1, $rows);
     $this->assertStringContainsString('Node 6 content default_value', $rows[0]->getHtml());
@@ -196,14 +196,14 @@ class PaginationAJAXTest extends WebDriverTestBase {
     // Set the title filter to empty string using the exposed pager.
     $page->fillField('title', '');
     $page->pressButton('Filter');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
     $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
 
     // Navigate to the second page.
     $this->clickLink('Go to page 2');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
     $this->assertStringContainsString('Node 6 content default_value', $rows[0]->getHtml());
@@ -215,21 +215,21 @@ class PaginationAJAXTest extends WebDriverTestBase {
 
     // Navigate back to the first page.
     $this->clickLink('Go to first page');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
     $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
 
     // Navigate using the 'next' link.
     $this->clickLink('Go to next page');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(5, $rows);
     $this->assertStringContainsString('Node 6 content default_value', $rows[0]->getHtml());
 
     // Navigate using the 'last' link.
     $this->clickLink('Go to last page');
-    $session_assert->assertWaitOnAjaxRequest();
+    $session_assert->assertExpectedAjaxRequest();
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertCount(1, $rows);
     $this->assertStringContainsString('Node 1 content default_value', $rows[0]->getHtml());

@@ -107,7 +107,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('Are you sure you want to remove the Shortcuts block?');
     $this->assertSession()->pageTextContains('This action cannot be undone.');
     $page->pressButton('Remove');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->assertSession()->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     $this->assertSession()->elementNotExists('css', 'form .block-navigation-shortcuts');
@@ -121,7 +121,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
 
     // Save the new block, and ensure it is displayed on the page.
     $page->pressButton('Add block');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->assertSession()->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $this->assertSession()->addressEquals($layout_url);
     $this->assertSession()->pageTextContains('Shortcuts');
@@ -148,7 +148,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
 
     $page->fillField('settings[label]', 'Newer Shortcuts');
     $page->pressButton('Update');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->assertSession()->assertNoElementAfterWait('css', '#drupal-off-canvas');
 
     $this->assertSession()->addressEquals($layout_url);
@@ -168,7 +168,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
   private function openAddBlockForm($block_title) {
     $this->assertSession()->linkExists('Add block');
     $this->clickLink('Add block');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('named', ['link', $block_title]));
     $this->clickLink($block_title);
     $this->assertOffCanvasFormAfterWait('layout_builder_add_block');
@@ -184,7 +184,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
    *    \Drupal\Tests\layout_builder\FunctionalJavascript\LayoutBuilderTest
    */
   private function assertOffCanvasFormAfterWait(string $expected_form_id): void {
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->waitForOffCanvasArea();
     $off_canvas = $this->assertSession()->elementExists('css', '#drupal-off-canvas');
     $this->assertNotNull($off_canvas);

@@ -190,9 +190,9 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
     });
     $this->assertNotEmpty($result);
 
-    // assertWaitOnAjaxRequest() required for input "id" attributes to
+    // assertExpectedAjaxRequest() required for input "id" attributes to
     // consistently match their label's "for" attribute.
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
   }
 
   /**
@@ -233,9 +233,9 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   protected function saveAnd($operation) {
     $this->assertElementExistsAfterWait('css', '.ui-dialog-buttonpane')->pressButton("Save and $operation");
 
-    // assertWaitOnAjaxRequest() required for input "id" attributes to
+    // assertExpectedAjaxRequest() required for input "id" attributes to
     // consistently match their label's "for" attribute.
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
   }
 
   /**
@@ -259,9 +259,9 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
       $this->assertNotEmpty($result);
     }
 
-    // assertWaitOnAjaxRequest() required for input "id" attributes to
+    // assertExpectedAjaxRequest() required for input "id" attributes to
     // consistently match their label's "for" attribute.
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
   }
 
   /**
@@ -446,7 +446,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * Asserts that the grid display of the widget view is visible.
    */
   protected function assertMediaLibraryGrid() {
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->assertSession()
       ->elementExists('css', '.js-media-library-view[data-view-display-id="widget"]');
   }

@@ -90,7 +90,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Create a field of type list:string.
     $this->fieldUIAddNewFieldJS($bundle_path, 'test_string_list', 'Test string list', 'list_string', FALSE);
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest();
     $page->findField('set_default_value')->setValue(TRUE);
     // Assert that the option added in the subform is available to the default
     // value field.
@@ -98,7 +98,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $page->pressButton('Add another item');
     $this->assertNotNull($assert_session->waitForElement('css', "[name='field_storage[subform][settings][allowed_values][table][1][item][label]']"));
     $page->findField('field_storage[subform][settings][allowed_values][table][1][item][label]')->setValue('second');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest();
     $assert_session->optionExists('default_value_input[field_test_string_list]', 'second');
     $page->selectFieldOption('default_value_input[field_test_string_list]', 'second');
     $page->pressButton('Save settings');
@@ -107,11 +107,11 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Create a field of type list:integer.
     $this->fieldUIAddNewFieldJS($bundle_path, 'test_int_list', 'Test int list', 'list_integer', FALSE);
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest();
     // Assert that no validation is performed.
     $assert_session->statusMessageNotContains('Value field is required.');
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][key]')->setValue(1);
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest();
     $page->findField('set_default_value')->setValue(TRUE);
     // Assert that the option added in the subform is available to the default
     // value field.
@@ -158,7 +158,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
 
     $label_element_name = "field_storage[subform][settings][allowed_values][table][0][item][label]";
     $this->getSession()->getPage()->fillField($label_element_name, 'Hello world');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->exposeOptionMachineName(1);
 
     $key_element_name = "field_storage[subform][settings][allowed_values][table][0][item][key]";
@@ -169,7 +169,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     // Ensure that the machine name can be overridden with a value that includes
     // special characters.
     $this->getSession()->getPage()->fillField($key_element_name, '.hello #world');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $this->getSession()->getPage()->pressButton('Save settings');
     $this->assertSession()->statusMessageContains("Saved {$this->fieldName} configuration.");
 

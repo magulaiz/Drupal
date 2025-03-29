@@ -240,7 +240,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $assert_session->fieldValueEquals($default_input_1_name, 'There can be only one!');
     $page->findField($default_input_2_name)->setValue('But maybe also two?');
     $cardinality->setValue('1');
-    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->assertExpectedAjaxRequest();
     $assert_session->waitForElementRemoved('xpath', $default_input_2->getXpath());
     // Ensure the first input retains its value.
     $assert_session->fieldValueEquals($default_input_1_name, 'There can be only one!');

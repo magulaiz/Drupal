@@ -187,11 +187,11 @@ class DialogTest extends WebDriverTestBase {
 
     // Press buttons in the dialog to ensure there are no AJAX errors.
     $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Hello world');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $has_focus_text = $this->getSession()->evaluateScript('document.activeElement.textContent');
     $this->assertEquals('Do it', $has_focus_text);
     $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Preview');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest();
     $has_focus_text = $this->getSession()->evaluateScript('document.activeElement.textContent');
     $this->assertEquals('Do it', $has_focus_text);
 
@@ -232,7 +232,7 @@ class DialogTest extends WebDriverTestBase {
     // Open the modal dialog with POST HTTP method.
     $this->drupalGet('/ajax-test/http-methods');
     $this->clickLink('Link');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest();
     $assert->pageTextContains('Modal dialog contents');
     $width = $this->getSession()->getDriver()->evaluateScript($script);
     // The theme is adding 4px as padding and border on each side.
@@ -245,7 +245,7 @@ class DialogTest extends WebDriverTestBase {
     // Open the modal dialog with GET HTTP method.
     $this->drupalGet('/ajax-test/http-methods');
     $this->clickLink('Link');
-    $assert->assertWaitOnAjaxRequest();
+    $assert->assertExpectedAjaxRequest();
     $assert->pageTextContains('Modal dialog contents');
     $width = $this->getSession()->getDriver()->evaluateScript($script);
     // The theme is adding 4px as padding and border on each side.

@@ -91,7 +91,7 @@ JS;
     // Test progress throbber position on a dropbutton in a table display.
     $this->drupalGet('/admin/structure/block');
     $this->clickLink('Place block');
-    $web_assert->assertWaitOnAjaxRequest();
+    $web_assert->assertExpectedAjaxRequest();
     $this->assertNotEmpty($web_assert->waitForElementVisible('css', '#drupal-modal'));
     hold_test_response(TRUE);
     $this->clickLink('Place block');
