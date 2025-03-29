@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Core\Hook;
+namespace Drupal\Core\Hook\Attribute;
 
 /**
  * Common interface for attributes used for hook discovery.
@@ -12,6 +12,4 @@ namespace Drupal\Core\Hook;
  *
  * @internal
  */
-interface HookAttributeInterface {
-
-}
+interface HookAttributeInterface {}

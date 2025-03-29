@@ -8,6 +8,7 @@ use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Extension\ProceduralCall;
+use Drupal\Core\Hook\Attribute\HookAttributeInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter;
@@ -582,7 +583,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * @param \ReflectionClass $reflectionClass
    *   A reflected class.
    *
-   * @return array<string, list<\Drupal\Core\Hook\HookAttributeInterface>>
+   * @return array<string, list<\Drupal\Core\Hook\Attribute\HookAttributeInterface>>
    *   Lists of Hook attribute instances by method name.
    */
   protected static function getAttributeInstances(\ReflectionClass $reflectionClass): array {
