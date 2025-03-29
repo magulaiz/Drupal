@@ -420,7 +420,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
         [
           'config:block.block.stark_primary_local_tasks',
           'config:user.role.authenticated',
-          'config:block.block.stark_secondary_local_tasks'
+          'config:block.block.stark_secondary_local_tasks',
         ],
       ],
     ];
