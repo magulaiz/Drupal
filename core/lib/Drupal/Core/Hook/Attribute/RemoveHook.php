@@ -21,11 +21,11 @@ class RemoveHook implements HookAttributeInterface {
    * Constructs a RemoveHook object.
    *
    * @param string $hook
-   *   The hook name from which to remove the target hook listener.
+   *   The hook name from which to remove the target implementation.
    * @param class-string $class
-   *   The class name of the target hook listener.
+   *   The class name of the target hook implementation.
    * @param string $method
-   *   The method name of the target hook listener.
+   *   The method name of the target hook implementation.
    *   If the class instance itself is the listener, this should be '__invoke'.
    */
   public function __construct(

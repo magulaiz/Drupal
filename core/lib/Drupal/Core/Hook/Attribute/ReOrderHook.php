@@ -22,15 +22,16 @@ class ReOrderHook implements HookAttributeInterface {
    * Constructs a ReOrderHook object.
    *
    * @param string $hook
-   *   The hook for which to reorder a listener method.
+   *   The hook for which to reorder an implementation.
    * @param class-string $class
-   *   The class of the targeted hook listener.
+   *   The class of the targeted hook implementation.
    * @param string $method
-   *   The method name of the targeted hook listener.
-   *   If the class instance itself is the listener, this should be '__invoke'.
+   *   The method name of the targeted hook implementation.
+   *   If the #[Hook] attribute is on the class itself, this should be
+   *   '__invoke'.
    * @param \Drupal\Core\Hook\OrderInterface $order
-   *   Specifies a new position for the targeted hook listener relative to other
-   *   listeners.
+   *   Specifies a new position for the targeted hook implementation relative to
+   *   other implementations.
    */
   public function __construct(
     public string $hook,
