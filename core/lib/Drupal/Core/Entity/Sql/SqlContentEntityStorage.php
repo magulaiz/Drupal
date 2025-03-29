@@ -1905,13 +1905,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $workspace_associated_revisions = [];
       if ($this->getQuery() instanceof WorkspacesEntityQuery) {
         // Get revision_id from the workspace_association entity.
-        $active_workspace = \Drupal::service('workspaces.manager')->getActiveWorkspace();
-//dump('$active_workspace->id(): ' . $active_workspace->id());
-//dump('$this->getEntityTypeId(): ' . $this->getEntityTypeId());
-//dump('$entity_id: ' . $entity_id);
-        $workspace_associated_revisions = \Drupal::service('workspaces.association')->getAssociatedMongodbRevisions($active_workspace->id(), $this->getEntityTypeId(), [$entity_id]);
-//dump('$workspace_associated_revisions');
-//dump($workspace_associated_revisions);
+        $active_workspace_id = \Drupal::service('workspaces.manager')->getActiveWorkspace()->id();
+        $workspace_associated_revisions = \Drupal::service('workspaces.association')->getAssociatedMongodbRevisions($active_workspace_id, $this->getEntityTypeId(), [$entity_id]);
       }
 
       // Create for MongoDB a specific implementation for getting the latest
