@@ -9,22 +9,22 @@ use Drupal\Core\Cache\CacheableMetadata;
  *
  * Cache context ID: 'status_code'.
  */
-class RequestFormatCacheContext extends RequestStackCacheContextBase {
+class StatusCodeCacheContext extends RequestStackCacheContextBase {
 
   /**
    * {@inheritdoc}
    */
-  public static function getLabel() {
+  public static function getLabel(): \Stringable {
     return t('Status code');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): string {
     $exception = $this->requestStack->getCurrentRequest()->attributes->get('exception');
     if ($exception) {
-      return $exception->getStatusCode();
+      return (string) $exception->getStatusCode();
     }
     return '200';
   }
@@ -32,7 +32,7 @@ class RequestFormatCacheContext extends RequestStackCacheContextBase {
   /**
    * {@inheritdoc}
    */
-  public function getCacheableMetadata() {
+  public function getCacheableMetadata(): CacheableMetadata {
     return new CacheableMetadata();
   }
 
