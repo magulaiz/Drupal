@@ -23,6 +23,10 @@ use WebDriver\Exception;
 class JSWebAssert extends WebAssert {
 
   /**
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0.
+   * Use assertExpectedAjaxRequest instead.
+   * @see https://www.drupal.org/node/3516145
+   *
    * Waits for AJAX request to be completed.
    *
    * @param int $timeout
@@ -35,6 +39,10 @@ class JSWebAssert extends WebAssert {
    *   be displayed.
    */
   public function assertWaitOnAjaxRequest($timeout = 10000, $message = 'Unable to complete AJAX request.'): void {
+    @trigger_error(
+      __CLASS__ . '::' . __FUNCTION__ . ' is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use assertExpectedAjaxRequest instead. See https://www.drupal.org/project/drupal/issues/3401619',
+      E_USER_DEPRECATED
+    );
     $this->assertExpectedAjaxRequest(NULL, $timeout, $message);
   }
 
