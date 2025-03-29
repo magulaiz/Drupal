@@ -8,6 +8,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\HookCollectorPass;
+use Drupal\Core\Hook\ImplementationList;
 use Drupal\Core\Hook\OrderOperation\OrderOperation;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -61,20 +62,11 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $includeFileKeys = [];
 
   /**
-   * Lists of implementation callables by hook.
+   * Implementation lists by hook name.
    *
-   * @var array<string, list<callable>>
+   * @var array<string, \Drupal\Core\Hook\ImplementationList>
    */
-  protected array $listenersByHook = [];
-
-  /**
-   * Lists of module names by hook.
-   *
-   * The indices are exactly the same as in $listenersByHook.
-   *
-   * @var array<string, list<string>>
-   */
-  protected array $modulesByHook = [];
+  protected array $hookImplementationLists = [];
 
   /**
    * Hook and module keyed list of listeners.
@@ -244,13 +236,20 @@ class ModuleHandler implements ModuleHandlerInterface {
     $hook_collector->loadAllIncludes();
     // Register procedural implementations.
     foreach ($hook_collector->getImplementations() as $hook => $moduleImplements) {
+      $list = $this->hookImplementationLists[$hook] ?? NULL;
+      $listeners = $list?->listeners ?? [];
+      $modules = $list?->modules ?? [];
       foreach ($moduleImplements as $module => $classImplements) {
         foreach ($classImplements[ProceduralCall::class] ?? [] as $method) {
           // @todo Reorder these after adding!
-          $this->listenersByHook[$hook][] = $method;
-          $this->modulesByHook[$hook][] = $module;
+          $listeners[] = $method;
+          $modules[] = $module;
           $this->invokeMap[$hook][$module][] = $method;
         }
+      }
+      // @todo Order the listeners after adding.
+      if ($listeners) {
+        $this->hookImplementationLists[$hook] = new ImplementationList($modules, $listeners);
       }
     }
   }
@@ -348,8 +347,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function invokeAllWith(string $hook, callable $callback): void {
-    foreach ($this->getFlatHookListeners($hook) as $index => $listener) {
-      $module = $this->modulesByHook[$hook][$index];
+    $list = $this->getHookImplementationList($hook);
+    foreach ($list->iterateByModule() as $module => $listener) {
       $callback($listener, $module);
     }
   }
@@ -482,26 +481,26 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   protected function getCombinedListeners(array $hooks): array {
     // Get implementation lists for each hook.
-    $listener_lists = array_map($this->getFlatHookListeners(...), $hooks);
+    /** @var list<\Drupal\Core\Hook\ImplementationList> $lists */
+    $lists = array_map($this->getHookImplementationList(...), $hooks);
     // Remove empty lists.
-    $listener_lists = array_filter($listener_lists);
-    if (!$listener_lists) {
+    /** @var array<int, \Drupal\Core\Hook\ImplementationList> $lists */
+    $lists = array_filter($lists, fn (ImplementationList $list) => $list->hasImplementations());
+    if (!$lists) {
       // No implementations exist.
       return [];
     }
-    if (array_keys($listener_lists) === [0]) {
+    if (array_keys($lists) === [0]) {
       // Only the main hook has implementations.
-      return $listener_lists[0];
+      return $lists[0]->listeners;
     }
     // Collect the lists from each hook.
     // Group the listeners by module.
     $listeners_by_identifier = [];
     $modules_by_identifier = [];
     $identifiers_by_module = [];
-    foreach ($listener_lists as $i_hook => $listeners) {
-      $hook = $hooks[$i_hook];
-      foreach ($listeners as $i_listener => $listener) {
-        $module = $this->modulesByHook[$hook][$i_listener];
+    foreach ($lists as $list) {
+      foreach ($list->iterateByModule() as $module => $listener) {
         $identifier = is_array($listener)
           ? get_class($listener[0]) . '::' . $listener[1]
           : ProceduralCall::class . '::' . $listener;
@@ -706,30 +705,23 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   A list of event listeners implementing this hook.
    */
   protected function getHookListeners(string $hook): array {
-    if (!isset($this->invokeMap[$hook])) {
-      $this->invokeMap[$hook] = [];
-      foreach ($this->getFlatHookListeners($hook) as $index => $listener) {
-        $module = $this->modulesByHook[$hook][$index];
-        $this->invokeMap[$hook][$module][] = $listener;
-      }
-    }
-
-    return $this->invokeMap[$hook] ?? [];
+    return $this->invokeMap[$hook]
+      ??= $this->getHookImplementationList($hook)->groupByModule();
   }
 
   /**
-   * Gets a list of hook listener callbacks.
+   * Gets a hook implementation list for a specific hook.
    *
    * @param string $hook
    *   The hook name.
    *
-   * @return list<callable>
-   *   A list of hook implementation callables.
-   *
-   * @internal
+   * @return \Drupal\Core\Hook\ImplementationList
+   *   Object with hook implementation callbacks and their modules.
    */
-  protected function getFlatHookListeners(string $hook): array {
-    if (!isset($this->listenersByHook[$hook])) {
+  protected function getHookImplementationList(string $hook): ImplementationList {
+    if (!isset($this->hookImplementationLists[$hook])) {
+      $listeners = [];
+      $modules = [];
       foreach ($this->eventDispatcher->getListeners("drupal_hook.$hook") as $listener) {
         if (is_array($listener) && is_object($listener[0])) {
           $module = $this->hookImplementationsMap[$hook][get_class($listener[0])][$listener[1]];
@@ -742,11 +734,12 @@ class ModuleHandler implements ModuleHandlerInterface {
             $callable = $listener;
           }
           if (isset($this->moduleList[$module])) {
-            $this->listenersByHook[$hook][] = $callable;
-            $this->modulesByHook[$hook][] = $module;
+            $listeners[] = $callable;
+            $modules[] = $module;
           }
         }
       }
+      $this->hookImplementationLists[$hook] = new ImplementationList($listeners, $modules);
       if (isset($this->groupIncludes[$hook])) {
         foreach ($this->groupIncludes[$hook] as $include) {
           @trigger_error('Autoloading hooks in the file (' . $include . ') is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Move the functions in this file to either the .module file or other appropriate location. See https://www.drupal.org/node/3489765', E_USER_DEPRECATED);
@@ -755,7 +748,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       }
     }
 
-    return $this->listenersByHook[$hook] ?? [];
+    return $this->hookImplementationLists[$hook];
   }
 
 }
