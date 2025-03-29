@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 
 // cspell:ignore languageswitcher
@@ -415,15 +414,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'StylesheetBytes' => 41750,
     ];
     $this->assertMetrics($expected, $performance_data);
-  }
-
-  /**
-   * Clear caches.
-   */
-  protected function clearCaches(): void {
-    foreach (Cache::getBins() as $bin) {
-      $bin->deleteAll();
-    }
   }
 
 }

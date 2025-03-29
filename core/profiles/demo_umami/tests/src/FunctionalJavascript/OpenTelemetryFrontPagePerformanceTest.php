@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 
 /**
@@ -98,15 +97,6 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageCoolCache');
-  }
-
-  /**
-   * Clear caches.
-   */
-  protected function clearCaches(): void {
-    foreach (Cache::getBins() as $bin) {
-      $bin->deleteAll();
-    }
   }
 
 }
