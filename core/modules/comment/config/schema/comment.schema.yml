@@ -48,7 +48,6 @@ comment.type.*:
       label: 'Description'
       nullable: true
 
-
 field.storage_settings.comment:
   type: mapping
   label: 'Comment settings'
