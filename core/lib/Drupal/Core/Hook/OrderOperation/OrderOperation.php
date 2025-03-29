@@ -9,27 +9,22 @@ namespace Drupal\Core\Hook\OrderOperation;
  */
 abstract class OrderOperation {
 
-  const array KNOWN_CLASSES = [
-    FirstOrLast::class,
-    BeforeOrAfter::class,
-  ];
-
   /**
-   * Serializes an order operation object.
+   * Packs an order operation object.
    *
    * @return array
    *   Packed operation.
    */
   final public function pack(): array {
-    $type_index = array_search(get_class($this), self::KNOWN_CLASSES);
-    if ($type_index === FALSE) {
-      throw new \LogicException(sprintf('Unknown subclass %s of internal class %s.', static::class, self::class));
-    }
-    return [$type_index, get_object_vars($this)];
+    $is_before_or_after = match(get_class($this)) {
+      BeforeOrAfter::class => TRUE,
+      FirstOrLast::class => FALSE,
+    };
+    return [$is_before_or_after, get_object_vars($this)];
   }
 
   /**
-   * Unserializes an order operation object.
+   * Unpacks an order operation object.
    *
    * @param array $packed_operation
    *   Packed operation.
@@ -38,9 +33,8 @@ abstract class OrderOperation {
    *   Unpacked operation.
    */
   final public static function unpack(array $packed_operation): self {
-    [$type_index, $args] = $packed_operation;
-    $class = static::KNOWN_CLASSES[$type_index]
-      ?? throw new \InvalidArgumentException('Unsupported order operation type index ' . $type_index);
+    [$is_before_or_after, $args] = $packed_operation;
+    $class = $is_before_or_after ? BeforeOrAfter::class : FirstOrLast::class;
     return new $class(...$args);
   }
 
