@@ -6,7 +6,7 @@ namespace Drupal\hk_extra_test\Hook;
 
 use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\Attribute\ReOrderHook;
-use Drupal\Core\Hook\OrderBefore;
+use Drupal\Core\Hook\Order\OrderBefore;
 
 /**
  * Hooks for testing ordering.

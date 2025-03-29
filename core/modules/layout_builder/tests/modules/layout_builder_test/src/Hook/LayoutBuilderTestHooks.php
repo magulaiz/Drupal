@@ -11,7 +11,7 @@ use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\OrderBefore;
+use Drupal\Core\Hook\Order\OrderBefore;
 
 /**
  * Hook implementations for layout_builder_test.

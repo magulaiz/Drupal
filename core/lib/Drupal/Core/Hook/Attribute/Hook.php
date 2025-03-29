@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Hook\Attribute;
 
-use Drupal\Core\Hook\OrderInterface;
+use Drupal\Core\Hook\Order\OrderInterface;
 
 /**
  * Attribute for defining a class method as a hook implementation.
@@ -115,7 +115,7 @@ class Hook implements HookAttributeInterface {
    *   (optional) The module this implementation is for. This allows one module
    *   to implement a hook on behalf of another module. Defaults to the module
    *   the implementation is in.
-   * @param \Drupal\Core\Hook\OrderInterface|null $order
+   * @param \Drupal\Core\Hook\Order\OrderInterface|null $order
    *   (optional) Set the order of the implementation.
    */
   public function __construct(

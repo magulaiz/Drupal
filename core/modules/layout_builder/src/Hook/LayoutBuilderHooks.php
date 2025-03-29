@@ -26,7 +26,7 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\Order;
+use Drupal\Core\Hook\Order\Order;
 
 /**
  * Hook implementations for layout_builder.

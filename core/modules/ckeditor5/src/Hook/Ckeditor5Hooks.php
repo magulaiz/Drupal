@@ -2,7 +2,7 @@
 
 namespace Drupal\ckeditor5\Hook;
 
-use Drupal\Core\Hook\OrderAfter;
+use Drupal\Core\Hook\Order\OrderAfter;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Render\Element;

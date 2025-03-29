@@ -7,7 +7,7 @@ namespace Drupal\hk_d_test\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\ReOrderHook;
-use Drupal\Core\Hook\Order;
+use Drupal\Core\Hook\Order\Order;
 use Drupal\hk_c_test\Hook\CHooks;
 
 /**

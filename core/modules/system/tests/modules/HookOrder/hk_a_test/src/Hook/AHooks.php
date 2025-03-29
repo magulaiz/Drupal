@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\hk_a_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\Order;
-use Drupal\Core\Hook\OrderAfter;
+use Drupal\Core\Hook\Order\Order;
+use Drupal\Core\Hook\Order\OrderAfter;
 
 /**
  * Hooks for testing ordering.

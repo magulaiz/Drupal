@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Core\Hook;
+namespace Drupal\Core\Hook\Order;
 
 /**
  * Set this implementation to be after others.

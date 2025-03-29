@@ -17,7 +17,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\Order;
+use Drupal\Core\Hook\Order\Order;
 
 /**
  * Hook implementations for content_translation.

@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Core\Hook;
+namespace Drupal\Core\Hook\Order;
 
 use Drupal\Core\Hook\OrderOperation\OrderOperation;
 

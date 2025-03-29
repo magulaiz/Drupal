@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\hook_order_first_alphabetically\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\OrderAfter;
+use Drupal\Core\Hook\Order\OrderAfter;
 
 /**
  * Hook implementations for verifying ordering hooks by attributes.
