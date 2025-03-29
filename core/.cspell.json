@@ -16,6 +16,7 @@
       "../**/LICENSE.txt",
       "modules/**/Migrate*Test.php",
       "modules/ckeditor5/js/build/*",
+      "modules/field/tests/fixtures/update/*",
       "modules/media/tests/fixtures/oembed/*",
       "modules/migrate_drupal/tests/fixtures/drupal6.php",
       "modules/migrate_drupal/tests/fixtures/drupal7.php",
