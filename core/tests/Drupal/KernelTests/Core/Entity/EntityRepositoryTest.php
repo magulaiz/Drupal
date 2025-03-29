@@ -190,11 +190,7 @@ class EntityRepositoryTest extends KernelTestBase {
     $storage->save($it_revision2);
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
-    if (\Drupal::database()->driver() != 'mongodb') {
-      // @todo Fix this for MongoDB. This looks like it is a result of a bug in
-      // the EntityQuery tool.
-      $this->assertSame($it_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
-    }
+    $this->assertSame($it_revision2->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($it_revision2->getUntranslated()->language()->getId(), $active->language()->getId());
 
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $it_contexts);
