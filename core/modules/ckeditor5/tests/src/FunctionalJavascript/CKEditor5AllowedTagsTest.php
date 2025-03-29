@@ -68,7 +68,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->checkField('filters[filter_html][status]');
     $page->checkField($incompatible_filter_name);
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
-    $assert_session->assertExpectedAjaxRequest(null, 2);
+    $assert_session->assertExpectedAjaxRequest(NULL, 2);
     $assert_session->pageTextContains($filter_warning);
 
     // Disable the incompatible filter.

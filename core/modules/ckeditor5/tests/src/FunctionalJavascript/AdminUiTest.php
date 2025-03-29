@@ -103,7 +103,7 @@ JS);
       // In case of the non-first AJAX request, ensure that no AJAX requests are
       // in progress.
       try {
-        $this->assertSession()->assertExpectedAjaxRequest(null, 500);
+        $this->assertSession()->assertExpectedAjaxRequest(NULL, 500);
       }
       catch (\RuntimeException $e) {
         throw new \LogicException(sprintf('This call to %s claims there no AJAX request was triggered, but this is wrong: %s.', __METHOD__, $e->getMessage()));

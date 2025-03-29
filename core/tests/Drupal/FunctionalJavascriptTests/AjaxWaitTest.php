@@ -26,7 +26,7 @@ class AjaxWaitTest extends WebDriverTestBase {
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage('There are no AJAX requests to wait for.');
 
-    $this->assertSession()->assertExpectedAjaxRequest(null, 500);
+    $this->assertSession()->assertExpectedAjaxRequest(NULL, 500);
   }
 
   /**
