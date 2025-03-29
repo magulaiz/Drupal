@@ -26,6 +26,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Utility\Error;
 use Drupal\mongodb\Driver\Database\mongodb\EmbeddedTableData;
+use Drupal\mongodb\modules\workspaces\EntityQuery\Query as WorkspacesEntityQuery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -1899,6 +1900,20 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     if (!isset($this->latestRevisionIds[$entity_id][LanguageInterface::LANGCODE_DEFAULT])) {
+      // When the EntityQuery is from the workspace module we need to match the
+      // latest revision to the one tracked by workspace associated revisions.
+      $workspace_associated_revisions = [];
+      if ($this->getQuery() instanceof WorkspacesEntityQuery) {
+        // Get revision_id from the workspace_association entity.
+        $active_workspace = \Drupal::service('workspaces.manager')->getActiveWorkspace();
+//dump('$active_workspace->id(): ' . $active_workspace->id());
+//dump('$this->getEntityTypeId(): ' . $this->getEntityTypeId());
+//dump('$entity_id: ' . $entity_id);
+        $workspace_associated_revisions = \Drupal::service('workspaces.association')->getAssociatedMongodbRevisions($active_workspace->id(), $this->getEntityTypeId(), [$entity_id]);
+//dump('$workspace_associated_revisions');
+//dump($workspace_associated_revisions);
+      }
+
       // Create for MongoDB a specific implementation for getting the latest
       // revision id. MongoDB stores all revision data in a single document/row.
       // As such there is no need for an aggregate query.
@@ -1912,8 +1927,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $revision_key = $this->entityType->getKey('revision');
       if (!empty($all_revisions) && is_array($all_revisions)) {
         foreach ($all_revisions as $revision) {
-          if (isset($revision[$revision_key]) && ($revision[$revision_key] > $latest_revision_id)) {
-            $latest_revision_id = $revision[$revision_key];
+          if (isset($revision[$revision_key])) {
+            if (!empty($workspace_associated_revisions)) {
+              // When we have workspace associated revision when should match the
+              // entity ids and the revision ids.
+              if (in_array($revision[$revision_key], array_keys($workspace_associated_revisions)) && in_array($entity_id, array_values($workspace_associated_revisions)) && ($revision[$revision_key] > $latest_revision_id)) {
+                $latest_revision_id = $revision[$revision_key];
+              }
+            }
+            elseif ($revision[$revision_key] > $latest_revision_id) {
+              $latest_revision_id = $revision[$revision_key];
+            }
           }
         }
       }

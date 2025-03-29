@@ -112,11 +112,11 @@ class WorkspaceEntityRepositoryTest extends KernelTestBase {
     // revision are returned even when there's a newer revision in Live.
     $this->switchToWorkspace('ham');
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
-    // $this->assertSame($ham_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame($ham_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
 
     $this->switchToWorkspace('cheese');
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $en_contexts);
-    // $this->assertSame($cheese_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame($cheese_revision->getLoadedRevisionId(), $active->getLoadedRevisionId());
 
     // Check that a revision created in a workspace does not leak into other
     // workspaces.
@@ -133,7 +133,7 @@ class WorkspaceEntityRepositoryTest extends KernelTestBase {
     // Check that the default revision is returned in another workspace.
     $this->switchToWorkspace('cheese');
     $active = $this->entityRepository->getActive($entity_type_id, $entity_2->id(), $en_contexts);
-    // $this->assertSame($entity_2->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame($entity_2->getLoadedRevisionId(), $active->getLoadedRevisionId());
 
     // Check that the correct active variant is returned for a translatable and
     // revisionable entity.
@@ -177,12 +177,12 @@ class WorkspaceEntityRepositoryTest extends KernelTestBase {
 
     $this->switchToWorkspace('ham');
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $ro_contexts);
-    // $this->assertSame($ham_revision_ro->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame($ham_revision_ro->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($ham_revision_ro->language()->getId(), $active->language()->getId());
 
     $this->switchToWorkspace('cheese');
     $active = $this->entityRepository->getActive($entity_type_id, $entity->id(), $ro_contexts);
-    // $this->assertSame($cheese_revision_ro->getLoadedRevisionId(), $active->getLoadedRevisionId());
+    $this->assertSame($cheese_revision_ro->getLoadedRevisionId(), $active->getLoadedRevisionId());
     $this->assertSame($cheese_revision_ro->language()->getId(), $active->language()->getId());
   }
 

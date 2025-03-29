@@ -321,6 +321,87 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   }
 
   /**
+   * Retrieves all content revisions tracked by a given workspace.
+   *
+   * Since the 'workspace_association' index table only tracks the latest
+   * associated revisions, this method retrieves all the tracked revisions by
+   * querying the entity type's revision table directly.
+   *
+   * @param string $workspace_id
+   *   The ID of the workspace.
+   * @param string $entity_type_id
+   *   An entity type ID to find revisions for.
+   * @param int[]|string[]|null $entity_ids
+   *   (optional) An array of entity IDs to filter the results by. Defaults to
+   *   NULL.
+   *
+   * @return array
+   *   Returns an array where the values are an array of entity IDs keyed by
+   *   revision IDs.
+   */
+  public function getAssociatedMongodbRevisions($workspace_id, $entity_type_id, $entity_ids = NULL) {
+    // @todo Add caching for the result.
+
+    /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+
+    // If the entity type is not using core's default entity storage, we can't
+    // assume the table mapping layout so we have to return only the latest
+    // tracked revisions.
+    if (!$storage instanceof SqlContentEntityStorage) {
+      return $this->getTrackedEntities($workspace_id, $entity_type_id, $entity_ids)[$entity_type_id];
+    }
+
+    $entity_type = $storage->getEntityType();
+    $table_mapping = $storage->getTableMapping();
+    $workspace_field = $table_mapping->getColumnNames($entity_type->get('revision_metadata_keys')['workspace'])['target_id'];
+    $id_field = $table_mapping->getColumnNames($entity_type->getKey('id'))['value'];
+    $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
+
+    $workspace_tree = $this->workspaceRepository->loadTree();
+    if (isset($workspace_tree[$workspace_id])) {
+      $workspace_candidates = array_merge([$workspace_id], $workspace_tree[$workspace_id]['ancestors']);
+    }
+    else {
+      $workspace_candidates = [$workspace_id];
+    }
+
+    $all_revisions_table = $table_mapping->getJsonStorageAllRevisionsTable();
+
+    $query = $this->database->select($entity_type->getBaseTable(), 'base');
+    $query
+      ->fields('base', [$revision_id_field, $id_field, $all_revisions_table])
+      ->condition("$all_revisions_table.$workspace_field", $workspace_candidates, 'IN')
+      ->orderBy("$all_revisions_table.$revision_id_field", 'ASC');
+
+    // Restrict the result to a set of entity ID's if provided.
+    if ($entity_ids) {
+      foreach ($entity_ids as & $entity_id) {
+        $entity_id = (int) $entity_id;
+      }
+      $query->condition($id_field, $entity_ids, 'IN');
+    }
+
+    $result = [];
+
+    $rows = $query->execute()->fetchAll();
+    foreach ($rows as $row) {
+      $id = $row->{$id_field};
+      $all_revisions = $row->{$all_revisions_table};
+      foreach ($all_revisions as $all_revision) {
+        $all_revision_revision_id = $all_revision[$revision_id_field] ?? NULL;
+        $all_revision_workspace = $all_revision[$workspace_field] ?? NULL;
+        // We select all revisions that are associated with the workspace id.
+        if ($all_revision_revision_id && $all_revision_workspace && (in_array($all_revision_workspace, $workspace_candidates, TRUE))) {
+          $result[$all_revision_revision_id] = $id;
+        }
+      }
+    }
+
+    return $result;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = []) {
