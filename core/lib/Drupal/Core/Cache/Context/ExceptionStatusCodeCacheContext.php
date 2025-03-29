@@ -15,7 +15,7 @@ class ExceptionStatusCodeCacheContext extends RequestStackCacheContextBase {
    * {@inheritdoc}
    */
   public static function getLabel(): \Stringable {
-    return t('Status code');
+    return t('Exception status code');
   }
 
   /**
