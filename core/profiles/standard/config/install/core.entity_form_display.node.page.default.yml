@@ -17,6 +17,7 @@ content:
     weight: 31
     region: content
     settings:
+      orderable: true
       rows: 9
       summary_rows: 3
       placeholder: ''
@@ -26,19 +27,22 @@ content:
     type: datetime_timestamp
     weight: 10
     region: content
-    settings: {  }
+    settings:
+      orderable: true
     third_party_settings: {  }
   path:
     type: path
     weight: 30
     region: content
-    settings: {  }
+    settings:
+      orderable: true
     third_party_settings: {  }
   promote:
     type: boolean_checkbox
     weight: 15
     region: content
     settings:
+      orderable: true
       display_label: true
     third_party_settings: {  }
   status:
@@ -53,6 +57,7 @@ content:
     weight: 16
     region: content
     settings:
+      orderable: true
       display_label: true
     third_party_settings: {  }
   title:
@@ -60,6 +65,7 @@ content:
     weight: -5
     region: content
     settings:
+      orderable: true
       size: 60
       placeholder: ''
     third_party_settings: {  }
@@ -68,6 +74,7 @@ content:
     weight: 5
     region: content
     settings:
+      orderable: true
       match_operator: CONTAINS
       match_limit: 10
       size: 60

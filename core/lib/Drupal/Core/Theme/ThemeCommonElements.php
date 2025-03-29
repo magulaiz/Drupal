@@ -235,6 +235,9 @@ class ThemeCommonElements {
       'field_multiple_value_form' => [
         'render element' => 'element',
       ],
+      'field_multiple_value_without_order_form' => [
+        'render element' => 'element',
+      ],
       'off_canvas_page_wrapper' => [
         'variables' => [
           'children' => NULL,
