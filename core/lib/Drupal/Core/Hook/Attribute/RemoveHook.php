@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Hook\Attribute;
 
 /**
- * Attribute for removing an implementation.
+ * Removes an already existing implementation.
  *
  * The effect of this attribute is independent from the specific class or method
  * on which it is placed.

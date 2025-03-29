@@ -7,7 +7,7 @@ namespace Drupal\Core\Hook\Attribute;
 use Drupal\Core\Hook\Order\OrderInterface;
 
 /**
- * Set the order of an already existing implementation.
+ * Sets the order of an already existing implementation.
  *
  * The effect of this attribute is independent from the specific class or method
  * on which it is placed.

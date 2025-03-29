@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Hook\Attribute;
 
 /**
- * Defines a LegacyModuleImplementsAlter object.
+ * Prevents procedural hook_module_implements_alter from executing.
  *
  * This allows contrib and core to maintain legacy hook_module_implements_alter
  * alongside the new attribute-based ordering. This means that a contrib module
