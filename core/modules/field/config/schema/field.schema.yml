@@ -55,7 +55,7 @@ field.storage.*.*:
         type: sequence
         label: 'Indexes'
         sequence:
-          type: array
+          type: sequence
           label: 'Index'
     persist_with_no_fields:
       type: boolean
