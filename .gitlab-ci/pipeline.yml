@@ -132,3 +132,4 @@ variables:
     REPEAT_TEST_CLASS: '\Drupal\Tests\settings_tray\FunctionalJavascript\SettingsTrayBlockFormTest'
   services:
     - <<: *with-database
+    - <<: *with-selenium-chrome
