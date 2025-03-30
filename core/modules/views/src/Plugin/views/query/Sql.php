@@ -20,8 +20,6 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-// cspell: ignore groupby
-
 /**
  * Views query plugin for an SQL query.
  *
@@ -1792,7 +1790,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1802,7 +1799,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodDistinct',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1812,7 +1808,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1822,7 +1817,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1832,7 +1826,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1842,7 +1835,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1852,7 +1844,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],

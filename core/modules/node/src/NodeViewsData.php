@@ -13,8 +13,6 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\views\EntityViewsData;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-// cspell:ignore fulldate
-
 /**
  * Provides the views data for the node entity type.
  */
