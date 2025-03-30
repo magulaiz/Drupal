@@ -55,10 +55,14 @@ final class SetProperties implements ConfigActionPluginInterface, ContainerFacto
       }
       $parts = explode('.', $property_name);
 
+      if (in_array($parts[0], ['uuid', 'id'])) {
+        throw new ConfigActionException('The setProperties config action cannot set the UUID or ID of a config entity.');
+      }
+
       $property_value = $entity->get($parts[0]);
       if (count($parts) > 1) {
         if (isset($property_value) && !is_array($property_value)) {
-          throw new ConfigActionException('This config action can only set nested values on arrays.');
+          throw new ConfigActionException('The setProperties config action can only set nested values on arrays.');
         }
         $property_value ??= [];
         NestedArray::setValue($property_value, array_slice($parts, 1), $value);
