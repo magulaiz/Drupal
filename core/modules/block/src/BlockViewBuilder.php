@@ -6,6 +6,7 @@ use Drupal\Core\Block\MainContentBlockPluginInterface;
 use Drupal\Core\Block\TitleBlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\CacheOptionalInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -50,7 +51,6 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
       // @see template_preprocess_block().
       $build[$entity_id] = [
         '#cache' => [
-          'keys' => ['entity_view', 'block', $entity->id()],
           'contexts' => Cache::mergeContexts(
             $entity->getCacheContexts(),
             $plugin->getCacheContexts()
@@ -60,6 +60,12 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
         ],
         '#weight' => $entity->getWeight(),
       ];
+
+      // Only add cache keys if the block plugin does not implement
+      // CacheOptionalInterface.
+      if (!$plugin instanceof CacheOptionalInterface) {
+        $build[$entity_id]['#cache']['keys'] = ['entity_view', 'block', $entity->id()];
+      }
 
       // Allow altering of cacheability metadata or setting #create_placeholder.
       $this->moduleHandler->alter(['block_build', "block_build_" . $plugin->getBaseId()], $build[$entity_id], $plugin);
