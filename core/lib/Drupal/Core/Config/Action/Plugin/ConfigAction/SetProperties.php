@@ -48,16 +48,18 @@ final class SetProperties implements ConfigActionPluginInterface, ContainerFacto
     assert(is_array($values));
     assert(!array_is_list($values));
 
+    // Don't allow the ID or UUID to be changed.
     $entity_keys = $entity->getEntityType()->getKeys();
+    $forbidden_keys = array_filter([
+      $entity_keys['id'],
+      $entity_keys['uuid'],
+    ]);
+
     foreach ($values as $property_name => $value) {
-      if (in_array($property_value, $entity_keys, TRUE)) {
-        throw new ConfigActionException("Entity key '$property_name' cannot be changed.");
+      if (in_array($property_name, $forbidden_keys, TRUE)) {
+        throw new ConfigActionException("Entity key '$property_name' cannot be changed by the setProperties config action.");
       }
       $parts = explode('.', $property_name);
-
-      if (in_array($parts[0], ['uuid', 'id'])) {
-        throw new ConfigActionException('The setProperties config action cannot set the UUID or ID of a config entity.');
-      }
 
       $property_value = $entity->get($parts[0]);
       if (count($parts) > 1) {

@@ -221,28 +221,29 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
       $block->getConfigDependencyName(),
       ['theme.name' => 'stark'],
     );
-
-    // We should not be able to set uuid or id.
-    $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('The setProperties config action cannot set the UUID or ID of a config entity.');
-    $this->configActionManager->applyAction(
-      'setProperties',
-      $block->getConfigDependencyName(),
-      ['uuid' => '12345'],
-    );
-    $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('The setProperties config action cannot set the UUID or ID of a config entity.');
-    $this->configActionManager->applyAction(
-      'setProperties',
-      $block->getConfigDependencyName(),
-      ['id' => '123'],
-    );
   }
 
   /**
-   * Tests that the setProperties action refuses to modify entity keys.
+   * Tests that the setProperties action refuses to modify entity IDs or UUIDs.
+   *
+   * @testWith ["id"]
+   *   ["uuid"]
    */
-  public function testSetPropertiesWillNotChangeEntityKeys(): void {
+  public function testSetPropertiesWillNotChangeEntityKeys(string $key): void {
+    $view_display = $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getViewDisplay('entity_test_with_bundle', 'test');
+    $this->assertFalse($view_display->isNew());
+
+    $property_name = $view_display->getEntityType()->getKey($key);
+    $this->assertNotEmpty($property_name);
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage("Entity key '$property_name' cannot be changed by the setProperties config action.");
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $view_display->getConfigDependencyName(),
+      [$property_name => '12345'],
+    );
   }
 
   /**
