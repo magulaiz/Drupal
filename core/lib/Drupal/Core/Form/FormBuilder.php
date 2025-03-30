@@ -1238,7 +1238,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         // Get the input for the current element. NULL values in the input need
         // to be explicitly distinguished from missing input. (see below)
         $input_exists = NULL;
-        $input = NestedArray::getValue($form_state->getUserInput(), $element['#parents'], $input_exists);
+        if (!empty($element['#name'])) {
+          $input = NestedArray::getValue($form_state->getUserInput(), [$element['#name']], $input_exists);
+        }
+        else {
+          $input = NestedArray::getValue($form_state->getUserInput(), $element['#parents'], $input_exists);
+        }
         // For browser-submitted forms, the submitted values do not contain
         // values for certain elements (empty multiple select, unchecked
         // checkbox). During initial form processing, we add explicit NULL

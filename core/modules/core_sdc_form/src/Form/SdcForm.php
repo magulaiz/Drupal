@@ -28,22 +28,92 @@ class SdcForm extends FormBase {
 //      '#title' => $this->t('Normal form element'),
 //    ];
 
+//    $form['component'] =  [
+//      '#type' => 'component',
+//      '#component' => 'navigation:badge',
+////      '#slots' => [
+////        'label' => [
+////          'form_element_in_component' => [
+////            '#type' => 'textfield',
+////            '#title' => $this->t('form element in component'),
+////          ],
+////        ],
+////      ],
+////      'label' => [
+////        'form_element_component_children' => [
+////          '#type' => 'textfield',
+////          '#title' => $this->t('form element component children'),
+////        ],
+////      ],
+//      'label' => [
+//        [
+//          '#type' => 'textfield',
+//          '#title' => $this->t('Toto'),
+//          '#name' => 'toto',
+//        ],
+//        [
+//          '#type' => 'textfield',
+//          '#title' => $this->t('Tutu'),
+//          '#name' => 'tutu',
+//        ],
+//      ],
+//    ];
+
     $form['component'] =  [
       '#type' => 'component',
-      '#component' => 'navigation:badge',
-      '#slots' => [
-        'label' => [
-          'form_element_in_component' => [
-            '#type' => 'textfield',
-            '#title' => $this->t('form element in component'),
+      '#component' => 'core_sdc_form:two_slots',
+      //      '#slots' => [
+      //        'label' => [
+      //          'form_element_in_component' => [
+      //            '#type' => 'textfield',
+      //            '#title' => $this->t('form element in component'),
+      //          ],
+      //        ],
+      //      ],
+      //      'label' => [
+      //        'form_element_component_children' => [
+      //          '#type' => 'textfield',
+      //          '#title' => $this->t('form element component children'),
+      //        ],
+      //      ],
+      'slot_1' => [
+        [
+          '#type' => 'textfield',
+          '#title' => $this->t('Toto'),
+          '#name' => 'toto',
+        ],
+        [
+          '#type' => 'select',
+          '#title' => $this->t('Titi'),
+          '#name' => 'titi',
+          '#options' => [
+            'aaa' => $this->t('aaa'),
           ],
         ],
       ],
-//      'form_element_component_children' => [
-//        '#type' => 'textfield',
-//        '#title' => $this->t('form element component children'),
-//      ],
+      'slot_2' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Tutu'),
+        '#name' => 'tutu',
+      ],
     ];
+
+//    $form['component_slot_child'] =  [
+//      '#type' => 'component',
+//      '#component' => 'navigation:badge',
+//      '#slots' => [
+//        'label' => [
+//          '#type' => 'textfield',
+//          '#title' => $this->t('form element in component'),
+//          '#name' => 'toto',
+//        ],
+//      ],
+//      'label' => [
+//        '#type' => 'textfield',
+//        '#title' => $this->t('form element in component'),
+//        '#name' => 'toto',
+//      ],
+//    ];
 
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = [
@@ -60,6 +130,9 @@ class SdcForm extends FormBase {
     $values = $form_state->getValues();
     dpm(array_keys($values));
     $keys = [
+      'toto',
+      'tutu',
+      'titi',
       'test',
       'form_element_in_component',
       'form_element_component_children',
