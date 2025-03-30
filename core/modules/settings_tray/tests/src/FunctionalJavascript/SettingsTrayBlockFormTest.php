@@ -267,7 +267,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    * Tests that validation errors appear in the off-canvas dialog.
    */
   public function testValidationMessages(): void {
-    $this->markTestSkipped('Not interested in this one.');
     $page = $this->getSession()->getPage();
     $web_assert = $this->assertSession();
     foreach (static::getTestThemes() as $theme) {
