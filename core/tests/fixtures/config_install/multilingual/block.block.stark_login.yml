@@ -18,5 +18,6 @@ settings:
   id: user_login_block
   label: 'User login'
   label_display: visible
+  condition_logic: and
   provider: user
 visibility: {  }

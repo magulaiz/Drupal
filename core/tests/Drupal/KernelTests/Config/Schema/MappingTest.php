@@ -54,6 +54,7 @@ class MappingTest extends KernelTestBase {
             'use_site_name' => TRUE,
             'use_site_slogan' => TRUE,
             'label_display' => FALSE,
+            'condition_logic' => 'and',
             // This is inherited from `type: block_settings`.
             'context_mapping' => [],
           ],
@@ -94,6 +95,7 @@ class MappingTest extends KernelTestBase {
           'status' => TRUE,
           'settings' => [
             'label_display' => FALSE,
+            'condition_logic' => 'and',
             // This is inherited from `type: block_settings`.
             'context_mapping' => [],
           ],
@@ -317,6 +319,7 @@ class MappingTest extends KernelTestBase {
         'id',
         'label',
         'label_display',
+        'condition_logic',
         'provider',
         'context_mapping',
         // Keys defined locally, in `type:
@@ -339,6 +342,7 @@ class MappingTest extends KernelTestBase {
         'id',
         'label',
         'label_display',
+        'condition_logic',
         'provider',
         'context_mapping',
         // Keys defined locally, in `type: block.settings.local_tasks_block`.

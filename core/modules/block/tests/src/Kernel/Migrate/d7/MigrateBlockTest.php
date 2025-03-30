@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel\Migrate\d7;
 
+use Drupal\block\BlockConfigUpdater;
 use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
@@ -59,7 +60,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
       'd7_custom_block',
       'd7_block',
     ]);
-    $blockRebuild = new BlockHooks();
+    $blockRebuild = new BlockHooks($this->container->get(BlockConfigUpdater::class));
     $blockRebuild->rebuild();
   }
 

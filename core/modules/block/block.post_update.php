@@ -5,6 +5,7 @@
  * Post update functions for Block.
  */
 
+use Drupal\block\BlockConfigUpdater;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 
@@ -33,4 +34,16 @@ function block_post_update_make_weight_integer(array &$sandbox = []): void {
       }
       return FALSE;
     });
+}
+
+/**
+ * Updates all blocks with new settings for condition logic.
+ */
+function block_post_update_move_custom_block_library(&$sandbox = NULL): void {
+  /** @var \Drupal\block\BlockConfigUpdater $blockConfigUpdater */
+  $blockConfigUpdater = \Drupal::service(BlockConfigUpdater::class);
+  $blockConfigUpdater->setDeprecationsEnabled(FALSE);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'block', function (BlockInterface $block) use ($blockConfigUpdater): bool {
+    return $blockConfigUpdater->needsConditionalLogicSettingsUpdate($block);
+  });
 }

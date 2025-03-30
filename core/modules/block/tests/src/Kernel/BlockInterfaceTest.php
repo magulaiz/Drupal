@@ -45,6 +45,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'id' => 'test_block_instantiation',
       'label' => 'Custom Display Message',
       'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+      'condition_logic' => 'and',
       'provider' => 'block_test',
       'display_message' => 'no message set',
     ];
@@ -81,6 +82,15 @@ class BlockInterfaceTest extends KernelTestBase {
         '#title' => 'Display title',
         '#default_value' => TRUE,
         '#return_value' => 'visible',
+      ],
+      'condition_logic' => [
+        '#type' => 'select',
+        '#title' => 'Conditions logic',
+        '#options' => [
+          'and' => 'And',
+          'or' => 'Or',
+        ],
+        '#default_value' => 'and',
       ],
       'context_mapping' => [],
       'display_message' => [
