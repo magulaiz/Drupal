@@ -32170,12 +32170,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/system.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Function system_post_update_sdc_uninstall\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/system.post_update.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\action_test\\\\Plugin\\\\Action\\\\NoType\\:\\:execute\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
