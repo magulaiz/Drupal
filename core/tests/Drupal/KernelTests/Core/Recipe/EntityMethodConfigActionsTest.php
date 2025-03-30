@@ -213,13 +213,29 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     $this->assertSame('highlighted', Block::load($block->id())->getRegion());
 
     // We should get an exception if we try to set a nested value on a property
-    // that isn't array.
+    // that isn't an array.
     $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('This config action can only set nested values on arrays.');
+    $this->expectExceptionMessage('The setProperties config action can only set nested values on arrays.');
     $this->configActionManager->applyAction(
       'setProperties',
       $block->getConfigDependencyName(),
       ['theme.name' => 'stark'],
+    );
+
+    // We should not be able to set uuid or id.
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('The setProperties config action cannot set the UUID or ID of a config entity.');
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['uuid' => '12345'],
+    );
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('The setProperties config action cannot set the UUID or ID of a config entity.');
+    $this->configActionManager->applyAction(
+      'setProperties',
+      $block->getConfigDependencyName(),
+      ['id' => '123'],
     );
   }
 
