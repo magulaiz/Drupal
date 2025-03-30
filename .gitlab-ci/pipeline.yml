@@ -129,7 +129,7 @@ variables:
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
   variables:
-    REPEAT_TEST_CLASS: '\Drupal\Tests\settings_tray\FunctionalJavascript\SettingsTrayBlockFormTest'
+    REPEAT_TEST_CLASS: '\Drupal\Tests\settings_tray\FunctionalJavascript\SettingsTrayBlockFormEditModeTest'
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
