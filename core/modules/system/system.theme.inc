@@ -26,7 +26,7 @@ function template_preprocess_system_security_advisories_fetch_error_message(arra
       ],
     ],
   ];
-  if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
+  if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access dblog reports')) {
     $options = ['query' => ['type' => ['system']]];
     $dblog_url = Url::fromRoute('dblog.overview', [], $options);
     $variables['error_message']['items']['#items']['dblog'] = t('Check <a href=":url">your local system logs</a> for additional error messages.', [':url' => $dblog_url->toString()]);

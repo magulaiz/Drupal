@@ -64,6 +64,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       'access user profiles',
       'administer users',
       'administer blocks',
+      'access dblog reports',
       'access site reports',
     ]);
     $this->drupalLogin($this->searchUser);
