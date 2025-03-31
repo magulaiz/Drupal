@@ -15,6 +15,7 @@ use Drupal\mysql\Driver\Database\mysql\Schema as BaseMySqlSchema;
 class Schema extends BaseMySqlSchema {
 
   // @phpstan-ignore missingType.return
+
   /**
    * {@inheritdoc}
    */
