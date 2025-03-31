@@ -37,9 +37,7 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',
@@ -471,7 +469,13 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     $errors = $entity->validate();
     $this->assertCount(1, $errors);
-    $this->assertEquals(new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $title]), $errors[0]->getMessage());
+    $this->assertEquals(
+      new FormattableMarkup('This entity (%type: %label) cannot be referenced.',
+        [
+          '%type' => 'node',
+          '%label' => $title,
+        ]),
+      $errors[0]->getMessage());
     $this->assertEquals('field_test_node.0.entity', $errors[0]->getPropertyPath());
 
     // Publish the node and try again.
@@ -519,9 +523,19 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     $errors = $entity->validate();
     $this->assertCount(2, $errors);
-    $this->assertEquals(new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $unsaved_unpublished_node_title]), $errors[0]->getMessage());
+    $this->assertEquals(
+      new FormattableMarkup('This entity (%type: %label) cannot be referenced.', [
+        '%type' => 'node',
+        '%label' => $unsaved_unpublished_node_title,
+      ]),
+      $errors[0]->getMessage());
     $this->assertEquals('field_test_node.0.entity', $errors[0]->getPropertyPath());
-    $this->assertEquals(new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $saved_unpublished_node->id()]), $errors[1]->getMessage());
+    $this->assertEquals(
+      new FormattableMarkup('This entity (%type: %label) cannot be referenced.', [
+        '%type' => 'node',
+        '%label' => $saved_unpublished_node->id(),
+      ]),
+      $errors[1]->getMessage());
     $this->assertEquals('field_test_node.1.target_id', $errors[1]->getPropertyPath());
 
     // Publish one of the nodes and try again.
@@ -529,7 +543,12 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
     $saved_unpublished_node->save();
     $errors = $entity->validate();
     $this->assertCount(1, $errors);
-    $this->assertEquals(new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'node', '%label' => $unsaved_unpublished_node_title]), $errors[0]->getMessage());
+    $this->assertEquals(
+      new FormattableMarkup('This entity (%type: %label) cannot be referenced.', [
+        '%type' => 'node',
+        '%label' => $unsaved_unpublished_node_title,
+      ]),
+      $errors[0]->getMessage());
     $this->assertEquals('field_test_node.0.entity', $errors[0]->getPropertyPath());
 
     // Publish the last invalid node and try again.
@@ -553,7 +572,12 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     $errors = $entity->validate();
     $this->assertCount(1, $errors);
-    $this->assertEquals(new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'comment', '%label' => $title]), $errors[0]->getMessage());
+    $this->assertEquals(
+      new FormattableMarkup('This entity (%type: %label) cannot be referenced.', [
+        '%type' => 'comment',
+        '%label' => $title,
+      ]),
+      $errors[0]->getMessage());
     $this->assertEquals('field_test_comment.0.entity', $errors[0]->getPropertyPath());
 
     // Publish the comment and try again.
@@ -576,7 +600,12 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     $errors = $entity->validate();
     $this->assertCount(1, $errors);
-    $this->assertEquals(new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'user', '%label' => $name]), $errors[0]->getMessage());
+    $this->assertEquals(
+      new FormattableMarkup('This entity (%type: %label) cannot be referenced.', [
+        '%type' => 'user',
+        '%label' => $name,
+      ]),
+      $errors[0]->getMessage());
     $this->assertEquals('field_test_user.0.entity', $errors[0]->getPropertyPath());
 
     // Activate the user and try again.
@@ -599,7 +628,12 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
 
     $errors = $entity->validate();
     $this->assertCount(1, $errors);
-    $this->assertEquals(new FormattableMarkup('This entity (%type: %label) cannot be referenced.', ['%type' => 'file', '%label' => $filename]), $errors[0]->getMessage());
+    $this->assertEquals(
+      new FormattableMarkup('This entity (%type: %label) cannot be referenced.', [
+        '%type' => 'file',
+        '%label' => $filename,
+      ]),
+      $errors[0]->getMessage());
     $this->assertEquals('field_test_file.0.entity', $errors[0]->getPropertyPath());
 
     // Set the file as permanent and try again.

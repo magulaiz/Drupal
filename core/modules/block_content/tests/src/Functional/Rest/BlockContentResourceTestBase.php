@@ -10,14 +10,14 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
- * ResourceTestBase for BlockContent entity.
+ * Resource test base for BlockContent entity.
  */
 abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block_content'];
+  protected static $modules = ['block_content', 'content_translation'];
 
   /**
    * {@inheritdoc}

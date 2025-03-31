@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * The controller class.
+ * Controller routines for custom block routes.
  */
 class BlockContentController extends ControllerBase {
 
