@@ -9,7 +9,6 @@ use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
- *
  * Determines if a string is a valid regular expression.
  */
 #[Constraint(
