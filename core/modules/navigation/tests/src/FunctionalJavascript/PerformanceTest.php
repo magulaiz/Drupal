@@ -73,14 +73,14 @@ class PerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 4,
-      'CacheGetCount' => 59,
+      'CacheGetCount' => 60,
       'CacheGetCountByBin' => [
         'config' => 11,
-        'data' => 6,
+        'data' => 5,
         'discovery' => 10,
         'bootstrap' => 6,
         'dynamic_page_cache' => 2,
-        'render' => 23,
+        'render' => 25,
         'menu' => 1,
       ],
       'CacheSetCount' => 2,
@@ -92,8 +92,8 @@ class PerformanceTest extends PerformanceTestBase {
       'CacheTagLookupQueryCount' => 20,
       'ScriptCount' => 3,
       'ScriptBytes' => 215500,
-      'StylesheetCount' => 1,
-      'StylesheetBytes' => 46300,
+      'StylesheetCount' => 2,
+      'StylesheetBytes' => 46000,
     ];
     $this->assertMetrics($expected, $performance_data);
 
