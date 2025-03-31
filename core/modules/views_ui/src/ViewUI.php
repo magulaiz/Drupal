@@ -2,26 +2,30 @@
 
 namespace Drupal\views_ui;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Timer;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+use Drupal\views\Views;
+use Drupal\views\Entity\View;
+use Drupal\Core\TempStore\Lock;
+use Drupal\views\ViewExecutable;
 use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Database\Database;
+use Drupal\Component\Utility\Timer;
+use Drupal\views\ViewEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\TempStore\Lock;
-use Drupal\views\Controller\ViewAjaxController;
-use Drupal\views\Views;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\views\ViewExecutable;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
-use Drupal\views\Entity\View;
-use Drupal\views\ViewEntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Symfony\Component\HttpFoundation\InputBag;
+use Drupal\views\Controller\ViewAjaxController;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Stores UI related temporary settings.
@@ -174,47 +178,50 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function setStatus($status) {
-    return $this->storage->setStatus($status);
+  public function setStatus($status): static {
+    $this->storage->setStatus($status);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function set($property_name, $value, $notify = TRUE) {
+  public function set($property_name, $value, $notify = TRUE): self {
     if (property_exists($this->storage, $property_name)) {
       $this->storage->set($property_name, $value);
     }
     else {
       $this->{$property_name} = $value;
     }
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setSyncing($syncing) {
-    $this->isSyncing = $syncing;
+  public function setSyncing($syncing): static {
+    $this->isSyncing = (bool) $syncing;
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setUninstalling($isUninstalling) {
+  public function setUninstalling($isUninstalling): void {
     $this->isUninstalling = $isUninstalling;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isSyncing() {
+  public function isSyncing(): bool {
     return $this->isSyncing;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isUninstalling() {
+  public function isUninstalling(): bool {
     return $this->isUninstalling;
   }
 
@@ -225,10 +232,9 @@ class ViewUI implements ViewEntityInterface {
    * to apply to the default display or to the current display, and dispatches
    * control appropriately.
    */
-  public function standardSubmit($form, FormStateInterface $form_state) {
+  public function standardSubmit($form, FormStateInterface $form_state): void {
     // Determine whether the values the user entered are intended to apply to
     // the current display or the default display.
-
     [$was_defaulted, $is_defaulted, $revert] = $this->getOverrideValues($form, $form_state);
 
     // Based on the user's choice in the display dropdown, determine which
@@ -274,7 +280,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * Submit handler for cancel button.
    */
-  public function standardCancel($form, FormStateInterface $form_state) {
+  public function standardCancel($form, FormStateInterface $form_state): void {
     if (!empty($this->changed) && isset($this->form_cache)) {
       unset($this->form_cache);
       $this->cacheSet();
@@ -292,7 +298,7 @@ class ViewUI implements ViewEntityInterface {
    * @todo Is the hidden op operator still here somewhere, or is that part of
    *   the docblock outdated?
    */
-  public function getStandardButtons(&$form, FormStateInterface $form_state, $form_id, $name = NULL) {
+  public function getStandardButtons(&$form, FormStateInterface $form_state, $form_id, $name = NULL): void {
     $form['actions'] = [
       '#type' => 'actions',
     ];
@@ -363,7 +369,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * Return the was_defaulted, is_defaulted and revert state of a form.
    */
-  public function getOverrideValues($form, FormStateInterface $form_state) {
+  public function getOverrideValues($form, FormStateInterface $form_state): array {
     // Make sure the dropdown exists in the first place.
     if ($form_state->hasValue(['override', 'dropdown'])) {
       // #default_value is used to determine whether it was the default value or
@@ -395,7 +401,7 @@ class ViewUI implements ViewEntityInterface {
    *
    * Clicking 'apply' will go to this form rather than closing the ajax popup.
    */
-  public function addFormToStack($key, $display_id, $type, $id = NULL, $top = FALSE, $rebuild_keys = FALSE) {
+  public function addFormToStack($key, $display_id, $type, $id = NULL, $top = FALSE, $rebuild_keys = FALSE): void {
     // Reset the cache of IDs. Drupal rather aggressively prevents ID
     // duplication but this causes it to remember IDs that are no longer even
     // being used.
@@ -441,7 +447,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * Submit handler for adding new item(s) to a view.
    */
-  public function submitItemAdd($form, FormStateInterface $form_state) {
+  public function submitItemAdd($form, FormStateInterface $form_state): void {
     $type = $form_state->get('type');
     $types = ViewExecutable::getHandlerTypes();
     $section = $types[$type]['plural'];
@@ -477,7 +483,7 @@ class ViewUI implements ViewEntityInterface {
         }
         $id = $this->getExecutable()->addHandler($display_id, $type, $table, $field);
 
-        // Check to see if we have group by settings
+        // Check to see if we have group by settings.
         $key = $type;
         // Footer,header and empty text have a different internal handler
         // type(area).
@@ -494,11 +500,11 @@ class ViewUI implements ViewEntityInterface {
         }
 
         // Check to see if this type has settings, if so add the settings form
-        // first
+        // first.
         if ($handler && $handler->hasExtraOptions()) {
           $this->addFormToStack('handler-extra', $display_id, $type, $id);
         }
-        // Then add the form to the stack
+        // Then add the form to the stack.
         $this->addFormToStack('handler', $display_id, $type, $id);
       }
     }
@@ -507,7 +513,7 @@ class ViewUI implements ViewEntityInterface {
       unset($this->form_cache);
     }
 
-    // Store in cache
+    // Store in cache.
     $this->cacheSet();
   }
 
@@ -519,7 +525,7 @@ class ViewUI implements ViewEntityInterface {
    *
    * @see ViewUI::endQueryCapture()
    */
-  public function startQueryCapture() {
+  public function startQueryCapture(): void {
     Database::startLog('views');
   }
 
@@ -528,13 +534,33 @@ class ViewUI implements ViewEntityInterface {
    *
    * @see ViewUI::startQueryCapture()
    */
-  public function endQueryCapture() {
+  public function endQueryCapture(): void {
     $queries = Database::getLog('views');
 
     $this->additionalQueries = $queries;
   }
 
-  public function renderPreview($display_id, $args = []) {
+  /**
+   * Renders a preview of a view display.
+   *
+   * This method generates a live preview of a view display, allowing users
+   * to see the output before saving changes. It processes exposed filters,
+   * query statistics, and performance details while ensuring the correct
+   * request context for AJAX-based previews.
+   *
+   * @param string $display_id
+   *   The machine name of the display to preview.
+   * @param array $args
+   *   (optional) An associative array of arguments to pass to the view.
+   *
+   * @return array
+   *   A renderable array containing the preview output. Returns an error
+   *   message if the display ID is invalid.
+   *
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
+   *   Thrown if an error occurs while executing the SQL query.
+   */
+  public function renderPreview(string $display_id, array $args = []): array {
     // Save the current path so it can be restored before returning from this
     // function.
     $request_stack = \Drupal::requestStack();
@@ -589,7 +615,6 @@ class ViewUI implements ViewEntityInterface {
       }
 
       // Make view links come back to preview.
-
       // Also override the current path so we get the pager, and make sure the
       // Request object gets all of the proper values from $_SERVER.
       $request = Request::createFromGlobals();
@@ -684,7 +709,10 @@ class ViewUI implements ViewEntityInterface {
                 $query_string = strtr($query['query'], $query['args']);
                 $queries[] = [
                   '#prefix' => "\n",
-                  '#markup' => $this->t('[@time ms] @query', ['@time' => round($query['time'] * 100000, 1) / 100000.0, '@query' => $query_string]),
+                  '#markup' => $this->t('[@time ms] @query', [
+                    '@time' => round($query['time'] * 100000, 1) / 100000.0,
+                    '@query' => $query_string,
+                  ]),
                 ];
               }
 
@@ -721,9 +749,7 @@ class ViewUI implements ViewEntityInterface {
               ],
             ];
             if (isset($path)) {
-              // @todo Views should expect and store a leading /. See:
-              //   https://www.drupal.org/node/2423913
-              $path = Link::fromTextAndUrl($path->toString(), $path)->toString();
+              $path = $this->getPreviewPath($executable);
             }
             else {
               $path = $this->t('This display has no path.');
@@ -884,7 +910,7 @@ class ViewUI implements ViewEntityInterface {
   /**
    * Sets a cached view object in the shared tempstore.
    */
-  public function cacheSet() {
+  public function cacheSet(): void {
     if ($this->isLocked()) {
       \Drupal::messenger()->addError($this->t('Changes cannot be made to a locked view.'));
       return;
@@ -914,15 +940,23 @@ class ViewUI implements ViewEntityInterface {
    * @return bool
    *   TRUE if the view is locked, FALSE otherwise.
    */
-  public function isLocked() {
+  public function isLocked(): bool {
     $lock = $this->getLock();
     return $lock && $lock->getOwnerId() != \Drupal::currentUser()->id();
   }
 
   /**
    * Passes through all unknown calls onto the storage object.
+   *
+   * @param string $method
+   *   The method name.
+   * @param array $args
+   *   The method arguments.
+   *
+   * @return mixed
+   *   The result of the method call on the storage object.
    */
-  public function __call($method, $args) {
+  public function __call(string $method, array $args): mixed {
     return call_user_func_array([$this->storage, $method], $args);
   }
 
@@ -936,126 +970,131 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function id() {
+  public function id(): string {
     return $this->storage->id();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function uuid() {
+  public function uuid(): string {
     return $this->storage->uuid();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isNew() {
+  public function isNew(): bool {
     return $this->storage->isNew();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getEntityTypeId() {
+  public function getEntityTypeId(): string {
     return $this->storage->getEntityTypeId();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function bundle() {
+  public function bundle(): string {
     return $this->storage->bundle();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getEntityType() {
+  public function getEntityType(): EntityTypeInterface {
     return $this->storage->getEntityType();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function createDuplicate() {
-    return $this->storage->createDuplicate();
+  public function createDuplicate(): static {
+    $duplicate = $this->storage->createDuplicate();
+    return new static($duplicate);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function load($id) {
-    return View::load($id);
+  public static function load($id): ?static {
+    $view = View::load($id);
+    return $view ? new static($view) : NULL;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function loadMultiple(?array $ids = NULL) {
-    return View::loadMultiple($ids);
+  public static function loadMultiple(?array $ids = NULL): array {
+    $views = View::loadMultiple($ids);
+    return array_map(fn($view) => new static($view), $views);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(array $values = []) {
-    return View::create($values);
+  public static function create(array $values = []): static {
+    $view = View::create($values);
+    return new static($view);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function delete() {
-    return $this->storage->delete();
+  public function delete(): void {
+    $this->storage->delete();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function save() {
+  public function save(): int {
     return $this->storage->save();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function toUrl($rel = NULL, array $options = []) {
+  public function toUrl($rel = NULL, array $options = []): Url {
     return $this->storage->toUrl($rel, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function toLink($text = NULL, $rel = 'edit-form', array $options = []) {
+  public function toLink($text = NULL, $rel = 'edit-form', array $options = []): Link {
     return $this->storage->toLink($text, $rel, $options);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function label() {
+  public function label(): ?string {
     return $this->storage->label();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function enforceIsNew($value = TRUE) {
-    return $this->storage->enforceIsNew($value);
+  public function enforceIsNew($value = TRUE): static {
+    $this->storage->enforceIsNew($value);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function toArray() {
+  public function toArray(): array {
     return $this->storage->toArray();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function language() {
+  public function language(): LanguageInterface {
     return $this->storage->language();
   }
 
@@ -1069,129 +1108,132 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function enable() {
-    return $this->storage->enable();
+  public function enable(): static {
+    $this->storage->enable();
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function disable() {
-    return $this->storage->disable();
+  public function disable(): static {
+    $this->storage->disable();
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function status() {
+  public function status(): bool {
     return $this->storage->status();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getOriginalId() {
+  public function getOriginalId(): ?string {
     return $this->storage->getOriginalId();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setOriginalId($id) {
-    return $this->storage->setOriginalId($id);
+  public function setOriginalId($id): static {
+    $this->storage->setOriginalId($id);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function preSave(EntityStorageInterface $storage) {
+  public function preSave(EntityStorageInterface $storage): void {
     $this->storage->presave($storage);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+  public function postSave(EntityStorageInterface $storage, $update = TRUE): void {
     $this->storage->postSave($storage, $update);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageInterface $storage, array &$values) {
+  public static function preCreate(EntityStorageInterface $storage, array &$values): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function postCreate(EntityStorageInterface $storage) {
+  public function postCreate(EntityStorageInterface $storage): void {
     $this->storage->postCreate($storage);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+  public static function preDelete(EntityStorageInterface $storage, array $entities): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+  public static function postDelete(EntityStorageInterface $storage, array $entities): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
+  public static function postLoad(EntityStorageInterface $storage, array &$entities): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getExecutable() {
+  public function getExecutable(): ViewExecutable {
     return $this->storage->getExecutable();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function duplicateDisplayAsType($old_display_id, $new_display_type) {
+  public function duplicateDisplayAsType($old_display_id, $new_display_type): string {
     return $this->storage->duplicateDisplayAsType($old_display_id, $new_display_type);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function mergeDefaultDisplaysOptions() {
+  public function mergeDefaultDisplaysOptions(): void {
     $this->storage->mergeDefaultDisplaysOptions();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function uriRelationships() {
+  public function uriRelationships(): array {
     return $this->storage->uriRelationships();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function referencedEntities() {
+  public function referencedEntities(): array {
     return $this->storage->referencedEntities();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasLinkTemplate($key) {
+  public function hasLinkTemplate($key): bool {
     return $this->storage->hasLinkTemplate($key);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function calculateDependencies() {
+  public function calculateDependencies(): static {
     $this->storage->calculateDependencies();
     return $this;
   }
@@ -1199,85 +1241,86 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getConfigDependencyKey() {
+  public function getConfigDependencyKey(): string {
     return $this->storage->getConfigDependencyKey();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfigDependencyName() {
+  public function getConfigDependencyName(): string {
     return $this->storage->getConfigDependencyName();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfigTarget() {
+  public function getConfigTarget(): string {
     return $this->storage->getConfigTarget();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function onDependencyRemoval(array $dependencies) {
+  public function onDependencyRemoval(array $dependencies): bool {
     return $this->storage->onDependencyRemoval($dependencies);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDependencies() {
+  public function getDependencies(): array {
     return $this->storage->getDependencies();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheContexts() {
+  public function getCacheContexts(): array {
     return $this->storage->getCacheContexts();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheTags() {
+  public function getCacheTags(): array {
     return $this->storage->getCacheTags();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheMaxAge() {
+  public function getCacheMaxAge(): int {
     return $this->storage->getCacheMaxAge();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTypedData() {
-    $this->storage->getTypedData();
+  public function getTypedData(): TypedDataInterface {
+    return $this->storage->getTypedData();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
+  public function addDisplay($plugin_id = 'page', $title = NULL, $id = NULL): string {
     return $this->storage->addDisplay($plugin_id, $title, $id);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isInstallable() {
+  public function isInstallable(): bool {
     return $this->storage->isInstallable();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setThirdPartySetting($module, $key, $value) {
-    return $this->storage->setThirdPartySetting($module, $key, $value);
+  public function setThirdPartySetting($module, $key, $value): static {
+    $this->storage->setThirdPartySetting($module, $key, $value);
+    return $this;
   }
 
   /**
@@ -1290,42 +1333,43 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getThirdPartySettings($module) {
+  public function getThirdPartySettings($module): array {
     return $this->storage->getThirdPartySettings($module);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function unsetThirdPartySetting($module, $key) {
+  public function unsetThirdPartySetting($module, $key): static {
     return $this->storage->unsetThirdPartySetting($module, $key);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getThirdPartyProviders() {
+  public function getThirdPartyProviders(): array {
     return $this->storage->getThirdPartyProviders();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function trustData() {
-    return $this->storage->trustData();
+  public function trustData(): static {
+    $this->storage->trustData();
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasTrustedData() {
+  public function hasTrustedData(): bool {
     return $this->storage->hasTrustedData();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addCacheableDependency($other_object) {
+  public function addCacheableDependency($other_object): static {
     $this->storage->addCacheableDependency($other_object);
     return $this;
   }
@@ -1333,29 +1377,32 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function addCacheContexts(array $cache_contexts) {
-    return $this->storage->addCacheContexts($cache_contexts);
+  public function addCacheContexts(array $cache_contexts): static {
+    $this->storage->addCacheContexts($cache_contexts);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function mergeCacheMaxAge($max_age) {
-    return $this->storage->mergeCacheMaxAge($max_age);
+  public function mergeCacheMaxAge($max_age): static {
+    $this->storage->mergeCacheMaxAge($max_age);
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheTagsToInvalidate() {
+  public function getCacheTagsToInvalidate(): array {
     return $this->storage->getCacheTagsToInvalidate();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addCacheTags(array $cache_tags) {
-    return $this->storage->addCacheTags($cache_tags);
+  public function addCacheTags(array $cache_tags): static {
+    $this->storage->addCacheTags($cache_tags);
+    return $this;
   }
 
   /**
@@ -1364,7 +1411,7 @@ class ViewUI implements ViewEntityInterface {
    * @return \Drupal\Core\TempStore\Lock|null
    *   The lock, if one exists.
    */
-  public function getLock() {
+  public function getLock(): ?Lock {
     return $this->lock;
   }
 
@@ -1376,7 +1423,7 @@ class ViewUI implements ViewEntityInterface {
    *
    * @return $this
    */
-  public function setLock(Lock $lock) {
+  public function setLock(Lock $lock): static {
     $this->lock = $lock;
     return $this;
   }
@@ -1386,16 +1433,50 @@ class ViewUI implements ViewEntityInterface {
    *
    * @return $this
    */
-  public function unsetLock() {
+  public function unsetLock(): static {
     $this->lock = NULL;
     return $this;
+  }
+
+  /**
+   * Gets the view's preview path.
+   *
+   * @param \Drupal\views\ViewExecutable $executable
+   *   The views executable instance.
+   *
+   * @return string
+   *   The rendered preview path as a string.
+   */
+  public function getPreviewPath(ViewExecutable $executable): string {
+    // @todo Views should expect and store a leading /. See:
+    //   https://www.drupal.org/node/2423913
+    $preview_path = Url::fromUserInput('/' . $executable->display_handler->getOption('path'));
+    $updated_path = $preview_path->toString();
+
+    $current_path = Link::fromTextAndUrl($executable->getUrl()->toString(), $executable->getUrl())->toString();
+    if ($executable->getUrl()->toString() !== $updated_path) {
+      $path = [
+        '#theme' => 'item_list',
+        '#list_type' => 'ul',
+        '#items' => [
+          ['#markup' => $this->t('Current path: @current_path', ['@current_path' => $current_path])],
+          ['#markup' => $this->t('New path after view is saved: @updated_path', ['@updated_path' => $updated_path])],
+        ],
+      ];
+      $path = \Drupal::service('renderer')->renderInIsolation($path);
+    }
+    else {
+      $path = Link::fromTextAndUrl($updated_path, $preview_path)->toString();
+    }
+    return $path;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getOriginal(): ?static {
-    return $this->storage->getOriginal();
+    $original = $this->storage->getOriginal();
+    return $original ? new static($original) : NULL;
   }
 
   /**
