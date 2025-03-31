@@ -69,7 +69,9 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
     if (!extension_loaded('intl')) {
       $type_order = strnatcasecmp($a_type, $b_type);
     }
-    $type_order = $collator->compare($a_type, $b_type);
+    else {
+      $type_order = $collator->compare($a_type, $b_type);
+    }
     return $type_order != 0 ? $type_order : parent::compare($a, $b, $collator);
   }
 
