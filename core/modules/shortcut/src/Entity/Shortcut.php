@@ -189,6 +189,9 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
     $a_weight = $a->getWeight();
     $b_weight = $b->getWeight();
     if ($a_weight == $b_weight) {
+      if (!extension_loaded('intl')) {
+        return strnatcasecmp($a->getTitle(), $b->getTitle());
+      }
       return $collator->compare($a->getTitle(), $b->getTitle());
     }
     return $a_weight <=> $b_weight;
