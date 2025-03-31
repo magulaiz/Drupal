@@ -344,7 +344,7 @@ system.file:
       type: string
       label: 'Default download method'
       constraints:
-        Callback: [\Drupal\system\ConfigValidation, isValidScheme]
+        Callback: [\Drupal\Core\Config\ConfigValidation, isValidScheme]
     path:
       type: mapping
       label: 'Path settings'

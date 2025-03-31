@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\system;
+namespace Drupal\Core\Config;
 
 /**
  * Provides validation methods for configuration values.
