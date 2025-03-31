@@ -280,6 +280,12 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
         $fields[$column] = $table_mapping->getFieldColumnName($field_definition, $column);
       }
 
+      if ($this->options['group_column'] == 'entity_id') {
+        // Group by entity ID.
+        $fields['entity_id'] = $this->entityTypeManager->getDefinition($this->definition['entity_type'])
+          ->getKey('id');
+      }
+
       $this->group_fields = $fields;
     }
 
@@ -941,7 +947,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
     // Copy our group fields into the cloned entity. It is possible this will
     // cause some weirdness, but there is only so much we can hope to do.
-    if (!empty($this->group_fields) && isset($entity->{$this->definition['field_name']})) {
+    if (!empty($this->group_fields) && isset($entity->{$this->definition['field_name']}) && $this->options['group_column'] != 'entity_id') {
       // first, test to see if we have a base value.
       $base_value = [];
       // Note: We would copy original values here, but it can cause problems.
