@@ -356,7 +356,6 @@ default:
     paths:
       - core/node_modules/
 
-'📔 Spell-checking':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
