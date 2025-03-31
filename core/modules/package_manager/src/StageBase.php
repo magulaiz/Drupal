@@ -904,11 +904,8 @@ abstract class StageBase implements LoggerAwareInterface {
     if ($this->lock) {
       return $this->lock[3];
     }
-    elseif ($this->isAvailable()) {
-      $reflector = new \ReflectionClass($this);
-      return Settings::get('package_manager_allow_direct_write', FALSE) && $reflector->getAttributes(AllowDirectWrite::class);
-    }
-    throw new \LogicException(__METHOD__ . '() cannot be called because the stage has not been created or claimed.');
+    $reflector = new \ReflectionClass($this);
+    return Settings::get('package_manager_allow_direct_write', FALSE) && $reflector->getAttributes(AllowDirectWrite::class);
   }
 
 }
