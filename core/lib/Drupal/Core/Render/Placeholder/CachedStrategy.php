@@ -22,17 +22,35 @@ class CachedStrategy implements PlaceholderStrategyInterface {
    */
   public function processPlaceholders(array $placeholders) {
     $return = $this->renderCache->getMultiple($placeholders);
-
-    foreach ($return as $key => $placeholder) {
-      if (!empty($placeholder['#attached']['placeholders'])) {
-        $cached = $this->renderCache->getMultiple($placeholder['#attached']['placeholders']);
-        foreach ($cached as $cache_key => $value) {
-          $return[$key]['#attached']['placeholders'][$cache_key] = $value;
-        }
-      }
+    if ($return) {
+      $return = $this->processNestedPlaceholders($return);
     }
 
     return $return;
+  }
+
+  /**
+   * Fetch any nested placeholders from cache.
+   */
+  private function processNestedPlaceholders(array $placeholders): array {
+    $sets = [];
+    foreach ($placeholders as $key => $placeholder) {
+      if (!empty($placeholder['#attached']['placeholders'])) {
+        $sets[] = $placeholder['#attached']['placeholders'];
+      }
+    }
+    if ($sets) {
+      $cached = $this->renderCache->getMultiple(...array_merge($sets));
+      if ($cached) {
+        $cached = $this->processNestedPlaceholders($cached);
+        foreach ($placeholders as $key => $placeholder) {
+          if (!empty($placeholder['#attached']['placeholders'])) {
+            $placeholders[$key]['#attached']['placeholders'] = array_replace($placeholder['#attached']['placeholders'], $cached);
+          }
+        }
+      }
+    }
+    return $placeholders;
   }
 
 }
