@@ -186,8 +186,6 @@ class AliasManagerTest extends UnitTestCase {
 
     $language = $this->setUpCurrentLanguage();
 
-    $this->aliasManager->setCacheKey($this->path);
-
     $this->aliasPrefixList->expects($this->any())
       ->method('get')
       ->with($path_part1)
@@ -226,8 +224,6 @@ class AliasManagerTest extends UnitTestCase {
 
     $language = $this->setUpCurrentLanguage();
 
-    $this->aliasManager->setCacheKey($this->path);
-
     $this->aliasPrefixList->expects($this->any())
       ->method('get')
       ->with($path_part1)
@@ -262,9 +258,6 @@ class AliasManagerTest extends UnitTestCase {
       ->method('get')
       ->with($this->cacheKey)
       ->willReturn((object) ['data' => $cached_paths]);
-
-    // Simulate a request so that the preloaded paths are fetched.
-    $this->aliasManager->setCacheKey($this->path);
 
     $this->aliasPrefixList->expects($this->any())
       ->method('get')
@@ -305,9 +298,6 @@ class AliasManagerTest extends UnitTestCase {
       ->with($this->cacheKey)
       ->willReturn((object) ['data' => $cached_paths]);
 
-    // Simulate a request so that the preloaded paths are fetched.
-    $this->aliasManager->setCacheKey($this->path);
-
     $this->aliasPrefixList->expects($this->any())
       ->method('get')
       ->with($path_part1)
@@ -346,9 +336,6 @@ class AliasManagerTest extends UnitTestCase {
       ->method('get')
       ->with($this->cacheKey)
       ->willReturn((object) ['data' => $cached_paths]);
-
-    // Simulate a request so that the preloaded paths are fetched.
-    $this->aliasManager->setCacheKey($this->path);
 
     $this->aliasPrefixList->expects($this->any())
       ->method('get')
@@ -425,9 +412,6 @@ class AliasManagerTest extends UnitTestCase {
       ->method('get')
       ->with($this->cacheKey)
       ->willReturn((object) ['data' => $cached_paths]);
-
-    // Simulate a request so that the preloaded paths are fetched.
-    $this->aliasManager->setCacheKey($this->path);
 
     $this->aliasPrefixList->expects($this->any())
       ->method('get')
