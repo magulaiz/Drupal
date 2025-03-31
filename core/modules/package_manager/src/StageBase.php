@@ -576,11 +576,6 @@ abstract class StageBase implements LoggerAwareInterface {
    * @throws \Drupal\Core\TempStore\TempStoreException
    */
   public function destroy(bool $force = FALSE, ?TranslatableMarkup $message = NULL): void {
-    // If we're in direct-write mode, we don't want to destroy anything.
-    if ($this->isDirectWrite()) {
-      return;
-    }
-
     if (!$force) {
       $this->checkOwnership();
     }
@@ -591,7 +586,7 @@ abstract class StageBase implements LoggerAwareInterface {
     // If the stage directory exists, queue it to be automatically cleaned up
     // later by a queue (which may or may not happen during cron).
     // @see \Drupal\package_manager\Plugin\QueueWorker\Cleaner
-    if ($this->stageDirectoryExists()) {
+    if ($this->stageDirectoryExists() && !$this->isDirectWrite()) {
       $this->queueFactory->get('package_manager_cleanup')
         ->createItem($this->getStageDirectory());
     }

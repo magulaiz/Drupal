@@ -39,7 +39,6 @@ class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubsc
     $container->get(EventDispatcherInterface::class)->addSubscriber($this);
   }
 
-
   /**
    * Event listener that asserts the stage is not in direct-write mode.
    *
