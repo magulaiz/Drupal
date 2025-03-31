@@ -7,6 +7,7 @@ namespace Drupal\mysqli\Driver\Database\mysqli;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\ExceptionHandler as BaseExceptionHandler;
+use Drupal\Core\Database\Exception\SchemaPrimaryKeyMustBeDroppedException;
 use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
 use Drupal\Core\Database\Exception\SchemaTableKeyTooLargeException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
@@ -53,15 +54,18 @@ class ExceptionHandler extends BaseExceptionHandler {
       throw new IntegrityConstraintViolationException($message, $code, $exception);
     }
 
-    if ($exception->getSqlState() === '42000') {
-      match ($code) {
+    match ($exception->getSqlState()) {
+      'HY000' =>  match ($code) {
+        4111 => throw new SchemaPrimaryKeyMustBeDroppedException($message, $code, $exception),
+        default => throw new DatabaseExceptionWrapper($message, $code, $exception),
+      },
+      '42000' =>  match ($code) {
         1071 => throw new SchemaTableKeyTooLargeException($message, $code, $exception),
         1074 => throw new SchemaTableColumnSizeTooLargeException($message, $code, $exception),
-        default => throw new DatabaseExceptionWrapper($message, 0, $exception),
-      };
-    }
-
-    throw new DatabaseExceptionWrapper($message, 0, $exception);
+        default => throw new DatabaseExceptionWrapper($message, $code, $exception),
+      },
+      default => throw new DatabaseExceptionWrapper($message, $code, $exception),
+    };
   }
 
 }

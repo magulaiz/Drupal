@@ -192,16 +192,6 @@ class Connection extends BaseMySqlConnection {
   /**
    * {@inheritdoc}
    */
-  public function schema() {
-    if (empty($this->schema)) {
-      $this->schema = new Schema($this);
-    }
-    return $this->schema;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function driverTransactionManager(): TransactionManagerInterface {
     return new TransactionManager($this);
   }
