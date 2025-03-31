@@ -60,7 +60,7 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
    *
    * @var int
    */
-  protected const MAX_EXECUTION_TIME = 30;
+  protected const MAX_EXECUTION_TIME = 20;
 
   /**
    * {@inheritdoc}
