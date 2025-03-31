@@ -109,7 +109,8 @@ class MachineName extends Textfield {
       // valid input in programmatic form submissions.
       return is_scalar($input) ? (string) $input : '';
     }
-    return NULL;
+
+    return $element['#default_value'] ? (string) $element['#default_value'] : NULL;
   }
 
   /**
