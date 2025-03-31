@@ -235,6 +235,9 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     }
 
     // Sort by label.
+    if (!extension_loaded('intl')) {
+      return strcmp($a->label(), $b->label());
+    }
     return $collator->compare($a->label(), $b->label());
   }
 
