@@ -17,6 +17,7 @@ class Schema extends BaseMySqlSchema {
   /**
    * {@inheritdoc}
    */
+  // @phpstan-ignore missingType.return
   public function addField($table, $field, $spec, $keys_new = []) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add field '$table.$field': table doesn't exist.");
