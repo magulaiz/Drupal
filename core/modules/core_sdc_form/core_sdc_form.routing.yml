@@ -1,3 +1,11 @@
+core_sdc_form.form_in_component:
+  path: '/form-in-component'
+  defaults:
+    _controller: 'Drupal\core_sdc_form\Controller\FormInComponent::build'
+    _title: 'Form in component'
+  requirements:
+    _access: 'TRUE'
+
 core_sdc_form.form:
   path: '/sdc-form'
   defaults:

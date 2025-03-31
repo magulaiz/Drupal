@@ -36,7 +36,8 @@ use Drupal\Core\Render\Element;
  * @see \Drupal\Core\Render\Element\Textarea
  */
 #[FormElement('textfield')]
-class Textfield extends FormElementBase {
+//class Textfield extends FormElementBase {
+class Textfield extends RenderElementBase {
 
   /**
    * {@inheritdoc}
@@ -48,14 +49,14 @@ class Textfield extends FormElementBase {
       '#maxlength' => 128,
       '#autocomplete_route_name' => FALSE,
       '#process' => [
-        [static::class, 'processAutocomplete'],
-        [static::class, 'processAjaxForm'],
-        [static::class, 'processPattern'],
-        [static::class, 'processGroup'],
+//        [static::class, 'processAutocomplete'],
+//        [static::class, 'processAjaxForm'],
+//        [static::class, 'processPattern'],
+//        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
         [static::class, 'preRenderTextfield'],
-        [static::class, 'preRenderGroup'],
+//        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__textfield',
       '#theme_wrappers' => ['form_element'],
@@ -65,17 +66,18 @@ class Textfield extends FormElementBase {
   /**
    * {@inheritdoc}
    */
-  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    if ($input !== FALSE && $input !== NULL) {
-      // This should be a string, but allow other scalars since they might be
-      // valid input in programmatic form submissions.
-      if (!is_scalar($input)) {
-        $input = '';
-      }
-      return str_replace(["\r", "\n"], '', $input);
-    }
-    return NULL;
-  }
+//  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+//    $foo = 'bar';
+//    if ($input !== FALSE && $input !== NULL) {
+//      // This should be a string, but allow other scalars since they might be
+//      // valid input in programmatic form submissions.
+//      if (!is_scalar($input)) {
+//        $input = '';
+//      }
+//      return str_replace(["\r", "\n"], '', $input);
+//    }
+//    return NULL;
+//  }
 
   /**
    * Prepares a #type 'textfield' render element for input.html.twig.

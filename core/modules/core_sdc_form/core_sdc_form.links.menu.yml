@@ -1,3 +1,8 @@
+core_sdc_form.form_in_component:
+  title: "Form in component"
+  menu_name: main
+  route_name: core_sdc_form.form_in_component
+
 core_sdc_form.form:
   title: SDC form
   menu_name: main

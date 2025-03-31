@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
@@ -34,8 +35,26 @@ use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
  */
 #[RenderElement('component')]
 class ComponentElement extends RenderElementBase {
+//class ComponentElement extends RenderElementBase implements FormElementInterface {
 
   use DoTrustedCallbackTrait;
+
+//  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+//    return NULL;
+//  }
+
+//  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+//    $foo = 'bar';
+//    if ($input !== FALSE && $input !== NULL) {
+//      // This should be a string, but allow other scalars since they might be
+//      // valid input in programmatic form submissions.
+//      if (!is_scalar($input)) {
+//        $input = '';
+//      }
+//      return str_replace(["\r", "\n"], '', $input);
+//    }
+//    return NULL;
+//  }
 
   /**
    * Expands a component into an inline template with an attachment.
