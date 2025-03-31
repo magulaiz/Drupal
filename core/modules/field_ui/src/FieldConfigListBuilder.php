@@ -108,9 +108,8 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
       return $field_definition instanceof FieldConfigInterface;
     });
 
-    // Sort the entities using the entity class's sort() method.
-    // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
-    uasort($entities, [$this->entityType->getClass(), 'sort']);
+    // Sort the entities using the entity class's sortEntities() method.
+    $this->entityType->getClass()::sortEntities($entities);
     return $entities;
   }
 
@@ -185,6 +184,11 @@ class FieldConfigListBuilder extends ConfigEntityListBuilder {
         'url' => $entity->toUrl("{$entity->getTargetEntityTypeId()}-field-edit-form"),
         'attributes' => [
           'title' => $this->t('Edit field settings.'),
+          'class' => ['use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 1100,
+          ]),
         ],
       ];
     }
