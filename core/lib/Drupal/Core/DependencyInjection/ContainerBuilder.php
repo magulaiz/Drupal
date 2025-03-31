@@ -66,7 +66,7 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    * {@inheritdoc}
    */
   public function setParameter($name, $value): void {
-    if (strtolower($name) !== $name) {
+    if (strtolower($name) !== $name && strpos($name, 'env(') !== 0) {
       throw new \InvalidArgumentException("Parameter names must be lowercase: $name");
     }
     parent::setParameter($name, $value);
