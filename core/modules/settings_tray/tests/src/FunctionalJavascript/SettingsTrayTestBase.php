@@ -50,7 +50,9 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
     // link is added.
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.dialog-off-canvas-main-canvas.js-settings-tray-edit-mode'));
 
-    $block = $this->getSession()->getPage()->find('css', $block_selector);
+    $block = $this->assertSession()->waitForElementVisible('css', $block_selector);
+    $this->assertNotEmpty($block);
+
     $block->mouseOver();
     $block->click();
     $this->waitForOffCanvasToOpen();
