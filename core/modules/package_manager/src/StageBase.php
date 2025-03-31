@@ -149,9 +149,9 @@ abstract class StageBase implements LoggerAwareInterface {
    *
    * Consists of a unique random string and the current class name.
    *
-   * @var string[]
+   * @var string[]|null
    */
-  private $lock;
+  private ?array $lock = NULL;
 
   /**
    * The shared temp store.
@@ -340,6 +340,7 @@ abstract class StageBase implements LoggerAwareInterface {
       $id,
       static::class,
       $this->getType(),
+      $this->isDirectWrite(),
     ]);
     $this->claim($id);
 
@@ -693,7 +694,7 @@ abstract class StageBase implements LoggerAwareInterface {
       )->render());
     }
 
-    if ($stored_lock === [$unique_id, static::class, $this->getType()]) {
+    if (array_slice($stored_lock, 0, 3) === [$unique_id, static::class, $this->getType()]) {
       $this->lock = $stored_lock;
 
       if ($this->isDirectWrite()) {
@@ -902,12 +903,17 @@ abstract class StageBase implements LoggerAwareInterface {
    * @return bool
    */
   final public function isDirectWrite(): bool {
-    $reflector = new \ReflectionClass($this);
-
-    return (
-      Settings::get('package_manager_allow_direct_write', FALSE) &&
-      $reflector->getAttributes(AllowDirectWrite::class)
-    );
+    // The use of direct-write is stored as part of the lock so that it will
+    // remain consistent during the stage's entire life cycle, even if the
+    // underlying global settings are changed.
+    if ($this->lock) {
+      return $this->lock[3];
+    }
+    elseif ($this->isAvailable()) {
+      $reflector = new \ReflectionClass($this);
+      return Settings::get('package_manager_allow_direct_write', FALSE) && $reflector->getAttributes(AllowDirectWrite::class);
+    }
+    throw new \LogicException(__METHOD__ . '() cannot be called because the stage has not been created or claimed.');
   }
 
 }
