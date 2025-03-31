@@ -87,7 +87,7 @@ function node_requirements($phase): array {
                 'display_id' => $display_id,
               ]);
               if ($url->access()) {
-                $node_status_filter_problematic_views_list[] = Link::fromTextAndUrl($text, $url)->toRenderable();
+                $node_status_filter_problematic_views_list[] = Link::fromTextAndUrl($text, $url)->toString();
               }
               else {
                 $node_status_filter_problematic_views_list[] = $text;

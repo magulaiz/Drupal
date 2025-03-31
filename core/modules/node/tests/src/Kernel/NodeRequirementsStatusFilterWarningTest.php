@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Entity\View;
 
 /**
@@ -13,6 +14,8 @@ use Drupal\views\Entity\View;
  * @group node
  */
 class NodeRequirementsStatusFilterWarningTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -163,15 +166,28 @@ class NodeRequirementsStatusFilterWarningTest extends KernelTestBase {
   }
 
   /**
-   * Tests description links when Views UI is enabled.
+   * Tests description when Views UI is enabled but user cannot edit views.
    */
-  public function testDescriptionWithViewsUiEnabled(): void {
+  public function testDescriptionWithViewsUiEnabledWithoutUserHavingEditViewDisplayAccess(): void {
     $this->enableModules(['views_ui']);
     $this->enableNodeAccessTestModule();
     $this->createTestView('test_view', 'Test View', TRUE, ['status' => $this->getStatusFilterConfig()]);
 
     $requirements = $this->getRequirements();
     self::assertEquals('The <em class="placeholder">Test View (Default)</em> view uses the <em class="placeholder">Published status or admin user</em> filter but it has no effect because the following module(s) control access: <em class="placeholder">Node module access tests</em>. Review and consider removing the filter.', $this->renderStatusFilterDescription($requirements));
+  }
+
+  /**
+   * Tests description when Views UI is enabled but user cam edit views.
+   */
+  public function testDescriptionWithViewsUiEnabledWithUserHavingEditViewDisplayAccess(): void {
+    $this->enableModules(['views_ui']);
+    $this->setCurrentUser($this->createUser(['administer views']));
+    $this->enableNodeAccessTestModule();
+    $this->createTestView('test_view', 'Test View', TRUE, ['status' => $this->getStatusFilterConfig()]);
+
+    $requirements = $this->getRequirements();
+    self::assertEquals('The <em class="placeholder"><a href="/admin/structure/views/view/test_view/edit/default">Test View (Default)</a></em> view uses the <em class="placeholder">Published status or admin user</em> filter but it has no effect because the following module(s) control access: <em class="placeholder">Node module access tests</em>. Review and consider removing the filter.', $this->renderStatusFilterDescription($requirements));
   }
 
   /**
