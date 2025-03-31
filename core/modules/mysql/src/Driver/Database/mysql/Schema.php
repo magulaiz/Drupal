@@ -2,7 +2,6 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Exception\SchemaPrimaryKeyMustBeDroppedException;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
