@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\automated_cron\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\State\StateInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -13,20 +16,12 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class AutomatedCron implements EventSubscriberInterface {
 
-  /**
-   * The cron configuration.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
-
   public function __construct(
-    protected \Closure $cron_closure,
-    ConfigFactoryInterface $config_factory,
+    #[AutowireServiceClosure('cron')]
+    protected readonly \Closure $cron,
+    protected readonly ConfigFactoryInterface $configFactory,
     protected StateInterface $state,
-  ) {
-    $this->config = $config_factory->get('automated_cron.settings');
-  }
+  ) {}
 
   /**
    * Run the automated cron if enabled.
@@ -34,12 +29,12 @@ class AutomatedCron implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\TerminateEvent $event
    *   The Event to process.
    */
-  public function onTerminate(TerminateEvent $event) {
-    $interval = $this->config->get('interval');
+  public function onTerminate(TerminateEvent $event): void {
+    $interval = $this->configFactory->get('automated_cron.settings')->get('interval');
     if ($interval > 0) {
       $cron_next = $this->state->get('system.cron_last', 0) + $interval;
       if ((int) $event->getRequest()->server->get('REQUEST_TIME') > $cron_next) {
-        ($this->cron_closure)()->run();
+        ($this->cron)()->run();
       }
     }
   }
