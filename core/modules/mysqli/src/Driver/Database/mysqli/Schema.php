@@ -14,13 +14,14 @@ use Drupal\mysql\Driver\Database\mysql\Schema as BaseMySqlSchema;
  */
 class Schema extends BaseMySqlSchema {
 
-  // @phpstan-ignore-next-line missingType.return
-
+  // @phpcs:disable
   /**
    * {@inheritdoc}
    */
+  // @phpstan-ignore-next-line missingType.return
   public function addField($table, $field, $spec, $keys_new = []) {
-    if (!$this->tableExists($table)) {
+  // @phpcs:enable
+  if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add field '$table.$field': table doesn't exist.");
     }
     if ($this->fieldExists($table, $field)) {
