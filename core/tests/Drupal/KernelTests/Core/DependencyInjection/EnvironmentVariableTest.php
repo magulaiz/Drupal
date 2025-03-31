@@ -25,7 +25,7 @@ class EnvironmentVariableTest extends KernelTestBase {
 
     $_ENV['CONTAINER_ENV_TEST_STRING'] = 'test-string';
     $_ENV['CONTAINER_ENV_TEST_INTEGER'] = 123;
-    $_ENV['CONTAINER_ENV_TEST_BOOLEAN'] = true;
+    $_ENV['CONTAINER_ENV_TEST_BOOLEAN'] = TRUE;
     parent::setUp();
   }
 
