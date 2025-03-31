@@ -113,6 +113,11 @@
  *   that this event is NOT dispatched when the stage is operating in
  *   direct-write mode.
  *
+ * Since the apply events are not dispatched in direct-write mode, event
+ * subscribers that want to prevent a stage from moving through its life cycle
+ * in direct-write mode should do it by subscribing to PreCreateEvent or
+ * StatusCheckEvent.
+ *
  * @section sec_stage_api Stage API: Public methods
  * The public API of any stage consists of the following methods:
  *

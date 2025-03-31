@@ -14,11 +14,6 @@ namespace Drupal\package_manager\Attribute;
  * directly on the live site, but ONLY if the
  * `package_manager_allow_direct_write` setting is set to TRUE.
  *
- * When operating in direct-write mode, the PreApplyEvent and PostApplyEvent
- * events are not dispatched. Event subscribers that want to prevent a stage
- * from moving through its lifecycle in direct-write mode should do that by
- * subscribing to PreCreateEvent or StatusCheckEvent.
- *
  * @see \Drupal\package_manager\StageBase::isDirectWrite()
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
