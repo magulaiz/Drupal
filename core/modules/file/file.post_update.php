@@ -44,7 +44,7 @@ function file_post_update_add_playsinline(array &$sandbox = []): ?TranslatableMa
 /**
  * Add the preload configuration to existing media formatters.
  */
-function file_post_update_preload_setting(array &$sandbox = NULL): void {
+function file_post_update_preload_setting(array &$sandbox = []): void {
   $file_config_updater = \Drupal::classResolver(FileConfigUpdater::class);
   assert($file_config_updater instanceof FileConfigUpdater);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $view_display) use ($file_config_updater): bool {
