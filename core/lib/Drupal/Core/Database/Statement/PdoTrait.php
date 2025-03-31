@@ -49,6 +49,19 @@ trait PdoTrait {
   }
 
   /**
+   * Returns the client-level database statement object.
+   *
+   * This method should normally be used only within database driver code.
+   *
+   * @return object
+   *   The client-level database statement.
+   *
+   * @throws \RuntimeException
+   *   If the client-level statement is not set.
+   */
+  abstract public function getClientStatement(): object;
+
+  /**
    * Sets the default fetch mode for the PDO statement.
    *
    * @param \Drupal\Core\Database\FetchAs $mode
