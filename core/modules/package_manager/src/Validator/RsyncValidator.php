@@ -38,6 +38,12 @@ final class RsyncValidator implements EventSubscriberInterface {
    *   The event being handled.
    */
   public function validate(PreOperationStageEvent $event): void {
+    // If the stage is going to change the active directory directly, we don't
+    // need rsync.
+    if ($event->stage->isDirectWrite()) {
+      return;
+    }
+
     try {
       $this->executableFinder->find('rsync');
       $rsync_found = TRUE;

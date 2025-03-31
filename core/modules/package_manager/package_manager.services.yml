@@ -201,3 +201,9 @@ services:
   PhpTuf\ComposerStager\Internal\Translation\Service\SymfonyTranslatorProxyInterface:
     class: PhpTuf\ComposerStager\Internal\Translation\Service\SymfonyTranslatorProxy
     public: false
+
+  Drupal\package_manager\DirectWritePreconditionBypass:
+    decorates: 'PhpTuf\ComposerStager\API\Precondition\Service\ActiveAndStagingDirsAreDifferentInterface'
+    arguments:
+      - '@.inner'
+    public: false

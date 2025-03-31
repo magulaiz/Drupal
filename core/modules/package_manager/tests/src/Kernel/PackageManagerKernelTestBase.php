@@ -12,6 +12,7 @@ use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\fixture_manipulator\StageFixtureManipulator;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\package_manager\Attribute\AllowDirectWrite;
 use Drupal\package_manager\Event\PreApplyEvent;
 use Drupal\package_manager\Event\PreOperationStageEvent;
 use Drupal\package_manager\Exception\StageEventException;
@@ -173,11 +174,15 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
   /**
    * Creates a stage object for testing purposes.
    *
+   * @param class-string $class
+   *   (optional) The class of the stage object to create. Defaults to
+   *   \Drupal\Tests\package_manager\Kernel\TestStage.
+   *
    * @return \Drupal\Tests\package_manager\Kernel\TestStage
    *   A stage object, with test-only modifications.
    */
-  protected function createStage(): TestStage {
-    return new TestStage(
+  protected function createStage(string $class = TestStage::class): TestStage {
+    return new $class(
       $this->container->get(PathLocator::class),
       $this->container->get(BeginnerInterface::class),
       $this->container->get(StagerInterface::class),
@@ -472,6 +477,19 @@ class TestStage extends StageBase {
   public function __sleep(): array {
     return [];
   }
+
+}
+
+/**
+ * Defines a stage specifically for testing purposes that allows direct-write.
+ */
+#[AllowDirectWrite]
+class DirectWriteTestStage extends TestStage {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected string $type = 'package_manager:test_direct_write';
 
 }
 
