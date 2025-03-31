@@ -77,7 +77,7 @@ class DependencyVariation implements CacheableDependencyInterface {
    *   this will only ever contain cache tags and max-age.
    */
   public static function parsePseudoCacheContext(string $cache_context): CacheableMetadata {
-    [$cache_context_id, $parameter] = explode(':', $cache_context, 2);
+    [, $parameter] = explode(':', $cache_context, 2);
     [$cache_tag_string, $max_age] = explode('|', $parameter);
     return (new CacheableMetadata())
       ->addCacheTags(explode(',', $cache_tag_string))
