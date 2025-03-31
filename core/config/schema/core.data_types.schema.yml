@@ -940,6 +940,14 @@ field.value.timestamp:
       type: timestamp
       label: 'Value'
 
+field.value.language:
+  type: mapping
+  label: 'Language value'
+  mapping:
+    value:
+      type: string
+      label: 'Language value'
+
 # Text with a text format.
 text_format:
   type: mapping
