@@ -6,6 +6,7 @@ namespace Drupal\Tests\settings_tray\FunctionalJavascript;
 
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationIsClassBlock;
 use Drupal\settings_tray_test\Plugin\Block\SettingsTrayFormAnnotationNoneBlock;
+use Drupal\Tests\WaitTerminateTestTrait;
 use Drupal\user\Entity\Role;
 
 /**
@@ -14,6 +15,8 @@ use Drupal\user\Entity\Role;
  * @group settings_tray
  */
 class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
+
+  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -44,13 +47,13 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
       'search content',
     ]);
     $this->drupalLogin($user);
+    $this->setWaitForTerminate();
   }
 
   /**
    * Tests opening off-canvas dialog by click blocks and elements in the blocks.
    */
   public function testBlocks(): void {
-    $this->markTestSkipped('Not interested in this one.');
     foreach ($this->getBlockTests() as $test) {
       call_user_func_array([$this, 'doTestBlocks'], array_values($test));
     }
