@@ -116,4 +116,19 @@ class DirectWriteTest extends PackageManagerKernelTestBase implements EventSubsc
     $this->assertFalse($this->createStage()->isDirectWrite());
   }
 
+  /**
+   * Tests that the stage's direct-write status is part of its locking info.
+   */
+  public function testDirectWriteFlagIsLocked(): void {
+    $this->setSetting('package_manager_allow_direct_write', TRUE);
+    $stage = $this->createStage(DirectWriteTestStage::class);
+    $this->assertTrue($stage->isDirectWrite());
+    $stage->create();
+    $this->setSetting('package_manager_allow_direct_write', FALSE);
+    $this->assertTrue($stage->isDirectWrite());
+    // Only once the stage is destroyed should it reflect the changed setting.
+    $stage->destroy();
+    $this->assertFalse($stage->isDirectWrite());
+  }
+
 }
