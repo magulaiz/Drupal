@@ -141,7 +141,14 @@ function template_preprocess_block(&$variables): void {
 
   // Proactively add aria-describedby if possible to improve accessibility.
   if ($variables['label'] && isset($variables['attributes']['role'])) {
-    $variables['title_attributes']['id'] = Html::getUniqueId($variables['label']);
+    $label = $variables['label'];
+    // If the label is an array, render it to a string.
+    if (is_array($label)) {
+      /** @var RendererInterface $renderer */
+      $renderer = \Drupal::service('renderer');
+      $label = $renderer->renderInIsolation($label);
+    }
+    $variables['title_attributes']['id'] = Html::getUniqueId($label);
     $variables['attributes']['aria-describedby'] = $variables['title_attributes']['id'];
   }
 

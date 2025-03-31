@@ -35,7 +35,7 @@ class BlockHtmlTest extends BrowserTestBase {
     ]));
 
     // Enable the test_html block, to test HTML ID and attributes.
-    \Drupal::keyValue('block_test')->set('attributes', ['data-custom-attribute' => 'foo']);
+    \Drupal::keyValue('block_test')->set('attributes', ['data-custom-attribute' => 'foo', 'role' => 'search']);
     \Drupal::keyValue('block_test')->set('content', $this->randomMachineName());
     $this->drupalPlaceBlock('test_html', ['id' => 'test_html_block']);
 
@@ -55,6 +55,19 @@ class BlockHtmlTest extends BrowserTestBase {
 
     // Ensure expected markup for a menu block.
     $this->assertSession()->elementExists('xpath', '//nav[@id="block-test-menu-block"]/ul/li');
+
+    // Locate the block element.
+    $block_element = $this->assertSession()->elementExists('css', '#block-test-html-block');
+
+    // Verify the block has the role attribute.
+    $this->assertEquals('search', $block_element->getAttribute('role'), 'Block has role="search".');
+
+    // Find the block title element (h2) and get its ID.
+    $title_element = $this->assertSession()->elementExists('xpath', '//div[@id="block-test-html-block"]/h2');
+    $title_id = $title_element->getAttribute('id');
+
+    // Verify the block has aria-describedby set to the title ID.
+    $this->assertEquals($title_id, $block_element->getAttribute('aria-describedby'), 'aria-describedby is correctly set to the title ID.');
   }
 
 }
