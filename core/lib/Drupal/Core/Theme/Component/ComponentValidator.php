@@ -134,6 +134,8 @@ class ComponentValidator {
       static fn(array $error): string => sprintf("[%s] %s", $error['property'], $error['message']),
       $this->validator->getErrors()
     );
+    // Reset the validator.
+    $this->validator->reset();
     $message_parts = [
       ...$message_parts,
       ...$missing_class_errors,
@@ -188,16 +190,17 @@ class ComponentValidator {
     ] = $this->validateClassProps($schema, $props_raw, $component_id);
     $schema = Validator::arrayToObjectRecursive($schema);
     $props = Validator::arrayToObjectRecursive($props_raw);
-    $validator = $this->validator;
-    $validator->reset();
-    $validator->validate($props, $schema, Constraint::CHECK_MODE_TYPE_CAST);
-    $validator->getErrors();
-    if ($validator->isValid()) {
+    // Ensure $this->validator is not null.
+    $this->setValidator($this->validator);
+    $this->validator->reset();
+    $this->validator->validate($props, $schema, Constraint::CHECK_MODE_TYPE_CAST);
+    $this->validator->getErrors();
+    if ($this->validator->isValid()) {
       return TRUE;
     }
     // Dismiss type errors if the prop received a render array.
     $errors = array_filter(
-      $validator->getErrors(),
+      $this->validator->getErrors(),
       function (array $error) use ($context): bool {
         if (($error['constraint'] ?? '') !== 'type') {
           return TRUE;
@@ -229,6 +232,8 @@ class ComponentValidator {
       $errors
     );
     $message = implode("\n", $message_parts);
+    // Reset the validator.
+    $this->validator->reset();
     throw new InvalidComponentException($message);
   }
 
