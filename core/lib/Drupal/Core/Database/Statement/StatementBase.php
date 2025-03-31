@@ -98,18 +98,6 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   }
 
   /**
-   * Returns the client-level database statement object.
-   *
-   * This method should normally be used only within database driver code.
-   *
-   * @return object
-   *   The client-level database statement, for example \PDOStatement.
-   */
-  public function getClientStatement(): object {
-    return $this->clientStatement;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getConnectionTarget(): string {

@@ -50,6 +50,20 @@ class Statement extends StatementBase {
   }
 
   /**
+   * Returns the client-level database statement object.
+   *
+   * This method should normally be used only within database driver code.
+   *
+   * @return \mysqli_stmt
+   *   The client-level database statement.
+   */
+  public function getClientStatement(): \mysqli_stmt {
+    $clientStatement = $this->clientStatement;
+    assert($clientStatement instanceof \mysqli_stmt);
+    return $clientStatement;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
@@ -66,7 +80,7 @@ class Statement extends StatementBase {
 
     try {
       // Prepare the lower-level statement if it's not been prepared already.
-      if (!isset($this->clientStatement)) {
+      if (!$this->hasClientStatement()) {
         // Replace named placeholders with positional ones if needed.
         $this->paramsPositions = array_flip(array_keys($args));
         $converter = new NamedPlaceholderConverter();
@@ -85,11 +99,11 @@ class Statement extends StatementBase {
 
       // In mysqli, the results of the statement execution are returned in a
       // different object than the statement itself.
-      $return = $this->clientStatement->execute($args);
+      $return = $this->getClientStatement()->execute($args);
       $this->result = new Result(
         $this->fetchMode,
         $this->fetchOptions,
-        $this->clientStatement->get_result(),
+        $this->getClientStatement()->get_result(),
         $this->clientConnection,
       );
       $this->markResultsetIterable($return);
