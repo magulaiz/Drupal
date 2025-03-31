@@ -39,7 +39,7 @@ class StandardJavascriptTest extends WebDriverTestBase {
     $this->drupalGet('');
     $this->assertBigPipePlaceholderReplacementCount(4);
 
-    // Front page with warm render caches: zero placeholders.
+    // Front page with warm render caches: Zero placeholders.
     $this->drupalGet('');
     $this->assertBigPipePlaceholderReplacementCount(0);
 
