@@ -108,7 +108,12 @@ class SiteInformationForm extends ConfigFormBase {
     $form['site_information']['site_slogan'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Slogan'),
-      '#config_target' => 'system.site:slogan',
+      '#config_target' => new ConfigTarget(
+        'system.site',
+        'slogan',
+        static::class . '::transformSloganValue',
+        static::class . '::transformSloganValue',
+      ),
       '#description' => $this->t("How this is used depends on your site's theme."),
       '#maxlength' => 255,
     ];
@@ -118,7 +123,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#config_target' => new ConfigTarget(
         'system.site',
         'mail',
-        fromConfig: fn($value) => $value ?: ini_get('sendmail_from'),
+        static::class . '::transformMailValue',
       ),
       '#description' => $this->t("The <em>From</em> address in automated emails sent during registration and new password requests, and other notifications. (Use an address ending in your site's domain to help prevent this email being flagged as spam.)"),
       '#required' => TRUE,
@@ -208,6 +213,34 @@ class SiteInformationForm extends ConfigFormBase {
       ->save();
 
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Transforms the email value either from what's stored in config or php.ini.
+   *
+   * @param string|null $value
+   *   The site email address. If empty, returns the email from php.ini.
+   *
+   * @return string
+   *   The site email address.
+   *
+   * @see https://www.php.net/manual/en/mail.configuration.php#ini.sendmail-from
+   */
+  public static function transformMailValue(?string $value): string {
+    return $value ?: ini_get('sendmail_from');
+  }
+
+  /**
+   * Transforms the slogan ensure no empty string values.
+   *
+   * @param string|null $value
+   *   The site slogan value or NULL if no slogan is set.
+   *
+   * @return string|null
+   *   The site slogan string or NULL.
+   */
+  public static function transformSloganValue(?string $value): ?string {
+    return $value ?: NULL;
   }
 
 }
