@@ -4,10 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Theme\Component;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\Component\ComponentValidator;
 use Drupal\Core\Render\Component\Exception\InvalidComponentException;
 use Drupal\Core\Plugin\Component;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\Constraints\FormatConstraint;
+use JsonSchema\Entity\JsonPointer;
+use JsonSchema\Validator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
@@ -118,7 +123,7 @@ class ComponentValidatorTest extends TestCase {
       $definition
     );
     $component_validator = new ComponentValidator();
-    $component_validator->setValidator();
+    $component_validator->setValidator(new Validator((new Factory())->setConstraintClass('format', UrlHelperFormatConstraint::class)));
     $this->assertTrue(
       $component_validator->validateProps($context, $component),
       'The valid component props threw an error.'
@@ -137,6 +142,19 @@ class ComponentValidatorTest extends TestCase {
         [
           'text' => 'Can Pica',
           'href' => 'https://www.drupal.org',
+          'target' => '_blank',
+          'attributes' => new Attribute(['key' => 'value']),
+        ],
+        'my-cta',
+        static::loadComponentDefinitionFromFs('my-cta'),
+      ],
+      [
+        [
+          'text' => 'Can Pica',
+          // This is a valid URI but for v5.2 of justinrainbow/json-schema it
+          // does not pass validation without a custom constraint for format.
+          // We pass a custom factory and it should be used.
+          'href' => 'entity:node/1',
           'target' => '_blank',
           'attributes' => new Attribute(['key' => 'value']),
         ],
@@ -236,6 +254,23 @@ class ComponentValidatorTest extends TestCase {
         'description' => 'My description',
       ]
     );
+  }
+
+}
+
+class UrlHelperFormatConstraint extends FormatConstraint {
+
+  public function check(&$element, $schema = NULL, ?JsonPointer $path = NULL, $i = NULL): void {
+    if (!isset($schema->format) || $this->factory->getConfig(self::CHECK_MODE_DISABLE_FORMAT)) {
+      return;
+    }
+    if ($schema->format === 'uri') {
+      if (\is_string($element) && !UrlHelper::isValid($element)) {
+        $this->addError($path, 'Invalid URL format', 'format', array('format' => $schema->format));
+      }
+      return;
+    }
+    parent::check($element, $schema, $path, $i);
   }
 
 }

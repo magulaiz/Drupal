@@ -188,7 +188,8 @@ class ComponentValidator {
     ] = $this->validateClassProps($schema, $props_raw, $component_id);
     $schema = Validator::arrayToObjectRecursive($schema);
     $props = Validator::arrayToObjectRecursive($props_raw);
-    $validator = new Validator();
+    $validator = $this->validator;
+    $validator->reset();
     $validator->validate($props, $schema, Constraint::CHECK_MODE_TYPE_CAST);
     $validator->getErrors();
     if ($validator->isValid()) {
