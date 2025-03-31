@@ -258,15 +258,21 @@ class ComponentValidatorTest extends TestCase {
 
 }
 
+/**
+ * Defines a custom format constraint for json-schema.
+ */
 class UrlHelperFormatConstraint extends FormatConstraint {
 
+  /**
+   * {@inheritdoc}
+   */
   public function check(&$element, $schema = NULL, ?JsonPointer $path = NULL, $i = NULL): void {
     if (!isset($schema->format) || $this->factory->getConfig(self::CHECK_MODE_DISABLE_FORMAT)) {
       return;
     }
     if ($schema->format === 'uri') {
       if (\is_string($element) && !UrlHelper::isValid($element)) {
-        $this->addError($path, 'Invalid URL format', 'format', array('format' => $schema->format));
+        $this->addError($path, 'Invalid URL format', 'format', ['format' => $schema->format]);
       }
       return;
     }
