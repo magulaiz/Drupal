@@ -44,6 +44,7 @@ function node_requirements($phase): array {
       $node_status_filter_problematic_views = [];
       $active_view_ids = \Drupal::entityQuery('view')
         ->condition('status', TRUE)
+        ->accessCheck(FALSE)
         ->execute();
 
       $views_storage = \Drupal::entityTypeManager()->getStorage('view');
