@@ -49,6 +49,7 @@ class Some extends PagerPluginBase {
     $form['items_per_page'] = [
       '#title' => $pager_text['items per page title'],
       '#type' => 'number',
+      '#required' => TRUE,
       '#min' => 0,
       '#description' => $pager_text['items per page description'],
       '#default_value' => $this->options['items_per_page'],
@@ -56,11 +57,13 @@ class Some extends PagerPluginBase {
 
     $form['offset'] = [
       '#type' => 'number',
+      '#required' => TRUE,
       '#min' => 0,
       '#title' => $this->t('Offset (number of items to skip)'),
       '#description' => $this->t('For example, set this to 3 and the first 3 items will not be displayed.'),
       '#default_value' => $this->options['offset'],
     ];
+    return $form;
   }
 
   /**
