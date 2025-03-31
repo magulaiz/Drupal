@@ -98,6 +98,24 @@ abstract class StatementBase implements \Iterator, StatementInterface {
   }
 
   /**
+   * Returns the client-level database statement object.
+   *
+   * This method should normally be used only within database driver code.
+   *
+   * @return object
+   *   The client-level database statement.
+   *
+   * @throws \RuntimeException
+   *   If the client-level statement is not set.
+   */
+  public function getClientStatement(): object {
+    if ($this->hasClientStatement()) {
+      return $this->clientStatement;
+    }
+    throw new \LogicException('Client statement not initialized');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getConnectionTarget(): string {

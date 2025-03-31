@@ -58,9 +58,11 @@ class Statement extends StatementBase {
    *   The client-level database statement.
    */
   public function getClientStatement(): \mysqli_stmt {
-    $clientStatement = $this->clientStatement;
-    assert($clientStatement instanceof \mysqli_stmt);
-    return $clientStatement;
+    if ($this->hasClientStatement()) {
+      assert($this->clientStatement instanceof \mysqli_stmt);
+      return $this->clientStatement;
+    }
+    throw new \LogicException('\\mysqli_stmt not initialized');
   }
 
   /**
