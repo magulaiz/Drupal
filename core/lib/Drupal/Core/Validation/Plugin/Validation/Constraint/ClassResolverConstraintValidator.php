@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
@@ -15,14 +16,14 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class ClassResolverConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
-  public function __construct(protected ContainerInterface $container) {}
+  public function __construct(protected ClassResolver $classResolver) {}
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container
+      $container->get('class_resolver')
     );
   }
 
@@ -34,20 +35,18 @@ class ClassResolverConstraintValidator extends ConstraintValidator implements Co
     if (!$constraint instanceof ClassResolverConstraint) {
       throw new UnexpectedTypeException($constraint, ClassResolverConstraint::class);
     }
-    $service = $this->container->get($constraint->callback[0]);
-    if ($service === NULL) {
-      throw new \InvalidArgumentException('The service "' . $constraint->callback[0] . '" does not exist.');
+    $service = $this->classResolver->getInstanceFromDefinition($constraint->classOrService);
+
+    if (!method_exists($service, $constraint->method)) {
+      throw new \InvalidArgumentException('The method "' . $constraint->method . '" does not exist on the service "' . $constraint->classOrService . '".');
     }
 
-    if (!method_exists($service, $constraint->callback[1])) {
-      throw new \InvalidArgumentException('The method "' . $constraint->callback[1] . '" does not exist on the service "' . $constraint->callback[0] . '".');
-    }
-
-    $result = $service->{$constraint->callback[1]}($value);
+    $result = $service->{$constraint->method}($value);
     if ($result !== TRUE) {
       $this->context->buildViolation($constraint->message)
-        ->setParameter('@service', $constraint->callback[0])
-        ->setParameter('@method', $constraint->callback[1])
+        ->setParameter('@classOrService', $constraint->classOrService)
+        ->setParameter('@method', $constraint->method)
+        ->setParameter('@value', $value)
         ->addViolation();
     }
   }

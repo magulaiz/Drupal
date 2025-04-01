@@ -10,6 +10,11 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
  * Checks if a callback method on a service returns true.
+ *
+ *  For example to call the method 'isValidScheme' on the service
+ *  'stream_wrapper_manager', use: ['stream_wrapper_manager', 'isValidScheme'].
+ *  This method should return TRUE when the result is valid. All other values
+ *  will be considered as invalid.
  */
 #[Constraint(
   id: 'ClassResolver',
@@ -23,32 +28,28 @@ class ClassResolverConstraint extends SymfonyConstraint {
    *
    * @var string
    */
-  public string $message = "The '@callback` method on '@service' evaluated as invalid.";
+  public string $message = "Calling '@callback` method with value '@value' on '@classOrService' evaluated as invalid.";
 
   /**
-   * Array with service name and method name to call.
-   *
-   * For example to call the method 'isValidScheme' on the service
-   * 'stream_wrapper_manager', use: ['stream_wrapper_manager', 'isValidScheme'].
-   * This method should return TRUE when the result is valid. All other values
-   * will be considered as invalid.
+   * Class or service.
    *
    * @var array
    */
-  public array $callback;
+  public string $classOrService;
+
 
   /**
-   * {@inheritdoc}
+   * Method to call.
+   *
+   * @var string
    */
-  public function getDefaultOption(): ?string {
-    return 'callback';
-  }
+  public string $method;
 
   /**
    * {@inheritdoc}
    */
   public function getRequiredOptions(): array {
-    return ['callback'];
+    return ['classOrService', 'method'];
   }
 
 }

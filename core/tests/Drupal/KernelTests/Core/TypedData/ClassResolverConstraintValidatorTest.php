@@ -30,7 +30,6 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
     parent::setUp();
 
     $this->typedData = $this->container->get('typed_data_manager');
-
     $this->container->set('test.service', new class() {
 
       public function returnTrue(): bool {
@@ -49,31 +48,44 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
 
   }
 
-  public function testValidation(): void {
-    $definition = DataDefinition::create('integer')
-      ->addConstraint('ClassResolver', ['test.service', 'returnFalse']);
-    $typed_data = $this->typedData->create($definition, 1);
-    $violations = $typed_data->validate();
-    $this->assertEquals(1, $violations->count(), 'Validation failed when returning FALSE.');
+  /**
+   * Data provider for service validation test cases.
+   */
+  public function provideServiceValidationCases(): array {
+    return [
+      'false result' => [
+        'method' => 'returnFalse',
+        'expected_violations' => 1,
+        'message' => 'Validation failed when returning FALSE.',
+      ],
+      'true result' => [
+        'method' => 'returnTrue',
+        'expected_violations' => 0,
+        'message' => 'Validation succeeds when returning TRUE.',
+      ],
+      'truthy result' => [
+        'method' => 'returnNotTrue',
+        'expected_violations' => 1,
+        'message' => 'Validation fails when returning \'true\'.',
+      ],
+    ];
+  }
 
+  /**
+   * @dataProvider provideServiceValidationCases
+   */
+  public function testValidationForService(string $method, int $expected_violations, string $message): void {
     $definition = DataDefinition::create('integer')
-      ->addConstraint('ClassResolver', ['test.service', 'returnTrue']);
+      ->addConstraint('ClassResolver', ['classOrService' => 'test.service', 'method' => $method]);
     $typed_data = $this->typedData->create($definition, 1);
     $violations = $typed_data->validate();
-    $this->assertEquals(0, $violations->count(), 'Validation succeeds when returning TRUE.');
-
-    // Test truthy
-    $definition = DataDefinition::create('integer')
-      ->addConstraint('ClassResolver', ['test.service', 'returnNotTrue']);
-    $typed_data = $this->typedData->create($definition, 1);
-    $violations = $typed_data->validate();
-    $this->assertEquals(1, $violations->count(), 'Validation succeeds when returning \'true\'.');
+    $this->assertEquals($expected_violations, $violations->count(), $message);
   }
 
   public function testNonExistingMethod(): void {
     // Test with a non-existing method.
     $definition = DataDefinition::create('integer')
-      ->addConstraint('ClassResolver', ['test.service', 'missingMethod']);
+      ->addConstraint('ClassResolver', ['classOrService' => 'test.service', 'method' => 'missingMethod']);
     $typed_data = $this->typedData->create($definition, 1);
 
     $this->expectException(\InvalidArgumentException::class);
@@ -84,11 +96,10 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
   public function testNonExistingService(): void {
     // Test with a non-existing service.
     $definition = DataDefinition::create('integer')
-      ->addConstraint('ClassResolver', ['phantom.service', 'boo']);
+      ->addConstraint('ClassResolver', ['classOrService' => '\Drupal\NonExisting\Class', 'method' => 'boo']);
     $typed_data = $this->typedData->create($definition, 1);
 
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('You have requested a non-existent service "phantom.service".');
+    $this->expectExceptionMessage('Class "\Drupal\NonExisting\Class" does not exist.');
     $typed_data->validate();
   }
 

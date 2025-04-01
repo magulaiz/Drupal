@@ -344,7 +344,9 @@ system.file:
       type: string
       label: 'Default download method'
       constraints:
-        ClassResolver: ['stream_wrapper_manager', 'isValidScheme']
+        ClassResolver:
+          classOrService: 'stream_wrapper_manager'
+          method: 'isValidScheme'
     path:
       type: mapping
       label: 'Path settings'
