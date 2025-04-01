@@ -12,14 +12,10 @@ use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
 /**
  * Tests recipe unpacking.
  *
- * Things we still need to test:
- * - Unpacking only works on recipes. Trying to unpack a module or theme either
- *   has no effect, or throws an error.
- * -
- *
  * @group Unpack
  */
 class UnpackRecipeTest extends BuildTestBase {
+
   use ExecTrait;
 
   /**
@@ -67,6 +63,20 @@ class UnpackRecipeTest extends BuildTestBase {
   }
 
   /**
+   * Tests that only recipes can be unpacked.
+   */
+  public function testOnlyRecipesCanBeUnpacked(): void {
+    $this->markTestSkipped('Not implemented yet.');
+  }
+
+  /**
+   * Tests that the unpacking process will leave extant constraints alone.
+   */
+  public function testUnpackingRespectsExistingConstraints(): void {
+    $this->markTestSkipped('Not implemented yet.');
+  }
+
+  /**
    * Tests the dependencies unpack on install.
    */
   public function testAutomaticUnpack(): void {
@@ -79,7 +89,7 @@ class UnpackRecipeTest extends BuildTestBase {
 
     // Install a module in require-dev that should be moved to require.
     $this->mustExec('composer require --dev --no-ansi --no-interaction fixtures/module-a', $root_project_path);
-    // Ensure we have added the dependency to require-dev
+    // Ensure we have added the dependency to require-dev.
     $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
     $this->assertArrayHasKey('fixtures/module-a', $root_composer_json['require-dev']);
 
@@ -111,9 +121,6 @@ class UnpackRecipeTest extends BuildTestBase {
     $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
     $root_composer_lock = $this->getFileContents($root_project_path . '/composer.lock');
     dump($root_composer_json);
-
-    $this->assertIsArray($root_composer_json);
-    $this->assertIsArray($root_composer_lock);
 
     $expected_unpacked = $this->dependenciesData();
     foreach ($expected_unpacked as $package => $dependencies) {
@@ -166,9 +173,6 @@ class UnpackRecipeTest extends BuildTestBase {
     $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
     $root_composer_lock = $this->getFileContents($root_project_path . '/composer.lock');
 
-    $this->assertIsArray($root_composer_json);
-    $this->assertIsArray($root_composer_lock);
-
     $package_type = $this->getPackageType('fixtures/recipe-a');
     $this->assertNotNull($package_type);
 
@@ -201,9 +205,6 @@ class UnpackRecipeTest extends BuildTestBase {
     $root_composer_json = $this->getFileContents($root_project_path . '/composer.json');
     $root_composer_lock = $this->getFileContents($root_project_path . '/composer.lock');
 
-    $this->assertIsArray($root_composer_json);
-    $this->assertIsArray($root_composer_lock);
-
     $expected_unpacked = $this->dependenciesData();
     foreach ($expected_unpacked as $package => $dependencies) {
       $package_type = $this->getPackageType($package);
@@ -234,7 +235,7 @@ class UnpackRecipeTest extends BuildTestBase {
    * @return array<string, array<string>>
    *   The packages that need to be unpacked and their dependencies.
    */
-  public function dependenciesData(): array {
+  private function dependenciesData(): array {
     return [
       'fixtures/recipe-a' => [
         'fixtures/module-b',
@@ -255,9 +256,9 @@ class UnpackRecipeTest extends BuildTestBase {
    * @return array
    *   The contents of the file as an array.
    */
-  protected function getFileContents(string $path): array {
+  private function getFileContents(string $path): array {
     $file = file_get_contents($path);
-    return json_decode($file, TRUE);
+    return json_decode($file, TRUE, flags: JSON_THROW_ON_ERROR);
   }
 
   /**
@@ -272,13 +273,11 @@ class UnpackRecipeTest extends BuildTestBase {
    * @return string|null
    *   The package type.
    */
-  protected function getPackageType(string $package_name): ?string {
-    $type = NULL;
+  private function getPackageType(string $package_name): ?string {
     if (preg_match('/fixtures\/(\w+)-/', $package_name, $matches)) {
-      $type = 'drupal-' . $matches[1];
+      return 'drupal-' . $matches[1];
     }
-
-    return $type;
+    return NULL;
   }
 
   /**
@@ -292,7 +291,7 @@ class UnpackRecipeTest extends BuildTestBase {
    * @return bool
    *   TRUE if the package is in the composer.lock, FALSE otherwise.
    */
-  public function isPackageInComposerLock(string $package_name, array $composer_lock): bool {
+  private function isPackageInComposerLock(string $package_name, array $composer_lock): bool {
     if (!isset($composer_lock['packages'])) {
       return FALSE;
     }
