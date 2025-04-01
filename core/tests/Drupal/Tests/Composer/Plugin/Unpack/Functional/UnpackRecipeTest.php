@@ -12,6 +12,11 @@ use Drupal\Tests\Composer\Plugin\Scaffold\ExecTrait;
 /**
  * Tests recipe unpacking.
  *
+ * Things we still need to test:
+ * - Unpacking only works on recipes. Trying to unpack a module or theme either
+ *   has no effect, or throws an error.
+ * -
+ *
  * @group Unpack
  */
 class UnpackRecipeTest extends BuildTestBase {
