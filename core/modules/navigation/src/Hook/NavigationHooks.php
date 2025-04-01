@@ -85,7 +85,7 @@ class NavigationHooks {
       return;
     }
     $this->navigationRenderer->removeToolbar($page_top);
-    if ($this->routeMatch->getRouteName() !== 'layout_builder.navigation.view') {
+    if (!$this->routeMatch->isRouteName('layout_builder.navigation.view')) {
       // Don't render the admin toolbar if in layout edit mode.
       $this->navigationRenderer->buildNavigation($page_top);
       $this->navigationRenderer->buildTopBar($page_top);

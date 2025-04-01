@@ -20,7 +20,7 @@ class NullRouteMatch implements RouteMatchInterface {
   /**
    * {@inheritdoc}
    */
-  public function isRouteName(string|array $value, ?string $operator = NULL): bool {
+  public function isRouteName(string|array $value, RouteName $operator = RouteName::Equals): bool {
     return FALSE;
   }
 

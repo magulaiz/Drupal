@@ -36,16 +36,14 @@ interface RouteMatchInterface {
    *
    * @param string|array $value
    *   The value to check against.
-   * @param string|null $operator
-   *   (optional) The comparison operator. Possible values:
-   *   - '=', 'STARTS_WITH', 'CONTAINS', 'ENDS_WITH': These operators expect
-   *     $value to be a string.
-   *   - 'IN', 'NOT IN': These operators expect $value to be an array.
+   * @param \Drupal\Core\Routing\RouteName $operator
+   *   (optional) The comparison operator. Note that RouteName::In expects
+   *   $value to be an array. Defaults to RouteName::Equals.
    *
    * @return bool
    *   Returns TRUE if the given value matches the route name, FALSE otherwise.
    */
-  public function isRouteName(string|array $value, ?string $operator = NULL): bool;
+  public function isRouteName(string|array $value, RouteName $operator = RouteName::Equals): bool;
 
   /**
    * Returns the route object.

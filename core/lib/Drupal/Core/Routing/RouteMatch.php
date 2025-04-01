@@ -102,23 +102,19 @@ class RouteMatch implements RouteMatchInterface {
   /**
    * {@inheritdoc}
    */
-  public function isRouteName(string|array $value, ?string $operator = NULL): bool {
-    $operator ??= '=';
-
-    if (is_array($value) && in_array($operator, ['=', 'STARTS_WITH', 'CONTAINS', 'ENDS_WITH'], TRUE)) {
+  public function isRouteName(string|array $value, RouteName $operator = RouteName::Equals): bool {
+    if (is_array($value) && $operator !== RouteName::In) {
       throw new \InvalidArgumentException('Invalid operator for an array value.');
     }
 
     // @todo Check $value for deprecated route names.
 
     return match ($operator) {
-      '=' => $this->routeName === $value,
-      'IN' => array_search($this->routeName, $value) !== FALSE,
-      'NOT IN' => array_search($this->routeName, $value) === FALSE,
-      'STARTS_WITH' => str_starts_with($this->routeName, $value),
-      'CONTAINS' => str_contains($this->routeName, $value),
-      'ENDS_WITH' => str_ends_with($this->routeName, $value),
-      default => throw new \InvalidArgumentException('Invalid operator.'),
+      RouteName::Equals => $this->routeName === $value,
+      RouteName::StartsWith => str_starts_with($this->routeName, $value),
+      RouteName::Contains => str_contains($this->routeName, $value),
+      RouteName::EndsWith => str_ends_with($this->routeName, $value),
+      RouteName::In => in_array($this->routeName, $value, TRUE),
     };
   }
 

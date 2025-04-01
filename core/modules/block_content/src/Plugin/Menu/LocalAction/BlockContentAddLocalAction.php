@@ -56,7 +56,7 @@ class BlockContentAddLocalAction extends LocalActionDefault {
     }
 
     // Adds a destination on content block listing.
-    if ($route_match->getRouteName() == 'entity.block_content.collection') {
+    if ($route_match->isRouteName('entity.block_content.collection')) {
       $options['query']['destination'] = Url::fromRoute('<current>')->toString();
     }
     return $options;
