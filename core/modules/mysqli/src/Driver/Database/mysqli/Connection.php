@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\mysqli\Driver\Database\mysqli;
 
+use Drupal\Core\Database\Connection as BaseConnection;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
@@ -26,44 +27,33 @@ class Connection extends BaseMySqlConnection {
   private string $serverVersion;
 
   public function __construct(
-    protected $connection,
-    protected $connectionOptions = [],
+    \mysqli $connection,
+    array $connectionOptions = [],
   ) {
-    assert($this->connection instanceof \mysqli);
-    assert(is_array($this->connectionOptions));
     // If the SQL mode doesn't include 'ANSI_QUOTES' (explicitly or via a
     // combination mode), then MySQL doesn't interpret a double quote as an
     // identifier quote, in which case use the non-ANSI-standard backtick.
     //
-    // Because we still support MySQL 5.7, check for the deprecated combination
-    // modes as well.
-    //
-    // @see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_ansi_quotes
-    $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI', 'DB2', 'MAXDB', 'MSSQL', 'ORACLE', 'POSTGRESQL'];
+    // @see https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html#sqlmode_ansi_quotes
+    $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI'];
     $is_ansi_quotes_mode = FALSE;
-    if (isset($this->connectionOptions['init_commands']['sql_mode'])) {
+    if (isset($connection_options['init_commands']['sql_mode'])) {
       foreach ($ansi_quotes_modes as $mode) {
         // None of the modes in $ansi_quotes_modes are substrings of other modes
         // that are not in $ansi_quotes_modes, so a simple stripos() does not
         // return false positives.
-        if (stripos($this->connectionOptions['init_commands']['sql_mode'], $mode) !== FALSE) {
+        if (stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
           $is_ansi_quotes_mode = TRUE;
           break;
         }
       }
     }
+
     if ($this->identifierQuotes === ['"', '"'] && !$is_ansi_quotes_mode) {
       $this->identifierQuotes = ['`', '`'];
     }
 
-    // Manage the table prefix.
-    $this->connectionOptions['prefix'] ??= '';
-    $this->setPrefix($this->connectionOptions['prefix']);
-
-    // Work out the database driver namespace if none is provided. This is
-    // normally written to setting.php by installer or set by
-    // \Drupal\Core\Database\Database::parseConnectionInfo().
-    $this->connectionOptions['namespace'] ??= (new \ReflectionObject($this))->getNamespaceName();
+    BaseConnection::__construct($connection, $connection_options);
   }
 
   /**
