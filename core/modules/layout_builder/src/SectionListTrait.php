@@ -39,8 +39,8 @@ trait SectionListTrait {
   public function getSection($delta) {
     if (!$this->hasSection($delta)) {
       throw new \OutOfBoundsException(sprintf(
-        'Invalid section delta "%s", there are %d sections.', 
-        $delta, 
+        'Invalid section delta "%s", there are %d sections.',
+        $delta,
         $this->count()
       ));
     }
