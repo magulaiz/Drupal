@@ -67,7 +67,7 @@ class VariationCache implements VariationCacheInterface {
     // However, ::getRedirectChain() has an internal cache that we could both
     // benefit from and contribute to whenever we call this function. So any use
     // or manipulation of $this->redirectChainCache below is for optimization
-    // purposes. You can read up on how the internal cache is structured on the
+    // purposes. A description of the internal cache structure is on the
     // property documentation of $this->redirectChainCache.
     //
     // Create a map of CIDs with their associated $items index and cache keys.
