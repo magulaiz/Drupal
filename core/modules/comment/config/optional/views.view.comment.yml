@@ -606,6 +606,7 @@ display:
           entity_type: comment
           entity_field: status
           plugin_id: boolean
+          accept_null: false
           operator: '='
           value: '1'
           group: 1
@@ -1419,6 +1420,7 @@ display:
           entity_type: comment
           entity_field: status
           plugin_id: boolean
+          accept_null: false
           operator: '='
           value: '0'
           group: 1
