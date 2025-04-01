@@ -75,10 +75,8 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Max-Age', '60');
     // 2. controller result: render array, per-role cacheable route access.
     $this->drupalGet('router_test/test19');
-    $expected_cache_contexts = Cache::mergeContexts($renderer_required_cache_contexts, [
-      'url',
-      'user.roles',
-    ]);
+    // @todo: Does this test still make sense like this?
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', implode(' ', Cache::mergeContexts($renderer_required_cache_contexts, ['url'])));
     sort($expected_cache_contexts);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', implode(' ', $expected_cache_contexts));
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'config:user.role.anonymous foo http_response rendered');

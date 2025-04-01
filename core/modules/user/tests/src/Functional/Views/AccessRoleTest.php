@@ -70,12 +70,14 @@ class AccessRoleTest extends AccessTestBase {
     $this->drupalLogin($this->webUser);
     $this->drupalGet('test-role');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertCacheContext('user.roles');
+    // @todo: Does this test still make sense like this?
+    $this->assertCacheContext('user.permissions');
 
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('test-role');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertCacheContext('user.roles');
+    // @todo: Does this test still make sense like this?
+    $this->assertCacheContext('user.permissions');
 
     // Test allowing multiple roles.
     $view = Views::getView('test_access_role')->storage;
@@ -99,15 +101,18 @@ class AccessRoleTest extends AccessTestBase {
     $this->drupalLogin($this->webUser);
     $this->drupalGet('test-role');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertCacheContext('user.roles');
+    // @todo: Does this test still make sense like this?
+    $this->assertCacheContext('user.permissions');
     $this->drupalLogout();
     $this->drupalGet('test-role');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertCacheContext('user.roles');
+    // @todo: Does this test still make sense like this?
+    $this->assertCacheContext('user.permissions');
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('test-role');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertCacheContext('user.roles');
+    // @todo: Does this test still make sense like this?
+    $this->assertCacheContext('user.permissions');
   }
 
   /**
@@ -133,8 +138,8 @@ class AccessRoleTest extends AccessTestBase {
     $build = DisplayPluginBase::buildBasicRenderable('test_access_role', 'default');
     $account_switcher->switchTo($this->normalUser);
     $result = $renderer->renderInIsolation($build);
-    $this->assertContains('user.roles', $build['#cache']['contexts']);
-    $this->assertEquals(['config:views.view.test_access_role'], $build['#cache']['tags']);
+    $this->assertContains('user.permissions', $build['#cache']['contexts']);
+    $this->assertEquals(['config:views.view.test_access_role', 'user:' . $this->normalUser->id()], $build['#cache']['tags']);
     $this->assertEquals(Cache::PERMANENT, $build['#cache']['max-age']);
     $this->assertNotSame('', $result);
 

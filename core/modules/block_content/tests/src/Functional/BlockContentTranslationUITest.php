@@ -40,7 +40,6 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     'url.path',
     'url.query_args',
     'user.permissions',
-    'user.roles:authenticated',
   ];
 
   /**

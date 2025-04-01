@@ -14,7 +14,7 @@ use Drupal\Core\Cache\CacheableMetadata;
  * Calculated cache context ID: 'user.roles:%role', e.g. 'user.roles:anonymous'
  * (to vary by the presence/absence of a specific role).
  */
-class UserRolesCacheContext extends UserCacheContextBase implements CalculatedCacheContextInterface {
+class UserRolesCacheContext extends UserCacheContextBase implements CalculatedCacheContextInterface, CacheContextOptimizableInterface {
 
   /**
    * {@inheritdoc}
@@ -39,6 +39,20 @@ class UserRolesCacheContext extends UserCacheContextBase implements CalculatedCa
    */
   public function getCacheableMetadata($role = NULL) {
     return (new CacheableMetadata())->setCacheTags(['user:' . $this->user->id()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasVariations() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getParentContexts() {
+    return ['user', 'user.permissions'];
   }
 
 }

@@ -121,7 +121,8 @@ class HistoryTest extends BrowserTestBase {
 
     // View the node.
     $this->drupalGet('node/' . $nid);
-    $this->assertCacheContext('user.roles:authenticated');
+    // @todo: Does this test still make sense like this?
+    $this->assertCacheContext('user.permissions');
     // JavaScript present to record the node read.
     $settings = $this->getDrupalSettings();
     $libraries = explode(',', $settings['ajaxPageState']['libraries']);

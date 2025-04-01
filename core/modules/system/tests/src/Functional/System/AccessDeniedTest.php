@@ -145,14 +145,16 @@ class AccessDeniedTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('You are not authorized to access this page.');
     $this->assertSession()->statusCodeEquals(403);
     // Verify the access cacheability metadata for custom 403 is bubbled.
-    $this->assertCacheContext('user.roles');
+    // @todo: Does this test still make sense like this?
+    $this->assertCacheContext('user.permissions');
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('/system-test/always-denied');
     $this->assertSession()->pageTextContains('Admin-only 4xx response');
     $this->assertSession()->statusCodeEquals(403);
     // Verify the access cacheability metadata for custom 403 is bubbled.
-    $this->assertCacheContext('user.roles');
+    // @todo: Does this test still make sense like this?
+    $this->assertCacheContext('user.permissions');
   }
 
 }
