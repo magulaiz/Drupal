@@ -35,37 +35,37 @@ class Connection extends BaseMySqlConnection {
     // identifier quote, in which case use the non-ANSI-standard backtick.
     //
     // @see https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html#sqlmode_ansi_quotes
-    $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI'];
-    $is_ansi_quotes_mode = FALSE;
-    if (isset($connection_options['init_commands']['sql_mode'])) {
-      foreach ($ansi_quotes_modes as $mode) {
-        // None of the modes in $ansi_quotes_modes are substrings of other modes
-        // that are not in $ansi_quotes_modes, so a simple stripos() does not
+    $ansiQuotesModes = ['ANSI_QUOTES', 'ANSI'];
+    $isAnsiQuotesMode = FALSE;
+    if (isset($connectionOptions['init_commands']['sql_mode'])) {
+      foreach ($ansiQuotesModes as $mode) {
+        // None of the modes in $ansiQuotesModes are substrings of other modes
+        // that are not in $ansiQuotesModes, so a simple stripos() does not
         // return false positives.
-        if (stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
-          $is_ansi_quotes_mode = TRUE;
+        if (stripos($connectionOptions['init_commands']['sql_mode'], $mode) !== FALSE) {
+          $isAnsiQuotesMode = TRUE;
           break;
         }
       }
     }
 
-    if ($this->identifierQuotes === ['"', '"'] && !$is_ansi_quotes_mode) {
+    if ($this->identifierQuotes === ['"', '"'] && !$isAnsiQuotesMode) {
       $this->identifierQuotes = ['`', '`'];
     }
 
-    BaseConnection::__construct($connection, $connection_options);
+    BaseConnection::__construct($connection, $connectionOptions);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function open(array &$connection_options = []) {
+  public static function open(array &$connectionOptions = []) {
     // Sets mysqli error reporting mode to report errors from mysqli function
     // calls and to throw mysqli_sql_exception for errors.
     // @see https://www.php.net/manual/en/mysqli-driver.report-mode.php
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-    if (isset($connection_options['_dsn_utf8_fallback']) && $connection_options['_dsn_utf8_fallback'] === TRUE) {
+    if (isset($connectionOptions['_dsn_utf8_fallback']) && $connectionOptions['_dsn_utf8_fallback'] === TRUE) {
       // Only used during the installer version check, as a fallback from utf8mb4.
       $charset = 'utf8';
     }
@@ -74,18 +74,18 @@ class Connection extends BaseMySqlConnection {
     }
 
     // Allow PDO options to be overridden.
-    $connection_options += [
+    $connectionOptions += [
       'pdo' => [],
     ];
 
     try {
       $mysqli = @new \mysqli(
-        $connection_options['host'],
-        $connection_options['username'],
-        $connection_options['password'],
-        $connection_options['database'] ?? '',
-        !empty($connection_options['port']) ? (int) $connection_options['port'] : 3306,
-        $connection_options['unix_socket'] ?? ''
+        $connectionOptions['host'],
+        $connectionOptions['username'],
+        $connectionOptions['password'],
+        $connectionOptions['database'] ?? '',
+        !empty($connectionOptions['port']) ? (int) $connectionOptions['port'] : 3306,
+        $connectionOptions['unix_socket'] ?? ''
       );
       if (!$mysqli->set_charset($charset)) {
         throw new InvalidCharsetException('Invalid charset ' . $charset);
@@ -108,8 +108,8 @@ class Connection extends BaseMySqlConnection {
     // certain one has been set; otherwise, MySQL defaults to
     // 'utf8mb4_general_ci' (MySQL 5) or 'utf8mb4_0900_ai_ci' (MySQL 8) for
     // utf8mb4.
-    if (!empty($connection_options['collation'])) {
-      $mysqli->query('SET NAMES ' . $charset . ' COLLATE ' . $connection_options['collation']);
+    if (!empty($connectionOptions['collation'])) {
+      $mysqli->query('SET NAMES ' . $charset . ' COLLATE ' . $connectionOptions['collation']);
     }
     else {
       $mysqli->query('SET NAMES ' . $charset);
@@ -123,21 +123,21 @@ class Connection extends BaseMySqlConnection {
     // https://www.drupal.org/node/344575 for further discussion. Also, as MySQL
     // 5.5 changed the meaning of TRADITIONAL we need to spell out the modes one
     // by one.
-    $connection_options += [
+    $connectionOptions += [
       'init_commands' => [],
     ];
 
-    $connection_options['init_commands'] += [
+    $connectionOptions['init_commands'] += [
       'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
     ];
-    if (!empty($connection_options['isolation_level'])) {
-      $connection_options['init_commands'] += [
-        'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connection_options['isolation_level']),
+    if (!empty($connectionOptions['isolation_level'])) {
+      $connectionOptions['init_commands'] += [
+        'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connectionOptions['isolation_level']),
       ];
     }
 
     // Execute initial commands.
-    foreach ($connection_options['init_commands'] as $sql) {
+    foreach ($connectionOptions['init_commands'] as $sql) {
       $mysqli->query($sql);
     }
 
