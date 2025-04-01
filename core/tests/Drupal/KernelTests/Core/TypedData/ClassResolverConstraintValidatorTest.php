@@ -41,24 +41,33 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
         return FALSE;
       }
 
+      public function returnNotTrue(): string {
+        return 'true';
+      }
+
     });
 
   }
 
   public function testValidation(): void {
-    // Test with a valid value.
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['test.service', 'returnFalse']);
     $typed_data = $this->typedData->create($definition, 1);
     $violations = $typed_data->validate();
-    $this->assertEquals(1, $violations->count(), 'Validation failed when returning TRUE.');
+    $this->assertEquals(1, $violations->count(), 'Validation failed when returning FALSE.');
 
-    // Test with an invalid value.
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['test.service', 'returnTrue']);
     $typed_data = $this->typedData->create($definition, 1);
     $violations = $typed_data->validate();
     $this->assertEquals(0, $violations->count(), 'Validation succeeds when returning TRUE.');
+
+    // Test truthy
+    $definition = DataDefinition::create('integer')
+      ->addConstraint('ClassResolver', ['test.service', 'returnNotTrue']);
+    $typed_data = $this->typedData->create($definition, 1);
+    $violations = $typed_data->validate();
+    $this->assertEquals(1, $violations->count(), 'Validation succeeds when returning \'true\'.');
   }
 
   public function testNonExistingMethod(): void {
