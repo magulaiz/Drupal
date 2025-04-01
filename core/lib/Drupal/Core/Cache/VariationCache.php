@@ -73,20 +73,24 @@ class VariationCache implements VariationCacheInterface {
     // Create a map of CIDs with their associated $items index and cache keys.
     $cid_map = [];
     foreach ($items as $index => [$keys, $cacheability]) {
-      $cid = $initial_cid = $this->createCacheIdFast($keys, $cacheability);
-
-      // Try to optimize based on the redirect chain cache.
-      if (isset($this->redirectChainCache[$cid]) && $this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
-        $last_item = end($this->redirectChainCache[$cid]);
+      // Try to optimize based on the cached redirect chain.
+      if ($chain = $this->getValidatedCachedRedirectChain($keys, $cacheability)) {
+        $last_item = end($chain);
 
         // Immediately skip processing the CID for cache misses.
         if ($last_item === FALSE) {
           continue;
         }
+
+        // We do not need to calculate the initial CID as its part of the chain.
+        $initial_cid = array_key_first($chain);
+
         // Prime the CID map with the last known redirect for the initial CID.
-        if ($last_item->data instanceof CacheRedirect) {
-          $cid = $this->createCacheIdFast($keys, $last_item->data);
-        }
+        assert($last_item->data instanceof CacheRedirect);
+        $cid = $this->createCacheIdFast($keys, $last_item->data);
+      }
+      else {
+        $cid = $initial_cid = $this->createCacheIdFast($keys, $cacheability);
       }
 
       $cid_map[$cid] = [
@@ -325,24 +329,18 @@ class VariationCache implements VariationCacheInterface {
    *   to query the cache for that result.
    */
   protected function getRedirectChain(array $keys, CacheableDependencyInterface $initial_cacheability): array {
-    $cid = $initial_cid = $this->createCacheIdFast($keys, $initial_cacheability);
-
-    // See if we previously stored the redirect chain in memory. We do need to
-    // run a validity check because cache context values might have changed
-    // since the last time we got the chain. In theory that should never happen
-    // during a single request, but better safe than sorry.
-    if (isset($this->redirectChainCache[$cid]) && $this->redirectChainIsValid($keys, $this->redirectChainCache[$cid])) {
-      $chain = $this->redirectChainCache[$cid];
-    }
+    $chain = $this->getValidatedCachedRedirectChain($keys, $initial_cacheability);
 
     // Initiate the chain if we couldn't retrieve (a partial) one from memory.
-    // If we did find one, we continue our search from the last redirect in the
-    // chain in case we had a cache hit before, or we take the FALSE at the end
-    // of the chain from a previous cache miss, bypassing the while loop below.
     if (empty($chain)) {
+      $cid = $initial_cid = $this->createCacheIdFast($keys, $initial_cacheability);
       $chain[$cid] = $result = $this->cacheBackend->get($cid);
     }
+    // If we did find one, we continue our search from the last valid redirect
+    // in the chain or bypass the while loop below in case the chain ends in
+    // FALSE, indicating a previous cache miss.
     else {
+      $initial_cid = array_key_first($chain);
       $result = end($chain);
     }
 
@@ -364,26 +362,46 @@ class VariationCache implements VariationCacheInterface {
   }
 
   /**
-   * Validates a redirect chain for the current cache context values.
+   * Retrieved the redirect chain from cache, validating each part.
    *
    * @param string[] $keys
-   *   The cache keys used to build the chain.
-   * @param array $chain
-   *   The redirect chain to validate.
+   *   The cache keys to retrieve the redirect chain for.
+   * @param \Drupal\Core\Cache\CacheableDependencyInterface $initial_cacheability
+   *   The initial cacheability for the redirect chain.
    *
-   * @return bool
-   *   Whether the redirect chain is valid.
+   * @return array
+   *   The part of the cached redirect chain, if any, that is still valid.
    */
-  protected function redirectChainIsValid(array $keys, array $chain): bool {
-    foreach ($chain as $result) {
+  protected function getValidatedCachedRedirectChain(array $keys, CacheableDependencyInterface $initial_cacheability): array {
+    $cid = $this->createCacheIdFast($keys, $initial_cacheability);
+    if (!isset($this->redirectChainCache[$cid])) {
+      return [];
+    }
+
+    // Only use that part of the redirect chain that is still valid. Even though
+    // we do not store cache hits in the internal redirect chain cache, we can
+    // still reuse the whole chain up until what would have been a cache hit.
+    //
+    // If part of a redirect chain no longer matches because cache contexts
+    // changed values, we could perhaps still reuse part of the chain until we
+    // encounter a redirect for the changed cache context value.
+    //
+    // There is one special case: If the very last item of the chain is a cache
+    // redirect, and we cannot find anything for it, we still add the redirect
+    // to the validated chain because the only way a cached chain ends in a
+    // redirect is if it led to a cache hit in ::getRedirectChain().
+    $valid_parts = [];
+    $last_key = array_key_last($this->redirectChainCache[$cid]);
+    foreach ($this->redirectChainCache[$cid] as $key => $result) {
       if ($result && $result->data instanceof CacheRedirect) {
         $cid = $this->createCacheIdFast($keys, $result->data);
-        if (!isset($chain[$cid])) {
-          return FALSE;
+        if (!isset($chain[$cid]) && $last_key !== $key) {
+          break;
         }
       }
+      $valid_parts[$key] = $result;
     }
-    return TRUE;
+    return $valid_parts;
   }
 
   /**
