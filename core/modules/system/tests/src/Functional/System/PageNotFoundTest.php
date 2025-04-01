@@ -91,8 +91,7 @@ class PageNotFoundTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The requested page could not be found.');
     $this->assertSession()->statusCodeEquals(404);
     // Verify the access cacheability metadata for custom 404 is bubbled.
-    // @todo: Does this test still make sense like this?
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user.roles');
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('/this-path-does-not-exist');
@@ -100,8 +99,7 @@ class PageNotFoundTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('The requested page could not be found.');
     $this->assertSession()->statusCodeEquals(404);
     // Verify the access cacheability metadata for custom 404 is bubbled.
-    // @todo: Does this test still make sense like this?
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user.roles');
   }
 
 }

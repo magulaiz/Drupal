@@ -91,7 +91,6 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
       'config:field.field.entity_test.entity_test.comment',
       'config:field.storage.comment.comment_body',
       'config:user.settings',
-      'user:' . \Drupal::currentUser()->id(),
     ];
     $this->assertEqualsCanonicalizing($expected_cache_tags, $build['#cache']['tags']);
 
@@ -135,7 +134,6 @@ class CommentDefaultFormatterCacheTagsTest extends EntityKernelTestBase {
       'user_view',
       'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
       'user:' . $user->id(),
-      'user:' . \Drupal::currentUser()->id(),
       'config:core.entity_form_display.comment.comment.default',
       'config:field.field.comment.comment.comment_body',
       'config:field.field.entity_test.entity_test.comment',

@@ -81,8 +81,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // item" options in menu_ui_form_node_type_form_alter(). The "log out" link
     // adds the "user.roles:authenticated" cache context.
     $this->drupalGet('admin/structure/types/manage/page');
-    // @todo: Does this test still make sense like this?
-    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.permissions');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.roles:authenticated');
 
     // Assert the description of "Available menus" checkboxes field.
     $this->assertSession()->pageTextContains('Content of this type can be placed in the selected menus.');
