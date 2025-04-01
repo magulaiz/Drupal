@@ -65,14 +65,6 @@ class Connection extends BaseMySqlConnection {
     // @see https://www.php.net/manual/en/mysqli-driver.report-mode.php
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
-    if (isset($connectionOptions['_dsn_utf8_fallback']) && $connectionOptions['_dsn_utf8_fallback'] === TRUE) {
-      // Only used during the installer version check, as a fallback from utf8mb4.
-      $charset = 'utf8';
-    }
-    else {
-      $charset = 'utf8mb4';
-    }
-
     // Allow PDO options to be overridden.
     $connectionOptions += [
       'pdo' => [],
@@ -87,8 +79,8 @@ class Connection extends BaseMySqlConnection {
         !empty($connectionOptions['port']) ? (int) $connectionOptions['port'] : 3306,
         $connectionOptions['unix_socket'] ?? ''
       );
-      if (!$mysqli->set_charset($charset)) {
-        throw new InvalidCharsetException('Invalid charset ' . $charset);
+      if (!$mysqli->set_charset('utf8mb4')) {
+        throw new InvalidCharsetException('Invalid charset utf8mb4');
       }
     }
     catch (\mysqli_sql_exception $e) {
@@ -106,13 +98,12 @@ class Connection extends BaseMySqlConnection {
 
     // Force MySQL to use the UTF-8 character set. Also set the collation, if a
     // certain one has been set; otherwise, MySQL defaults to
-    // 'utf8mb4_general_ci' (MySQL 5) or 'utf8mb4_0900_ai_ci' (MySQL 8) for
-    // utf8mb4.
+    // 'utf8mb4_0900_ai_ci' for the 'utf8mb4' character set.
     if (!empty($connectionOptions['collation'])) {
-      $mysqli->query('SET NAMES ' . $charset . ' COLLATE ' . $connectionOptions['collation']);
+      $mysqli->query('SET NAMES utf8mb4 COLLATE ' . $connectionOptions['collation']);
     }
     else {
-      $mysqli->query('SET NAMES ' . $charset);
+      $mysqli->query('SET NAMES utf8mb4');
     }
 
     // Set MySQL init_commands if not already defined.  Default Drupal's MySQL
