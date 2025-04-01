@@ -123,6 +123,7 @@ class ComponentValidator {
     );
 
     $definition_object = Validator::arrayToObjectRecursive($definition);
+    $this->validator->reset();
     $this->validator->validate(
       $definition_object,
       (object) ['$ref' => 'file://' . dirname(__DIR__, 5) . '/assets/schemas/v1/metadata-full.schema.json']
@@ -134,8 +135,6 @@ class ComponentValidator {
       static fn(array $error): string => sprintf("[%s] %s", $error['property'], $error['message']),
       $this->validator->getErrors()
     );
-    // Reset the validator.
-    $this->validator->reset();
     $message_parts = [
       ...$message_parts,
       ...$missing_class_errors,
@@ -190,8 +189,6 @@ class ComponentValidator {
     ] = $this->validateClassProps($schema, $props_raw, $component_id);
     $schema = Validator::arrayToObjectRecursive($schema);
     $props = Validator::arrayToObjectRecursive($props_raw);
-    // Ensure $this->validator is not null.
-    $this->setValidator($this->validator);
     $this->validator->reset();
     $this->validator->validate($props, $schema, Constraint::CHECK_MODE_TYPE_CAST);
     $this->validator->getErrors();
@@ -232,8 +229,6 @@ class ComponentValidator {
       $errors
     );
     $message = implode("\n", $message_parts);
-    // Reset the validator.
-    $this->validator->reset();
     throw new InvalidComponentException($message);
   }
 
