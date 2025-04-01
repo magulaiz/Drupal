@@ -274,10 +274,8 @@ variables:
 
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
-  when: manual
-  allow_failure: true
   variables:
-    REPEAT_TEST_CLASS: 'Drupal\Tests\Change\Me'
+    REPEAT_TEST_CLASS: '\Drupal\Tests\package_manager\Build\PackageUpdateTest'
   services:
     - <<: *with-database
 
