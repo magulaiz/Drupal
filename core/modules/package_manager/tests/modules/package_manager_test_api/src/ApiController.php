@@ -108,7 +108,7 @@ class ApiController extends ControllerBase {
    *   as long as the stage needs to exist.
    */
   protected function createAndApplyStage(Request $request) : string {
-    $id = $this->stage->create();
+    $id = $this->stage->create(180);
     $this->stage->require(
       $request->get('runtime', []),
       $request->get('dev', [])
