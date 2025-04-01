@@ -377,6 +377,7 @@ class VariationCache implements VariationCacheInterface {
     if (!isset($this->redirectChainCache[$cid])) {
       return [];
     }
+    $chain = $this->redirectChainCache[$cid];
 
     // Only use that part of the redirect chain that is still valid. Even though
     // we do not store cache hits in the internal redirect chain cache, we can
@@ -391,8 +392,8 @@ class VariationCache implements VariationCacheInterface {
     // to the validated chain because the only way a cached chain ends in a
     // redirect is if it led to a cache hit in ::getRedirectChain().
     $valid_parts = [];
-    $last_key = array_key_last($this->redirectChainCache[$cid]);
-    foreach ($this->redirectChainCache[$cid] as $key => $result) {
+    $last_key = array_key_last($chain);
+    foreach ($chain as $key => $result) {
       if ($result && $result->data instanceof CacheRedirect) {
         $cid = $this->createCacheIdFast($keys, $result->data);
         if (!isset($chain[$cid]) && $last_key !== $key) {
