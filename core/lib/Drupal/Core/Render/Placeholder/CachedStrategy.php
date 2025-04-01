@@ -31,6 +31,11 @@ class CachedStrategy implements PlaceholderStrategyInterface {
 
   /**
    * Fetch any nested placeholders from cache.
+   *
+   * Placeholders returned from cache may have placeholders in #attached, which
+   * can themselves be fetched from the cache. By recursively processing the
+   * placeholders here, we're able to use multiple cache get to fetch the cache
+   * items at each level of recursion.
    */
   private function processNestedPlaceholders(array $placeholders): array {
     $sets = [];
