@@ -32,11 +32,11 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
     $this->typedData = $this->container->get('typed_data_manager');
 
     $this->container->set('test.service', new class() {
-      public function returnTrue() {
+      public function returnTrue(): bool {
         return true;
       }
 
-      public function returnFalse() {
+      public function returnFalse(): bool {
         return false;
       }
     });
