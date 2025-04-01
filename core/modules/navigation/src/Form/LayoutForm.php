@@ -146,11 +146,16 @@ final class LayoutForm extends FormBase {
    *   Boolean indicating whether the Navigation layout edit mode is enabled.
    */
   protected function handleFormElementsVisibility(array &$form, bool $edit_mode_enabled = TRUE): array {
-    foreach (Element::children($form['actions']) as $action) {
-      $edit_action_access = isset($form['actions'][$action]['#name']) && $form['actions'][$action]['#name'] === 'enable_edition';
-      $form['actions'][$action]['#access'] = $edit_mode_enabled ? !$edit_action_access : $edit_action_access;
-    }
+    // Edit mode elements are visible only in edit mode.
+    $form['actions']['submit']['#access'] =
+    $form['actions']['discard_changes']['#access'] =
+    $form['actions']['preview_toggle']['#access'] =
+    $form['actions']['preview_toggle']['toggle_content_preview']['#access'] =
     $form['layout_builder']['#access'] = $edit_mode_enabled;
+
+    // Edit mode flag element is onl visible when edit mode is disabled.
+    $form['actions']['enable_edition']['#access'] = !$edit_mode_enabled;
+
     return $form;
   }
 
