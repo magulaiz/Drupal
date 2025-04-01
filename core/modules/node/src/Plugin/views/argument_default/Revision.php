@@ -1,32 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\node\Plugin\views\argument_default;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\NodeInterface;
-use Drupal\node\NodeStorageInterface;
+use Drupal\views\Attribute\ViewsArgumentDefault;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Default argument plugin to extract a revision.
- *
- * @ViewsArgumentDefault(
- *   id = "revision_id",
- *   title = @Translation("Revision ID from URL")
- * )
  */
+#[ViewsArgumentDefault(
+  id: 'revision_id',
+  title: new TranslatableMarkup('Revision ID from URL'),
+)]
 class Revision extends ArgumentDefaultPluginBase implements CacheableDependencyInterface {
-
-  /**
-   * The route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
 
   /**
    * Constructs a new Node instance.
@@ -37,13 +31,16 @@ class Revision extends ArgumentDefaultPluginBase implements CacheableDependencyI
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    *   The route match.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected readonly RouteMatchInterface $routeMatch,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
-    $this->routeMatch = $route_match;
   }
 
   /**
@@ -54,7 +51,7 @@ class Revision extends ArgumentDefaultPluginBase implements CacheableDependencyI
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
     );
   }
 
@@ -73,14 +70,14 @@ class Revision extends ArgumentDefaultPluginBase implements CacheableDependencyI
   /**
    * {@inheritdoc}
    */
-  public function getCacheMaxAge() {
+  public function getCacheMaxAge(): int {
     return Cache::PERMANENT;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheContexts() {
+  public function getCacheContexts(): array {
     return ['url'];
   }
 
