@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Composer\Plugin\Unpack;
+namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Package\Link;
 use Composer\Package\PackageInterface;

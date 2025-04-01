@@ -1,13 +1,11 @@
 <?php
 
-namespace Drupal\Composer\Plugin\Unpack\Unpackers;
+namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
-use Drupal\Composer\Plugin\Unpack\RootComposer;
-use Drupal\Composer\Plugin\Unpack\UnpackCollection;
-use Drupal\Composer\Plugin\Unpack\UnpackOptions;
+use Drupal\Core\Recipe\Recipe;
 
 /**
  * Unpacker factory for dependency unpackers.
@@ -28,12 +26,12 @@ final readonly class UnpackerFactory {
    * @param \Composer\Package\PackageInterface $package
    *   The package to unpack.
    *
-   * @return \Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerInterface|null
+   * @return \Drupal\Composer\Plugin\RecipeUnpack\RecipeUnpacker|null
    *   The unpacker or NULL if the package cannot be unpacked.
    */
-  public function create(PackageInterface $package): ?UnpackerInterface {
+  public function create(PackageInterface $package): ?RecipeUnpacker {
     return match ($package->getType()) {
-      RecipeUnpacker::PROJECT_TYPE => new RecipeUnpacker($package, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection, $this->unpackOptions),
+      Recipe::COMPOSER_PROJECT_TYPE => new RecipeUnpacker($package, $this->composer, $this->io, $this->rootComposer, $this->unpackCollection, $this->unpackOptions),
       default => NULL,
     };
   }

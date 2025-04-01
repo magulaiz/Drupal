@@ -1,28 +1,19 @@
 <?php
 
-namespace Drupal\Composer\Plugin\Unpack\Unpackers;
+namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Package\Link;
 use Composer\Package\PackageInterface;
-use Drupal\Composer\Plugin\Unpack\RootComposer;
-use Drupal\Composer\Plugin\Unpack\UnpackCollection;
-use Drupal\Composer\Plugin\Unpack\UnpackOptions;
+use Drupal\Core\Recipe\Recipe;
 
 /**
  * Unpacker for recipes.
  *
  * @internal
  */
-class RecipeUnpacker implements UnpackerInterface {
-
-  /**
-   * The composer project type the unpacker works on.
-   *
-   * @see \Drupal\Core\Recipe\Recipe::COMPOSER_PROJECT_TYPE
-   */
-  public const string PROJECT_TYPE = 'drupal-recipe';
+final class RecipeUnpacker {
 
   /**
    * UnpackerBase constructor.
@@ -77,7 +68,7 @@ class RecipeUnpacker implements UnpackerInterface {
         continue;
       }
 
-      if ($package?->getType() === static::PROJECT_TYPE) {
+      if ($package?->getType() === Recipe::COMPOSER_PROJECT_TYPE) {
         // This dependency is of the same type as the current package being
         // unpacked. This  means that this dependency should be unpacked as
         // well, so let's add it into the package queue.

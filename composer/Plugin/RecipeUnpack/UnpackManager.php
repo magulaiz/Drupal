@@ -1,11 +1,10 @@
 <?php
 
-namespace Drupal\Composer\Plugin\Unpack;
+namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
-use Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerFactory;
 
 /**
  * Core class to handle operations on dependencies.
@@ -15,28 +14,28 @@ final class UnpackManager {
   /**
    * The unpack collection.
    *
-   * @var \Drupal\Composer\Plugin\Unpack\UnpackCollection
+   * @var \Drupal\Composer\Plugin\RecipeUnpack\UnpackCollection
    */
   private UnpackCollection $unpackCollection;
 
   /**
    * The unpacker factory.
    *
-   * @var \Drupal\Composer\Plugin\Unpack\Unpackers\UnpackerFactory
+   * @var \Drupal\Composer\Plugin\RecipeUnpack\UnpackerFactory
    */
   private UnpackerFactory $unpackerFactory;
 
   /**
    * The root composer with the root dependencies to be manipulated.
    *
-   * @var \Drupal\Composer\Plugin\Unpack\RootComposer
+   * @var \Drupal\Composer\Plugin\RecipeUnpack\RootComposer
    */
   private RootComposer $rootComposer;
 
   /**
    * The unpack options.
    *
-   * @var \Drupal\Composer\Plugin\Unpack\unpackOptions
+   * @var \Drupal\Composer\Plugin\RecipeUnpack\unpackOptions
    */
   public readonly UnpackOptions $unpackOptions;
 
@@ -94,7 +93,7 @@ final class UnpackManager {
    * @param \Composer\Package\PackageInterface $package
    *   The package to unpack.
    *
-   * @return \Drupal\Composer\Plugin\Unpack\UnpackOptions
+   * @return \Drupal\Composer\Plugin\RecipeUnpack\UnpackOptions
    *   The unpack options.
    */
   public static function getUnpackOptions(PackageInterface $package): UnpackOptions {

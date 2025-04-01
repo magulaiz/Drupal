@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Composer\Plugin\Unpack;
+namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Command\BaseCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -8,21 +8,21 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * The "drupal:unpack" command class.
+ * The "drupal:recipe-unpack" command class.
  *
  * Manually run the unpack operation that normally happens after
  * 'composer install'.
  *
  * @internal
  */
-class ComposerUnpackCommand extends BaseCommand {
+final class ComposerUnpackCommand extends BaseCommand {
 
   /**
    * {@inheritdoc}
    */
   protected function configure(): void {
     $this
-      ->setName('drupal:unpack')
+      ->setName('drupal:recipe-unpack')
       ->setAliases(['unpack'])
       ->setDescription('Unpack Drupal recipes.')
       ->addArgument('package', InputArgument::REQUIRED)

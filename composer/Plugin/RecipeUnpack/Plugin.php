@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Composer\Plugin\Unpack;
+namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
@@ -14,7 +14,7 @@ use Composer\Plugin\Capability\CommandProvider;
 use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
-use Drupal\Composer\Plugin\Unpack\CommandProvider as UnpackCommandProvider;
+use Drupal\Composer\Plugin\RecipeUnpack\CommandProvider as UnpackCommandProvider;
 
 /**
  * Composer plugin for handling dependency unpacking.

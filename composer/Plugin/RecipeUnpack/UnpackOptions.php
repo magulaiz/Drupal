@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Composer\Plugin\Unpack;
+namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 /**
  * Per-project options from the 'extras' section of the composer.json file.

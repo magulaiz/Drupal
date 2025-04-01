@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Composer\Plugin\Unpack;
+namespace Drupal\Composer\Plugin\RecipeUnpack;
 
 use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
 
@@ -9,7 +9,7 @@ use Composer\Plugin\Capability\CommandProvider as CommandProviderCapability;
  *
  * @internal
  */
-class CommandProvider implements CommandProviderCapability {
+final class CommandProvider implements CommandProviderCapability {
 
   /**
    * {@inheritdoc}
