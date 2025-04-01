@@ -105,7 +105,7 @@ final class RootComposer {
    * @throws \RuntimeException
    *   If the root composer could not be updated.
    */
-  public function updateComposerJsonFile(): void {
+  private function updateComposerJsonFile(): void {
     $composer_json = Factory::getComposerFile();
     if (!file_put_contents($composer_json, $this->getComposerManipulator()->getContents())) {
       throw new \RuntimeException(sprintf('Could not update %s', $composer_json));
@@ -115,7 +115,7 @@ final class RootComposer {
   /**
    * Updates the root composer.lock file.
    */
-  public function updateComposerLockFile(): void {
+  private function updateComposerLockFile(): void {
     $composer_content = self::getRawComposerContent();
     $composer_locker_content = $this->getComposerLockedContent();
     $composer_locker_content['packages'] = array_values($composer_locker_content['packages']);

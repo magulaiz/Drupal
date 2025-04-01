@@ -26,7 +26,7 @@ final class Plugin implements PluginInterface, EventSubscriberInterface, Capable
   /**
    * The handler for dependency unpacking.
    */
-  private UnpackManager $manager;
+  private readonly UnpackManager $manager;
 
   /**
    * {@inheritdoc}

@@ -8,7 +8,7 @@ use Composer\Package\PackageInterface;
 /**
  * A collection with packages to unpack.
  */
-final class UnpackCollection implements \IteratorAggregate {
+final class UnpackCollection {
 
   /**
    * The queue of packages to unpack.
@@ -30,16 +30,6 @@ final class UnpackCollection implements \IteratorAggregate {
    * @var array
    */
   private array $allPackageDependencies = [];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @return \ArrayIterator<string, \Composer\Package\PackageInterface>
-   *   The list of unpacked packages.
-   */
-  public function getIterator(): \ArrayIterator {
-    return new \ArrayIterator($this->unpackedPackages);
-  }
 
   /**
    * Adds a package to the queue of packages to unpack.
@@ -131,7 +121,7 @@ final class UnpackCollection implements \IteratorAggregate {
    * @return bool
    *   TRUE if the dependency has been unpacked.
    */
-  public function dependencyExists(string $name): bool {
+  private function dependencyExists(string $name): bool {
     return isset($this->allPackageDependencies[$name]);
   }
 

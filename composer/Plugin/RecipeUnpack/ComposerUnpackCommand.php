@@ -21,24 +21,24 @@ final class ComposerUnpackCommand extends BaseCommand {
    * {@inheritdoc}
    */
   protected function configure(): void {
+    $name = 'drupal:recipe-unpack';
     $this
-      ->setName('drupal:recipe-unpack')
+      ->setName($name)
       ->setAliases(['unpack'])
       ->setDescription('Unpack Drupal recipes.')
       ->addArgument('package', InputArgument::REQUIRED)
       ->setHelp(
         <<<EOT
-The <info>drupal:unpack</info> command unpacks a package's dependencies into the
+The <info>$name</info> command unpacks a package's dependencies into the
 composer.json file.
 
-<info>php composer.phar drupal:unpack package-name</info>
+<info>php composer.phar $name package-name</info>
 
-It is usually not necessary to call <info>drupal:unpack</info> manually,
+It is usually not necessary to call <info>$name</info> manually,
 because by default it is called automatically as needed, e.g. after an
 <info>install</info> or <info>update</info> command.
 EOT
             );
-
   }
 
   /**

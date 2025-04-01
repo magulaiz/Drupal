@@ -15,16 +15,13 @@ use Drupal\Core\Recipe\Recipe;
  */
 final class RecipeUnpacker {
 
-  /**
-   * UnpackerBase constructor.
-   */
   public function __construct(
-    protected readonly PackageInterface $package,
-    protected readonly Composer $composer,
-    protected readonly IOInterface $io,
-    protected readonly RootComposer $rootComposer,
-    protected readonly UnpackCollection $unpackCollection,
-    protected readonly UnpackOptions $unpackOptions,
+    private readonly PackageInterface $package,
+    private readonly Composer $composer,
+    private readonly IOInterface $io,
+    private readonly RootComposer $rootComposer,
+    private readonly UnpackCollection $unpackCollection,
+    private readonly UnpackOptions $unpackOptions,
   ) {
   }
 
@@ -49,7 +46,7 @@ final class RecipeUnpacker {
    * @param array<string, \Composer\Package\Link> $package_dependency_links
    *   The package dependencies.
    */
-  public function processPackageDependencies(array $package_dependency_links): void {
+  private function processPackageDependencies(array $package_dependency_links): void {
     foreach ($package_dependency_links as $link) {
       if ($link->getTarget() === $this->package->getName()) {
         // This dependency is the same as the current package, so let's skip it.
@@ -83,7 +80,7 @@ final class RecipeUnpacker {
   /**
    * Updates the composer.json and composer.lock with the unpacked dependencies.
    */
-  public function updateRootDependencies(): void {
+  private function updateRootDependencies(): void {
     $this->updateComposerJsonPackages();
     $this->updateComposerLockContent();
   }
@@ -97,7 +94,7 @@ final class RecipeUnpacker {
    * @throws \RuntimeException
    *   If the composer.json could not be updated.
    */
-  public function updateComposerJsonPackages(): void {
+  private function updateComposerJsonPackages(): void {
     $composer_json = $this->rootComposer->getComposerContent();
     $composer_manipulator = $this->rootComposer->getComposerManipulator();
     $composer_config = $this->composer->getConfig();
@@ -155,7 +152,7 @@ final class RecipeUnpacker {
    * This method will remove the package itself from the composer.lock content
    * in the root composer.
    */
-  public function updateComposerLockContent(): void {
+  private function updateComposerLockContent(): void {
     $composer_locker_content = $this->rootComposer->getComposerLockedContent();
 
     if ($this->removeSelf()) {
@@ -187,7 +184,7 @@ final class RecipeUnpacker {
    * @return \Composer\Package\PackageInterface|null
    *   The package object.
    */
-  protected function getPackageFromLinkTarget(Link $dependency): ?PackageInterface {
+  private function getPackageFromLinkTarget(Link $dependency): ?PackageInterface {
     return $this->composer->getRepositoryManager()
       ->getLocalRepository()
       ->findPackage($dependency->getTarget(), $dependency->getConstraint());
@@ -196,7 +193,7 @@ final class RecipeUnpacker {
   /**
    * {@inheritdoc}
    */
-  public function removeSelf(): bool {
+  private function removeSelf(): bool {
     return $this->unpackOptions->options['remove-self'];
   }
 

@@ -39,7 +39,7 @@ final class UnpackManager {
   ) {
     $this->unpackCollection = new UnpackCollection();
     $this->rootComposer = new RootComposer($composer, $this->io);
-    $this->unpackOptions = UnpackManager::getUnpackOptions($composer->getPackage());
+    $this->unpackOptions = UnpackOptions::create($composer->getPackage()->getExtra());
   }
 
   /**
@@ -79,19 +79,6 @@ final class UnpackManager {
       /** @var \Composer\Package\PackageInterface $package */
       $this->io->write("The <info>{$package->getName()}</info> recipe was unpacked successfully.");
     }
-  }
-
-  /**
-   * Get the unpack options for a package.
-   *
-   * @param \Composer\Package\PackageInterface $package
-   *   The package to unpack.
-   *
-   * @return \Drupal\Composer\Plugin\RecipeUnpack\UnpackOptions
-   *   The unpack options.
-   */
-  public static function getUnpackOptions(PackageInterface $package): UnpackOptions {
-    return UnpackOptions::create($package->getExtra());
   }
 
 }
