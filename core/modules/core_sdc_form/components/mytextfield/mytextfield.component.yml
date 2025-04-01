@@ -1,6 +1,12 @@
 $schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
-name: "My textfield"
+name: "Bootstrap textfield"
 status: experimental
+slots:
+  label:
+    title: "Label"
 props:
   type: object
-  properties: { }
+  properties:
+    id:
+      title: ID
+      type: string

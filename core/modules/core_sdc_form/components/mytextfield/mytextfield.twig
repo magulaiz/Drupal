@@ -1,4 +1,8 @@
-<input
-       type="text"
-       name="aaa"
-       value="">
+{% set id = id|default('mytextfield-' ~ random()) %}
+
+<div{{ attributes.addClas('mb-3') }}>
+  <label class="form-label" for="{{ id }}">
+    {{ label }}
+  </label>
+  <input type="text" class="form-control" id="{{ id }}" name="{{ form_state.name }}" value="{{ form_state.value }}">
+</div>

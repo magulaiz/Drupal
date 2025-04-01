@@ -114,7 +114,6 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
 
       // If this is element is to be used exclusively in a form, denote that it
       // will receive input, and assign the value callback.
-      // If a
       if ($element instanceof FormElementInterface) {
         $element_info['#input'] = TRUE;
         $element_info['#value_callback'] = [$definition['class'], 'valueCallback'];

@@ -31,8 +31,11 @@ class ComponentFormElementWorking extends FormBase {
     $form['component'] =  [
       '#type' => 'component',
       '#component' => 'core_sdc_form:mytextfield',
-      '#input' => TRUE,
-      '#name' => 'aaa',
+      '#slots' => [
+        'label' => (string) $this->t('My Bootstrap textfield'),
+      ],
+      '#name' => 'foo',
+      '#default_value' => 'bar',
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -47,9 +50,19 @@ class ComponentFormElementWorking extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $this->messenger()->addStatus($form_state->getValue('normal'));
-    $this->messenger()->addStatus($form_state->getValue('component'));
-    $this->messenger()->addStatus($form_state->getValue('aaa'));
+    $values = $form_state->getValues();
+    $keys = [
+      'normal',
+      'foo',
+    ];
+    foreach ($keys as $key) {
+      if (isset($values[$key])) {
+        $this->messenger()->addStatus($this->t('@key: @value', [
+          '@key' => $key,
+          '@value' => $values[$key],
+        ]));
+      }
+    }
   }
 
 }
