@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config_translation\Functional;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\user\Entity\Role;
 
 // cspell:ignore anonyme viewsviewfiles
 
@@ -332,6 +334,26 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
       ->get('config_translation_test.content')
       ->get('animals');
     $this->assertEquals($expected, $actual);
+  }
+
+  /**
+   * Tests escaping of source configuration label.
+   */
+  public function testLabelEscaping(): void {
+    $this->drupalLogin($this->adminUser);
+
+    // Testing via translating a role configuration.
+    $role_id = $this->randomMachineName(16);
+    $malicious_role_name = '">\'><img src="http://127.0.0.1/evil">';
+    $this->drupalCreateRole([], $role_id, $malicious_role_name);
+
+    // Visit the form that adds the translation of this label.
+    $translate_link = 'admin/people/roles/manage/' . $role_id . '/translate/fr/add';
+    $this->drupalGet($translate_link);
+
+    // Ensure that the displayed label is escaped.
+    $role = Role::load($role_id);
+    $this->assertSession()->responseContains(Html::escape($role->label()));
   }
 
 }
