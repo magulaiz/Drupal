@@ -54,11 +54,6 @@ class BlockContentAddLocalAction extends LocalActionDefault {
     if ($region = $this->requestStack->getCurrentRequest()->query->getString('region')) {
       $options['query']['region'] = $region;
     }
-
-    // Adds a destination on content block listing.
-    if ($route_match->getRouteName() == 'entity.block_content.collection') {
-      $options['query']['destination'] = Url::fromRoute('<current>')->toString();
-    }
     return $options;
   }
 
