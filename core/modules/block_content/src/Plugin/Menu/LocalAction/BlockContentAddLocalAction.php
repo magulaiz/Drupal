@@ -5,7 +5,6 @@ namespace Drupal\block_content\Plugin\Menu\LocalAction;
 use Drupal\Core\Menu\LocalActionDefault;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
-use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
