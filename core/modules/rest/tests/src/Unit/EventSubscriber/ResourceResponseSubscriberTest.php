@@ -53,6 +53,9 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     $this->assertEquals($expected_response !== FALSE ? $expected_response : Json::encode($data), $event->getResponse()->getContent());
   }
 
+  /**
+   * Provides data to testSerialization().
+   */
   public static function providerTestSerialization() {
     return [
       // The default data for \Drupal\rest\ResourceResponse.
@@ -380,6 +383,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
 
   /**
    * @return \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
+   *   A functioning ResourceResponseSubscriber.
    */
   protected function getFunctioningResourceResponseSubscriber(RouteMatchInterface $route_match) {
     // Create a dummy of the renderer service.

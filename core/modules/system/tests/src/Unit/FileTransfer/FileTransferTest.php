@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @group FileTransfer
+ * @group legacy
  */
 class FileTransferTest extends UnitTestCase {
 
@@ -26,6 +27,9 @@ class FileTransferTest extends UnitTestCase {
     $this->testConnection = TestFileTransfer::factory($this->root, []);
   }
 
+  /**
+   * Tests the value returned by __get().
+   */
   public function testFileTransferMagicMethods(): void {
     // Test to ensure __get() preserves public access.
     $this->assertInstanceOf(MockTestConnection::class, $this->testConnection->connection);
