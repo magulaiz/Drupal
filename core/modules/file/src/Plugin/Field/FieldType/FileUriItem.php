@@ -8,6 +8,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\UriItem;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\ComputedFileUrl;
+use Drupal\file\ComputedFileUriAbsolute;
 
 /**
  * File-specific plugin implementation of a URI item to provide a full URL.
@@ -33,6 +34,11 @@ class FileUriItem extends UriItem {
       ->setComputed(TRUE)
       ->setInternal(FALSE)
       ->setClass(ComputedFileUrl::class);
+    $properties['url_absolute'] = DataDefinition::create('string')
+      ->setLabel(t('Absolute file URL'))
+      ->setComputed(TRUE)
+      ->setInternal(FALSE)
+      ->setClass(ComputedFileUriAbsolute::class);
 
     return $properties;
   }
