@@ -202,10 +202,13 @@ class ArgumentDefaultTest extends ViewTestBase {
     $id = 'view_block_id';
     $this->drupalPlaceBlock("views_block:test_argument_default_revision-block_1", ['id' => $id]);
     $xpath = '//*[@id="block-view-block-id"]';
+    // Test revision id coming from node route parameter.
     $this->drupalGet($node1->toUrl());
     $this->assertStringContainsString($node1->getTitle(), $this->xpath($xpath)[0]->getText());
+    // Test revision id coming from node_revision route parameter.
     $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1->getRevisionId()]));
     $this->assertStringContainsString($node1->getTitle(), $this->xpath($xpath)[0]->getText());
+    // Test both with a different node.
     $this->drupalGet($node2->toUrl());
     $this->assertStringContainsString($node2->getTitle(), $this->xpath($xpath)[0]->getText());
     $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node2->id(), 'node_revision' => $node2->getRevisionId()]));

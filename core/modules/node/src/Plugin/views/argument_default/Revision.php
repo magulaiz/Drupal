@@ -59,11 +59,9 @@ class Revision extends ArgumentDefaultPluginBase implements CacheableDependencyI
    * {@inheritdoc}
    */
   public function getArgument() {
-    if (($revision = $this->routeMatch->getParameter('node_revision')) && $revision instanceof NodeInterface) {
+    $revision = $this->routeMatch->getParameter('node_revision') ?? $this->routeMatch->getParameter('node');
+    if ($revision instanceof NodeInterface) {
       return $revision->getRevisionId();
-    }
-    elseif (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
-      return $node->getRevisionId();
     }
   }
 
