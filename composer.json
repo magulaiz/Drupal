@@ -11,8 +11,8 @@
     "require": {
         "composer/installers": "^2.3",
         "drupal/core": "self.version",
-        "drupal/core-composer-unpack": "self.version",
         "drupal/core-project-message": "self.version",
+        "drupal/core-recipe-unpack": "self.version",
         "drupal/core-vendor-hardening": "self.version"
     },
     "require-dev": {
@@ -62,8 +62,8 @@
         "allow-plugins": {
             "composer/installers": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "drupal/core-composer-unpack": true,
             "drupal/core-project-message": true,
+            "drupal/core-recipe-unpack": true,
             "drupal/core-vendor-hardening": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true,
@@ -88,7 +88,7 @@
             "modules/custom/{$name}": ["type:drupal-custom-module"],
             "themes/custom/{$name}": ["type:drupal-custom-theme"]
         },
-        "drupal-core-composer-unpack": {
+        "drupal-recipe-unpack": {
             "on-install-and-update": false
         },
         "drupal-core-project-message": {

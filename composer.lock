@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4bc1dd80f06ce45a3f13820fbb1f70e7",
+    "content-hash": "912a6fcc91d086e009eb385dc7db21c1",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -651,45 +651,6 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
-            "transport-options": {
-                "relative": true
-            }
-        },
-        {
-            "name": "drupal/core-composer-unpack",
-            "version": "11.x-dev",
-            "dist": {
-                "type": "path",
-                "url": "composer/Plugin/Unpack",
-                "reference": "aa5303137bcbc281c5f0c8906aa79267319c4c1d"
-            },
-            "require": {
-                "composer-plugin-api": "^2",
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "composer/composer": "^2.7"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "Drupal\\Composer\\Plugin\\Unpack\\Plugin",
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\Composer\\Plugin\\Unpack\\": ""
-                }
-            },
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "description": "A flexible Composer project unpacker.",
-            "homepage": "https://www.drupal.org/project/drupal",
-            "keywords": [
-                "drupal"
-            ],
             "transport-options": {
                 "relative": true
             }
@@ -9890,14 +9851,14 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/core": 20,
-        "drupal/core-composer-unpack": 20,
         "drupal/core-project-message": 20,
+        "drupal/core-recipe-unpack": 20,
         "drupal/core-vendor-hardening": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.3.0"
     },
