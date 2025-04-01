@@ -325,6 +325,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       if (count($listeners) > 1) {
         throw new \LogicException("Module $module should not implement $hook more than once");
       }
+      $args[] = $hook;
       return reset($listeners)(... $args);
     }
 
@@ -359,6 +360,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function invokeAll($hook, array $args = []) {
     $return = [];
+    $args[] = $hook;
     $this->invokeAllWith($hook, function (callable $hook, string $module) use ($args, &$return) {
       $result = call_user_func_array($hook, $args);
       if (isset($result) && is_array($result)) {
