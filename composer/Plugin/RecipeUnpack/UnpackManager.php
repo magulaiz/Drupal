@@ -5,6 +5,7 @@ namespace Drupal\Composer\Plugin\RecipeUnpack;
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
+use Drupal\Core\Recipe\Recipe;
 
 /**
  * Core class to handle operations on dependencies.
@@ -17,13 +18,6 @@ final class UnpackManager {
    * @var \Drupal\Composer\Plugin\RecipeUnpack\UnpackCollection
    */
   private UnpackCollection $unpackCollection;
-
-  /**
-   * The unpacker factory.
-   *
-   * @var \Drupal\Composer\Plugin\RecipeUnpack\UnpackerFactory
-   */
-  private UnpackerFactory $unpackerFactory;
 
   /**
    * The root composer with the root dependencies to be manipulated.
@@ -40,19 +34,12 @@ final class UnpackManager {
   public readonly UnpackOptions $unpackOptions;
 
   public function __construct(
-    Composer $composer,
+    private readonly Composer $composer,
     private readonly IOInterface $io,
   ) {
     $this->unpackCollection = new UnpackCollection();
     $this->rootComposer = new RootComposer($composer, $this->io);
     $this->unpackOptions = UnpackManager::getUnpackOptions($composer->getPackage());
-    $this->unpackerFactory = new UnpackerFactory(
-      $composer,
-      $this->io,
-      $this->unpackCollection,
-      $this->rootComposer,
-      $this->unpackOptions
-    );
   }
 
   /**
@@ -65,7 +52,7 @@ final class UnpackManager {
    *   The package to register for unpacking.
    */
   public function registerPackage(PackageInterface $package): void {
-    if ($this->unpackerFactory->canBeUnpacked($package)) {
+    if ($package->getType() === Recipe::COMPOSER_PROJECT_TYPE) {
       $this->unpackCollection->enqueuePackage($package);
     }
   }
@@ -75,15 +62,22 @@ final class UnpackManager {
    */
   public function unpack(): void {
     while ($package = $this->unpackCollection->popPackageQueue()) {
-      $unpacker = $this->unpackerFactory->create($package);
-      $unpacker?->unpackDependencies();
+      $unpacker = new RecipeUnpacker(
+        $package,
+        $this->composer,
+        $this->io,
+        $this->rootComposer,
+        $this->unpackCollection,
+        $this->unpackOptions,
+      );
+      $unpacker->unpackDependencies();
     }
 
     $this->rootComposer->updateComposer();
 
     foreach ($this->unpackCollection->getUnpackedPackages() as $package) {
       /** @var \Composer\Package\PackageInterface $package */
-      $this->io->write("Package <info>{$package->getName()}</info> of type <info>{$package->getType()}</info> was unpacked successfully.");
+      $this->io->write("The <info>{$package->getName()}</info> recipe was unpacked successfully.");
     }
   }
 
