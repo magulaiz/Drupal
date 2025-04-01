@@ -32,26 +32,28 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
     $this->typedData = $this->container->get('typed_data_manager');
 
     $this->container->set('test.service', new class() {
+
       public function returnTrue(): bool {
-        return true;
+        return TRUE;
       }
 
       public function returnFalse(): bool {
-        return false;
+        return FALSE;
       }
+
     });
 
   }
 
   public function testValidation(): void {
-    # Test with a valid value.
+    // Test with a valid value.
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['test.service', 'returnFalse']);
     $typed_data = $this->typedData->create($definition, 1);
     $violations = $typed_data->validate();
     $this->assertEquals(1, $violations->count(), 'Validation failed when returning TRUE.');
 
-    # Test with an invalid value.
+    // Test with an invalid value.
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['test.service', 'returnTrue']);
     $typed_data = $this->typedData->create($definition, 1);
@@ -59,7 +61,8 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
     $this->assertEquals(0, $violations->count(), 'Validation succeeds when returning TRUE.');
   }
 
-  public function testNonExistingMethod(): void {    # Test with a non-existing method.
+  public function testNonExistingMethod(): void {
+    // Test with a non-existing method.
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['test.service', 'missingMethod']);
     $typed_data = $this->typedData->create($definition, 1);
@@ -70,7 +73,7 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
   }
 
   public function testNonExistingService(): void {
-    # Test with a non-existing service.
+    // Test with a non-existing service.
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['phantom.service', 'boo']);
     $typed_data = $this->typedData->create($definition, 1);

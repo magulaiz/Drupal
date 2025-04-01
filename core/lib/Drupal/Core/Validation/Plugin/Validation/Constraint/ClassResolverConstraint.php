@@ -26,10 +26,12 @@ class ClassResolverConstraint extends SymfonyConstraint {
   public string $message = "The '@callback` method on '@service' evaluated as invalid.";
 
   /**
-   * Array with service name and method name to call. For example to call the
-   * method 'isValidScheme' on the service 'stream_wrapper_manager', use:
-   * ['stream_wrapper_manager', 'isValidScheme']. This method should return TRUE
-   * when the result is valid. All other values will be seen as invalid.
+   * Array with service name and method name to call.
+   *
+   * For example to call the method 'isValidScheme' on the service
+   * 'stream_wrapper_manager', use: ['stream_wrapper_manager', 'isValidScheme'].
+   * This method should return TRUE when the result is valid. All other values
+   * will be considered as invalid.
    *
    * @var array
    */
