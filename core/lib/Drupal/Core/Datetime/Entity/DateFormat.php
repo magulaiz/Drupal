@@ -88,6 +88,9 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
     if ($a->isLocked() == $b->isLocked()) {
       $a_label = $a->label();
       $b_label = $b->label();
+      if (!extension_loaded('intl')) {
+        return strnatcasecmp($a_label, $b_label);
+      }
       return $collator->compare($a_label, $b_label);
     }
     return $a->isLocked() ? 1 : -1;
