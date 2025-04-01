@@ -177,44 +177,38 @@ class ArgumentDefaultTest extends ViewTestBase {
   /**
    * Test revision default argument.
    */
-  public function testArgumentDefaultRevision() {
+  public function testArgumentDefaultRevision(): void {
     // Create a user that has permission to place a view block.
     $permissions = [
-      'administer views',
       'administer blocks',
-      'bypass node access',
-      'access user profiles',
       'view all revisions',
     ];
     $views_admin = $this->drupalCreateUser($permissions);
     $this->drupalLogin($views_admin);
 
     // Create nodes where should show themselves again as view block.
-    $node_type = NodeType::create(['type' => 'page', 'label' => 'Page']);
-    $node_type->save();
-    $node1 = Node::create(['title' => 'Test node 1', 'type' => 'page']);
-    $node1->save();
+    $this->drupalCreateContentType(['type' => 'page']);
+    $node1 = $this->drupalCreateNode();
     $node1->setTitle($this->randomString());
     $node1->setNewRevision(TRUE);
     $node1->save();
-    $node2 = Node::create(['title' => 'Test node 2', 'type' => 'page']);
-    $node2->save();
+    $node2 = $this->drupalCreateNode();
     $node2->setTitle($this->randomString());
     $node2->setNewRevision(TRUE);
     $node2->save();
 
     // Place the block, visit the pages that display the block, and check that
     // the nodes we expect appear in the respective pages.
-    $id = 'view-block-id';
+    $id = 'view_block_id';
     $this->drupalPlaceBlock("views_block:test_argument_default_revision-block_1", ['id' => $id]);
-    $xpath = '//*[@id="block-' . $id . '"]';
-    $this->drupalGet('node/' . $node1->id());
+    $xpath = '//*[@id="block-view-block-id"]';
+    $this->drupalGet($node1->toUrl());
     $this->assertStringContainsString($node1->getTitle(), $this->xpath($xpath)[0]->getText());
-    $this->drupalGet('node/' . $node1->id() . '/revisions/' . $node1->getRevisionId() . '/view');
+    $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1->getRevisionId()]));
     $this->assertStringContainsString($node1->getTitle(), $this->xpath($xpath)[0]->getText());
-    $this->drupalGet('node/' . $node2->id());
+    $this->drupalGet($node2->toUrl());
     $this->assertStringContainsString($node2->getTitle(), $this->xpath($xpath)[0]->getText());
-    $this->drupalGet('node/' . $node2->id() . '/revisions/' . $node2->getRevisionId() . '/view');
+    $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node2->id(), 'node_revision' => $node2->getRevisionId()]));
     $this->assertStringContainsString($node2->getTitle(), $this->xpath($xpath)[0]->getText());
   }
 
