@@ -6,6 +6,8 @@ namespace Drupal\Tests\block_content\Functional;
 
 /**
  * Tests block_content local action links.
+ *
+ * @group block_content
  */
 class LocalActionTest extends BlockContentTestBase {
 
