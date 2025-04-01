@@ -6,7 +6,6 @@ namespace Drupal\navigation\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\Form\LayoutBuilderEntityFormTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
