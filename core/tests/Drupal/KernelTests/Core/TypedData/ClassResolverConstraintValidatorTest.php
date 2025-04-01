@@ -51,12 +51,13 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
   /**
    * Data provider for service validation test cases.
    */
-  public function provideServiceValidationCases(): array {
+  public static function provideServiceValidationCases(): array {
     return [
       'false result' => [
         'method' => 'returnFalse',
         'expected_violations' => 1,
         'message' => 'Validation failed when returning FALSE.',
+        'expected_violation_message' => 'Calling \'returnFalse\' method with value \'1\' on \'test.service\' evaluated as invalid.',
       ],
       'true result' => [
         'method' => 'returnTrue',
@@ -67,6 +68,7 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
         'method' => 'returnNotTrue',
         'expected_violations' => 1,
         'message' => 'Validation fails when returning \'true\'.',
+        'expected_violation_message' => 'Calling \'returnNotTrue\' method with value \'1\' on \'test.service\' evaluated as invalid.',
       ],
     ];
   }
@@ -74,12 +76,15 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
   /**
    * @dataProvider provideServiceValidationCases
    */
-  public function testValidationForService(string $method, int $expected_violations, string $message): void {
+  public function testValidationForService(string $method, int $expected_violations, string $message, ?string $expected_violation_message = NULL): void {
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['classOrService' => 'test.service', 'method' => $method]);
     $typed_data = $this->typedData->create($definition, 1);
     $violations = $typed_data->validate();
     $this->assertEquals($expected_violations, $violations->count(), $message);
+    if ($expected_violation_message) {
+      $this->assertEquals($expected_violation_message, $violations->get(0)->getMessage());
+    }
   }
 
   public function testNonExistingMethod(): void {

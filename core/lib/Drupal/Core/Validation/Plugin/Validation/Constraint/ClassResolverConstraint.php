@@ -28,7 +28,7 @@ class ClassResolverConstraint extends SymfonyConstraint {
    *
    * @var string
    */
-  public string $message = "Calling '@callback` method with value '@value' on '@classOrService' evaluated as invalid.";
+  public string $message = "Calling '@method' method with value '@value' on '@classOrService' evaluated as invalid.";
 
   /**
    * Class or service.
@@ -36,7 +36,6 @@ class ClassResolverConstraint extends SymfonyConstraint {
    * @var array
    */
   public string $classOrService;
-
 
   /**
    * Method to call.
