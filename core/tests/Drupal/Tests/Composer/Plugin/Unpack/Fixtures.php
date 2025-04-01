@@ -15,7 +15,7 @@ class Fixtures extends FixturesBase {
    * {@inheritdoc}
    */
   public function projectRoot(): string {
-    return realpath(__DIR__) . '/../../../../../../../composer/Plugin/Unpack';
+    return realpath(__DIR__) . '/../../../../../../../composer/Plugin/RecipeUnpack';
   }
 
   /**

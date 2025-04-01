@@ -6,7 +6,6 @@ use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Package\Link;
 use Composer\Package\PackageInterface;
-use Drupal\Core\Recipe\Recipe;
 
 /**
  * Unpacker for recipes.
@@ -65,7 +64,7 @@ final class RecipeUnpacker {
         continue;
       }
 
-      if ($package?->getType() === Recipe::COMPOSER_PROJECT_TYPE) {
+      if ($package?->getType() === 'drupal-recipe') {
         // This dependency is of the same type as the current package being
         // unpacked. This  means that this dependency should be unpacked as
         // well, so let's add it into the package queue.

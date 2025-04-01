@@ -5,7 +5,6 @@ namespace Drupal\Composer\Plugin\RecipeUnpack;
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
-use Drupal\Core\Recipe\Recipe;
 
 /**
  * Core class to handle operations on dependencies.
@@ -52,7 +51,7 @@ final class UnpackManager {
    *   The package to register for unpacking.
    */
   public function registerPackage(PackageInterface $package): void {
-    if ($package->getType() === Recipe::COMPOSER_PROJECT_TYPE) {
+    if ($package->getType() === 'drupal-recipe') {
       $this->unpackCollection->enqueuePackage($package);
     }
   }

@@ -129,7 +129,7 @@ class UnpackRecipeTest extends BuildTestBase {
 
       // When the package is unpacked, the unpacked dependencies should be logged
       // in the stdout.
-      $this->assertStringContainsString("Package $package of type $package_type was unpacked successfully.", $stdout);
+      $this->assertStringContainsString("The $package recipe was unpacked successfully.", $stdout);
 
       // After being unpacked, the package should be removed from the root
       // composer.json and composer.lock.
@@ -212,7 +212,7 @@ class UnpackRecipeTest extends BuildTestBase {
 
       // When the package is unpacked, the unpacked dependencies should be logged
       // in the stdout.
-      $this->assertStringContainsString("Package $package of type $package_type was unpacked successfully.", $stdout);
+      $this->assertStringContainsString("The $package recipe was unpacked successfully.", $stdout);
 
       // After being unpacked, the package should be removed from the root
       // composer.json and composer.lock.
