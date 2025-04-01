@@ -101,8 +101,8 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
     parent::buildExposeForm($form, $form_state);
     $form['expose']['reduce'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Limit list to selected items'),
-      '#description' => $this->t('If checked, the only items presented to the user will be the ones selected here.'),
+      '#title' => $this->t('Limit the available options'),
+      '#description' => $this->t('Limit the available options to be shown on the exposed filter to the ones selected above.'),
       // Safety.
       '#default_value' => !empty($this->options['expose']['reduce']),
     ];
