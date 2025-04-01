@@ -167,20 +167,29 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     if ($logo_uri !== NULL) {
       $extension = pathinfo($logo_uri, PATHINFO_EXTENSION);
     }
-    $build['site_logo'] = [
-      '#theme' => 'image',
-      '#uri' => $logo_uri,
-      '#alt' => $this->t('Home'),
-      '#attributes' => ['loading' => 'eager', 'fetchpriority' => 'high'],
-      '#access' => $this->configuration['use_site_logo'],
-    ];
 
-    // Add width and height attributes. SVGs are printed inline in the template.
-    if (isset($extension) && $extension !== 'svg') {
-      $image = $this->imageFactory->get(ltrim($logo_uri, '/'));
-      if ($image->isValid()) {
-        $build['site_logo']['#attributes']['width'] = $image->getWidth();
-        $build['site_logo']['#attributes']['height'] = $image->getHeight();
+    if (isset($extension)) {
+      $logo_uri = ltrim($logo_uri, '/');
+      $build['site_logo'] = [
+        '#access' => $this->configuration['use_site_logo'],
+      ];
+      // SVG uses an inline template. Otherwise, use the image factory.
+      if ($extension === 'svg') {
+        $build['site_logo']['#type'] = 'inline_template';
+        $build['site_logo']['#template'] = file_get_contents($logo_uri);
+      }
+      else {
+        $image = $this->imageFactory->get($logo_uri);
+        if ($image->isValid()) {
+          $build['site_logo']['#theme'] = 'image';
+          $build['site_logo']['#uri'] = $logo_uri;
+          $build['site_logo']['#alt'] = $this->t('Home');
+          $build['site_logo']['#attributes'] = ['loading' => 'eager',
+            'fetchpriority' => 'high',
+            'width' => $image->getWidth(),
+            'height' => $image->getHeight(),
+          ];
+        }
       }
     }
 
