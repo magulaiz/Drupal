@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Hooks implementations.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_page_attachments().
+ */
+function core_sdc_form_page_attachments(array &$attachments): void {
+  $attachments['#attached']['library'][] = 'core_sdc_form/bootstrap';
+}

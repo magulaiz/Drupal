@@ -1,9 +1,23 @@
-core_sdc_form.form_in_component:
-  title: "Form in component"
+core_sdc_form.1:
+  title: "1: Form in component"
   menu_name: main
-  route_name: core_sdc_form.form_in_component
+  route_name: core_sdc_form.1
+  weight: 5
 
-core_sdc_form.form:
-  title: SDC form
+core_sdc_form.2:
+  title: "2: Component in form (not working)"
   menu_name: main
-  route_name: core_sdc_form.form
+  route_name: core_sdc_form.2
+  weight: 10
+
+core_sdc_form.3:
+  title: "3: Component in form (working)"
+  menu_name: main
+  route_name: core_sdc_form.3
+  weight: 15
+
+core_sdc_form.4:
+  title: "4: Component as form element (working)"
+  menu_name: main
+  route_name: core_sdc_form.4
+  weight: 20

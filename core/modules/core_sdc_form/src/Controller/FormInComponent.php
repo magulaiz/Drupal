@@ -18,9 +18,10 @@ class FormInComponent extends ControllerBase {
     $form = $this->formBuilder()->getForm(\Drupal\core_sdc_form\Form\FormInComponent::class);
     return [
       '#type' => 'component',
-      '#component' => 'navigation:badge',
+      '#component' => 'core_sdc_form:accordion',
       '#slots' => [
-        'label' => $form,
+        'title' => (string) $this->t('Form in component accordion'),
+        'content' => $form,
       ],
     ];
   }

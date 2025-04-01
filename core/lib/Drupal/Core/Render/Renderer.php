@@ -458,11 +458,6 @@ class Renderer implements RendererInterface {
       if (isset($elements['#type']) && $elements['#type'] === 'component') {
         $elements['#children'] .= $this->doRender($elements['inline-template']);
         $elements['#children'] = Markup::create($elements['#children']);
-
-//        foreach ($children as $key) {
-//          $elements['#slots'][$key] = $this->doRender($elements[$key]);
-//          $elements['#slots'][$key] = Markup::create($elements['#slots'][$key]);
-//        }
       }
       else {
         foreach ($children as $key) {

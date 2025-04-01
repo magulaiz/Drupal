@@ -1,0 +1,16 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Card
+description: "A card is a flexible and extensible content container. It includes options for headers and footers, a wide variety of content, contextual background colors, and powerful display options."
+slots:
+  header:
+    title: Header
+    description: "Card header."
+  content:
+    title: Content
+    description: "Card body."
+  footer:
+    title: Footer
+    description: "Card footer."
+props:
+  type: object
+  properties: { }
