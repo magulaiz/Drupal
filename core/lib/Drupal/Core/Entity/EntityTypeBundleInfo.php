@@ -64,8 +64,10 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
    *   The typed data manager.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
+   * @param array $bundleClasses
+   *   An array of bundle class info, keyed by fully qualified class name.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, CacheBackendInterface $cache_backend) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, CacheBackendInterface $cache_backend, protected array $bundleClasses = []) {
     $this->entityTypeManager = $entity_type_manager;
     $this->languageManager = $language_manager;
     $this->moduleHandler = $module_handler;
@@ -107,6 +109,15 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
             $this->bundleInfo[$type][$type]['label'] = $entity_type->getLabel();
           }
         }
+
+        // Bundle classes.
+        foreach ($this->bundleClasses as $class => $info) {
+          $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['class'] = $class;
+          $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['label'] = $info['label']
+            ?? $this->bundleInfo[$info['entityTypeId']][$info['bundle']]['label']
+            ?? $info['bundle'];
+        }
+
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, [
           'entity_types',
