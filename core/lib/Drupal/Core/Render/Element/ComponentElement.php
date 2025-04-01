@@ -70,17 +70,7 @@ class ComponentElement extends FormElementBase {
     }
 
     // This component is a form component.
-//    if ($element['#form_state']) {
-//      $random = new Random();
-//      $element['#form_state']['name'] = $element['#name'] ?? $random->string();
-//
-//      $props['form_state'] = $element['#form_state'];
-//      // useless, too late. So try to change ComponentElement into a form element.
-////      $element['#input'] = TRUE;
-//    }
-
-    // This component is a form component.
-    if ($element['#name']) {
+    if (!empty($element['#name'])) {
       $props['form_state'] = [
         'name' => $element['#name'],
         'value' => $element['#value'] ?? $element['#default_value'] ?? NULL,

@@ -28,7 +28,7 @@ class ComponentFormElementWorking extends FormBase {
       '#title' => $this->t('Normal form element'),
     ];
 
-    $form['component'] =  [
+    $form['component_textfield'] =  [
       '#type' => 'component',
       '#component' => 'core_sdc_form:mytextfield',
       '#slots' => [
@@ -36,6 +36,22 @@ class ComponentFormElementWorking extends FormBase {
       ],
       '#name' => 'foo',
       '#default_value' => 'bar',
+    ];
+
+    $form['component_select'] =  [
+      '#type' => 'component',
+      '#component' => 'core_sdc_form:myselect',
+      '#slots' => [
+        'label' => (string) $this->t('My Bootstrap select'),
+      ],
+      '#props' => [
+        'options' => [
+          '1' => $this->t('One'),
+          '2' => $this->t('Two'),
+          '3' => $this->t('Three'),
+        ],
+      ],
+      '#name' => 'baz',
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -54,6 +70,7 @@ class ComponentFormElementWorking extends FormBase {
     $keys = [
       'normal',
       'foo',
+      'baz',
     ];
     foreach ($keys as $key) {
       if (isset($values[$key])) {
