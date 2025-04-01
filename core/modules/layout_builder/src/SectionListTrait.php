@@ -38,17 +38,12 @@ trait SectionListTrait {
    */
   public function getSection($delta) {
     if (!$this->hasSection($delta)) {
-      $sections = $this->getSections();
-      $validDeltas = array_keys($sections);
-      $message = sprintf(
-        'The section delta "%s" is invalid. Available deltas: %s. Total sections: %d.',
-        $delta,
-        $validDeltas ? implode(', ', $validDeltas) : 'none',
-        count($sections)
-      );
-      throw new \OutOfBoundsException($message);
+      throw new \OutOfBoundsException(sprintf(
+        'Invalid section delta "%s", there are %d sections.', 
+        $delta, 
+        $this->count()
+      ));
     }
-  
     return $this->getSections()[$delta];
   }
 
