@@ -598,6 +598,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->initializeRequestGlobals($request);
 
     // Put the request on the stack.
+    // It will be popped out in
+    // \Drupal\Core\EventSubscriber\StackMiddlewareSubscriber::onKernelTerminate()
     $this->container->get('request_stack')->push($request);
 
     // Set the allowed protocols.
@@ -696,6 +698,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
           $service = $this->container->get($id);
           $service->destruct();
         }
+      }
+
+      // Pop the transaction added in ::preHandle().
+      if ($this->prepared === TRUE) {
+        $this->container->get('request_stack')->pop();
       }
     }
   }
