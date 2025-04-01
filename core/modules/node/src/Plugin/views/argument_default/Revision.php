@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\node\Plugin\views\argument_default;
 
 use Drupal\Core\Cache\Cache;
@@ -56,11 +58,12 @@ class Revision extends ArgumentDefaultPluginBase implements CacheableDependencyI
   /**
    * {@inheritdoc}
    */
-  public function getArgument() {
+  public function getArgument(): int|null|string {
     $revision = $this->routeMatch->getParameter('node_revision') ?? $this->routeMatch->getParameter('node');
     if ($revision instanceof NodeInterface) {
       return $revision->getRevisionId();
     }
+    return NULL;
   }
 
   /**
