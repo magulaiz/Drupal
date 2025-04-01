@@ -290,7 +290,10 @@ END;
     // executable that might not exist while dependencies are being installed.
     // It adds no value to this test.
     $data['config']['allow-plugins']['dealerdirect/phpcodesniffer-composer-installer'] = FALSE;
+
+    $data['require']['cweagans/composer-patches'] = '^1.7';
     $data['config']['allow-plugins']['cweagans/composer-patches'] = TRUE;
+    $data['config']['extra']['composer-exit-on-patch-failure'] = TRUE;
 
     // Always force Composer to mirror path repositories. This is necessary
     // because dependencies are installed from a Composer-type repository, which
