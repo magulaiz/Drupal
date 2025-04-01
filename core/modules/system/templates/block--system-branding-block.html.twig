@@ -19,11 +19,7 @@
 {% block content %}
   {% if site_logo %}
     <a href="{{ path('<front>') }}" rel="home">
-      {% if site_logo|split('.')|last == "svg" %}
-        {% include site_logo %}
-      {% else %}
-        {{ site_logo_rendered }}
-      {% endif %}
+      {{ site_logo }}
     </a>
   {% endif %}
   {% if site_name %}
