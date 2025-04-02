@@ -11,6 +11,7 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @coversDefaultClass \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl
@@ -36,6 +37,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
    * An array of languages.
    */
   protected array $languages;
+  protected $requestStack;
 
   /**
    * {@inheritdoc}
@@ -69,6 +71,9 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     // Create a user stub.
     $this->user = $this->getMockBuilder('Drupal\Core\Session\AccountInterface')
       ->getMock();
+
+    // Create an empty request stack.
+    $this->requestStack = new RequestStack();
 
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
@@ -106,6 +111,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $method->setLanguageManager($this->languageManager);
     $method->setConfig($config);
     $method->setCurrentUser($this->user);
+    $method->setRequestStack($this->requestStack);
     $this->assertEquals($expected_langcode, $method->getLangcode($request));
 
     $cacheability = new BubbleableMetadata();
@@ -200,6 +206,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $method->setLanguageManager($this->languageManager);
     $method->setConfig($config);
     $method->setCurrentUser($this->user);
+    $method->setRequestStack($this->requestStack);
     $this->assertNull($method->getLangcode($request));
 
     $language = $this->createMock(LanguageInterface::class);
@@ -260,6 +267,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $method->setLanguageManager($this->languageManager);
     $method->setConfig($config);
     $method->setCurrentUser($this->user);
+    $method->setRequestStack($this->requestStack);
     $this->assertEquals($expected_langcode, $method->getLangcode($request));
 
     $cacheability = new BubbleableMetadata();
