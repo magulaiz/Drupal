@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 
 /**
@@ -18,6 +19,8 @@ use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
  * @group node
  */
 class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -31,33 +34,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     parent::setUp();
     $this->installConfig(['filter', 'node']);
 
-    $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
-    $node_type->save();
-    // Ensure the 'body' field storage exists.
-    $field_storage = FieldStorageConfig::loadByName('node', 'body');
-    if (!$field_storage) {
-      $field_storage = FieldStorageConfig::create([
-        'field_name' => 'body',
-        'entity_type' => 'node',
-        'type' => 'text_long',
-      ]);
-      $field_storage->save();
-    }
-
-    // Ensure the 'body' field exists for the 'article' content type.
-    $field = FieldConfig::loadByName('node', $node_type->id(), 'body');
-    if (!$field) {
-      $field = FieldConfig::create([
-        'field_storage' => $field_storage,
-        'bundle' => $node_type->id(),
-        'label' => 'Body',
-        'settings' => [
-          'display_summary' => TRUE,
-          'allowed_formats' => [],
-        ],
-      ]);
-      $field->save();
-    }
+    $this->createContentType(['type' => 'article', 'name' => 'Article']);
   }
 
   /**
