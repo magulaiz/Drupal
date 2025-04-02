@@ -6,10 +6,9 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests importing recreated configuration entities.
@@ -17,6 +16,8 @@ use Drupal\node\Entity\NodeType;
  * @group config
  */
 class ConfigImportRecreateTest extends KernelTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * Config Importer object used for testing.
@@ -61,50 +62,12 @@ class ConfigImportRecreateTest extends KernelTestBase {
     );
   }
 
-  /**
-   * Tests the recreation of a content type and its associated configurations.
-   */
   public function testRecreateEntity(): void {
     $type_name = $this->randomMachineName(16);
-    $content_type = NodeType::create([
+    $content_type = $this->createContentType([
       'type' => $type_name,
       'name' => 'Node type one',
     ]);
-    $content_type->save();
-
-    // Create field storage and field config.
-    FieldStorageConfig::create([
-      'field_name' => 'content',
-      'entity_type' => 'node',
-      'type' => 'text_long',
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'content',
-      'entity_type' => 'node',
-      'bundle' => $content_type->id(),
-      'label' => 'Content',
-    ])->save();
-
-    // Add entity form and view displays.
-    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
-    $display_repository = \Drupal::service('entity_display.repository');
-
-    // Assign widget settings for the default form mode.
-    $display_repository->getFormDisplay('node', $type_name)
-      ->setComponent('content', [
-        'type' => 'text_textfield',
-      ])
-      ->save();
-
-    // Assign display settings for the 'default' and 'teaser' view modes.
-    $display_repository->getViewDisplay('node', $type_name)
-      ->setComponent('content', [
-        'label' => 'hidden',
-        'type' => 'text_default',
-      ])
-      ->save();
-
     /** @var \Drupal\Core\Config\StorageInterface $active */
     $active = $this->container->get('config.storage');
     /** @var \Drupal\Core\Config\StorageInterface $sync */
@@ -114,43 +77,14 @@ class ConfigImportRecreateTest extends KernelTestBase {
     $this->copyConfig($active, $sync);
 
     // Delete the content type. This will also delete a field storage, a field,
-    // an entity view display, and an entity form display.
+    // an entity view display and an entity form display.
     $content_type->delete();
-    $this->assertFalse($active->exists($config_name), 'Content type\'s old name does not exist in active store.');
-
+    $this->assertFalse($active->exists($config_name), 'Content type\'s old name does not exist active store.');
     // Recreate with the same type - this will have a different UUID.
-    $content_type = NodeType::create([
+    $this->createContentType([
       'type' => $type_name,
       'name' => 'Node type two',
     ]);
-    $content_type->save();
-    // Recreate the field storage and config.
-    FieldStorageConfig::create([
-      'field_name' => 'content',
-      'entity_type' => 'node',
-      'type' => 'text_long',
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'content',
-      'entity_type' => 'node',
-      'bundle' => $content_type->id(),
-      'label' => 'Content',
-    ])->save();
-
-    // Recreate entity form and view displays.
-    $display_repository->getFormDisplay('node', $type_name)
-      ->setComponent('content', [
-        'type' => 'text_textfield',
-      ])
-      ->save();
-
-    $display_repository->getViewDisplay('node', $type_name)
-      ->setComponent('content', [
-        'label' => 'hidden',
-        'type' => 'text_default',
-      ])
-      ->save();
 
     $this->configImporter->reset();
     // A node type, a field, an entity view display and an entity form display
