@@ -73,7 +73,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->submitForm([
       'moderation_state[0][state]' => 'published',
       'title[0][value]' => 'Some moderated content',
-      'body[0][value]' => 'First version of the content.',
     ], 'Preview');
     $this->clickLink('Back to content editing');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'draft');
@@ -104,7 +103,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     // Update the draft.
     $this->drupalGet($edit_path);
     $this->submitForm([
-      'body[0][value]' => 'Second version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Save');
 
@@ -117,7 +115,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     // Preview the draft.
     $this->drupalGet($edit_path);
     $this->submitForm([
-      'body[0][value]' => 'Second version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Preview');
 
@@ -138,7 +135,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     // Publish the draft.
     $this->drupalGet($edit_path);
     $this->submitForm([
-      'body[0][value]' => 'Third version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save');
 
@@ -169,7 +165,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     // Make a pending revision.
     $this->drupalGet($edit_path);
     $this->submitForm([
-      'body[0][value]' => 'Fourth version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Save');
 
@@ -312,7 +307,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet('node/add/moderated_content');
     $this->submitForm([
       'title[0][value]' => 'Some moderated content',
-      'body[0][value]' => 'First version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Save');
     $this->assertSession()->elementExists('xpath', '//ul[@class="entity-moderation-form"]');
@@ -334,7 +328,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
     $this->submitForm([
-      'body[0][value]' => 'Second version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
 
@@ -358,7 +351,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
 
     $this->submitForm([
-      'body[0][value]' => 'Third version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Save (this translation)');
 
@@ -378,7 +370,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
     $this->submitForm([
-      'body[0][value]' => 'Fifth version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
 
@@ -391,7 +382,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
     $this->submitForm([
-      'body[0][value]' => 'Sixth version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
 
@@ -410,7 +400,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionExists('moderation_state[0][state]', 'archived');
     $this->submitForm([
-      'body[0][value]' => 'Seventh version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Save (this translation)');
 
@@ -425,7 +414,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->assertSession()->optionExists('moderation_state[0][state]', 'published');
     $this->assertSession()->optionNotExists('moderation_state[0][state]', 'archived');
     $this->submitForm([
-      'body[0][value]' => 'Eighth version of the content.',
       'moderation_state[0][state]' => 'published',
     ], 'Save (this translation)');
 
@@ -497,12 +485,12 @@ class ModerationFormTest extends ModerationStateTestBase {
    * Tests the moderation_state field when an alternative widget is set.
    */
   public function testAlternativeModerationStateWidget(): void {
-    $entity_form_display = EntityFormDisplay::load('node.moderated_content.default');
-    $entity_form_display->setComponent('moderation_state', [
-      'type' => 'string_textfield',
-      'region' => 'content',
-    ]);
-    $entity_form_display->save();
+    \Drupal::service('entity_display.repository')->getFormDisplay('node', 'moderated_content')
+      ->setComponent('moderation_state', [
+        'type' => 'string_textfield',
+        'region' => 'content',
+      ])
+      ->save();
     $this->drupalGet('node/add/moderated_content');
     $this->submitForm([
       'title[0][value]' => 'Test content',
@@ -543,7 +531,6 @@ class ModerationFormTest extends ModerationStateTestBase {
     $this->drupalGet('node/add/moderated_content');
     $this->submitForm([
       'title[0][value]' => 'Some moderated content',
-      'body[0][value]' => 'First version of the content.',
       'moderation_state[0][state]' => 'draft',
     ], 'Save');
 
