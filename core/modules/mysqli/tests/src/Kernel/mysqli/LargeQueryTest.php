@@ -42,7 +42,7 @@ class LargeQueryTest extends BaseMySqlTest {
       Database::closeConnection('testMaxAllowedPacketQueryTruncating');
       // Got a packet bigger than 'max_allowed_packet' bytes exception thrown.
       $this->assertInstanceOf(DatabaseExceptionWrapper::class, $e);
-      $this->assertEquals(1153, $e->getCode());
+      $this->assertEquals(1153, $e->getPrevious()->getCode());
       // 'max_allowed_packet' exception message truncated.
       // Use strlen() to count the bytes exactly, not the unicode chars.
       $this->assertLessThanOrEqual($max_allowed_packet, strlen($e->getMessage()));
