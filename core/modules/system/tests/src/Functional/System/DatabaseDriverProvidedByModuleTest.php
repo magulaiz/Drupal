@@ -36,7 +36,7 @@ class DatabaseDriverProvidedByModuleTest extends BrowserTestBase {
    */
   public function testDatabaseDriverIsProvidedByModuleButTheModuleIsNotEnabled(): void {
     $driver = Database::getConnection()->driver();
-    if (!in_array($driver, ['mysql', 'pgsql'])) {
+    if (!in_array($driver, ['mysql', 'mysqli', 'pgsql'])) {
       $this->markTestSkipped("This test does not support the {$driver} database driver.");
     }
 

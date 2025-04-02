@@ -25,7 +25,7 @@ class ExistingDrupal8StyleDatabaseConnectionInSettingsPhpTest extends BrowserTes
     parent::setUp();
 
     $driver = Database::getConnection()->driver();
-    if (!in_array($driver, ['mysql', 'pgsql', 'sqlite'])) {
+    if (!in_array($driver, ['mysql', 'mysqli', 'pgsql', 'sqlite'])) {
       $this->markTestSkipped("This test does not support the {$driver} database driver.");
     }
 
