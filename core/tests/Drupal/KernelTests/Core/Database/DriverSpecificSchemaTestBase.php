@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Schema;
@@ -12,6 +13,8 @@ use Drupal\Tests\Core\Database\SchemaIntrospectionTestTrait;
 
 /**
  * Tests table creation and modification via the schema API.
+ *
+ * @coversDefaultClass \Drupal\Core\Database\Schema
  */
 abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase {
 
@@ -50,7 +53,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    * @param string|null $column
    *   Optional column to test.
    */
-  abstract public function checkSchemaComment(string $description, string $table, string $column = NULL): void;
+  abstract public function checkSchemaComment(string $description, string $table, ?string $column = NULL): void;
 
   /**
    * Tests inserting data into an existing table.
@@ -252,7 +255,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Test the primary key columns.
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $method->setAccessible(TRUE);
     $this->assertSame(['test_serial'], $method->invoke($this->schema, 'test_table'));
 
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
@@ -308,27 +310,12 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Check that the ID sequence gets renamed when the table is renamed.
     $this->checkSequenceRenaming($new_table_name);
-
-    // Use database specific data type and ensure that table is created.
-    $table_specification = [
-      'description' => 'Schema table description.',
-      'fields' => [
-        'timestamp'  => [
-          'mysql_type' => 'timestamp',
-          'pgsql_type' => 'timestamp',
-          'sqlite_type' => 'datetime',
-          'not null' => FALSE,
-          'default' => NULL,
-        ],
-      ],
-    ];
-    try {
-      $this->schema->createTable('test_timestamp', $table_specification);
-    }
-    catch (\Exception $e) {
-    }
-    $this->assertTrue($this->schema->tableExists('test_timestamp'), 'Table with database specific datatype was created.');
   }
+
+  /**
+   * Tests creating a table with database specific data type.
+   */
+  abstract public function testTableWithSpecificDataType(): void;
 
   /**
    * Tests creating unsigned columns and data integrity thereof.
@@ -356,8 +343,8 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Finally, check each column and try to insert invalid values into them.
     foreach ($table_spec['fields'] as $column_name => $column_spec) {
-      $this->assertTrue($this->schema->fieldExists($table_name, $column_name), new FormattableMarkup('Unsigned @type column was created.', ['@type' => $column_spec['type']]));
-      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), new FormattableMarkup('Unsigned @type column rejected a negative value.', ['@type' => $column_spec['type']]));
+      $this->assertTrue($this->schema->fieldExists($table_name, $column_name), "Unsigned {$column_spec['type']} column was created.");
+      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), "Unsigned {$column_spec['type']} column rejected a negative value.");
     }
   }
 
@@ -592,7 +579,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    */
   public function testSchemaChangePrimaryKey(array $initial_primary_key, array $renamed_primary_key): void {
     $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $find_primary_key_columns->setAccessible(TRUE);
 
     // Test making the field the primary key of the table upon creation.
     $table_name = 'test_table';
@@ -665,7 +651,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    * @return array
    *   An array of test cases for SchemaTest::testSchemaCreateTablePrimaryKey().
    */
-  public function providerTestSchemaCreateTablePrimaryKey() {
+  public static function providerTestSchemaCreateTablePrimaryKey() {
     $tests = [];
 
     $tests['simple_primary_key'] = [
@@ -748,11 +734,16 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     }
 
     // Ensure auto numbering now works.
+    // We use a >= assertion to allow non-core drivers, that may have specific
+    // strategies on automatic incrementing, to run core tests. For example,
+    // Oracle will allocate a 10 id with the previous insert that was meant to
+    // fail; that id will be discarded, and the insert here will get a new 11
+    // id instead.
     $id = $this->connection
       ->insert($table_name)
       ->fields(['test_field_string' => 'test'])
       ->execute();
-    $this->assertEquals(10, $id);
+    $this->assertGreaterThanOrEqual(10, $id);
   }
 
   /**
@@ -900,7 +891,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    */
   public function testFindPrimaryKeyColumns(): void {
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $method->setAccessible(TRUE);
 
     // Test with single column primary key.
     $this->schema->createTable('table_with_pk_0', [
@@ -1222,6 +1212,147 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     $this->assertSame("'s o'clock'", $result->column5);
     $this->assertSame("o'clock", $result->column6);
     $this->assertSame('default value', $result->column7);
+  }
+
+  /**
+   * Tests handling with reserved keywords for naming tables, fields and more.
+   */
+  public function testReservedKeywordsForNaming(): void {
+    $table_specification = [
+      'description' => 'A test table with an ANSI reserved keywords for naming.',
+      'fields' => [
+        'primary' => [
+          'description' => 'Simple unique ID.',
+          'type' => 'int',
+          'not null' => TRUE,
+        ],
+        'update' => [
+          'description' => 'A column with reserved name.',
+          'type' => 'varchar',
+          'length' => 255,
+        ],
+      ],
+      'primary key' => ['primary'],
+      'unique keys' => [
+        'having' => ['update'],
+      ],
+      'indexes' => [
+        'in' => ['primary', 'update'],
+      ],
+    ];
+
+    // Creating a table.
+    $table_name = 'select';
+    $this->schema->createTable($table_name, $table_specification);
+    $this->assertTrue($this->schema->tableExists($table_name));
+
+    // Finding all tables.
+    $tables = $this->schema->findTables('%');
+    sort($tables);
+    $this->assertEquals(['config', 'select'], $tables);
+
+    // Renaming a table.
+    $table_name_new = 'from';
+    $this->schema->renameTable($table_name, $table_name_new);
+    $this->assertFalse($this->schema->tableExists($table_name));
+    $this->assertTrue($this->schema->tableExists($table_name_new));
+
+    // Adding a field.
+    $field_name = 'delete';
+    $this->schema->addField($table_name_new, $field_name, ['type' => 'int', 'not null' => TRUE]);
+    $this->assertTrue($this->schema->fieldExists($table_name_new, $field_name));
+
+    // Dropping a primary key.
+    $this->schema->dropPrimaryKey($table_name_new);
+
+    // Adding a primary key.
+    $this->schema->addPrimaryKey($table_name_new, [$field_name]);
+
+    // Check the primary key columns.
+    $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
+    $this->assertEquals([$field_name], $find_primary_key_columns->invoke($this->schema, $table_name_new));
+
+    // Dropping a primary key.
+    $this->schema->dropPrimaryKey($table_name_new);
+
+    // Changing a field.
+    $field_name_new = 'where';
+    $this->schema->changeField($table_name_new, $field_name, $field_name_new, ['type' => 'int', 'not null' => FALSE]);
+    $this->assertFalse($this->schema->fieldExists($table_name_new, $field_name));
+    $this->assertTrue($this->schema->fieldExists($table_name_new, $field_name_new));
+
+    // Adding an unique key
+    $unique_key_name = $unique_key_introspect_name = 'unique';
+    $this->schema->addUniqueKey($table_name_new, $unique_key_name, [$field_name_new]);
+
+    // Check the unique key columns.
+    $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
+    $this->assertEquals([$field_name_new], $introspect_index_schema->invoke($this->schema, $table_name_new)['unique keys'][$unique_key_introspect_name]);
+
+    // Dropping an unique key
+    $this->schema->dropUniqueKey($table_name_new, $unique_key_name);
+
+    // Dropping a field.
+    $this->schema->dropField($table_name_new, $field_name_new);
+    $this->assertFalse($this->schema->fieldExists($table_name_new, $field_name_new));
+
+    // Adding an index.
+    $index_name = $index_introspect_name = 'index';
+    $this->schema->addIndex($table_name_new, $index_name, ['update'], $table_specification);
+    $this->assertTrue($this->schema->indexExists($table_name_new, $index_name));
+
+    // Check the index columns.
+    $this->assertEquals(['update'], $introspect_index_schema->invoke($this->schema, $table_name_new)['indexes'][$index_introspect_name]);
+
+    // Dropping an index.
+    $this->schema->dropIndex($table_name_new, $index_name);
+    $this->assertFalse($this->schema->indexExists($table_name_new, $index_name));
+
+    // Dropping a table.
+    $this->schema->dropTable($table_name_new);
+    $this->assertFalse($this->schema->tableExists($table_name_new));
+  }
+
+  /**
+   * Tests changing a field length.
+   */
+  public function testChangeSerialFieldLength(): void {
+    $specification = [
+      'fields' => [
+        'id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+          'description' => 'Primary Key: Unique ID.',
+        ],
+        'text' => [
+          'type' => 'text',
+          'description' => 'A text field',
+        ],
+      ],
+      'primary key' => ['id'],
+    ];
+    $this->schema->createTable('change_serial_to_big', $specification);
+
+    // Increase the size of the field.
+    $new_specification = [
+      'size' => 'big',
+      'type' => 'serial',
+      'not null' => TRUE,
+      'description' => 'Primary Key: Unique ID.',
+    ];
+    $this->schema->changeField('change_serial_to_big', 'id', 'id', $new_specification);
+    $this->assertTrue($this->schema->fieldExists('change_serial_to_big', 'id'));
+
+    // Test if we can actually add a big int.
+    $id = $this->connection->insert('change_serial_to_big')->fields([
+      'id' => 21474836470,
+    ])->execute();
+
+    $id_two = $this->connection->insert('change_serial_to_big')->fields([
+      'text' => 'Testing for ID generation',
+    ])->execute();
+
+    $this->assertEquals($id + 1, $id_two);
   }
 
 }

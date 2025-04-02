@@ -2,21 +2,21 @@
 
 namespace Drupal\telephone\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\telephone\Plugin\Field\FieldType\TelephoneItem;
 
 /**
  * Plugin implementation of the 'telephone_default' widget.
- *
- * @FieldWidget(
- *   id = "telephone_default",
- *   label = @Translation("Telephone number"),
- *   field_types = {
- *     "telephone"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'telephone_default',
+  label: new TranslatableMarkup('Telephone number'),
+  field_types: ['telephone'],
+)]
 class TelephoneDefaultWidget extends WidgetBase {
 
   /**
@@ -66,6 +66,7 @@ class TelephoneDefaultWidget extends WidgetBase {
       '#type' => 'tel',
       '#default_value' => $items[$delta]->value ?? NULL,
       '#placeholder' => $this->getSetting('placeholder'),
+      '#maxlength' => TelephoneItem::MAX_LENGTH,
     ];
     return $element;
   }

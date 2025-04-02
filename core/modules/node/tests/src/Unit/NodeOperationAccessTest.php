@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Unit;
 
 use Drupal\Core\Access\AccessResult;
@@ -7,7 +9,6 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -56,7 +57,7 @@ class NodeOperationAccessTest extends UnitTestCase {
    *
    * @dataProvider providerTestRevisionOperations
    */
-  public function testRevisionOperations($operation, array $hasPermissionMap, $assertAccess, $isDefaultRevision = NULL) {
+  public function testRevisionOperations($operation, array $hasPermissionMap, $assertAccess, $isDefaultRevision = NULL): void {
     $account = $this->createMock(AccountInterface::class);
     $account->method('hasPermission')
       ->willReturnMap($hasPermissionMap);
@@ -118,11 +119,6 @@ class NodeOperationAccessTest extends UnitTestCase {
     $accessControl = new NodeAccessControlHandler($entityType, $grants, $entityTypeManager);
     $accessControl->setModuleHandler($moduleHandler);
 
-    $nodeType = $this->createMock(RevisionableEntityBundleInterface::class);
-    $typeProperty = new \stdClass();
-    $typeProperty->entity = $nodeType;
-    $node->type = $typeProperty;
-
     $access = $accessControl->access($node, $operation, $account, FALSE);
     $this->assertEquals($assertAccess, $access);
   }
@@ -133,7 +129,7 @@ class NodeOperationAccessTest extends UnitTestCase {
    * @return array
    *   Data for testing.
    */
-  public function providerTestRevisionOperations() {
+  public static function providerTestRevisionOperations() {
     $data = [];
 
     // Tests 'bypass node access' never works on revision operations.

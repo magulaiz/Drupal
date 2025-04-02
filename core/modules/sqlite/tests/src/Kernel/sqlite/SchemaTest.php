@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\sqlite\Kernel\sqlite;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
 /**
- * Tests schema API for the PostgreSQL driver.
+ * Tests schema API for the SQLite driver.
  *
  * @group Database
  */
@@ -14,7 +16,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * {@inheritdoc}
    */
-  public function checkSchemaComment(string $description, string $table, string $column = NULL): void {
+  public function checkSchemaComment(string $description, string $table, ?string $column = NULL): void {
     // The sqlite driver schema does not support fetching table/column
     // comments.
   }
@@ -24,6 +26,24 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
    */
   protected function tryInsertExpectsIntegrityConstraintViolationException(string $tableName): void {
     // Sqlite does not throw an IntegrityConstraintViolationException here.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testTableWithSpecificDataType(): void {
+    $table_specification = [
+      'description' => 'Schema table description.',
+      'fields' => [
+        'timestamp'  => [
+          'sqlite_type' => 'datetime',
+          'not null' => FALSE,
+          'default' => NULL,
+        ],
+      ],
+    ];
+    $this->schema->createTable('test_timestamp', $table_specification);
+    $this->assertTrue($this->schema->tableExists('test_timestamp'));
   }
 
   /**
@@ -76,7 +96,6 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     unset($table_specification['fields']);
 
     $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
-    $introspect_index_schema->setAccessible(TRUE);
     $index_schema = $introspect_index_schema->invoke($this->schema, $table_name);
 
     $this->assertEquals($table_specification, $index_schema);

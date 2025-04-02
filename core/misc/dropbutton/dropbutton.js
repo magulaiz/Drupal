@@ -61,26 +61,26 @@
          *
          * @ignore
          */
-        'mouseleave.dropbutton': $.proxy(this.hoverOut, this),
+        'mouseleave.dropbutton': this.hoverOut.bind(this),
 
         /**
          * Clears timeout when mouseout of the dropdown.
          *
          * @ignore
          */
-        'mouseenter.dropbutton': $.proxy(this.hoverIn, this),
+        'mouseenter.dropbutton': this.hoverIn.bind(this),
 
         /**
          * Similar to mouseleave/mouseenter, but for keyboard navigation.
          *
          * @ignore
          */
-        'focusout.dropbutton': $.proxy(this.focusOut, this),
+        'focusout.dropbutton': this.focusOut.bind(this),
 
         /**
          * @ignore
          */
-        'focusin.dropbutton': $.proxy(this.focusIn, this),
+        'focusin.dropbutton': this.focusIn.bind(this),
       });
     } else {
       this.$dropbutton.addClass('dropbutton-single');
@@ -151,7 +151,7 @@
       /**
        * Toggle the dropbutton open and closed.
        *
-       * @param {bool} [show]
+       * @param {boolean} [show]
        *   Force the dropbutton to open by passing true or to close by
        *   passing false.
        */
@@ -176,7 +176,7 @@
        */
       hoverOut() {
         // Wait half a second before closing.
-        this.timerID = window.setTimeout($.proxy(this, 'close'), 500);
+        this.timerID = window.setTimeout(this.close.bind(this), 500);
       },
 
       /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\media_library\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -11,6 +12,7 @@ use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -30,19 +32,16 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 /**
  * Plugin implementation of the 'media_library_widget' widget.
  *
- * @FieldWidget(
- *   id = "media_library_widget",
- *   label = @Translation("Media library"),
- *   description = @Translation("Allows you to select items from the media library."),
- *   field_types = {
- *     "entity_reference"
- *   },
- *   multiple_values = TRUE,
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[FieldWidget(
+  id: 'media_library_widget',
+  label: new TranslatableMarkup('Media library'),
+  description: new TranslatableMarkup('Allows you to select items from the media library.'),
+  field_types: ['entity_reference'],
+  multiple_values: TRUE,
+)]
 class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface {
 
   /**
@@ -70,7 +69,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    * Constructs a MediaLibraryWidget widget.
    *
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
@@ -391,6 +390,20 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     ];
 
     foreach ($referenced_entities as $delta => $media_item) {
+      if ($media_item->access('view')) {
+        // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
+        $preview = $view_builder->view($media_item, 'media_library');
+      }
+      else {
+        $item_label = $media_item->access('view label') ? $media_item->label() : new FormattableMarkup('@label @id', [
+          '@label' => $media_item->getEntityType()->getSingularLabel(),
+          '@id' => $media_item->id(),
+        ]);
+        $preview = [
+          '#theme' => 'media_embed_error',
+          '#message' => $this->t('You do not have permission to view @item_label.', ['@item_label' => $item_label]),
+        ];
+      }
       $element['selection'][$delta] = [
         '#theme' => 'media_library_item__widget',
         '#attributes' => [
@@ -414,22 +427,21 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
           '#value' => $this->t('Remove'),
           '#media_id' => $media_item->id(),
           '#attributes' => [
-            'aria-label' => $this->t('Remove @label', ['@label' => $media_item->label()]),
+            'aria-label' => $media_item->access('view label') ? $this->t('Remove @label', ['@label' => $media_item->label()]) : $this->t('Remove media'),
           ],
           '#ajax' => [
             'callback' => [static::class, 'updateWidget'],
             'wrapper' => $wrapper_id,
             'progress' => [
               'type' => 'throbber',
-              'message' => $this->t('Removing @label.', ['@label' => $media_item->label()]),
+              'message' => $media_item->access('view label') ? $this->t('Removing @label.', ['@label' => $media_item->label()]) : $this->t('Removing media.'),
             ],
           ],
           '#submit' => [[static::class, 'removeItem']],
           // Prevent errors in other widgets from preventing removal.
           '#limit_validation_errors' => $limit_validation_errors,
         ],
-        // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
-        'rendered_entity' => $view_builder->view($media_item, 'media_library'),
+        'rendered_entity' => $preview,
         'target_id' => [
           '#type' => 'hidden',
           '#value' => $media_item->id(),
@@ -513,9 +525,6 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
           'type' => 'throbber',
           'message' => $this->t('Opening media library.'),
         ],
-        // The AJAX system automatically moves focus to the first tabbable
-        // element of the modal, so we need to disable refocus on the button.
-        'disable-refocus' => TRUE,
       ],
       // Allow the media library to be opened even if there are form errors.
       '#limit_validation_errors' => [],
@@ -618,7 +627,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
   protected function getNoMediaTypesAvailableMessage() {
     $entity_type_id = $this->fieldDefinition->getTargetEntityTypeId();
 
-    $default_message = $this->t('There are no allowed media types configured for this field. Please contact the site administrator.');
+    $default_message = $this->t('There are no allowed media types configured for this field. Contact the site administrator.');
 
     // Show the default message if the user does not have the permissions to
     // configure the fields for the entity type.
@@ -698,9 +707,8 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
 
     // Announce the updated content to screen readers.
     if ($is_remove_button) {
-      $announcement = new TranslatableMarkup('@label has been removed.', [
-        '@label' => Media::load($field_state['removed_item_id'])->label(),
-      ]);
+      $media_item = Media::load($field_state['removed_item_id']);
+      $announcement = $media_item->access('view label') ? new TranslatableMarkup('@label has been removed.', ['@label' => $media_item->label()]) : new TranslatableMarkup('Media has been removed.');
     }
     else {
       $new_items = count(static::getNewMediaItems($element, $form_state));
@@ -915,8 +923,8 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    */
   protected static function getNewMediaItems(array $element, FormStateInterface $form_state) {
     // Get the new media IDs passed to our hidden button. We need to use the
-    // actual user input, since when #limit_validation_errors is used, the
-    // unvalidated user input is not added to the form state.
+    // actual user input, since when #limit_validation_errors is used, any
+    // non validated user input is not added to the form state.
     // @see FormValidator::handleErrorsWithLimitedValidation()
     $values = $form_state->getUserInput();
     $path = $element['#parents'];
@@ -951,7 +959,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // Default to using the current selection if the form is new.
     $path = $element['#parents'];
     // We need to use the actual user input, since when #limit_validation_errors
-    // is used, the unvalidated user input is not added to the form state.
+    // is used, the non validated user input is not added to the form state.
     // @see FormValidator::handleErrorsWithLimitedValidation()
     $values = NestedArray::getValue($form_state->getUserInput(), $path);
     $selection = $values['selection'] ?? [];
@@ -991,6 +999,11 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
   public static function validateRequired(array $element, FormStateInterface $form_state, array $form) {
     // If a remove button triggered submit, this validation isn't needed.
     if (in_array([static::class, 'removeItem'], $form_state->getSubmitHandlers(), TRUE)) {
+      return;
+    }
+
+    // If user has no access, the validation isn't needed.
+    if (isset($element['#access']) && !$element['#access']) {
       return;
     }
 

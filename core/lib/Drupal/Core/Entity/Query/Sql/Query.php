@@ -77,6 +77,7 @@ class Query extends QueryBase implements QueryInterface {
    */
   public function execute() {
     return $this
+      ->alter()
       ->prepare()
       ->compile()
       ->addSort()
@@ -263,7 +264,7 @@ class Query extends QueryBase implements QueryInterface {
    */
   protected function result() {
     if ($this->count) {
-      return $this->sqlQuery->countQuery()->execute()->fetchField();
+      return (int) $this->sqlQuery->countQuery()->execute()->fetchField();
     }
     // Return a keyed array of results. The key is either the revision_id or
     // the entity_id depending on whether the entity type supports revisions.

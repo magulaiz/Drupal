@@ -89,7 +89,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * An alias for getPluginId() for backwards compatibility reasons.
    *
    * @return string
-   *   The plugin_id of the plugin instance.
+   *   The plugin ID of the plugin instance.
    *
    * @see \Drupal\migrate\Plugin\MigrationInterface::getPluginId()
    */
@@ -106,7 +106,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Get a list of required plugin IDs.
    *
-   * @returns string[]
+   * @return string[]
    */
   public function getRequirements(): array;
 
@@ -121,14 +121,17 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Returns the process plugins.
    *
-   * @param array $process
-   *   A process configuration array.
+   * @param array|null $process
+   *   (Optional) A process configuration array. Defaults to NULL. If specified,
+   *   then the plugins from the given process array are returned. If not
+   *   specified, then the plugins from this migration's process array are
+   *   returned.
    *
    * @return \Drupal\migrate\Plugin\MigrateProcessInterface[][]
    *   An associative array. The keys are the destination property names. Values
    *   are process pipelines. Each pipeline contains an array of plugins.
    */
-  public function getProcessPlugins(array $process = NULL);
+  public function getProcessPlugins(?array $process = NULL);
 
   /**
    * Returns the initialized destination plugin.
@@ -195,8 +198,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function clearInterruptionResult();
 
   /**
-   * Signal that the migration should be interrupted with the specified result
-   * code.
+   * Sets the migration status as interrupted with a given result code.
    *
    * @param int $result
    *   One of the MigrationInterface::RESULT_* constants.
@@ -204,8 +206,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function interruptMigration($result);
 
   /**
-   * Get the normalized process pipeline configuration describing the process
-   * plugins.
+   * Gets the normalized process plugin configuration.
    *
    * The process configuration is always normalized. All shorthand processing
    * will be expanded into their full representations.

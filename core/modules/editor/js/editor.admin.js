@@ -27,6 +27,10 @@
      * @fires event:drupalEditorFeatureAdded
      */
     addedFeature(feature) {
+      Drupal.deprecationError({
+        message:
+          'Drupal.editorConfiguration.addedFeature is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+      });
       $(document).trigger('drupalEditorFeatureAdded', feature);
     },
 
@@ -43,6 +47,10 @@
      * @fires event:drupalEditorFeatureRemoved
      */
     removedFeature(feature) {
+      Drupal.deprecationError({
+        message:
+          'Drupal.editorConfiguration.removedFeature is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+      });
       $(document).trigger('drupalEditorFeatureRemoved', feature);
     },
 
@@ -62,6 +70,10 @@
      * @fires event:drupalEditorFeatureModified
      */
     modifiedFeature(feature) {
+      Drupal.deprecationError({
+        message:
+          'Drupal.editorConfiguration.modifiedFeature is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+      });
       $(document).trigger('drupalEditorFeatureModified', feature);
     },
 
@@ -83,7 +95,7 @@
      * @param {Drupal.EditorFeature} feature
      *   A text editor feature object.
      *
-     * @return {bool}
+     * @return {boolean}
      *   Whether the given feature is allowed by the current filters.
      */
     featureIsAllowedByFilters(feature) {
@@ -94,7 +106,7 @@
        * @param {object} section
        *   The section to check.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Returns true if the section has empty properties, false otherwise.
        */
       function emptyProperties(section) {
@@ -211,10 +223,10 @@
        *   The property to check.
        * @param {string} propertyValue
        *   The property value to check.
-       * @param {bool} allowing
+       * @param {boolean} allowing
        *   Whether to update the universe or not.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Returns true if found, false otherwise.
        */
       function findPropertyValueOnTag(
@@ -240,7 +252,7 @@
         }
 
         // The simple case: no wildcard in property value.
-        if (propertyValue.indexOf('*') === -1) {
+        if (!propertyValue.includes('*')) {
           if (
             universe.hasOwnProperty(tag) &&
             universe[tag].hasOwnProperty(key)
@@ -276,10 +288,10 @@
        *   The property to check.
        * @param {Array} propertyValues
        *   Values of the property to check.
-       * @param {bool} allowing
+       * @param {boolean} allowing
        *   Whether to update the universe or not.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Returns true if found, false otherwise.
        */
       function findPropertyValuesOnAllTags(
@@ -319,10 +331,10 @@
        *   The property to check.
        * @param {Array} propertyValues
        *   Values of the property to check.
-       * @param {bool} allowing
+       * @param {boolean} allowing
        *   Whether to update the universe or not.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Returns true if found, false otherwise.
        */
       function findPropertyValuesOnTag(
@@ -365,7 +377,7 @@
        * @param {object} universe
        *   The universe to delete from.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Whether something was deleted from the universe.
        */
       function deleteAllTagsFromUniverseIfAllowed(universe) {
@@ -388,7 +400,7 @@
        * @param {string} tag
        *   The tag to check.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Whether something was deleted from the universe.
        */
       function deleteFromUniverseIfAllowed(universe, tag) {
@@ -417,7 +429,7 @@
        * @param {object} filterStatus
        *   Filter status to use for check.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Whether any filter rule forbids something in the universe.
        */
       function anyForbiddenFilterRuleMatches(universe, filterStatus) {
@@ -568,7 +580,7 @@
        * @param {object} feature
        *   The feature requested.
        *
-       * @return {bool}
+       * @return {boolean}
        *   Whether the current status of the filter allows specified feature.
        *
        * @see generateUniverseFromFeatureRequirements()
@@ -657,6 +669,11 @@
         return true;
       }
 
+      Drupal.deprecationError({
+        message:
+          'Drupal.editorConfiguration.featureIsAllowedByFilters is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+      });
+
       // If any filter's current status forbids the editor feature, return
       // false.
       Drupal.filterConfiguration.update();
@@ -702,6 +719,11 @@
    * @see Drupal.EditorFeature
    */
   Drupal.EditorFeatureHTMLRule = function () {
+    Drupal.deprecationError({
+      message:
+        'Drupal.EditorFeatureHTMLRule is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+    });
+
     /**
      *
      * @type {Object}
@@ -768,6 +790,11 @@
    * @see Drupal.EditorFeatureHTMLRule
    */
   Drupal.EditorFeature = function (name) {
+    Drupal.deprecationError({
+      message:
+        'Drupal.EditorFeature is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+    });
+
     this.name = name;
     this.rules = [];
   };
@@ -779,6 +806,11 @@
    *   A text editor feature HTML rule.
    */
   Drupal.EditorFeature.prototype.addHTMLRule = function (rule) {
+    Drupal.deprecationError({
+      message:
+        'Drupal.EditorFeature.prototype.addHTMLRule is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+    });
+
     this.rules.push(rule);
   };
 
@@ -806,6 +838,11 @@
    * @see Drupal.FilterHTMLRule
    */
   Drupal.FilterStatus = function (name) {
+    Drupal.deprecationError({
+      message:
+        'Drupal.FilterStatus is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+    });
+
     /**
      *
      * @type {string}
@@ -814,7 +851,7 @@
 
     /**
      *
-     * @type {bool}
+     * @type {boolean}
      */
     this.active = false;
 
@@ -832,6 +869,11 @@
    *   A text filter HTML rule.
    */
   Drupal.FilterStatus.prototype.addHTMLRule = function (rule) {
+    Drupal.deprecationError({
+      message:
+        'Drupal.FilterStatus.prototype.addHTMLRule is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+    });
+
     this.rules.push(rule);
   };
 
@@ -911,6 +953,11 @@
    * @see Drupal.FilterStatus
    */
   Drupal.FilterHTMLRule = function () {
+    Drupal.deprecationError({
+      message:
+        'Drupal.FilterHTMLRule is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+    });
+
     // Allow or forbid tags.
     this.tags = [];
     this.allow = null;
@@ -926,6 +973,11 @@
   };
 
   Drupal.FilterHTMLRule.prototype.clone = function () {
+    Drupal.deprecationError({
+      message:
+        'Drupal.FilterHTMLRule.prototype.clone is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+    });
+
     const clone = new Drupal.FilterHTMLRule();
     clone.tags = this.tags.slice(0);
     clone.allow = this.allow;
@@ -984,12 +1036,17 @@
      * up-to-date.
      */
     update() {
+      Drupal.deprecationError({
+        message:
+          'Drupal.filterConfiguration.update is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+      });
+
       Object.keys(Drupal.filterConfiguration.statuses || {}).forEach(
         (filterID) => {
           // Update status.
           Drupal.filterConfiguration.statuses[filterID].active = $(
             `[name="filters[${filterID}][status]"]`,
-          ).is(':checked');
+          )[0].checked;
 
           // Update current rules.
           if (Drupal.filterConfiguration.liveSettingParsers[filterID]) {
@@ -1013,6 +1070,11 @@
    */
   Drupal.behaviors.initializeFilterConfiguration = {
     attach(context, settings) {
+      Drupal.deprecationError({
+        message:
+          'Drupal.behaviors.initializeFilterConfiguration is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
+      });
+
       once(
         'filter-editor-status',
         '#filters-status-wrapper input.form-checkbox',

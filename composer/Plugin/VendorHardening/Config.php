@@ -22,7 +22,6 @@ class Config {
   protected static $defaultConfig = [
     'behat/mink' => ['tests'],
     'behat/mink-browserkit-driver' => ['tests'],
-    'behat/mink-selenium2-driver' => ['tests'],
     'composer/composer' => ['bin'],
     'drupal/coder' => [
       'coder_sniffer/Drupal/Test',
@@ -32,9 +31,11 @@ class Config {
     'egulias/email-validator' => ['documentation', 'tests'],
     'guzzlehttp/promises' => ['tests'],
     'guzzlehttp/psr7' => ['tests'],
-    'instaclick/php-webdriver' => ['doc', 'test'],
     'justinrainbow/json-schema' => ['demo'],
+    'lullabot/mink-selenium2-driver' => ['tests'],
+    'lullabot/php-webdriver' => ['doc', 'test'],
     'masterminds/html5' => ['bin', 'test'],
+    'mck89/peast' => ['doc'],
     'mikey179/vfsstream' => ['src/test'],
     'myclabs/deep-copy' => ['doc'],
     'pear/archive_tar' => ['docs', 'tests'],
@@ -77,6 +78,7 @@ class Config {
     'symfony/var-dumper' => ['Tests'],
     'symfony/validator' => ['Tests', 'Resources'],
     'symfony/yaml' => ['Tests'],
+    'tbachert/spi' => ['tests'],
     'theseer/tokenizer' => ['tests'],
     'twig/twig' => ['doc', 'ext', 'test', 'tests'],
   ];
@@ -84,7 +86,7 @@ class Config {
   /**
    * The root package.
    *
-   * @var Composer\Package\RootPackageInterface
+   * @var \Composer\Package\RootPackageInterface
    */
   protected $rootPackage;
 

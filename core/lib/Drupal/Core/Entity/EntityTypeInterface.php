@@ -385,6 +385,16 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getAdminPermission();
 
   /**
+   * Gets the name of the default collection permission.
+   *
+   * @see \Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider::getCollectionRoute()
+   *
+   * @return string|null
+   *   The collection permission name, or NULL if none.
+   */
+  public function getCollectionPermission(): ?string;
+
+  /**
    * Gets the permission granularity level.
    *
    * The allowed values are respectively "entity_type" or "bundle".
@@ -402,11 +412,9 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * should be used for them. Where possible, link relationships should use
    * established IANA relationships rather than custom relationships.
    *
-   * Every entity type should, at minimum, define "canonical", which is the
-   * pattern for URIs to that entity. Even if the entity will have no HTML page
-   * exposed to users it should still have a canonical URI in order to be
-   * compatible with web services. Entities that will be user-editable via an
-   * HTML page must also define an "edit-form" relationship.
+   * Entities which can be viewed should define "canonical", which is the
+   * pattern for URIs to that entity including REST. Entities that will be
+   * user-editable via an HTML page should define an "edit-form" relationship.
    *
    * By default, the following placeholders are supported:
    * - [entityType]: The entity type itself will also be a valid token for the
@@ -472,15 +480,15 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   public function getBundleEntityType();
 
   /**
-   * Gets the entity type for which this entity provides bundles.
+   * Gets the entity type ID for which this entity provides bundles.
    *
    * It can be used by other modules to act accordingly; for example,
    * the Field UI module uses it to add operation links to manage fields and
    * displays.
    *
    * @return string|null
-   *   The entity type for which this entity provides bundles, or NULL if does
-   *   not provide bundles for another entity type.
+   *   The entity type ID for which this entity provides bundles, or NULL if
+   *   does not provide bundles for another entity type.
    */
   public function getBundleOf();
 
@@ -510,8 +518,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * The implications of this method are left to the discretion of the caller.
    * For example, a module providing an HTTP API may not expose entities of
-   * this type or a custom entity reference field settings form may deprioritize
-   * entities of this type in a select list.
+   * this type or a custom entity reference field settings form may reduce the
+   * priority for entities of this type in a select list.
    *
    * @return bool
    *   TRUE if the entity data is internal, FALSE otherwise.
@@ -669,6 +677,14 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
   /**
    * Gets the machine name of the entity type group.
    *
+   * The entity type group is an annotation property of the entity type.
+   *
+   * Drupal core defines two entity type groups:
+   *  - content: Entities which form the information on a site. Content entities
+   *    are typically customized with fields.
+   *  - config: Entities which define structural elements of a site, which are
+   *    managed as part of the site's configuration.
+   *
    * @return string
    */
   public function getGroup();
@@ -678,6 +694,8 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *   The group label.
+   *
+   * @see self::getGroup()
    */
   public function getGroupLabel();
 

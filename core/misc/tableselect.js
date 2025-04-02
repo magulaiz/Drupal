@@ -71,7 +71,7 @@
       .find('th.select-all')
       .prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll))
       .on('click', (event) => {
-        if ($(event.target).is('input[type="checkbox"]')) {
+        if (event.target.matches('input[type="checkbox"]')) {
           // Loop through all checkboxes and set their state to the select all
           // checkbox' state.
           checkboxes.each(function () {
@@ -142,7 +142,7 @@
    *   The HTML element representing the "from" part of the range.
    * @param {HTMLElement} to
    *   The HTML element representing the "to" part of the range.
-   * @param {bool} state
+   * @param {boolean} state
    *   The state to set on the range.
    */
   Drupal.tableSelectRange = function (from, to, state) {

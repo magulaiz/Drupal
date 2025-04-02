@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
@@ -25,9 +27,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'content_translation',
     'config_translation',
     'telephone',
-    'book',
-    'forum',
-    'statistics',
     'syslog',
     'update',
     // Test migrations states.
@@ -48,7 +47,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSourceBasePath() {
+  protected function getSourceBasePath(): string {
     return __DIR__ . '/files';
   }
 
@@ -60,7 +59,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Block translation',
       'Blog',
       'Blog API',
-      'Book',
       'CCK translation',
       'Calendar Signup',
       'Comment',
@@ -88,7 +86,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'FileField',
       'FileField Meta',
       'Filter',
-      'Forum',
       'Help',
       'ImageAPI',
       'ImageAPI GD2',
@@ -103,6 +100,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Menu translation',
       'Node',
       'Node Reference',
+      'Node Reference URL Widget',
       'Nodeaccess',
       'Number',
       'OpenID',
@@ -115,7 +113,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Profile',
       'Profile translation',
       'Search',
-      'Statistics',
       'String translation',
       'Synchronize translations',
       'Syslog',
@@ -145,12 +142,15 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      'Book',
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Color',
       'Devel',
       'Devel generate',
       'Devel node access',
+      'Forum',
+      'Statistics',
       // Option Widgets is set not_finished in migrate_state_not_finished_test.
       'Option Widgets',
       'Views',

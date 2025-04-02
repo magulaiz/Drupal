@@ -27,6 +27,9 @@ drupal.user.permissions:
     - core/drupal
     - core/drupalSettings
     - user/drupal.user.admin
+    - core/drupal.checkbox
+    - core/drupal.debounce
+    - core/drupal.announce
 
 drupal.user.icons:
   version: VERSION

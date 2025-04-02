@@ -24,7 +24,7 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
   /**
    * {@inheritdoc}
    */
-  public function __construct(ParameterBagInterface $parameterBag = NULL) {
+  public function __construct(?ParameterBagInterface $parameterBag = NULL) {
     parent::__construct($parameterBag);
     $this->setResourceTracking(FALSE);
   }
@@ -36,14 +36,14 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    * override Symfony's ContainerBuilder's restriction on setting services in a
    * frozen builder.
    *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
+   *
    * @todo Restrict this to synthetic services only. Ideally, the upstream
    *   ContainerBuilder class should be fixed to allow setting synthetic
    *   services in a frozen builder.
    */
   public function set($id, $service) {
-    if (strtolower($id) !== $id) {
-      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
-    }
     SymfonyContainer::set($id, $service);
   }
 
@@ -51,9 +51,6 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    * {@inheritdoc}
    */
   public function register($id, $class = NULL): Definition {
-    if (strtolower($id) !== $id) {
-      throw new \InvalidArgumentException("Service ID names must be lowercase: $id");
-    }
     $definition = new Definition($class);
     // As of Symfony 5.2 all services are private by default, but in Drupal
     // services are still public by default.
@@ -73,6 +70,9 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function setParameter($name, $value) {
     if (strtolower($name) !== $name) {
