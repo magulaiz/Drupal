@@ -22228,24 +22228,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Plugin/Block/FieldBlock.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Plugin\\\\Block\\\\InlineBlock\\:\\:blockSubmit\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Plugin/Block/InlineBlock.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Plugin\\\\Block\\\\InlineBlock\\:\\:blockValidate\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Plugin/Block/InlineBlock.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\layout_builder\\\\Plugin\\\\Block\\\\InlineBlock\\:\\:saveBlockContent\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Plugin/Block/InlineBlock.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\layout_builder\\\\Plugin\\\\DataType\\\\SectionData\\:\\:setValue\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
