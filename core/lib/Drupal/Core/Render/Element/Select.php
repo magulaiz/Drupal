@@ -40,7 +40,7 @@ use Drupal\Core\Render\Element;
  *   field and "- None -" for an optional field.
  * - #empty_value: (optional) The value for the first default option, which is
  *   used to determine whether the user submitted a value or not.
- *   - If #required is TRUE, this defaults to '' (an empty string). Note that 
+ *   - If #required is TRUE, this defaults to '' (an empty string). Note that
  *     if #empty_value is the same as a key in #options then the value of
  *     #empty_option is used for that key in the #options array. This is
  *     because #empty_value and #empty_option are merged into the #options
