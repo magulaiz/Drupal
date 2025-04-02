@@ -118,24 +118,7 @@ class EditorAdminTest extends BrowserTestBase {
     $this->container->get('module_installer')->install(['node']);
     $this->resetAll();
     // Create a new node type and attach a text field to it.
-    $node_type = NodeType::create(['type' => $this->randomMachineName(), 'name' => $this->randomString()]);
-    $node_type->save();
-
-    $field_name = $this->randomMachineName();
-    $field_storage = FieldStorageConfig::create([
-      'field_name'  => $field_name,
-      'entity_type' => 'node',
-      'type'        => 'text_long',
-    ]);
-    $field_storage->save();
-
-    $field_config = FieldConfig::create([
-      'field_name'  => $field_name,
-      'entity_type' => 'node',
-      'bundle'      => $node_type->id(),
-      'label'       => 'Body',
-    ]);
-    $field_config->save();
+    $node_type = $this->drupalCreateContentType(['type' => $this->randomMachineName(), 'name' => $this->randomString()]);
 
     $permissions = ['administer filters', "edit any {$node_type->id()} content"];
     foreach ($formats as $format => $name) {
@@ -145,13 +128,13 @@ class EditorAdminTest extends BrowserTestBase {
       $permissions[] = "use text format $format";
     }
 
-    // Create a node having a text format value 'monoceros'.
+    // Create a node having the body format value 'monoceros'.
     $node = Node::create([
       'type' => $node_type->id(),
       'title' => $this->randomString(),
     ]);
-    $node->$field_name->value = $this->randomString(100);
-    $node->$field_name->format = 'monoceros';
+    $node->body->value = $this->randomString(100);
+    $node->body->format = 'monoceros';
     $node->save();
 
     // Log in as a user able to use both formats and edit nodes of created type.
@@ -165,7 +148,7 @@ class EditorAdminTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->responseContains($text);
 
-    // Disable the format assigned to a text field of the node.
+    // Disable the format assigned to the 'body' field of the node.
     FilterFormat::load('monoceros')->disable()->save();
 
     // Edit again the node.
