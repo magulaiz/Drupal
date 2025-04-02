@@ -28,9 +28,9 @@ trait SynchronizeCsrfTokenSeedTrait {
    */
   protected function drupalLogin(AccountInterface $account) {
     parent::drupalLogin($account);
-    $session_data = $this->container->get('session_handler.write_safe')->read($this->getSession()->getCookie($this->getSessionName()));
+    $session_data = \Drupal::service('session_handler.write_safe')->read($this->getSession()->getCookie($this->getSessionName()));
     $csrf_token_seed = unserialize(explode('_sf2_meta|', $session_data)[1])['s'];
-    $this->container->get('session_manager.metadata_bag')->setCsrfTokenSeed($csrf_token_seed);
+    \Drupal::service('session_manager.metadata_bag')->setCsrfTokenSeed($csrf_token_seed);
   }
 
   /**
@@ -52,7 +52,7 @@ trait SynchronizeCsrfTokenSeedTrait {
    */
   protected function drupalLogout() {
     parent::drupalLogout();
-    $this->container->get('session_manager.metadata_bag')->stampNew();
+    \Drupal::service('session_manager.metadata_bag')->stampNew();
   }
 
 }

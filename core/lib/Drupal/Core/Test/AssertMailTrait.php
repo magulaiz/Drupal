@@ -20,7 +20,7 @@ trait AssertMailTrait {
    *   An array containing email messages captured during the current test.
    */
   protected function getMails(array $filter = []) {
-    $captured_emails = $this->container->get('state')->get('system.test_mail_collector', []);
+    $captured_emails = \Drupal::service('state')->get('system.test_mail_collector', []);
     $filtered_emails = [];
 
     foreach ($captured_emails as $message) {
@@ -56,7 +56,7 @@ trait AssertMailTrait {
    *   TRUE on pass.
    */
   protected function assertMail($name, $value = '', $message = '') {
-    $captured_emails = $this->container->get('state')->get('system.test_mail_collector') ?: [];
+    $captured_emails = \Drupal::service('state')->get('system.test_mail_collector') ?: [];
     $email = end($captured_emails);
     $this->assertIsArray($email, $message);
     $this->assertArrayHasKey($name, $email, $message);
