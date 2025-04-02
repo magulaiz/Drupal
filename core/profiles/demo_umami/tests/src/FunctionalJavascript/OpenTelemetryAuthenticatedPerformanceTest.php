@@ -55,7 +55,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
         'config' => 22,
         'bootstrap' => 5,
         'discovery' => 5,
-        'data' => 6,
+        'data' => 5,
         'dynamic_page_cache' => 2,
         'menu' => 1,
         'render' => 2,
