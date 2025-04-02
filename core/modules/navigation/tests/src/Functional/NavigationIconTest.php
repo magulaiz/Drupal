@@ -9,6 +9,8 @@ use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests Navigation Icon behavior.
+ *
+ * @group navigation
  */
 class NavigationIconTest extends BrowserTestBase {
 
@@ -58,6 +60,7 @@ class NavigationIconTest extends BrowserTestBase {
     $this->assertSession()->elementAttributeContains('css', 'a.toolbar-button--icon--navigation-media svg', 'width', '20');
     $this->assertSession()->elementAttributeContains('css', 'a.toolbar-button--icon--navigation-media svg', 'class', 'toolbar-button__icon');
     $this->assertSession()->elementAttributeContains('css', 'a.toolbar-button--icon--radioactive svg', 'width', '20');
-    $this->assertSession()->elementAttributeContains('css', 'a.toolbar-button--icon--radioactive svg', 'class', 'toolbar-button__icon');  }
+    $this->assertSession()->elementAttributeContains('css', 'a.toolbar-button--icon--radioactive svg', 'class', 'toolbar-button__icon');
+  }
 
 }

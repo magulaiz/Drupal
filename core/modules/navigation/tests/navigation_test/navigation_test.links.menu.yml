@@ -35,4 +35,3 @@ navigation.media:
   menu_name: admin
   parent: system.admin
   route_name: "<front>"
-
