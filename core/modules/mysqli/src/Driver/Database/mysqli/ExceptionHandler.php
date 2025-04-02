@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\mysqli\Driver\Database\mysqli;
 
-use Drupal\Core\Database\ExceptionHandler as BaseExceptionHandler;
 use Drupal\Core\Database\StatementInterface;
+use Drupal\mysql\Driver\Database\mysql\ExceptionHandler as BaseMySqlExceptionHandler;
 
 /**
  * MySQLi database exception handler class.
  */
-class ExceptionHandler extends BaseExceptionHandler {
+class ExceptionHandler extends BaseMySqlExceptionHandler {
 
   /**
    * {@inheritdoc}

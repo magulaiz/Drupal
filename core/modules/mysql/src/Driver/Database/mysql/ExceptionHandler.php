@@ -60,7 +60,7 @@ class ExceptionHandler extends BaseExceptionHandler {
 
     // SQLState could be 'HY000' which cannot be used as a $code argument for
     // exceptions. PDOException is contravariant in this case, but since we are
-    // rethrowing an exception that inherits from \Exception, we need to
+    // re-throwing an exception that inherits from \Exception, we need to
     // convert the code to an integer.
     // @see https://www.php.net/manual/en/class.exception.php
     // @see https://www.php.net/manual/en/class.pdoexception.php
