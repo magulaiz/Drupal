@@ -34,34 +34,7 @@ class NodeFieldTokensTest extends NodeTestBase {
    */
   public function testViewsTokenReplacement(): void {
     // Create the Article content type with a standard body field.
-    /** @var \Drupal\node\NodeTypeInterface $node_type */
-    $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
-    $node_type->save();
-    // Ensure the 'body' field storage exists.
-    $field_storage = FieldStorageConfig::loadByName('node', 'body');
-    if (!$field_storage) {
-      $field_storage = FieldStorageConfig::create([
-        'field_name' => 'body',
-        'entity_type' => 'node',
-        'type' => 'text_long',
-      ]);
-      $field_storage->save();
-    }
-
-    // Ensure the 'body' field exists for the 'article' content type.
-    $field = FieldConfig::loadByName('node', $node_type->id(), 'body');
-    if (!$field) {
-      $field = FieldConfig::create([
-        'field_storage' => $field_storage,
-        'bundle' => $node_type->id(),
-        'label' => 'Body',
-        'settings' => [
-          'display_summary' => TRUE,
-          'allowed_formats' => [],
-        ],
-      ]);
-      $field->save();
-    }
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create a user and a node.
     $account = $this->createUser();
