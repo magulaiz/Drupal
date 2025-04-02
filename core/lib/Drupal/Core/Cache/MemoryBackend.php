@@ -29,7 +29,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    */
   protected $cache = [];
 
-    /**
+  /**
    * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected TimeInterface $time;
@@ -37,10 +37,10 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   /**
    * Constructs a MemoryBackend object.
    *
-   * @param \Drupal\Component\Datetime\TimeInterface $time|NULL
+   * @param \Drupal\Component\Datetime\TimeInterface $time |NULL
    *   The time service.
    */
-  public function __construct( TimeInterface $time = NULL) {
+  public function __construct(TimeInterface $time = NULL) {
     // Gracefully handle legacy calls to the constructor without a time service.
     if ($time === NULL) {
       $this->time = \Drupal::time();
@@ -210,8 +210,7 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
   /**
    * {@inheritdoc}
    */
-  public function garbageCollection() {
-  }
+  public function garbageCollection() {}
 
   /**
    * {@inheritdoc}
