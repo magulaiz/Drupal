@@ -143,7 +143,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 45,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 17,
+      'CacheTagLookupQueryCount' => 11,
       'CacheTagGroupedLookups' => [
         [
           'route_match',
@@ -155,6 +155,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
           'entity_bundles',
           'local_task',
           'library_info',
+          'http_response',
         ],
         ['config:views.view.frontpage'],
         ['config:core.extension', 'views_data'],
@@ -162,31 +163,12 @@ class StandardPerformanceTest extends PerformanceTestBase {
         ['rendered', 'user:0', 'user_view'],
         ['config:filter.format.restricted_html', 'node_view'],
         [
-          'block_view',
-          'config:block.block.stark_site_branding',
+          'config:block_list',
           'config:system.site',
         ],
         [
           'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
-          'config:block.block.stark_search_form_narrow',
           'config:search.settings',
-        ],
-        ['config:block.block.stark_search_form_wide'],
-        ['config:block.block.stark_messages'],
-        ['config:block.block.stark_help'],
-        ['config:block.block.stark_powered'],
-        ['config:block.block.stark_syndicate'],
-        [
-          'config:block.block.stark_account_menu',
-          'config:block.block.stark_breadcrumbs',
-          'config:block.block.stark_content',
-          'config:block.block.stark_main_menu',
-          'config:block.block.stark_page_title',
-          'config:block.block.stark_primary_admin_actions',
-          'config:block.block.stark_primary_local_tasks',
-          'config:block.block.stark_secondary_local_tasks',
-          'config:block_list',
-          'http_response',
         ],
         ['config:system.menu.main'],
         ['config:system.menu.account'],
@@ -231,7 +213,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 16,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 14,
+      'CacheTagLookupQueryCount' => 8,
       'CacheTagGroupedLookups' => [
         [
           'route_match',
@@ -243,35 +225,17 @@ class StandardPerformanceTest extends PerformanceTestBase {
           'entity_bundles',
           'local_task',
           'library_info',
+          'http_response',
         ],
         ['rendered', 'user:0', 'user_view'],
         ['config:filter.format.restricted_html', 'node:1', 'node_view'],
         [
-          'block_view',
-          'config:block.block.stark_site_branding',
+          'config:block_list',
           'config:system.site',
         ],
         [
           'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
-          'config:block.block.stark_search_form_narrow',
           'config:search.settings',
-        ],
-        ['config:block.block.stark_search_form_wide'],
-        ['config:block.block.stark_messages'],
-        ['config:block.block.stark_help'],
-        ['config:block.block.stark_powered'],
-        ['config:block.block.stark_syndicate'],
-        [
-          'config:block.block.stark_account_menu',
-          'config:block.block.stark_breadcrumbs',
-          'config:block.block.stark_content',
-          'config:block.block.stark_main_menu',
-          'config:block.block.stark_page_title',
-          'config:block.block.stark_primary_admin_actions',
-          'config:block.block.stark_primary_local_tasks',
-          'config:block.block.stark_secondary_local_tasks',
-          'config:block_list',
-          'http_response',
         ],
         ['config:system.menu.main'],
         ['config:system.menu.account'],
@@ -313,7 +277,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 17,
       'CacheDeleteCount' => 0,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 13,
+      'CacheTagLookupQueryCount' => 7,
       'StylesheetCount' => 1,
       'StylesheetBytes' => 1800,
     ];
@@ -368,7 +332,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 14,
+      'CacheTagLookupQueryCount' => 7,
       'CacheTagGroupedLookups' => [
         // Form submission and login.
         [
@@ -381,6 +345,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
           'entity_bundles',
           'local_task',
           'library_info',
+          'http_response',
         ],
         // The user page after the redirect.
         [
@@ -393,34 +358,20 @@ class StandardPerformanceTest extends PerformanceTestBase {
           'entity_bundles',
           'local_task',
           'library_info',
+          'http_response',
         ],
         ['rendered', 'user:2', 'user_view'],
         [
-          'block_view',
-          'config:block.block.stark_site_branding',
+          'config:block_list',
           'config:system.site',
         ],
         [
           'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
-          'config:block.block.stark_search_form_narrow',
           'config:search.settings',
         ],
         ['config:system.menu.account', 'config:system.menu.main'],
-        ['config:block.block.stark_search_form_wide'],
-        ['config:block.block.stark_messages'],
-        ['config:block.block.stark_help'],
-        ['config:block.block.stark_powered'],
-        ['config:block.block.stark_syndicate'],
-        ['config:block.block.stark_main_menu'],
         [
-          'config:block.block.stark_account_menu',
-          'config:block.block.stark_breadcrumbs',
-          'config:block.block.stark_primary_admin_actions',
-        ],
-        [
-          'config:block.block.stark_primary_local_tasks',
           'config:user.role.authenticated',
-          'config:block.block.stark_secondary_local_tasks',
         ],
       ],
     ];
@@ -478,7 +429,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'CacheSetCount' => 1,
       'CacheDeleteCount' => 1,
       'CacheTagInvalidationCount' => 0,
-      'CacheTagLookupQueryCount' => 20,
+      'CacheTagLookupQueryCount' => 11,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
