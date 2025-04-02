@@ -228,7 +228,7 @@ class TextFieldTest extends StringFieldTest {
     $field->save();
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository */
-    $entity_display_repository = $this->container->get('entity_display.repository');
+    $entity_display_repository = \Drupal::service('entity_display.repository');
     $entity_display_repository->getFormDisplay('entity_test', 'entity_test', 'default')
       ->setComponent($field_name, [
         'type' => 'text_textfield',

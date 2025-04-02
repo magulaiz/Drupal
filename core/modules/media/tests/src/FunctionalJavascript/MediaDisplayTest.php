@@ -31,12 +31,12 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     parent::setUp();
 
     // Install the optional configs from the standard profile.
-    $extension_path = $this->container->get('extension.list.profile')->getPath('standard');
+    $extension_path = \Drupal::service('extension.list.profile')->getPath('standard');
     $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
     $storage = new FileStorage($optional_install_path);
-    $this->container->get('config.installer')->installOptionalConfig($storage, '');
+    \Drupal::service('config.installer')->installOptionalConfig($storage, '');
     // Reset all the static caches and list caches.
-    $this->container->get('config.factory')->reset();
+    \Drupal::service('config.factory')->reset();
 
     // This test is going to test the display, so we need the standalone URL.
     \Drupal::configFactory()
@@ -44,7 +44,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**
@@ -91,8 +91,7 @@ class MediaDisplayTest extends MediaJavascriptTestBase {
     $this->assertNotEmpty($result);
     $page->fillField('field_media_image[0][alt]', 'Image Alt Text 1');
     $page->pressButton('Save');
-    $image_media_id = $this->container
-      ->get('entity_type.manager')
+    $image_media_id = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
       ->accessCheck(FALSE)

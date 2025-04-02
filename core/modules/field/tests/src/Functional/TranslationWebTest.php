@@ -103,10 +103,10 @@ class TranslationWebTest extends FieldTestBase {
 
     // Prepare the field translations.
     FieldTestHelper::entityInfoTranslatable($this->entityTypeId, TRUE);
-    $entity = $this->container->get('entity_type.manager')
+    $entity = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId)
       ->create();
-    $available_langcodes = array_flip(array_keys($this->container->get('language_manager')->getLanguages()));
+    $available_langcodes = array_flip(array_keys(\Drupal::service('language_manager')->getLanguages()));
     $field_name = $this->fieldStorage->getName();
 
     // Store the field translations.
@@ -140,7 +140,7 @@ class TranslationWebTest extends FieldTestBase {
   private function checkTranslationRevisions($id, $revision_id, $available_langcodes): void {
     $field_name = $this->fieldStorage->getName();
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $entity = $storage->loadRevision($revision_id);
     foreach ($available_langcodes as $langcode => $value) {

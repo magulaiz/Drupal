@@ -640,7 +640,7 @@ class DbLogTest extends BrowserTestBase {
       'timestamp'   => \Drupal::time()->getRequestTime(),
     ];
     // Add a watchdog entry.
-    $this->container->get('logger.dblog')->log($log['severity'], $log['message'], $log);
+    \Drupal::service('logger.dblog')->log($log['severity'], $log['message'], $log);
     // Make sure the table count has actually been incremented.
     $this->assertEquals($count + 1, (int) $connection->select('watchdog')->countQuery()->execute()->fetchField(), '\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog ' . $count);
     // Log in the admin user.

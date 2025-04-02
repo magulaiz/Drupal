@@ -80,7 +80,7 @@ class ClaroTest extends BrowserTestBase {
    */
   public function testPagerAttribute(): void {
     // Insert 300 log messages.
-    $logger = $this->container->get('logger.factory')->get('pager_test');
+    $logger = \Drupal::service('logger.factory')->get('pager_test');
     for ($i = 0; $i < 300; $i++) {
       $logger->debug($this->randomString());
     }

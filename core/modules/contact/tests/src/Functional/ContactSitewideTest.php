@@ -539,7 +539,7 @@ class ContactSitewideTest extends BrowserTestBase {
 
     // Ensure the statically cached bundle info is aware of the contact form
     // that was just created in the UI.
-    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
+    \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
   }
 
   /**

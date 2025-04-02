@@ -61,7 +61,7 @@ class NodeEditFormTest extends NodeTestBase {
     ]);
     $this->drupalPlaceBlock('local_tasks_block');
 
-    $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
+    $this->nodeStorage = \Drupal::service('entity_type.manager')->getStorage('node');
   }
 
   /**
@@ -238,7 +238,7 @@ class NodeEditFormTest extends NodeTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet("node/" . $node->id() . "/edit");
     $this->assertSession()->pageTextNotContains('Published');
-    $this->assertSession()->pageTextNotContains($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
+    $this->assertSession()->pageTextNotContains(\Drupal::service('date.formatter')->format($node->getChangedTime(), 'short'));
 
     // Check that users with the 'administer nodes' permission can see the meta
     // information.
@@ -254,7 +254,7 @@ class NodeEditFormTest extends NodeTestBase {
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->drupalGet("node/" . $node->id() . "/edit");
     $this->assertSession()->pageTextContains('Published');
-    $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
+    $this->assertSession()->pageTextContains(\Drupal::service('date.formatter')->format($node->getChangedTime(), 'short'));
   }
 
   /**

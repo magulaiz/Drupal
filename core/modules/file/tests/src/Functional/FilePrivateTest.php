@@ -46,7 +46,7 @@ class FilePrivateTest extends FileFieldTestBase {
    * Tests file access for file uploaded to a private node.
    */
   public function testPrivateFile(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $type_name = 'article';
@@ -148,12 +148,12 @@ class FilePrivateTest extends FileFieldTestBase {
     $edit = ['files[' . $field_name . '_0]' => $file_system->realpath($test_file->getFileUri())];
     $this->submitForm($edit, 'Upload');
     /** @var \Drupal\file\FileStorageInterface $file_storage */
-    $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
+    $file_storage = \Drupal::service('entity_type.manager')->getStorage('file');
     $files = $file_storage->loadByProperties(['uid' => 0]);
     $this->assertCount(1, $files, 'Loaded one anonymous file.');
     $file = end($files);
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
-    $usage = $this->container->get('file.usage')->listUsage($file);
+    $usage = \Drupal::service('file.usage')->listUsage($file);
     $this->assertEmpty($usage, 'No file usage found.');
     $file_url = $file->createFileUrl(FALSE);
     // Ensure the anonymous uploader has access to the temporary file.
@@ -183,7 +183,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $new_node->save();
     $file = File::load($file_id);
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
-    $usage = $this->container->get('file.usage')->listUsage($file);
+    $usage = \Drupal::service('file.usage')->listUsage($file);
     $this->assertEmpty($usage, 'No file usage found.');
     $file_url = $file->createFileUrl(FALSE);
     // Ensure the anonymous uploader has access to the temporary file.
@@ -206,7 +206,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $file = File::load($new_node->{$field_name}->target_id);
     $this->assertTrue($file->isPermanent(), 'File is permanent.');
-    $usage = $this->container->get('file.usage')->listUsage($file);
+    $usage = \Drupal::service('file.usage')->listUsage($file);
     $this->assertCount(1, $usage, 'File usage found.');
     $file_url = $file->createFileUrl(FALSE);
     // Ensure the anonymous uploader has access to the file.
@@ -233,7 +233,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $new_node->save();
     $file = File::load($new_node->{$field_name}->target_id);
     $this->assertTrue($file->isPermanent(), 'File is permanent.');
-    $usage = $this->container->get('file.usage')->listUsage($file);
+    $usage = \Drupal::service('file.usage')->listUsage($file);
     $this->assertCount(1, $usage, 'File usage found.');
     $file_url = $file->createFileUrl(FALSE);
     // Ensure the anonymous uploader cannot access to the file.

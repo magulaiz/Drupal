@@ -65,7 +65,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
     $global_account = User::load(\Drupal::currentUser()->id());
 
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = $this->container->get('date.formatter');
+    $date_formatter = \Drupal::service('date.formatter');
 
     // Generate and test tokens.
     $tests = [];

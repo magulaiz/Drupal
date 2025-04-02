@@ -52,7 +52,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
     $this->node = $this->drupalCreateNode();
 
     // First update the index. This does the initial processing.
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
   }
 
   /**

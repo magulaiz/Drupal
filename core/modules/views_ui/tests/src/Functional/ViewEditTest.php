@@ -34,7 +34,7 @@ class ViewEditTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->assertSession()->linkExists('Delete view', 0, 'Ensure that the view delete link appears');
 
-    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');
+    $view = \Drupal::service('entity_type.manager')->getStorage('view')->load('test_view');
     $this->assertInstanceOf(View::class, $view);
     $this->clickLink('Delete view');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_view/delete');
@@ -42,7 +42,7 @@ class ViewEditTest extends UITestBase {
     $this->assertSession()->pageTextContains("The view {$view->label()} has been deleted.");
 
     $this->assertSession()->addressEquals('admin/structure/views');
-    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view');
+    $view = \Drupal::service('entity_type.manager')->getStorage('view')->load('test_view');
     $this->assertNotInstanceOf(View::class, $view);
   }
 
@@ -156,7 +156,7 @@ class ViewEditTest extends UITestBase {
     }
 
     // Make the site multilingual and test the options again.
-    $this->container->get('module_installer')->install(['language', 'content_translation']);
+    \Drupal::service('module_installer')->install(['language', 'content_translation']);
     ConfigurableLanguage::createFromLangcode('hu')->save();
     $this->resetAll();
     $this->rebuildContainer();

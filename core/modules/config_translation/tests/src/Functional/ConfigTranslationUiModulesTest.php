@@ -290,7 +290,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
   public function testTextFormatTranslation(): void {
     $this->drupalLogin($this->adminUser);
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
-    $config_factory = $this->container->get('config.factory');
+    $config_factory = \Drupal::service('config.factory');
 
     $expected = [
       'value' => '<p><strong>Hello World</strong></p>',
@@ -328,7 +328,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
       'value' => '<p><strong>Hello World</strong> - FR</p>',
       'format' => 'plain_text',
     ];
-    $this->container->get('language.config_factory_override')
+    \Drupal::service('language.config_factory_override')
       ->setLanguage(new Language(['id' => 'fr']));
     $actual = $config_factory
       ->get('config_translation_test.content')

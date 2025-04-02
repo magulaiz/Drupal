@@ -213,7 +213,7 @@ class EntityFormTest extends BrowserTestBase {
   protected function loadEntityByName($entity_type, $name) {
     // Always load the entity from the database to ensure that changes are
     // correctly picked up.
-    $entity_storage = $this->container->get('entity_type.manager')->getStorage($entity_type);
+    $entity_storage = \Drupal::service('entity_type.manager')->getStorage($entity_type);
     $entity_storage->resetCache();
     $entities = $entity_storage->loadByProperties(['name' => $name]);
     return $entities ? current($entities) : NULL;
@@ -224,7 +224,7 @@ class EntityFormTest extends BrowserTestBase {
    */
   public function testValidationHandlers(): void {
     /** @var \Drupal\Core\State\StateInterface $state */
-    $state = $this->container->get('state');
+    $state = \Drupal::service('state');
 
     // Check that from-level validation handlers can be defined and can alter
     // the form array.

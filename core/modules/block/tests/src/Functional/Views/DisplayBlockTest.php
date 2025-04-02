@@ -160,7 +160,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->assertBlockAppears($block_3);
     $this->assertBlockAppears($block_4);
 
-    $block_storage = $this->container->get('entity_type.manager')->getStorage('block');
+    $block_storage = \Drupal::service('entity_type.manager')->getStorage('block');
 
     // Remove the block display, so both block entities from the first view
     // should both disappear.
@@ -208,7 +208,7 @@ class DisplayBlockTest extends ViewTestBase {
     // Save the block.
     $edit = ['region' => 'content'];
     $this->submitForm($edit, 'Save block');
-    $storage = $this->container->get('entity_type.manager')->getStorage('block');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('block');
     $block = $storage->load($default_theme . '_views_block__test_view_block_block_1');
     // This will only return a result if our new block has been created with the
     // expected machine name.
@@ -390,9 +390,9 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalGet('test-page');
 
     $id = 'block:block=' . $block->id() . ':langcode=en|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1&langcode=en';
-    $id_token = Crypt::hmacBase64($id, Settings::getHashSalt() . $this->container->get('private_key')->get());
+    $id_token = Crypt::hmacBase64($id, Settings::getHashSalt() . \Drupal::service('private_key')->get());
     $cached_id = 'block:block=' . $cached_block->id() . ':langcode=en|entity.view.edit_form:view=test_view_block:location=block&name=test_view_block&display_id=block_1&langcode=en';
-    $cached_id_token = Crypt::hmacBase64($cached_id, Settings::getHashSalt() . $this->container->get('private_key')->get());
+    $cached_id_token = Crypt::hmacBase64($cached_id, Settings::getHashSalt() . \Drupal::service('private_key')->get());
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:assertContextualLinkPlaceHolder()
     // Check existence of the contextual link placeholders.
     $this->assertSession()->responseContains('<div' . new Attribute(['data-contextual-id' => $id, 'data-contextual-token' => $id_token, 'data-drupal-ajax-container' => '']) . '></div>');

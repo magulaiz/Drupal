@@ -33,7 +33,7 @@ class SessionTest extends BrowserTestBase {
    * @covers \Drupal\Core\Session\SessionManager::regenerate
    */
   public function testSessionSaveRegenerate(): void {
-    $session_handler = $this->container->get('session_handler.write_safe');
+    $session_handler = \Drupal::service('session_handler.write_safe');
     $this->assertTrue($session_handler->isSessionWritable(), 'session_handler->isSessionWritable() initially returns TRUE.');
     $session_handler->setSessionWritable(FALSE);
     $this->assertFalse($session_handler->isSessionWritable(), '$session_handler->isSessionWritable() returns FALSE after disabling.');
@@ -255,17 +255,17 @@ class SessionTest extends BrowserTestBase {
     // Disable the dynamic_page_cache module; it'd cause session_test's debug
     // output (that is added in
     // SessionTestSubscriber::onKernelResponseSessionTest()) to not be added.
-    $this->container->get('module_installer')->uninstall(['dynamic_page_cache']);
+    \Drupal::service('module_installer')->uninstall(['dynamic_page_cache']);
 
     // Verify that no session is automatically created for anonymous user when
     // page caching is disabled.
-    $this->container->get('module_installer')->uninstall(['page_cache']);
+    \Drupal::service('module_installer')->uninstall(['page_cache']);
     $this->drupalGet('');
     $this->assertSessionCookie(FALSE);
     $this->assertSessionEmpty(TRUE);
 
     // The same behavior is expected when caching is enabled.
-    $this->container->get('module_installer')->install(['page_cache']);
+    \Drupal::service('module_installer')->install(['page_cache']);
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
     $config->save();

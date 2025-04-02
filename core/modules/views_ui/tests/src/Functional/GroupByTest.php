@@ -50,7 +50,7 @@ class GroupByTest extends UITestBase {
 
     $this->submitForm([], 'Save');
 
-    $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_views_group_by_save');
+    $view = \Drupal::service('entity_type.manager')->getStorage('view')->load('test_views_group_by_save');
     $display = $view->getDisplay('default');
     $this->assertTrue($display['display_options']['group_by'], 'The group by setting was saved on the view.');
     $this->assertEquals('count', $display['display_options']['fields']['id']['group_type'], 'Count group_by_type was saved on the view.');

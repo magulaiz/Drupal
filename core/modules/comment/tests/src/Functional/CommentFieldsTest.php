@@ -132,7 +132,7 @@ class CommentFieldsTest extends CommentTestBase {
     // We want to check the attached drupalSettings of
     // \Drupal\comment\CommentLinkBuilder::buildCommentedEntityLinks. Therefore
     // we need a node listing, let's use views for that.
-    $this->container->get('module_installer')->install(['views'], TRUE);
+    \Drupal::service('module_installer')->install(['views'], TRUE);
     $this->drupalGet('node');
 
     $link_info = $this->getDrupalSettings()['comment']['newCommentsLinks']['node']['comment2']['2'];

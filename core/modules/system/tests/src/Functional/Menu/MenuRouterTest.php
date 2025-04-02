@@ -213,7 +213,7 @@ class MenuRouterTest extends BrowserTestBase {
    * @see \Drupal\menu_test\EventSubscriber\MaintenanceModeSubscriber::onKernelRequestMaintenance()
    */
   public function testMaintenanceModeLoginPaths(): void {
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    \Drupal::service('state')->set('system.maintenance_mode', TRUE);
 
     $offline_message = $this->config('system.site')->get('name') . ' is currently under maintenance. We should be back shortly. Thank you for your patience.';
     $this->drupalGet('test-page');
@@ -221,7 +221,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('menu_login_callback');
     $this->assertSession()->pageTextContains('This is TestControllers::testLogin.');
 
-    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    \Drupal::service('state')->set('system.maintenance_mode', FALSE);
   }
 
   /**
@@ -251,7 +251,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->adminTheme = 'claro';
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
-    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install([$this->defaultTheme, $this->adminTheme]);
     $this->config('system.theme')
       ->set('default', $this->defaultTheme)
@@ -282,7 +282,7 @@ class MenuRouterTest extends BrowserTestBase {
    * Tests the theme negotiation when the site is in maintenance mode.
    */
   protected function doTestThemeCallbackMaintenanceMode(): void {
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    \Drupal::service('state')->set('system.maintenance_mode', TRUE);
 
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
@@ -298,7 +298,7 @@ class MenuRouterTest extends BrowserTestBase {
     // Check that the administrative theme's CSS appears on the page.
     $this->assertSession()->responseContains('claro/css/base/elements.css');
 
-    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    \Drupal::service('state')->set('system.maintenance_mode', FALSE);
   }
 
   /**
@@ -313,7 +313,7 @@ class MenuRouterTest extends BrowserTestBase {
 
     // Now install the theme and request it again.
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
-    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install(['test_theme']);
 
     $this->drupalGet('menu-test/theme-callback/use-test-theme');

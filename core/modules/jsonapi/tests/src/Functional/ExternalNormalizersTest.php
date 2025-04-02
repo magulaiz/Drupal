@@ -122,30 +122,30 @@ class ExternalNormalizersTest extends BrowserTestBase {
 
     // Asserts normalizing the entity using core's 'serializer' service DOES
     // yield the value we set.
-    $core_normalization = $this->container->get('serializer')->normalize($this->entity);
+    $core_normalization = \Drupal::service('serializer')->normalize($this->entity);
     $this->assertSame(static::VALUE_ORIGINAL, $core_normalization['field_test'][0]['value']);
 
     // Asserts denormalizing the entity using core's 'serializer' service DOES
     // yield the value we set.
     $core_normalization['field_test'][0]['value'] = static::VALUE_OVERRIDDEN;
-    $denormalized_entity = $this->container->get('serializer')->denormalize($core_normalization, EntityTest::class, 'json', []);
+    $denormalized_entity = \Drupal::service('serializer')->denormalize($core_normalization, EntityTest::class, 'json', []);
     $this->assertInstanceOf(EntityTest::class, $denormalized_entity);
     $this->assertSame(static::VALUE_OVERRIDDEN, $denormalized_entity->field_test->value);
 
     // Install test module that contains a high-priority alternative normalizer.
-    $this->container->get('module_installer')->install([$test_module]);
+    \Drupal::service('module_installer')->install([$test_module]);
     $this->rebuildContainer();
 
     // Asserts normalizing the entity using core's 'serializer' service DOES NOT
     // ANYMORE yield the value we set.
-    $core_normalization = $this->container->get('serializer')->normalize($this->entity);
+    $core_normalization = \Drupal::service('serializer')->normalize($this->entity);
     $this->assertSame(static::VALUE_OVERRIDDEN, $core_normalization['field_test'][0]['value']);
 
     // Asserts denormalizing the entity using core's 'serializer' service DOES
     // NOT ANYMORE yield the value we set.
-    $core_normalization = $this->container->get('serializer')->normalize($this->entity);
+    $core_normalization = \Drupal::service('serializer')->normalize($this->entity);
     $core_normalization['field_test'][0]['value'] = static::VALUE_OVERRIDDEN;
-    $denormalized_entity = $this->container->get('serializer')->denormalize($core_normalization, EntityTest::class, 'json', []);
+    $denormalized_entity = \Drupal::service('serializer')->denormalize($core_normalization, EntityTest::class, 'json', []);
     $this->assertInstanceOf(EntityTest::class, $denormalized_entity);
     $this->assertSame(static::VALUE_ORIGINAL, $denormalized_entity->field_test->value);
 
@@ -172,7 +172,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
     $response = $client->request('POST', Url::fromRoute('jsonapi.entity_test--entity_test.collection.post')->setAbsolute(TRUE)->toString(), $request_options);
     $document = $this->getDocumentFromResponse($response);
     $this->assertSame(static::VALUE_OVERRIDDEN, $document['data']['attributes']['field_test']);
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $uuid_key = $entity_type_manager->getDefinition('entity_test')->getKey('uuid');
     $entities = $entity_type_manager
       ->getStorage('entity_test')

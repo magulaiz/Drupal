@@ -223,12 +223,12 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->assertFileExists($generated_uri);
     // assertRaw can't be used with string containing non UTF-8 chars.
     $this->assertNotEmpty(file_get_contents($generated_uri), 'URL returns expected file.');
-    $image = $this->container->get('image.factory')->get($generated_uri);
+    $image = \Drupal::service('image.factory')->get($generated_uri);
     $this->assertSession()->responseHeaderEquals('Content-Type', $image->getMimeType());
     $this->assertSession()->responseHeaderEquals('Content-Length', (string) $image->getFileSize());
 
     // Check that we did not download the original file.
-    $original_image = $this->container->get('image.factory')
+    $original_image = \Drupal::service('image.factory')
       ->get($original_uri);
     $this->assertSession()->responseHeaderNotEquals('Content-Length', (string) $original_image->getFileSize());
 

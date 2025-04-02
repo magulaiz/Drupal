@@ -63,7 +63,7 @@ class WidgetOverflowTest extends MediaLibraryTestBase {
    */
   private function uploadFiles(int $number): void {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = $this->container->get('file_system');
+    $file_system = \Drupal::service('file_system');
 
     // Create a list of new files to upload.
     $filenames = $remote_paths = [];

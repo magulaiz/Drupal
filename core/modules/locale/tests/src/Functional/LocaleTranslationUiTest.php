@@ -88,7 +88,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Add string.
     $this->t($name, [], ['langcode' => $langcode])->render();
     // Reset locale cache.
-    $this->container->get('string_translation')->reset();
+    \Drupal::service('string_translation')->reset();
     $this->assertSession()->responseContains('"edit-languages-' . $langcode . '-weight"');
     // Ensure that test language was added.
     $this->assertSession()->pageTextContains($name);
@@ -172,7 +172,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Refresh the locale() cache to get fresh data from t() below. We are in
     // the same HTTP request and therefore t() is not refreshed by saving the
     // translation above.
-    $this->container->get('string_translation')->reset();
+    \Drupal::service('string_translation')->reset();
     // Now we should get the proper fresh translation from t().
     $this->assertNotEquals($translation_to_en, $name);
     $this->assertEquals($translation_to_en, $this->t($name, [], ['langcode' => 'en']), 't() works for English.');
@@ -279,7 +279,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add custom language');
-    $this->container->get('language_manager')->reset();
+    \Drupal::service('language_manager')->reset();
 
     // Build the JavaScript translation file.
 
@@ -441,7 +441,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Add string.
     $this->t($name, [], ['langcode' => $langcode])->render();
     // Reset locale cache.
-    $this->container->get('string_translation')->reset();
+    \Drupal::service('string_translation')->reset();
     $this->drupalLogout();
 
     // Search for the name.
@@ -569,13 +569,13 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ConfigurableLanguage::createFromLangcode('de')->save();
 
     // Create test source string.
-    $string = $this->container->get('locale.storage')->createString([
+    $string = \Drupal::service('locale.storage')->createString([
       'source' => $this->randomMachineName(100),
       'context' => $this->randomMachineName(20),
     ])->save();
 
     // Create translation for new string and save it as non-customized.
-    $translation = $this->container->get('locale.storage')->createTranslation([
+    $translation = \Drupal::service('locale.storage')->createTranslation([
       'lid' => $string->lid,
       'language' => 'de',
       'translation' => $this->randomMachineName(100),
@@ -583,7 +583,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     ])->save();
 
     // Reset locale cache.
-    $this->container->get('string_translation')->reset();
+    \Drupal::service('string_translation')->reset();
 
     // Ensure non-customized translation string does appear if searching
     // non-customized translation.

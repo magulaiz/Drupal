@@ -42,7 +42,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     ConfigurableLanguage::createFromLangcode('af')->save();
 
     // Enable locale module.
-    $this->container->get('module_installer')->install(['locale']);
+    \Drupal::service('module_installer')->install(['locale']);
     $this->resetAll();
 
     // Enable import of translations. By default this is disabled for automated
@@ -80,8 +80,8 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     // Ensure that \Drupal\locale\LocaleConfigSubscriber::onConfigSave() works
     // as expected during a configuration install that installs locale.
     /** @var \Drupal\Core\Config\FileStorage $sync */
-    $sync = $this->container->get('config.storage.sync');
-    $this->copyConfig($this->container->get('config.storage'), $sync);
+    $sync = \Drupal::service('config.storage.sync');
+    $this->copyConfig(\Drupal::service('config.storage'), $sync);
 
     // Add our own translation to the config that will be imported.
     $af_sync = $sync->createCollection('language.af');
@@ -90,8 +90,8 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $af_sync->write('system.maintenance', $data);
 
     // Uninstall locale module.
-    $this->container->get('module_installer')->uninstall(['locale_test_translate']);
-    $this->container->get('module_installer')->uninstall(['locale']);
+    \Drupal::service('module_installer')->uninstall(['locale_test_translate']);
+    \Drupal::service('module_installer')->uninstall(['locale']);
     $this->resetAll();
 
     $this->configImporter()->import();
@@ -114,7 +114,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
   public function testConfigTranslationModuleInstall(): void {
 
     // Enable locale, block and config_translation modules.
-    $this->container->get('module_installer')->install(['block', 'config_translation']);
+    \Drupal::service('module_installer')->install(['block', 'config_translation']);
     $this->resetAll();
 
     // The testing profile overrides locale.settings to disable translation
@@ -190,7 +190,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
    */
   public function testLocaleRemovalAndConfigOverrideDelete(): void {
     // Enable the locale module.
-    $this->container->get('module_installer')->install(['locale']);
+    \Drupal::service('module_installer')->install(['locale']);
     $this->resetAll();
 
     $admin_user = $this->drupalCreateUser([
@@ -236,7 +236,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
    */
   public function testLocaleRemovalAndConfigOverridePreserve(): void {
     // Enable the locale module.
-    $this->container->get('module_installer')->install(['locale']);
+    \Drupal::service('module_installer')->install(['locale']);
     $this->resetAll();
 
     $admin_user = $this->drupalCreateUser([
@@ -302,13 +302,13 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
    */
   public function testConfigTranslationWithNonEnglishLanguageDefault(): void {
     /** @var \Drupal\Core\Extension\ModuleInstallerInterface $module_installer */
-    $module_installer = $this->container->get('module_installer');
+    $module_installer = \Drupal::service('module_installer');
     ConfigurableLanguage::createFromLangcode('af')->save();
 
     $module_installer->install(['locale']);
     $this->resetAll();
     /** @var \Drupal\locale\StringStorageInterface $local_storage */
-    $local_storage = $this->container->get('locale.storage');
+    $local_storage = \Drupal::service('locale.storage');
 
     $source_string = 'Locale can translate';
     $translation_string = 'Locale can translate Afrikaans';

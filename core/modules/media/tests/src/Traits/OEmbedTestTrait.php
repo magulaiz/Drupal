@@ -62,8 +62,8 @@ trait OEmbedTestTrait {
     ]);
     // Rebuild the container in case there is already an instantiated service
     // that has a dependency on the http_client service.
-    $this->container->get('kernel')->rebuildContainer();
-    $this->container = $this->container->get('kernel')->getContainer();
+    \Drupal::service('kernel')->rebuildContainer();
+    $this->container = \Drupal::service('kernel')->getContainer();
   }
 
   /**
@@ -84,7 +84,7 @@ trait OEmbedTestTrait {
       ->toString();
 
     /** @var \Drupal\media_test_oembed\ProviderRepository $provider_repository */
-    $provider_repository = $this->container->get('media.oembed.provider_repository');
+    $provider_repository = \Drupal::service('media.oembed.provider_repository');
 
     foreach ($providers as &$provider) {
       foreach ($provider['endpoints'] as &$endpoint) {

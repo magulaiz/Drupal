@@ -421,7 +421,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     $test += ['path_options' => []];
     if (!empty($test['language_negotiation'])) {
       $method_weights = array_flip($test['language_negotiation']);
-      $this->container->get('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_INTERFACE, $method_weights);
+      \Drupal::service('language_negotiator')->saveConfiguration(LanguageInterface::TYPE_INTERFACE, $method_weights);
     }
     if (!empty($test['language_negotiation_url_part'])) {
       $this->config('language.negotiation')
@@ -431,7 +431,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     if (!empty($test['language_test_domain'])) {
       \Drupal::state()->set('language_test.domain', $test['language_test_domain']);
     }
-    $this->container->get('language_manager')->reset();
+    \Drupal::service('language_manager')->reset();
     $this->drupalGet($test['path'], $test['path_options'], $test['http_header']);
     $this->assertSession()->pageTextContains($test['expect']);
     $this->assertSession()->statusMessageContains('Language negotiation method: ' . $test['expected_method_id'], 'status');
@@ -451,7 +451,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     // Add the Italian language.
     $langcode_browser_fallback = 'it';
     ConfigurableLanguage::createFromLangcode($langcode_browser_fallback)->save();
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
 
     // Enable the path prefix for the default language: this way any unprefixed
     // URL must have a valid fallback value.
@@ -511,7 +511,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     // Add the Italian language.
     ConfigurableLanguage::createFromLangcode('it')->save();
 
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
 
     // Enable browser and URL language detection.
     $edit = [
@@ -571,7 +571,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     // Test HTTPS via current URL scheme.
     $request = Request::create('', 'GET', [], [], [], ['HTTPS' => 'on']);
     $request->setSession(new Session(new MockArraySessionStorage()));
-    $this->container->get('request_stack')->push($request);
+    \Drupal::service('request_stack')->push($request);
     $italian_url = Url::fromRoute('system.admin', [], ['language' => $languages['it']])->toString();
     $correct_link = 'https://' . $link;
     $this->assertSame($correct_link, $italian_url, "The right URL (via current URL scheme) ($italian_url) in accordance with the chosen language");

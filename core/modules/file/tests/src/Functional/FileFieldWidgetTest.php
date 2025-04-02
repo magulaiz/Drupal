@@ -80,7 +80,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests upload and remove buttons for a single-valued File field.
    */
   public function testSingleValuedWidget(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name);
@@ -121,7 +121,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests upload and remove buttons for multiple multi-valued File fields.
    */
   public function testMultiValuedWidget(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     // Use explicit names instead of random names for those fields, because of a
     // bug in submitForm() with multiple file uploads in one form, where the
@@ -246,7 +246,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests a file field with a "Private files" upload destination setting.
    */
   public function testPrivateFileSetting(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     // Grant the admin user required permissions.
     user_role_grant_permissions($this->adminUser->roles[0]->target_id, ['administer node fields']);
 
@@ -403,7 +403,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->assertSession()->elementNotExists('xpath', $xpath);
 
     // Upload a file.
-    $edit['files[' . $field_name . '_0][]'] = $this->container->get('file_system')->realpath($file->getFileUri());
+    $edit['files[' . $field_name . '_0][]'] = \Drupal::service('file_system')->realpath($file->getFileUri());
     $this->submitForm($edit, "{$field_name}_0_upload_button");
 
     // If the field has at least one item, the table should be visible.
@@ -581,7 +581,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     ];
 
     // Attach a file to a node.
-    $edit['files[' . $field_name . '_0]'] = $this->container->get('file_system')->realpath($test_file->getFileUri());
+    $edit['files[' . $field_name . '_0]'] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
     $this->drupalGet(Url::fromRoute('node.add', ['node_type' => $type_name]));
     $this->submitForm($edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);

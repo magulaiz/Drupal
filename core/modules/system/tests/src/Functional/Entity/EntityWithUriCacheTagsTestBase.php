@@ -70,7 +70,7 @@ abstract class EntityWithUriCacheTagsTestBase extends EntityCacheTagsTestBase {
     if ($bundle_entity_type_id = $this->entity->getEntityType()->getBundleEntityType()) {
       // Verify that after modifying the corresponding bundle entity, there is a
       // cache miss.
-      $bundle_entity = $this->container->get('entity_type.manager')
+      $bundle_entity = \Drupal::service('entity_type.manager')
         ->getStorage($bundle_entity_type_id)
         ->load($this->entity->bundle());
       $bundle_entity->save();

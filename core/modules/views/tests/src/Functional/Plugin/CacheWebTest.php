@@ -60,7 +60,7 @@ class CacheWebTest extends ViewTestBase {
       ],
     ]);
     $view->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $vc_factory */
     $variation_cache_factory = \Drupal::service('variation_cache_factory');

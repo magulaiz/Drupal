@@ -39,7 +39,7 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
     $session->pageTextContains('The no_source_module plugin must define the source_module property.');
 
     // Uninstall the module causing the missing module error messages.
-    $this->container->get('module_installer')
+    \Drupal::service('module_installer')
       ->uninstall(['migration_provider_test'], TRUE);
 
     // Restart the upgrade process and test there is no source_module error.

@@ -217,7 +217,7 @@ class ThemeTest extends BrowserTestBase {
       $this->submitForm($edit, 'Save configuration');
     }
 
-    $this->container->get('theme_installer')->install(['olivero']);
+    \Drupal::service('theme_installer')->install(['olivero']);
 
     // Ensure only valid themes are listed in the local tasks.
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
@@ -255,7 +255,7 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testThemeSettingsLogo(): void {
     // Visit Olivero's theme settings page to replace the logo.
-    $this->container->get('theme_installer')->install(['olivero']);
+    \Drupal::service('theme_installer')->install(['olivero']);
     $this->drupalGet('admin/appearance/settings/olivero');
     $edit = [
       'default_logo' => FALSE,
@@ -279,7 +279,7 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testThemeSettingsColorHexCode() : void {
     // Install the Olivero theme.
-    $this->container->get('theme_installer')->install(['olivero']);
+    \Drupal::service('theme_installer')->install(['olivero']);
 
     // Define invalid and valid hex color codes.
     $invalid_hex_codes = [
@@ -320,7 +320,7 @@ class ThemeTest extends BrowserTestBase {
    * Tests the 'rendered' cache tag is cleared when saving theme settings.
    */
   public function testThemeSettingsRenderCacheClear(): void {
-    $this->container->get('theme_installer')->install(['olivero']);
+    \Drupal::service('theme_installer')->install(['olivero']);
     // Ensure the frontpage is cached for anonymous users. The render cache will
     // cleared by installing a theme.
     $this->drupalLogout();
@@ -343,7 +343,7 @@ class ThemeTest extends BrowserTestBase {
    * Tests the administration theme functionality.
    */
   public function testAdministrationTheme(): void {
-    $this->container->get('theme_installer')->install(['claro']);
+    \Drupal::service('theme_installer')->install(['claro']);
 
     // Install an administration theme and show it on the node admin pages.
     $edit = [
@@ -460,9 +460,9 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testInvalidTheme(): void {
     // theme_page_test_system_info_alter() un-hides all hidden themes.
-    $this->container->get('module_installer')->install(['theme_page_test']);
+    \Drupal::service('module_installer')->install(['theme_page_test']);
     // Clear the system_list() and theme listing cache to pick up the change.
-    $this->container->get('theme_handler')->reset();
+    \Drupal::service('theme_handler')->reset();
     $this->drupalGet('admin/appearance');
     $this->assertSession()->pageTextContains('This theme requires the base theme not_real_test_base_theme to operate correctly.');
     $this->assertSession()->pageTextContains('This theme requires the base theme test_invalid_base_theme to operate correctly.');
@@ -558,7 +558,7 @@ class ThemeTest extends BrowserTestBase {
    */
   public function testThemeSettingsNoLogoNoFavicon(): void {
     // Install theme with no logo and no favicon feature.
-    $this->container->get('theme_installer')->install(['test_theme_settings_features']);
+    \Drupal::service('theme_installer')->install(['test_theme_settings_features']);
     // Visit this theme's settings page.
     $this->drupalGet('admin/appearance/settings/test_theme_settings_features');
     $edit = [];

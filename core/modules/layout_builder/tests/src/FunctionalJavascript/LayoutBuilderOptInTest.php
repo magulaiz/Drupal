@@ -38,7 +38,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
 
     // Create one content type before installing Layout Builder and one after.
     $this->createContentType(['type' => 'before']);
-    $this->container->get('module_installer')->install(['layout_builder']);
+    \Drupal::service('module_installer')->install(['layout_builder']);
     $this->rebuildAll();
     $this->createContentType(['type' => 'after']);
 
@@ -175,7 +175,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
   protected function getPathForFieldBlock($entity_type_id, $bundle, $view_mode, $field_name): string {
     $delta = 0;
     /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $display */
-    $display = $this->container->get('entity_type.manager')->getStorage('entity_view_display')->load("$entity_type_id.$bundle.$view_mode");
+    $display = \Drupal::service('entity_type.manager')->getStorage('entity_view_display')->load("$entity_type_id.$bundle.$view_mode");
     $body_component = NULL;
     foreach ($display->getSection($delta)->getComponents() as $component) {
       if ($component->getPluginId() === "field_block:$entity_type_id:$bundle:$field_name") {

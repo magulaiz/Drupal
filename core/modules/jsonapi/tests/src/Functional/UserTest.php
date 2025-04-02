@@ -499,7 +499,7 @@ class UserTest extends ResourceTestBase {
    */
   public function testCollectionFilterAccess(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['node'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['node'], TRUE), 'Installed modules.');
     FieldStorageConfig::create([
       'entity_type' => static::$entityTypeId,
       'field_name' => 'field_favorite_animal',
@@ -642,7 +642,7 @@ class UserTest extends ResourceTestBase {
 
     $this->sendDeleteRequestForUser($account, $cancel_method);
 
-    $user_storage = $this->container->get('entity_type.manager')
+    $user_storage = \Drupal::service('entity_type.manager')
       ->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
@@ -650,7 +650,7 @@ class UserTest extends ResourceTestBase {
     $this->assertNotNull($account, 'User is not deleted after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
     $this->assertTrue($account->isBlocked(), 'User is blocked after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
@@ -672,7 +672,7 @@ class UserTest extends ResourceTestBase {
 
     $this->sendDeleteRequestForUser($account, $cancel_method);
 
-    $user_storage = $this->container->get('entity_type.manager')
+    $user_storage = \Drupal::service('entity_type.manager')
       ->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
@@ -680,7 +680,7 @@ class UserTest extends ResourceTestBase {
     $this->assertNotNull($account, 'User is not deleted after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
     $this->assertTrue($account->isBlocked(), 'User is blocked after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
@@ -712,7 +712,7 @@ class UserTest extends ResourceTestBase {
 
     $this->sendDeleteRequestForUser($account, $cancel_method);
 
-    $user_storage = $this->container->get('entity_type.manager')
+    $user_storage = \Drupal::service('entity_type.manager')
       ->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
@@ -720,7 +720,7 @@ class UserTest extends ResourceTestBase {
     $this->assertNotNull($account, 'User is not deleted after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
     $this->assertTrue($account->isBlocked(), 'User is blocked after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $node_storage->resetCache($node_ids);
 
     $test_nodes = $node_storage->loadMultiple($node_ids);
@@ -750,14 +750,14 @@ class UserTest extends ResourceTestBase {
 
     $this->sendDeleteRequestForUser($account, $cancel_method);
 
-    $user_storage = $this->container->get('entity_type.manager')
+    $user_storage = \Drupal::service('entity_type.manager')
       ->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
 
     $this->assertNull($account, 'User is deleted after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
@@ -787,8 +787,8 @@ class UserTest extends ResourceTestBase {
     $response = $this->request('DELETE', $url, $request_options);
     $this->assertResourceResponse(204, NULL, $response);
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
+    $user_storage = \Drupal::service('entity_type.manager')->getStorage('user');
 
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());

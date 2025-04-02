@@ -112,7 +112,7 @@ class CommentLinksTest extends CommentTestBase {
       $this->assertSession()->linkExists('Add new comment');
     }
 
-    $display_repository = $this->container->get('entity_display.repository');
+    $display_repository = \Drupal::service('entity_display.repository');
 
     // Change weight to make links go before comment body.
     $display_repository->getViewDisplay('comment', 'comment')

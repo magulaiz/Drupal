@@ -94,7 +94,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     ];
 
     $this->createEntityReferenceField('node', 'article', $field_name, 'Tags', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $entity_type_manager
       ->getStorage('entity_form_display')
       ->load('node.article.default')

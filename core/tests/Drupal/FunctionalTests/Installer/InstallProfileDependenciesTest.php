@@ -40,9 +40,9 @@ class InstallProfileDependenciesTest extends BrowserTestBase {
     // We've uninstalled a module therefore we need to rebuild the container in
     // the test runner.
     $this->rebuildContainer();
-    $this->assertFalse($this->container->get('module_handler')->moduleExists('ban'));
+    $this->assertFalse(\Drupal::service('module_handler')->moduleExists('ban'));
     try {
-      $this->container->get('module_installer')->uninstall(['dblog']);
+      \Drupal::service('module_installer')->uninstall(['dblog']);
       $this->fail('Uninstalled dblog module.');
     }
     catch (ModuleUninstallValidatorException $e) {

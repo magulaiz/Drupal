@@ -86,7 +86,7 @@ class SearchCommentCountToggleTest extends BrowserTestBase {
     $this->submitForm($edit_comment, 'Save');
 
     // First update the index. This does the initial processing.
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
   }
 
   /**

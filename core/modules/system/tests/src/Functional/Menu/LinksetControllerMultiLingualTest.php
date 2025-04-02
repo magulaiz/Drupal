@@ -193,7 +193,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
       ]);
       $multi_lingual_menu_item->save();
     }
-    $this->httpKernel = $this->container->get('http_kernel');
+    $this->httpKernel = \Drupal::service('http_kernel');
   }
 
   /**

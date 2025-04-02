@@ -54,7 +54,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     // Create media.
     $media = Media::create([
@@ -247,7 +247,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     // Create media.
     $media = Media::create([
@@ -288,7 +288,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     $assert_session = $this->assertSession();
     $media_type = $this->createMediaType('test');
@@ -330,7 +330,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     $assert_session = $this->assertSession();
     $media_type = $this->createMediaType('test');
@@ -369,7 +369,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     // Create a media type and an entity reference to itself.
     $media_type = $this->createMediaType('test');

@@ -26,7 +26,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
       ->set('standalone_url', TRUE)
       ->save(TRUE);
 
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

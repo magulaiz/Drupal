@@ -70,7 +70,7 @@ class DisplayTest extends ViewTestBase {
    */
   public function testDisplayPlugin(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
+    $renderer = \Drupal::service('renderer');
     $view = Views::getView('test_view');
 
     // Add a new 'display_test' display and test it's there.
@@ -221,7 +221,7 @@ class DisplayTest extends ViewTestBase {
    */
   public function testReadMoreCustomURL(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
+    $renderer = \Drupal::service('renderer');
 
     $view = Views::getView('test_display_more');
     $view->setDisplay('default');

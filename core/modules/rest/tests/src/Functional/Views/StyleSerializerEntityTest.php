@@ -142,7 +142,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $this->executeView($view);
 
     // Get the serializer service.
-    $serializer = $this->container->get('serializer');
+    $serializer = \Drupal::service('serializer');
 
     $entities = [];
     foreach ($view->result as $row) {
@@ -485,7 +485,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $view->setDisplay('rest_export_1');
     $this->executeView($view);
 
-    $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('entity_test');
 
     // Update the name for each to include a script tag.
     foreach ($storage->loadMultiple() as $entity_test) {
@@ -544,7 +544,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $this->executeView($view);
 
     // Get the serializer service.
-    $serializer = $this->container->get('serializer');
+    $serializer = \Drupal::service('serializer');
 
     $entities = [];
     foreach ($view->result as $row) {

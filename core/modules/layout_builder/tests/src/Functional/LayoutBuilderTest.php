@@ -69,7 +69,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
     // @todo This should not be necessary.
-    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('The first node body');
@@ -339,7 +339,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->container->get('module_installer')->install(['menu_ui']);
+    \Drupal::service('module_installer')->install(['menu_ui']);
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
       'administer node display',
@@ -503,7 +503,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $this->drupalGet("{$field_ui_prefix}/display/default");
     $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
 
-    $storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $node = $storage->load(1);
     // Create a pending revision.
     $pending_revision = $storage->createRevision($node, FALSE);
@@ -683,7 +683,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $this->drupalLogin($this->createUser(['configure any layout']));
 
     // Prepare an object with a pre-existing section.
-    $this->container->get('config.factory')->getEditable('layout_builder_test.test_simple_config.existing')
+    \Drupal::service('config.factory')->getEditable('layout_builder_test.test_simple_config.existing')
       ->set('sections', [(new Section('layout_twocol'))->toArray()])
       // `layout_builder_test.test_simple_config.existing.sections.0.layout_settings.label`
       // contains a translatable label, so a `langcode` is required.

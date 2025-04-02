@@ -105,7 +105,7 @@ class AccessTest extends ViewTestBase {
     $view->save();
     // Saving a view will cause the router to be rebuilt when the kernel
     // termination event fires. Simulate that here.
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $this->assertTrue($access_plugin->access($this->normalUser));
 

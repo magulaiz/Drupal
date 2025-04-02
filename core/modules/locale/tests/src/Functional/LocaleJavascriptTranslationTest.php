@@ -45,8 +45,7 @@ class LocaleJavascriptTranslationTest extends BrowserTestBase {
       _locale_parse_js_file($filename);
 
       // Get all of the source strings that were found.
-      $strings = $this->container
-        ->get('locale.storage')
+      $strings = \Drupal::service('locale.storage')
         ->getStrings([
           'type' => 'javascript',
           'name' => $filename,

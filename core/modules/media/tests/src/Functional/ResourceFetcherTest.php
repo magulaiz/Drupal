@@ -71,7 +71,7 @@ class ResourceFetcherTest extends MediaFunctionalTestBase {
    */
   public function testFetchResource($resource_url, $provider_name, $title): void {
     /** @var \Drupal\media\OEmbed\Resource $resource */
-    $resource = $this->container->get('media.oembed.resource_fetcher')
+    $resource = \Drupal::service('media.oembed.resource_fetcher')
       ->fetchResource($resource_url);
 
     $this->assertInstanceOf(Resource::class, $resource);

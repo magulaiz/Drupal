@@ -59,7 +59,7 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     // Verify that French is the only language.
-    $this->container->get('language_manager')->reset();
+    \Drupal::service('language_manager')->reset();
     $this->assertFalse(\Drupal::languageManager()->isMultilingual(), 'Site is mono-lingual');
     $this->assertEquals('fr', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'French is the default language');
 

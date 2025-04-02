@@ -108,7 +108,7 @@ abstract class DateTestBase extends BrowserTestBase {
     // Create a field with settings to validate.
     $this->createField();
 
-    $this->dateFormatter = $this->container->get('date.formatter');
+    $this->dateFormatter = \Drupal::service('date.formatter');
   }
 
   /**
@@ -170,12 +170,12 @@ abstract class DateTestBase extends BrowserTestBase {
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
     if ($reset) {
-      $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
+      \Drupal::service('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     }
     $entity = EntityTest::load($id);
     $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);
     $build = $display->build($entity);
-    return (string) $this->container->get('renderer')->renderRoot($build);
+    return (string) \Drupal::service('renderer')->renderRoot($build);
   }
 
   /**

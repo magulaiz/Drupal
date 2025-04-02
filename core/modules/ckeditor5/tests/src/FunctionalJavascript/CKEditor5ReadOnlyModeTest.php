@@ -41,7 +41,7 @@ class CKEditor5ReadOnlyModeTest extends CKEditor5TestBase {
       'bundle' => 'page',
       'label' => 'Second CKEditor5 field',
     ])->save();
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', 'page')
       ->setComponent('field_second_ckeditor5_field', [
         'type' => 'text_textarea_with_summary',
@@ -61,14 +61,14 @@ class CKEditor5ReadOnlyModeTest extends CKEditor5TestBase {
     $assert_session->elementAttributeContains('css', '.field--name-body .ck-editor .ck-content', 'contenteditable', 'true');
     $assert_session->elementAttributeContains('css', '.field--name-field-second-ckeditor5-field .ck-editor .ck-content', 'contenteditable', 'true');
 
-    $this->container->get('state')->set('ckeditor5_read_only_mode_body_enabled', TRUE);
+    \Drupal::service('state')->set('ckeditor5_read_only_mode_body_enabled', TRUE);
 
     // Check that the first body field is no longer editable.
     $this->drupalGet('node/add');
     $assert_session->elementAttributeContains('css', '.field--name-body .ck-editor .ck-content', 'contenteditable', 'false');
     $assert_session->elementAttributeContains('css', '.field--name-field-second-ckeditor5-field .ck-editor .ck-content', 'contenteditable', 'true');
 
-    $this->container->get('state')->set('ckeditor5_read_only_mode_second_ckeditor5_field_enabled', TRUE);
+    \Drupal::service('state')->set('ckeditor5_read_only_mode_second_ckeditor5_field_enabled', TRUE);
 
     // Both fields are disabled, check that both fields are no longer editable.
     $this->drupalGet('node/add');

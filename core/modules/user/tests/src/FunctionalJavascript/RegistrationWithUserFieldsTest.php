@@ -108,7 +108,7 @@ class RegistrationWithUserFieldsTest extends WebDriverTestBase {
     $this->page->fillField('edit-test-user-field-0-value', $value);
     $this->page->pressButton('edit-submit');
     // Check user fields.
-    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+    $accounts = \Drupal::service('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $name . '@example.com']);
     $new_user = reset($accounts);
     $this->assertEquals($value, $new_user->test_user_field->value, 'The field value was correctly saved.');
@@ -133,7 +133,7 @@ class RegistrationWithUserFieldsTest extends WebDriverTestBase {
     $this->page->pressButton('edit-submit');
 
     // Check user fields.
-    $accounts = $this->container->get('entity_type.manager')
+    $accounts = \Drupal::service('entity_type.manager')
       ->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $name . '@example.com']);
     $new_user = reset($accounts);

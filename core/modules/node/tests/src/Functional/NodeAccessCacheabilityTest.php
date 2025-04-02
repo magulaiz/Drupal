@@ -64,7 +64,7 @@ class NodeAccessCacheabilityTest extends NodeTestBase {
     $this->drupalLogout();
 
     // Uninstall the module with the only hook_node_grants() implementation.
-    $this->container->get('module_installer')->uninstall(['node_access_test']);
+    \Drupal::service('module_installer')->uninstall(['node_access_test']);
     $this->rebuildContainer();
 
     // Because there are no node grants defined, there also is no need for the

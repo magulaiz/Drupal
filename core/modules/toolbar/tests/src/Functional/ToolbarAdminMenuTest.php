@@ -314,7 +314,7 @@ class ToolbarAdminMenuTest extends BrowserTestBase {
     // phpcs:ignore Drupal.Semantics.FunctionT.NotLiteralString
     $this->t($name, [], ['langcode' => $langcode]);
     // Reset locale cache.
-    $this->container->get('string_translation')->reset();
+    \Drupal::service('string_translation')->reset();
     $this->assertSession()->responseContains('"edit-languages-' . $langcode . '-weight"');
     // Verify that the test language was added.
     $this->assertSession()->pageTextContains($name);

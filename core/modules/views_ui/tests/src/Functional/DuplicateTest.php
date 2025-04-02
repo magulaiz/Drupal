@@ -36,7 +36,7 @@ class DuplicateTest extends UITestBase {
    * Checks if duplicated view exists and has correct label.
    */
   public function testDuplicateView(): void {
-    $language_manager = $this->container->get('language_manager');
+    $language_manager = \Drupal::service('language_manager');
     ConfigurableLanguage::createFromLangcode('nl')->save();
 
     // Create random view.

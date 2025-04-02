@@ -45,7 +45,7 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
     $workflow->save();
 
     /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
-    $router_builder = $this->container->get('router.builder');
+    $router_builder = \Drupal::service('router.builder');
     $router_builder->rebuildIfNeeded();
 
     $admin = $this->drupalCreateUser([

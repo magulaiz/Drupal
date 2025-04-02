@@ -68,7 +68,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->drupalLogin($user);
 
     // Set up the search plugin.
-    $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $this->plugin = \Drupal::service('plugin.manager.search')->createInstance('node_search');
 
     // Check indexing counts before adding any nodes.
     $this->assertIndexCounts(0, 0, 'before adding nodes');
@@ -145,7 +145,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     // because it doesn't go this low.
     $this->config('search.settings')->set('index.cron_limit', 2)->save();
     // Get a new search plugin, to make sure it has this setting.
-    $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $this->plugin = \Drupal::service('plugin.manager.search')->createInstance('node_search');
 
     // Update the index. This does the initial processing.
     $this->plugin->updateIndex();
@@ -163,7 +163,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->submitForm(['cron_limit' => 20], 'Save configuration');
     $this->assertEquals(20, $this->config('search.settings')->get('index.cron_limit'), 'Config setting was saved correctly');
     // Get a new search plugin, to make sure it has this setting.
-    $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $this->plugin = \Drupal::service('plugin.manager.search')->createInstance('node_search');
 
     $this->plugin->updateIndex();
     $this->assertIndexCounts(0, 8, 'after updating fully');
@@ -219,7 +219,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->assertIndexCounts(1, 8, 'after marking one node to reindex via API function');
 
     // Update the index and verify the totals again.
-    $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $this->plugin = \Drupal::service('plugin.manager.search')->createInstance('node_search');
     $this->plugin->updateIndex();
     $this->assertIndexCounts(0, 8, 'after indexing again');
 

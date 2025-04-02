@@ -125,7 +125,7 @@ class FileUploadTest extends ResourceTestBase {
 
     parent::setUp();
 
-    $this->fileStorage = $this->container->get('entity_type.manager')
+    $this->fileStorage = \Drupal::service('entity_type.manager')
       ->getStorage('file');
 
     // Add a file field.

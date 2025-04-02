@@ -88,9 +88,9 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
    */
   public function testCanonicalAlternateTags(): void {
     /** @var \Drupal\Core\Language\LanguageManagerInterface $languageManager */
-    $languageManager = $this->container->get('language_manager');
+    $languageManager = \Drupal::service('language_manager');
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager */
-    $entityTypeManager = $this->container->get('entity_type.manager');
+    $entityTypeManager = \Drupal::service('entity_type.manager');
 
     $definition = $entityTypeManager->getDefinition('entity_test_mul');
     $this->assertTrue($definition->hasLinkTemplate('canonical'), 'Canonical link template found for entity_test.');
@@ -145,7 +145,7 @@ class ContentTranslationLinkTagTest extends BrowserTestBase {
    */
   public function testCanonicalAlternateTagsMissing(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager */
-    $entityTypeManager = $this->container->get('entity_type.manager');
+    $entityTypeManager = \Drupal::service('entity_type.manager');
 
     $definition = $entityTypeManager->getDefinition('entity_test_translatable_no_skip');
     // Ensure 'canonical' link template does not exist, in case it is added in

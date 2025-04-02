@@ -104,7 +104,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->serializer = $this->container->get('serializer');
+    $this->serializer = \Drupal::service('serializer');
 
     // Ensure the anonymous user role has no permissions at all.
     $user_role = Role::load(RoleInterface::ANONYMOUS_ID);
@@ -132,7 +132,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->createUser();
     }
 
-    $this->resourceConfigStorage = $this->container->get('entity_type.manager')->getStorage('rest_resource_config');
+    $this->resourceConfigStorage = \Drupal::service('entity_type.manager')->getStorage('rest_resource_config');
 
     // Ensure there's a clean slate: delete all REST resource config entities.
     $this->resourceConfigStorage->delete($this->resourceConfigStorage->loadMultiple());

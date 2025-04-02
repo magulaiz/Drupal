@@ -186,7 +186,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Calculate REST Resource config entity ID.
     static::$resourceConfigId = 'entity.' . static::$entityTypeId;
 
-    $this->entityStorage = $this->container->get('entity_type.manager')
+    $this->entityStorage = \Drupal::service('entity_type.manager')
       ->getStorage(static::$entityTypeId);
 
     // Create an entity.
@@ -541,7 +541,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // which needs serialization after every cache hit. Instead, it should
     // contain a flattened response. Otherwise performance suffers.
     // @see \Drupal\rest\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
-    $cache_items = $this->container->get('database')
+    $cache_items = \Drupal::service('database')
       ->select('cache_dynamic_page_cache', 'c')
       ->fields('c', ['data'])
       ->condition('c.cid', '%[route]=rest.%', 'LIKE')
@@ -592,7 +592,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Finally, assert that the expected 'Link' headers are present.
     if ($this->entity->getEntityType()->getLinkTemplates()) {
       $this->assertArrayHasKey('Link', $response->getHeaders());
-      $link_relation_type_manager = $this->container->get('plugin.manager.link_relation_type');
+      $link_relation_type_manager = \Drupal::service('plugin.manager.link_relation_type');
       $expected_link_relation_headers = array_map(function ($relation_name) use ($link_relation_type_manager) {
         $link_relation_type = $link_relation_type_manager->createInstance($relation_name);
         return $link_relation_type->isRegistered()

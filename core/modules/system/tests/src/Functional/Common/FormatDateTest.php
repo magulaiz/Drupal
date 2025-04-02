@@ -47,7 +47,7 @@ class FormatDateTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Custom date format added.');
 
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = $this->container->get('date.formatter');
+    $date_formatter = \Drupal::service('date.formatter');
 
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
     $this->assertSame($date_formatter->format($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07');

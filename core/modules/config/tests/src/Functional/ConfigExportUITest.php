@@ -72,7 +72,7 @@ class ConfigExportUITest extends BrowserTestBase {
 
     // Prepare the list of config files from active storage, see
     // \Drupal\config\Controller\ConfigController::downloadExport().
-    $storage_active = $this->container->get('config.storage');
+    $storage_active = \Drupal::service('config.storage');
     $config_files = [];
     foreach ($storage_active->listAll() as $config_name) {
       $config_files[] = $config_name . '.yml';

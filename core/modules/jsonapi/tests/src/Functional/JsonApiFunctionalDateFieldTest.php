@@ -57,7 +57,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
    */
   public function testRead(): void {
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = $this->container->get('date.formatter');
+    $date_formatter = \Drupal::service('date.formatter');
 
     $timestamp_1 = 5000000;
     $timestamp_2 = 6000000;

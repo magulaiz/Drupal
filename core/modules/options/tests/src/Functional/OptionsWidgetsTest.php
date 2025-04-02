@@ -550,8 +550,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     ]);
     $field->save();
 
-    $this->container
-      ->get('entity_type.manager')
+    \Drupal::service('entity_type.manager')
       ->getStorage('entity_form_display')
       ->load('entity_test.entity_test.default')
       ->setComponent($this->float->getName(), ['type' => 'options_select'])

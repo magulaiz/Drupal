@@ -99,7 +99,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->nonWorkingEndpoint = $this->buildUrl('/advisory-feed-json/missing');
     $this->invalidJsonEndpoint = "$fixtures_path/invalid.json";
 
-    $this->tempStore = $this->container->get('keyvalue.expirable')->get('system');
+    $this->tempStore = \Drupal::service('keyvalue.expirable')->get('system');
   }
 
   /**
@@ -298,7 +298,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
    * @internal
    */
   protected function assertServiceAdvisoryLoggedErrors(array $expected_messages): void {
-    $state = $this->container->get('state');
+    $state = \Drupal::service('state');
     $messages = $state->get('advisory_feed_test.error_messages', []);
     $this->assertSame($expected_messages, $messages);
     $state->set('advisory_feed_test.error_messages', []);

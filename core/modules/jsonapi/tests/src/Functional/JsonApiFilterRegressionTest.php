@@ -46,7 +46,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testBundleSpecificTargetEntityTypeFromIssue2953207(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['comment'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['comment'], TRUE), 'Installed modules.');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'test_comment_type');
     $this->rebuildAll();
 
@@ -82,7 +82,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testFilterByIdFromIssue3015759(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['shortcut'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['shortcut'], TRUE), 'Installed modules.');
     $this->rebuildAll();
 
     // Create data.

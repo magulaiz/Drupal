@@ -52,7 +52,7 @@ class NavigationLogoTest extends BrowserTestBase {
     parent::setUp();
 
     // Inject the file_system service.
-    $this->fileSystem = $this->container->get('file_system');
+    $this->fileSystem = \Drupal::service('file_system');
 
     // Create and log in an administrative user.
     $this->adminUser = $this->drupalCreateUser([

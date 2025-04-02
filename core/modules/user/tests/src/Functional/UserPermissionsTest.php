@@ -68,9 +68,9 @@ class UserPermissionsTest extends BrowserTestBase {
    * Tests changing user permissions through the permissions pages.
    */
   public function testUserPermissionChanges(): void {
-    $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
+    $permissions_hash_generator = \Drupal::service('user_permissions_hash_generator');
 
-    $storage = $this->container->get('entity_type.manager')->getStorage('user_role');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('user_role');
 
     // Create an additional role and mark it as admin role.
     Role::create(['is_admin' => TRUE, 'id' => 'administrator', 'label' => 'Administrator'])->save();
@@ -124,7 +124,7 @@ class UserPermissionsTest extends BrowserTestBase {
 
     // Ensure that the admin role doesn't have any checkboxes.
     $this->drupalGet('admin/people/permissions');
-    foreach (array_keys($this->container->get('user.permissions')->getPermissions()) as $permission) {
+    foreach (array_keys(\Drupal::service('user.permissions')->getPermissions()) as $permission) {
       $this->assertSession()->checkboxChecked('administrator[' . $permission . ']');
       $this->assertSession()->fieldDisabled('administrator[' . $permission . ']');
     }
@@ -179,7 +179,7 @@ class UserPermissionsTest extends BrowserTestBase {
    * Verify proper permission changes by user_role_change_permissions().
    */
   public function testUserRoleChangePermissions(): void {
-    $permissions_hash_generator = $this->container->get('user_permissions_hash_generator');
+    $permissions_hash_generator = \Drupal::service('user_permissions_hash_generator');
 
     $rid = $this->rid;
     $account = $this->adminUser;

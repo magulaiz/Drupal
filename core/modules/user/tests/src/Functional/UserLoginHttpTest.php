@@ -106,7 +106,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     $this->doTestLogin('json');
 
     // Enable serialization so we have access to additional formats.
-    $this->container->get('module_installer')->install(['serialization']);
+    \Drupal::service('module_installer')->install(['serialization']);
     $this->rebuildAll();
 
     $this->doTestLogin('json');
@@ -245,7 +245,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     $this->doTestPasswordReset('json', $account);
 
     // Enable serialization so we have access to additional formats.
-    $this->container->get('module_installer')->install(['serialization']);
+    \Drupal::service('module_installer')->install(['serialization']);
     $this->rebuildAll();
 
     $this->doTestPasswordReset('json', $account);
@@ -283,7 +283,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * Resets all flood entries.
    */
   protected function resetFlood(): void {
-    $this->container->get('database')->delete(DatabaseBackend::TABLE_NAME)->execute();
+    \Drupal::service('database')->delete(DatabaseBackend::TABLE_NAME)->execute();
   }
 
   /**
@@ -444,7 +444,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    */
   protected function logoutRequest($format = 'json', $logout_token = ''): ResponseInterface {
     /** @var \GuzzleHttp\Client $client */
-    $client = $this->container->get('http_client');
+    $client = \Drupal::service('http_client');
     $user_logout_url = Url::fromRoute('user.logout.http')
       ->setRouteParameter('_format', $format)
       ->setAbsolute();

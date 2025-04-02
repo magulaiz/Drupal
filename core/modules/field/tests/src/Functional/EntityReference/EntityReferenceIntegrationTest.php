@@ -98,7 +98,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       // Try to post the form again with no modification and check if the field
       // values remain the same.
       /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
-      $storage = $this->container->get('entity_type.manager')->getStorage($this->entityType);
+      $storage = \Drupal::service('entity_type.manager')->getStorage($this->entityType);
       $entity = current($storage->loadByProperties(['name' => $entity_name]));
       $this->drupalGet($this->entityType . '/manage/' . $entity->id() . '/edit');
       $this->assertSession()->fieldValueEquals($this->fieldName . '[0][target_id]', $referenced_entities[0]->label() . ' (' . $referenced_entities[0]->id() . ')');
@@ -205,7 +205,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
    * @internal
    */
   protected function assertFieldValues(string $entity_name, array $referenced_entities, $assert_order = TRUE): void {
-    $entity = current($this->container->get('entity_type.manager')->getStorage(
+    $entity = current(\Drupal::service('entity_type.manager')->getStorage(
     $this->entityType)->loadByProperties(['name' => $entity_name]));
 
     $this->assertNotEmpty($entity, "$this->entityType: Entity found in the database.");

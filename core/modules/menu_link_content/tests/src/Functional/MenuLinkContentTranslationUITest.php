@@ -94,7 +94,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     $entityId = $this->createEntity([], 'en');
 
     // Set up the default admin theme to test.
-    $this->container->get('theme_installer')->install(['claro']);
+    \Drupal::service('theme_installer')->install(['claro']);
     $edit = [];
     $edit['admin_theme'] = 'claro';
     $this->drupalGet('admin/appearance');
@@ -111,10 +111,10 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function doTestTranslationEdit(): void {
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $entity = $storage->load($this->entityId);
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
 
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.

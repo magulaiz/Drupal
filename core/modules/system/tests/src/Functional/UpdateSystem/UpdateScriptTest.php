@@ -699,10 +699,10 @@ class UpdateScriptTest extends BrowserTestBase {
    * Tests update.php after performing a successful update.
    */
   public function testSuccessfulUpdateFunctionality(): void {
-    $initial_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
+    $initial_maintenance_mode = \Drupal::service('state')->get('system.maintenance_mode');
     $this->assertNull($initial_maintenance_mode, 'Site is not in maintenance mode.');
     $this->runUpdates($initial_maintenance_mode);
-    $final_maintenance_mode = $this->container->get('state')->get('system.maintenance_mode');
+    $final_maintenance_mode = \Drupal::service('state')->get('system.maintenance_mode');
     $this->assertEquals($initial_maintenance_mode, $final_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
 
     // Reset the static cache to ensure we have the most current setting.
@@ -743,13 +743,13 @@ class UpdateScriptTest extends BrowserTestBase {
    * Tests update.php while in maintenance mode.
    */
   public function testMaintenanceModeUpdateFunctionality(): void {
-    $this->container->get('state')
+    \Drupal::service('state')
       ->set('system.maintenance_mode', TRUE);
-    $initial_maintenance_mode = $this->container->get('state')
+    $initial_maintenance_mode = \Drupal::service('state')
       ->get('system.maintenance_mode');
     $this->assertTrue($initial_maintenance_mode, 'Site is in maintenance mode.');
     $this->runUpdates($initial_maintenance_mode);
-    $final_maintenance_mode = $this->container->get('state')
+    $final_maintenance_mode = \Drupal::service('state')
       ->get('system.maintenance_mode');
     $this->assertEquals($initial_maintenance_mode, $final_maintenance_mode, 'Maintenance mode should not have changed after database updates.');
   }
@@ -977,7 +977,7 @@ class UpdateScriptTest extends BrowserTestBase {
    * @internal
    */
   protected function assertInstalledExtensionsConfig(string $extension_type, array $extension_machine_names): void {
-    $extension_config = $this->container->get('config.factory')->getEditable('core.extension');
+    $extension_config = \Drupal::service('config.factory')->getEditable('core.extension');
     foreach ($extension_machine_names as $extension_machine_name) {
       $this->assertSame(0, $extension_config->get("$extension_type.$extension_machine_name"));
     }

@@ -137,7 +137,7 @@ class EntityViewControllerTest extends BrowserTestBase {
       'bundle' => $entity_type,
       'name' => $name ?? $this->randomMachineName(),
     ];
-    return $this->container->get('entity_type.manager')->getStorage($entity_type)->create($data);
+    return \Drupal::service('entity_type.manager')->getStorage($entity_type)->create($data);
   }
 
 }

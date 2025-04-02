@@ -64,7 +64,7 @@ class JSTranslationTest extends CKEditor5TestBase {
 
     // Ensure a string from the CKEditor 5 plugin is picked up by translation.
     // @see core/modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediatoolbar.js
-    $locale_storage = $this->container->get('locale.storage');
+    $locale_storage = \Drupal::service('locale.storage');
     $string = $locale_storage->findString(['source' => 'Drupal Media toolbar', 'context' => '']);
     $this->assertNotEmpty($string, 'String from JavaScript file saved.');
   }

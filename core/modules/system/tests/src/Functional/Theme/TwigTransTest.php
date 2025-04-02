@@ -220,7 +220,7 @@ class TwigTransTest extends BrowserTestBase {
         $file_system->unlink($filename);
       }
     }
-    $this->container->get('language_manager')->reset();
+    \Drupal::service('language_manager')->reset();
   }
 
   /**

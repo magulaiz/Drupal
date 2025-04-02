@@ -131,7 +131,7 @@ class AreaTest extends ViewTestBase {
 
     // Test we have the site:name token in the output.
     $output = $view->preview();
-    $output = (string) $this->container->get('renderer')->renderRoot($output);
+    $output = (string) \Drupal::service('renderer')->renderRoot($output);
     $expected = \Drupal::token()->replace('[site:name]');
     $this->assertStringContainsString($expected, $output);
   }

@@ -60,7 +60,7 @@ trait EntityViewTrait {
       }
     };
 
-    $render_controller = $this->container->get('entity_type.manager')->getViewBuilder($entity->getEntityTypeId());
+    $render_controller = \Drupal::service('entity_type.manager')->getViewBuilder($entity->getEntityTypeId());
     $build = $render_controller->view($entity, $view_mode, $langcode);
     $ensure_fully_built($build);
 

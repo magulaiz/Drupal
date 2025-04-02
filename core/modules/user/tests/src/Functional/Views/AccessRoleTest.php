@@ -50,7 +50,7 @@ class AccessRoleTest extends AccessTestBase {
       $this->normalRole => $this->normalRole,
     ];
     $view->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
     $expected = [
       'config' => ['user.role.' . $this->normalRole],
       'module' => ['user', 'views_test_data'],
@@ -85,7 +85,7 @@ class AccessRoleTest extends AccessTestBase {
       'anonymous' => 'anonymous',
     ];
     $view->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     // Ensure that the list of roles is sorted correctly, if the generated role
     // ID comes before 'anonymous', see https://www.drupal.org/node/2398259.

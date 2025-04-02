@@ -139,7 +139,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     }
 
     // Determine the visibility of subject form field.
-    $display_repository = $this->container->get('entity_display.repository');
+    $display_repository = \Drupal::service('entity_display.repository');
     if ($display_repository->getFormDisplay('comment', 'comment')->getComponent('subject')) {
       // Subject input allowed.
       $edit['subject[0][value]'] = $subject;

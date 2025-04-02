@@ -397,11 +397,11 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       Node::load(60)->uuid(),
     ], $output_uuids);
     // 25. Test collection count.
-    $this->container->get('module_installer')->install(['jsonapi_test_collection_count']);
+    \Drupal::service('module_installer')->install(['jsonapi_test_collection_count']);
     $collection_output = Json::decode($this->drupalGet('/jsonapi/node/article'));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertEquals(61, $collection_output['meta']['count']);
-    $this->container->get('module_installer')->uninstall(['jsonapi_test_collection_count']);
+    \Drupal::service('module_installer')->uninstall(['jsonapi_test_collection_count']);
 
     // Test documentation filtering examples.
     // 1. Only get published nodes.
@@ -521,7 +521,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
 
     // Request in maintenance mode returns valid JSON.
     $this->setWaitForTerminate();
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    \Drupal::service('state')->set('system.maintenance_mode', TRUE);
     $response = $this->drupalGet('/jsonapi/taxonomy_term/tags');
     $this->assertSession()->statusCodeEquals(503);
     $this->assertSession()->responseHeaderContains('Content-Type', 'application/vnd.api+json');
@@ -532,9 +532,9 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
 
     // Test that logged in user does not get logged out in maintenance mode
     // when hitting jsonapi route.
-    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    \Drupal::service('state')->set('system.maintenance_mode', FALSE);
     $this->drupalLogin($this->userCanViewProfiles);
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    \Drupal::service('state')->set('system.maintenance_mode', TRUE);
     $this->drupalGet('/jsonapi/taxonomy_term/tags');
     $this->assertSession()->statusCodeEquals(503);
     $this->assertTrue($this->drupalUserIsLoggedIn($this->userCanViewProfiles));
@@ -543,17 +543,17 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertFalse($this->drupalUserIsLoggedIn($this->userCanViewProfiles));
     $this->assertSession()->statusCodeEquals(503);
     $this->assertSession()->responseContains('Site under maintenance');
-    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    \Drupal::service('state')->set('system.maintenance_mode', FALSE);
     $this->drupalResetSession();
 
     // Test that admin user can bypass maintenance mode.
     $admin_user = $this->drupalCreateUser([], NULL, TRUE);
     $this->drupalLogin($admin_user);
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    \Drupal::service('state')->set('system.maintenance_mode', TRUE);
     $this->drupalGet('/jsonapi/taxonomy_term/tags');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertTrue($this->drupalUserIsLoggedIn($admin_user));
-    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    \Drupal::service('state')->set('system.maintenance_mode', FALSE);
     $this->drupalLogout();
   }
 
@@ -564,7 +564,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->createDefaultContent(3, 5, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
 
     // Tests resource meta is added.
-    $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
+    \Drupal::service('module_installer')->install(['jsonapi_test_meta_events']);
     $node = $this->nodes[0];
     \Drupal::state()->set('jsonapi_test_meta_events.object_meta', [
       'enabled_type' => 'node--article',
@@ -641,7 +641,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   public function testMetaRelationEvent(): void {
     $this->createDefaultContent(3, 5, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
 
-    $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
+    \Drupal::service('module_installer')->install(['jsonapi_test_meta_events']);
     $node = $this->nodes[0];
     \Drupal::state()->set('jsonapi_test_meta_events.relationship_meta', [
       'enabled_type' => 'node--article',
@@ -697,7 +697,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   public function testMetaRelationEventOnRelationshipEndpoint(): void {
     $this->createDefaultContent(1, 1, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
 
-    $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
+    \Drupal::service('module_installer')->install(['jsonapi_test_meta_events']);
     $node = $this->nodes[0];
     \Drupal::state()->set('jsonapi_test_meta_events.relationship_meta', [
       'enabled_type' => 'node--article',

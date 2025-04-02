@@ -48,7 +48,7 @@ class FieldRenderedEntityTranslationTest extends ViewTestBase {
   protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
     parent::setUp($import_test_views, $modules);
 
-    $this->entityTypeManager = $this->container->get('entity_type.manager');
+    $this->entityTypeManager = \Drupal::service('entity_type.manager');
 
     $node_type = $this->entityTypeManager->getStorage('node_type')->create([
       'type' => 'article',
@@ -57,7 +57,7 @@ class FieldRenderedEntityTranslationTest extends ViewTestBase {
     $node_type->save();
 
     /** @var \Drupal\content_translation\ContentTranslationManagerInterface $content_translation_manager */
-    $content_translation_manager = $this->container->get('content_translation.manager');
+    $content_translation_manager = \Drupal::service('content_translation.manager');
 
     $content_translation_manager->setEnabled('node', 'article', TRUE);
 

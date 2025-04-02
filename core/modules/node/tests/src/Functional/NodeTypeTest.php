@@ -205,7 +205,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertSession()->pageTextContains('This action cannot be undone.');
 
     // Test that a locked node type could not be deleted.
-    $this->container->get('module_installer')->install(['node_test_config']);
+    \Drupal::service('module_installer')->install(['node_test_config']);
     // Lock the default node type.
     $locked = \Drupal::state()->get('node.type.locked');
     $locked['default'] = 'default';
@@ -217,7 +217,7 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertSession()->linkNotExists('Delete');
     $this->drupalGet('admin/structure/types/manage/default/delete');
     $this->assertSession()->statusCodeEquals(403);
-    $this->container->get('module_installer')->uninstall(['node_test_config']);
+    \Drupal::service('module_installer')->uninstall(['node_test_config']);
     $this->container = \Drupal::getContainer();
     unset($locked['default']);
     \Drupal::state()->set('node.type.locked', $locked);

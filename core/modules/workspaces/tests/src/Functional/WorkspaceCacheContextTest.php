@@ -37,7 +37,7 @@ class WorkspaceCacheContextTest extends BrowserTestBase {
     $renderer = \Drupal::service('renderer');
     $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
     /** @var \Drupal\Core\Cache\VariationCacheFactoryInterface $variation_cache_factory */
-    $variation_cache_factory = $this->container->get('variation_cache_factory');
+    $variation_cache_factory = \Drupal::service('variation_cache_factory');
 
     // Check that the 'workspace' cache context is present when the module is
     // installed.

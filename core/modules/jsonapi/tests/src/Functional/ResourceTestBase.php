@@ -226,7 +226,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->serializer = $this->container->get('jsonapi.serializer');
+    $this->serializer = \Drupal::service('jsonapi.serializer');
 
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
@@ -236,16 +236,16 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // service this account, to ensure certain access check logic in tests works
     // as expected.
     $this->account = $this->createUser();
-    $this->container->get('current_user')->setAccount($this->account);
+    \Drupal::service('current_user')->setAccount($this->account);
 
     // Create an entity.
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $this->entityStorage = $entity_type_manager->getStorage(static::$entityTypeId);
     $this->uuidKey = $entity_type_manager->getDefinition(static::$entityTypeId)
       ->getKey('uuid');
     $this->entity = $this->setUpFields($this->createEntity(), $this->account);
 
-    $this->resourceType = $this->container->get('jsonapi.resource_type.repository')->getByTypeName(static::$resourceTypeName);
+    $this->resourceType = \Drupal::service('jsonapi.resource_type.repository')->getByTypeName(static::$resourceTypeName);
   }
 
   /**
@@ -379,10 +379,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   protected function normalize(EntityInterface $entity, Url $url) {
     // Don't use cached normalizations in tests.
-    $this->container->get('cache.jsonapi_normalizations')->deleteAll();
+    \Drupal::service('cache.jsonapi_normalizations')->deleteAll();
 
     $self_link = new Link(new CacheableMetadata(), $url, 'self');
-    $resource_type = $this->container->get('jsonapi.resource_type.repository')->getByTypeName(static::$resourceTypeName);
+    $resource_type = \Drupal::service('jsonapi.resource_type.repository')->getByTypeName(static::$resourceTypeName);
     $doc = new JsonApiDocumentTopLevel(new ResourceObjectData([ResourceObject::createFromEntity($resource_type, $entity)], 1), new NullIncludedData(), new LinkCollection(['self' => $self_link]));
     return $this->serializer->normalize($doc, 'api_json', [
       'resource_type' => $resource_type,
@@ -993,7 +993,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // which needs serialization after every cache hit. Instead, it should
     // contain a flattened response. Otherwise performance suffers.
     // @see \Drupal\jsonapi\EventSubscriber\ResourceResponseSubscriber::flattenResponse()
-    $cache_items = $this->container->get('database')
+    $cache_items = \Drupal::service('database')
       ->select('cache_dynamic_page_cache', 'cdp')
       ->fields('cdp', ['data'])
       ->condition('cid', '%[route]=jsonapi.%', 'LIKE')
@@ -1022,7 +1022,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // response results in the expected object.
     $unserialized = $this->serializer->deserialize((string) $response->getBody(), JsonApiDocumentTopLevel::class, 'api_json', [
       'target_entity' => static::$entityTypeId,
-      'resource_type' => $this->container->get('jsonapi.resource_type.repository')->getByTypeName(static::$resourceTypeName),
+      'resource_type' => \Drupal::service('jsonapi.resource_type.repository')->getByTypeName(static::$resourceTypeName),
     ]);
     $this->assertSame($unserialized->uuid(), $this->entity->uuid());
     $get_headers = $response->getHeaders();
@@ -2432,7 +2432,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($updated_entity instanceof EntityPublishedInterface) {
       $updated_entity->setPublished()->save();
     }
-    $this->assertTrue($this->container->get('module_installer')->install(['content_moderation'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['content_moderation'], TRUE), 'Installed modules.');
 
     if (!\Drupal::service('content_moderation.moderation_information')->canModerateEntitiesOfEntityType($this->entity->getEntityType())) {
       return;
@@ -2952,7 +2952,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->assertResourceResponse(200, $expected_document, $actual_response, Cache::mergeTags($expected_cache_tags, $this->getExtraRevisionCacheTags()), $expected_cache_contexts, NULL, TRUE);
 
     // Install content_moderation module.
-    $this->assertTrue($this->container->get('module_installer')->install(['content_moderation'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['content_moderation'], TRUE), 'Installed modules.');
 
     if (!\Drupal::service('content_moderation.moderation_information')->canModerateEntitiesOfEntityType($this->entity->getEntityType())) {
       return;

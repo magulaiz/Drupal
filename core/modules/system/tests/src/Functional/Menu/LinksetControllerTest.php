@@ -141,7 +141,7 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
       'parent' => $about_us_link->getPluginId(),
     ], $options);
 
-    $this->httpKernel = $this->container->get('http_kernel');
+    $this->httpKernel = \Drupal::service('http_kernel');
   }
 
   /**
@@ -312,7 +312,7 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
    */
   public function testCustomLinkRelation(): void {
     $this->enableEndpoint(TRUE);
-    $this->assertTrue($this->container->get('module_installer')->install(['decoupled_menus_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['decoupled_menus_test'], TRUE), 'Installed modules.');
     $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/account/linkset'), 200, $this->authorAccount);
     $link_context_object = Json::decode((string) $response->getBody())['linkset'][0];
     $this->assertContains('authenticated-as', array_keys($link_context_object));

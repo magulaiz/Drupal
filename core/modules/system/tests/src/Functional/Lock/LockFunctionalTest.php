@@ -27,7 +27,7 @@ class LockFunctionalTest extends BrowserTestBase {
    * Confirms that we can acquire and release locks in two parallel requests.
    */
   public function testLockAcquire(): void {
-    $lock = $this->container->get('lock');
+    $lock = \Drupal::service('lock');
     $lock_acquired = 'TRUE: Lock successfully acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()';
     $lock_not_acquired = 'FALSE: Lock not acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()';
     $this->assertTrue($lock->acquire('system_test_lock_acquire'), 'Lock acquired by this request.');
@@ -64,7 +64,7 @@ class LockFunctionalTest extends BrowserTestBase {
    * Tests that the persistent lock is persisted between requests.
    */
   public function testPersistentLock(): void {
-    $persistent_lock = $this->container->get('lock.persistent');
+    $persistent_lock = \Drupal::service('lock.persistent');
     // Get a persistent lock.
     $this->drupalGet('system-test/lock-persist/lock1');
     $this->assertSession()->pageTextContains('TRUE: Lock successfully acquired in SystemTestController::lockPersist()');

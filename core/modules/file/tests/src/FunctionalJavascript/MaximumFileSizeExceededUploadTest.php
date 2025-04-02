@@ -59,7 +59,7 @@ class MaximumFileSizeExceededUploadTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->fileSystem = $this->container->get('file_system');
+    $this->fileSystem = \Drupal::service('file_system');
 
     // Create the Article node type.
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);

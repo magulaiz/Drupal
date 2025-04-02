@@ -34,7 +34,7 @@ class MediaPreviewTest extends MediaTestBase {
     // handled in the JavaScript by displaying the expected error message.
     // @see core/modules/media/js/media_embed_ckeditor.theme.js
     // @see js/ckeditor5_plugins/drupalMedia/src/drupalmediaediting.js
-    $this->container->get('state')->set('test_media_filter_controller_throw_error', TRUE);
+    \Drupal::service('state')->set('test_media_filter_controller_throw_error', TRUE);
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $assert_session = $this->assertSession();
@@ -44,7 +44,7 @@ class MediaPreviewTest extends MediaTestBase {
     $this->assertNotEmpty($assert_session->waitForText('An error occurred while trying to preview the media. Save your work and reload this page.'));
     // Now assert that the error doesn't appear when the override to force an
     // error is removed.
-    $this->container->get('state')->set('test_media_filter_controller_throw_error', FALSE);
+    \Drupal::service('state')->set('test_media_filter_controller_throw_error', FALSE);
     $this->getSession()->reload();
     $this->waitForEditor();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
@@ -68,7 +68,7 @@ class MediaPreviewTest extends MediaTestBase {
     // Test when using the starterkit_theme theme, an additional class is added
     // to the error, which is supported by
     // stable9/templates/content/media-embed-error.html.twig.
-    $this->assertTrue($this->container->get('theme_installer')->install(['starterkit_theme']));
+    $this->assertTrue(\Drupal::service('theme_installer')->install(['starterkit_theme']));
     $this->config('system.theme')
       ->set('default', 'starterkit_theme')
       ->save();

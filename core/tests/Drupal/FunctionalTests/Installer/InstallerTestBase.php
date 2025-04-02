@@ -199,7 +199,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
 
       // Manually configure the test mail collector implementation to prevent
       // tests from sending out emails and collect them in state instead.
-      $this->container->get('config.factory')
+      \Drupal::service('config.factory')
         ->getEditable('system.mail')
         ->set('interface.default', 'test_mail_collector')
         ->set('mailer_dsn', [

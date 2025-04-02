@@ -75,7 +75,7 @@ class ClassLoaderTest extends BrowserTestBase {
     \Drupal::service('module_installer')->install(['module_test', 'module_autoload_test'], FALSE);
     $this->resetAll();
     // Ensure that module_autoload_test is disabled.
-    $this->container->get('module_installer')->uninstall(['module_autoload_test'], FALSE);
+    \Drupal::service('module_installer')->uninstall(['module_autoload_test'], FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i = 0; $i < 2; $i++) {

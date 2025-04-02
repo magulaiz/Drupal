@@ -80,7 +80,7 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
     $page->pressButton('Save layout');
     $assert_session->pageTextContains('This is an override');
 
-    $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
+    $this->nodeStorage = \Drupal::service('entity_type.manager')->getStorage('node');
     $this->node = $this->nodeStorage->load($this->node->id());
 
     $this->drupalLogout();
@@ -105,7 +105,7 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
-    $permissions = array_keys($this->container->get('user.permissions')->getPermissions());
+    $permissions = array_keys(\Drupal::service('user.permissions')->getPermissions());
     // Give the test user all permissions on the site. There should be no
     // permission that gives the user access to layout sections over REST.
     $this->account = $this->drupalCreateUser($permissions);

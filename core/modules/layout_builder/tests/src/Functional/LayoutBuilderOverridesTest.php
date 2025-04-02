@@ -71,7 +71,7 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
    * Tests Layout Builder overrides without Field UI installed.
    */
   public function testOverridesWithoutFieldUi(): void {
-    $this->container->get('module_installer')->uninstall(['field_ui']);
+    \Drupal::service('module_installer')->uninstall(['field_ui']);
 
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
@@ -108,7 +108,7 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
     // @todo This should not be necessary.
-    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Add a block with a custom label.
     $this->drupalGet('node/1');

@@ -77,7 +77,7 @@ class SearchDateIntervalTest extends BrowserTestBase {
     $node->save();
 
     // Update the index.
-    $plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $plugin = \Drupal::service('plugin.manager.search')->createInstance('node_search');
     $plugin->updateIndex();
   }
 

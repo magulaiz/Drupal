@@ -39,7 +39,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $display_repository = $this->container->get('entity_display.repository');
+    $display_repository = \Drupal::service('entity_display.repository');
 
     FieldStorageConfig::create([
       'field_name' => 'media_image_field',
@@ -98,8 +98,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
    * @dataProvider insertionReselectionProvider
    */
   public function testInsertionAndReselection($widget): void {
-    $this->container
-      ->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', 'basic_page')
       ->setComponent('media_image_field', [
         'type' => $widget,
@@ -125,7 +124,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
     $wrapper = $assert_session->elementExists('css', '#media_image_field-media-library-wrapper');
     $wrapper->pressButton('Add media');
     $this->assertNotNull($assert_session->waitForText('Add or select media'));
-    $page->attachFileToField('Add file', $this->container->get('file_system')->realpath($jpg_image->uri));
+    $page->attachFileToField('Add file', \Drupal::service('file_system')->realpath($jpg_image->uri));
     $this->assertNotNull($assert_session->waitForText('Alternative text'));
     $page->fillField('Alternative text', $this->randomString());
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Save and insert');

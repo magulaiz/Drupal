@@ -61,7 +61,7 @@ class MinimalTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('No pending updates.');
 
     // Ensure that there are no pending entity updates after installation.
-    $this->assertFalse($this->container->get('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
+    $this->assertFalse(\Drupal::service('entity.definition_update_manager')->needsUpdates(), 'After installation, entity schema is up to date.');
 
     // Ensure special configuration overrides are correct.
     $this->assertFalse($this->config('system.theme.global')->get('features.node_user_picture'), 'Configuration system.theme.global:features.node_user_picture is FALSE.');
@@ -70,9 +70,9 @@ class MinimalTest extends BrowserTestBase {
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when
     // Minimal profile modules are enabled.
-    $names = $this->container->get('config.storage')->listAll();
+    $names = \Drupal::service('config.storage')->listAll();
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
-    $typed_config = $this->container->get('config.typed');
+    $typed_config = \Drupal::service('config.typed');
     foreach ($names as $name) {
       $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());

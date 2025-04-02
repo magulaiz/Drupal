@@ -101,7 +101,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
     // The module "driver_test" should not be uninstallable, because it is
     // providing the database driver.
     try {
-      $this->container->get('module_installer')->uninstall(['driver_test']);
+      \Drupal::service('module_installer')->uninstall(['driver_test']);
       $this->fail('Uninstalled driver_test module.');
     }
     catch (ModuleUninstallValidatorException $e) {

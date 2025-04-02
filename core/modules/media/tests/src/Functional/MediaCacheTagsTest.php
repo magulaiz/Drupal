@@ -40,7 +40,7 @@ class MediaCacheTagsTest extends EntityWithUriCacheTagsTestBase {
       ->getEditable('media.settings')
       ->set('standalone_url', TRUE)
       ->save(TRUE);
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

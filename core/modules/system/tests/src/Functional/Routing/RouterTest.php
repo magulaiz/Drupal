@@ -327,7 +327,7 @@ class RouterTest extends BrowserTestBase {
    * Ensure that multiple successive slashes are redirected.
    */
   public function testSuccessiveSlashes(): void {
-    $request = $this->container->get('request_stack')->getCurrentRequest();
+    $request = \Drupal::service('request_stack')->getCurrentRequest();
 
     // Test a simple path with successive leading slashes.
     $url = $request->getUriForPath('//////router_test/test1');

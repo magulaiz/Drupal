@@ -47,7 +47,7 @@ class ModerationStateAccessTest extends BrowserTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'test');
     $workflow->save();
 
-    $this->container->get('module_installer')->install(['content_moderation_test_views']);
+    \Drupal::service('module_installer')->install(['content_moderation_test_views']);
   }
 
   /**

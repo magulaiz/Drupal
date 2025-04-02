@@ -76,7 +76,7 @@ class EntityTestTest extends ResourceTestBase {
   protected function createEntity() {
     // Set flag so that internal field 'internal_string_field' is created.
     // @see entity_test_entity_base_field_info()
-    $this->container->get('state')->set('entity_test.internal_field', TRUE);
+    \Drupal::service('state')->set('entity_test.internal_field', TRUE);
     $field_storage_definition = BaseFieldDefinition::create('string')
       ->setLabel('Internal field')
       ->setInternal(TRUE);

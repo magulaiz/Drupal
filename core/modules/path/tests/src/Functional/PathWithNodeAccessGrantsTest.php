@@ -103,8 +103,8 @@ class PathWithNodeAccessGrantsTest extends PathTestBase {
     // There shouldn't be any validation errors.
     $this->assertSession()->pageTextNotContains("Either the path '/node/1' is invalid or you do not have access to it.");
     // Translation should be saved with the given alias.
-    $this->container->get('path_alias.manager')->cacheClear();
-    $translation_alias = $this->container->get('path_alias.manager')->getAliasByPath('/node/1', 'fr');
+    \Drupal::service('path_alias.manager')->cacheClear();
+    $translation_alias = \Drupal::service('path_alias.manager')->getAliasByPath('/node/1', 'fr');
     $this->assertSame('/' . $alias, $translation_alias);
   }
 
