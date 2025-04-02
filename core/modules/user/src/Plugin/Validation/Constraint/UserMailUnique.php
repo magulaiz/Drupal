@@ -22,4 +22,11 @@ class UserMailUnique extends UniqueFieldConstraint {
    */
   public $message = 'The email address %value is already taken.';
 
+  /**
+   * {@inheritdoc}
+   */
+  public function shouldIgnoreCase(): bool {
+    return TRUE;
+  }
+
 }
