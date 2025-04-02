@@ -1,8 +1,18 @@
 {% set id = id|default('mytextfield-' ~ random()) %}
+{% set input_attributes = create_attribute({
+  class: [
+    'form-control'
+  ],
+  type: 'text',
+  name: form_state.name,
+  id: id,
+  value: form_state.value,
+  required: form_state.required ? 'required',
+}) %}
 
 <div{{ attributes.addClass('mb-3') }}>
   <label class="form-label" for="{{ id }}">
     {{ label }}
   </label>
-  <input type="text" class="form-control" id="{{ id }}" name="{{ form_state.name }}" value="{{ form_state.value }}"{{ form_state.required ? ' required="required"' }}>
+  <input{{ input_attributes }}>
 </div>
