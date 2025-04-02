@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Functional;
 
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Url;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
