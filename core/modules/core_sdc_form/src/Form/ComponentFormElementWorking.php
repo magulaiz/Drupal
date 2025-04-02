@@ -35,7 +35,8 @@ class ComponentFormElementWorking extends FormBase {
         'label' => (string) $this->t('My Bootstrap textfield'),
       ],
       '#name' => 'foo',
-      '#default_value' => 'default',
+//      '#default_value' => 'default',
+      '#required' => TRUE,
     ];
 
     $form['component_select'] =  [

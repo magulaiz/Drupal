@@ -4,5 +4,5 @@
   <label class="form-label" for="{{ id }}">
     {{ label }}
   </label>
-  <input type="text" class="form-control" id="{{ id }}" name="{{ form_state.name }}" value="{{ form_state.value }}">
+  <input type="text" class="form-control" id="{{ id }}" name="{{ form_state.name }}" value="{{ form_state.value }}"{{ form_state.required ? ' required="required"' }}>
 </div>

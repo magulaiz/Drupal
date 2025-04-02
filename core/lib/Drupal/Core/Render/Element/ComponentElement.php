@@ -74,6 +74,7 @@ class ComponentElement extends FormElementBase {
       $props['form_state'] = [
         'name' => $element['#name'],
         'value' => $element['#value'] ?? $element['#default_value'] ?? NULL,
+        'required' => $element['#required'] ?? FALSE,
       ];
     }
 
