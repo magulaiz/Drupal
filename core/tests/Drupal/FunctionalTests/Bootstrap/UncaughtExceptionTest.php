@@ -204,7 +204,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
       case 'pgsql':
       case 'mysql':
       case 'mysqli':
-            $this->expectedExceptionMessage = $incorrect_username;
+        $this->expectedExceptionMessage = $incorrect_username;
         break;
 
       default:
