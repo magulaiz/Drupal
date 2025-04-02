@@ -39,7 +39,7 @@ class AttributeBridgeDecoratorTest extends TestCase {
 
     $expected = [
       'object' => new ObjectDefinition(['id' => 'foo']),
-      'array' => (new ObjectDefinition(['id' => 'bar']))->setClass('com\example\PluginNamespace\AttributeDiscoveryTest1'),
+      'array' => (new ObjectDefinition(['id' => 'bar', 'autowire' => FALSE]))->setClass('com\example\PluginNamespace\AttributeDiscoveryTest1'),
     ];
     $this->assertEquals($expected, $decorator->getDefinitions());
   }
