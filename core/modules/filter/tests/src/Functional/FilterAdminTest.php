@@ -411,7 +411,7 @@ class FilterAdminTest extends BrowserTestBase {
    */
   public function testDisabledFormat(): void {
     // Create a node type and add a standard body field.
-    $node_type = $this->drupalCreateNode([
+    $node_type = $this->drupalCreateContentType([
       'type' => $this->randomMachineName(),
       'name' => $this->randomString(),
     ]);
