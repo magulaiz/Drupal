@@ -13,6 +13,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests tracking of file usage by the Text Editor module.
@@ -20,6 +21,8 @@ use Drupal\filter\Entity\FilterFormat;
  * @group editor
  */
 class EditorFileUsageTest extends EntityKernelTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -45,6 +48,11 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     ]);
     $filtered_html_format->save();
 
+    // Set cardinality for body field.
+    FieldStorageConfig::loadByName('node', 'body')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->save();
+
     // Set up text editor.
     $editor = Editor::create([
       'format' => 'filtered_html',
@@ -56,21 +64,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     $editor->save();
 
     // Create a node type for testing.
-    $type = NodeType::create(['type' => 'page', 'name' => 'page']);
-    $type->save();
-    FieldStorageConfig::create([
-      'field_name' => 'content',
-      'entity_type' => 'node',
-      'type' => 'text_with_summary',
-      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
-    ])->save();
-
-    FieldConfig::create([
-      'field_name' => 'content',
-      'entity_type' => 'node',
-      'bundle' => 'page',
-      'label' => 'Content',
-    ])->save();
+    $this->createContentType(['type' => 'page', 'name' => 'page']);
     FieldStorageConfig::create([
       'field_name' => 'description',
       'entity_type' => 'node',
@@ -108,7 +102,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     $node = Node::create([
       'type' => 'page',
       'title' => 'test',
-      'content' => $body,
+      'body' => $body,
       'uid' => 1,
     ]);
     $node->save();
@@ -176,7 +170,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     $node = $node = Node::create([
       'type' => 'page',
       'title' => 'test',
-      'content' => $body,
+      'body' => $body,
       'description' => $description,
       'uid' => 1,
     ]);
@@ -196,12 +190,12 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
 
     // Test hook_entity_update(): decrement, by modifying the last revision:
-    // remove the data-entity-type attribute from the content field.
+    // remove the data-entity-type attribute from the body field.
     $original_values = [];
     for ($i = 0; $i < count($image_entities); $i++) {
-      $original_value = $node->content[$i]->value;
+      $original_value = $node->body[$i]->value;
       $new_value = str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
-      $node->content[$i]->value = $new_value;
+      $node->body[$i]->value = $new_value;
       $original_values[$i] = $original_value;
     }
     $node->save();
@@ -210,10 +204,10 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
 
     // Test editor_entity_update(): increment again by creating a new revision:
-    // read the data- attributes to the content field.
+    // read the data- attributes to the body field.
     $node->setNewRevision(TRUE);
     foreach ($original_values as $key => $original_value) {
-      $node->content[$key]->value = $original_value;
+      $node->body[$key]->value = $original_value;
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
@@ -221,11 +215,11 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
 
     // Test hook_entity_update(): decrement, by modifying the last revision:
-    // remove the data-entity-uuid attribute from the content field.
+    // remove the data-entity-uuid attribute from the body field.
     foreach ($original_values as $key => $original_value) {
-      $original_value = $node->content[$key]->value;
+      $original_value = $node->body[$key]->value;
       $new_value = str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
-      $node->content[$key]->value = $new_value;
+      $node->body[$key]->value = $new_value;
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
@@ -233,9 +227,9 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     }
 
     // Test hook_entity_update(): increment, by modifying the last revision:
-    // read the data- attributes to the content field.
+    // read the data- attributes to the body field.
     foreach ($original_values as $key => $original_value) {
-      $node->content[$key]->value = $original_value;
+      $node->body[$key]->value = $original_value;
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
@@ -251,8 +245,8 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     // Populate both the body and summary. Because this will be the same
     // revision of the same node, it will record only one usage.
     foreach ($original_values as $key => $original_value) {
-      $node->content[$key]->value = $original_value;
-      $node->content[$key]->summary = $original_value;
+      $node->body[$key]->value = $original_value;
+      $node->body[$key]->summary = $original_value;
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
@@ -262,19 +256,19 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     // Empty out the body value, but keep the summary. The number of usages
     // should not change.
     foreach ($original_values as $key => $original_value) {
-      $node->content[$key]->value = '';
-      $node->content[$key]->summary = $original_value;
+      $node->body[$key]->value = '';
+      $node->body[$key]->summary = $original_value;
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
-      // $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
+      $this->assertSame(['editor' => ['node' => [1 => '2']]], $file_usage->listUsage($image_entity), 'The image ' . $image_paths[$key] . ' has 2 usages.');
     }
 
     // Empty out the body and summary. The number of usages should decrease by
     // one.
     foreach ($original_values as $key => $original_value) {
-      $node->content[$key]->value = '';
-      $node->content[$key]->summary = '';
+      $node->body[$key]->value = '';
+      $node->body[$key]->summary = '';
     }
     $node->save();
     foreach ($image_entities as $key => $image_entity) {
