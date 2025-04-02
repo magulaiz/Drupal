@@ -58,6 +58,15 @@ props:
     icon:
       title: Icon
       type: string
+    icon_pack:
+      title: Icon pack
+      type: string
+      default: navigation
+    icon_settings:
+      title: Icon settings
+      type: array
+      items:
+        type: string
     text:
       title: Text
       description: Text of button.
