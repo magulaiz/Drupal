@@ -7,7 +7,6 @@ namespace Drupal\Tests\editor\Kernel;
 use Drupal\editor\Entity\Editor;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 use Drupal\file\Entity\File;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
