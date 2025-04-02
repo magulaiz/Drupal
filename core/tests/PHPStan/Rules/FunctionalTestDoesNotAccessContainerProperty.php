@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\PHPStan\Rules;
 
+use Drupal\FunctionalTests\Installer\InstallerTestBase;
 use Drupal\Tests\BrowserTestBase;
 use PhpParser\Node;
 use PhpParser\Node\Expr\PropertyFetch;
@@ -31,7 +32,7 @@ final class FunctionalTestDoesNotAccessContainerProperty implements Rule {
   public function processNode(Node $node, Scope $scope): array {
     $class = $scope->getClassReflection();
 
-    if ($class === null || !$class->isSubclassOf(BrowserTestBase::class)) {
+    if ($class === null || !$class->isSubclassOf(BrowserTestBase::class) || $class->is(InstallerTestBase::class) || $class->isSubclassOf(InstallerTestBase::class)) {
       return [];
     }
 
