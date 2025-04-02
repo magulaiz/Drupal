@@ -85,26 +85,15 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
    */
   public function testFailIfExists(): void {
     $this->installConfig('node');
-    $field_storage = FieldStorageConfig::loadByName('node', 'body');
-    if (!$field_storage) {
-      $field_storage = FieldStorageConfig::create([
-        'field_name' => 'body',
-        'entity_type' => 'node',
-        'type' => 'text_long',
-      ]);
-      $field_storage->save();
-    }
 
+    $field_storage = FieldStorageConfig::loadByName('node', 'body');
     // Manually create the field.
-    $field = FieldConfig::loadByName('node', 'one', 'body');
-    if (!$field) {
-      $field = FieldConfig::create([
-        'field_storage' => $field_storage,
-        'bundle' => 'one',
-        'label' => 'Body',
-      ]);
-      $field->save();
-    }
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'one',
+      'label' => 'Body',
+    ]);
+    $field->save();
 
     $this->expectException(ConfigActionException::class);
     $this->expectExceptionMessage('Field node.one.body already exists.');
@@ -118,25 +107,13 @@ class AddToAllBundlesConfigActionTest extends KernelTestBase {
     $this->installConfig('node');
 
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
-    if (!$field_storage) {
-      $field_storage = FieldStorageConfig::create([
-        'field_name' => 'body',
-        'entity_type' => 'node',
-        'type' => 'text_long',
-      ]);
-      $field_storage->save();
-    }
-
-    $existing_field = FieldConfig::loadByName('node', 'one', 'body');
-    if (!$existing_field) {
-      $existing_field = FieldConfig::create([
-        'field_storage' => $field_storage,
-        'bundle' => 'one',
-        'label' => 'Original label',
-        'description' => 'Original description',
-      ]);
-      $existing_field->save();
-    }
+    $field = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'one',
+      'label' => 'Original label',
+      'description' => 'Original description',
+    ]);
+    $field->save();
 
     $this->applyAction('field.storage.node.body');
 
