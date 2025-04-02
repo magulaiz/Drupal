@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\datetime_range\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -55,10 +56,17 @@ class DateRangeItemTest extends FieldKernelTestBase {
     ]);
     $this->fieldStorage->save();
 
+    $date = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s', '2025-04-01T04:01:32');
     $this->field = FieldConfig::create([
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'required' => TRUE,
+      'default_value' => [
+        [
+          'value' => $date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT),
+          'end_value' => $date->modify('+2 hours')->format(DateTimeItemInterface::DATE_STORAGE_FORMAT),
+        ],
+      ],
     ]);
     $this->field->save();
 
