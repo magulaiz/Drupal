@@ -6,10 +6,7 @@ namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 

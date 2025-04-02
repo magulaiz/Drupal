@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional\Views;
 
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 
 /**
  * Tests replacement of Views tokens supplied by the Node module.

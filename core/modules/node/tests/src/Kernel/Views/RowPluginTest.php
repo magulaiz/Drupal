@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel\Views;
 
-use Drupal\node\Entity\NodeType;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
