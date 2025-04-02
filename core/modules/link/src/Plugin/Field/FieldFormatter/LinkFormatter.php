@@ -83,6 +83,7 @@ class LinkFormatter extends FormatterBase {
       'url_plain' => '',
       'rel' => '',
       'target' => '',
+      'class' => '',
     ] + parent::defaultSettings();
   }
 
@@ -129,6 +130,12 @@ class LinkFormatter extends FormatterBase {
       '#return_value' => '_blank',
       '#default_value' => $this->getSetting('target'),
     ];
+    $elements['class'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Add classes to links'),
+      '#default_value' => $this->getSetting('class'),
+      '#description' => $this->t('Enter a space separated list of classes.'),
+    ];
 
     return $elements;
   }
@@ -160,6 +167,11 @@ class LinkFormatter extends FormatterBase {
     }
     if (!empty($settings['target'])) {
       $summary[] = $this->t('Open link in new window');
+    }
+    if (!empty($settings['class'])) {
+      $summary[] = $this->t('Add class="@class"', [
+        '@class' => $settings['class'],
+      ]);
     }
 
     return $summary;
@@ -249,6 +261,15 @@ class LinkFormatter extends FormatterBase {
     if (!empty($settings['target'])) {
       $options['attributes']['target'] = $settings['target'];
     }
+    // Add optional 'class' attribute to link options.
+    if (!empty($settings['class'])) {
+      $options['attributes']['class'] = explode(' ', $settings['class']);
+    }
+
+    if (!empty($options['attributes'])) {
+      $options['attributes'] = AttributeXss::sanitizeAttributes($options['attributes']);
+    }
+
     $url->setOptions($options);
 
     return $url;
