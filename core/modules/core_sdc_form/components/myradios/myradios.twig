@@ -1,0 +1,13 @@
+{% set id = id|default('myradios-' ~ random()) %}
+
+<div{{ attributes.addClass('mb-3') }}>
+  {% for value, option in options %}
+    {% set option_id = id ~ '-' ~ loop.index0 %}
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{ form_state.name }}" id="{{ option_id }}" value="{{ value }}"{{ (value == form_state.value) ? ' checked' }}>
+      <label class="form-check-label" for="{{ option_id }}">
+        {{ option }}
+      </label>
+    </div>
+  {% endfor %}
+</div>

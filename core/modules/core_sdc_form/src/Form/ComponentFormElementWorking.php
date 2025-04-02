@@ -35,7 +35,7 @@ class ComponentFormElementWorking extends FormBase {
         'label' => (string) $this->t('My Bootstrap textfield'),
       ],
       '#name' => 'foo',
-      '#default_value' => 'bar',
+      '#default_value' => 'default',
     ];
 
     $form['component_select'] =  [
@@ -51,7 +51,22 @@ class ComponentFormElementWorking extends FormBase {
           '3' => $this->t('Three'),
         ],
       ],
+      '#name' => 'bar',
+      '#default_value' => '2',
+    ];
+
+    $form['component_radios'] =  [
+      '#type' => 'component',
+      '#component' => 'core_sdc_form:myradios',
+      '#props' => [
+        'options' => [
+          '1' => $this->t('One'),
+          '2' => $this->t('Two'),
+          '3' => $this->t('Three'),
+        ],
+      ],
       '#name' => 'baz',
+      '#default_value' => '3',
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -70,6 +85,7 @@ class ComponentFormElementWorking extends FormBase {
     $keys = [
       'normal',
       'foo',
+      'bar',
       'baz',
     ];
     foreach ($keys as $key) {
