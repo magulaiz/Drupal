@@ -8,6 +8,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests node body field storage.
@@ -15,6 +16,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group node
  */
 class NodeBodyFieldStorageTest extends KernelTestBase {
+
+  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -46,33 +49,8 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
   public function testFieldOverrides(): void {
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
     $this->assertNotEmpty($field_storage, 'Node body field storage exists.');
-    $type = NodeType::create(['name' => 'Ponies', 'type' => 'ponies']);
-    $type->save();
-    // Ensure the 'body' field storage exists.
-    $field_storage = FieldStorageConfig::loadByName('node', 'body');
-    if (!$field_storage) {
-      $field_storage = FieldStorageConfig::create([
-        'field_name' => 'body',
-        'entity_type' => 'node',
-        'type' => 'text_long',
-      ]);
-      $field_storage->save();
-    }
+    $this->createContentType(['name' => 'Ponies', 'type' => 'ponies']);
 
-    // Ensure the 'body' field exists for the 'article' content type.
-    $field = FieldConfig::loadByName('node', $type->id(), 'body');
-    if (!$field) {
-      $field = FieldConfig::create([
-        'field_storage' => $field_storage,
-        'bundle' => $type->id(),
-        'label' => 'Body',
-        'settings' => [
-          'display_summary' => TRUE,
-          'allowed_formats' => [],
-        ],
-      ]);
-      $field->save();
-    }
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
     $this->assertCount(1, $field_storage->getBundles(), 'Node body field storage is being used on the new node type.');
     $field = FieldConfig::loadByName('node', 'ponies', 'body');
