@@ -88,7 +88,6 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
   }
 
   public function testNonExistingMethod(): void {
-    // Test with a non-existing method.
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['classOrService' => 'test.service', 'method' => 'missingMethod']);
     $typed_data = $this->typedData->create($definition, 1);
@@ -98,8 +97,7 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
     $typed_data->validate();
   }
 
-  public function testNonExistingService(): void {
-    // Test with a non-existing service.
+  public function testNonExistingClass(): void {
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['classOrService' => '\Drupal\NonExisting\Class', 'method' => 'boo']);
     $typed_data = $this->typedData->create($definition, 1);
