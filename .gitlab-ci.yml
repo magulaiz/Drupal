@@ -101,6 +101,8 @@ default:
 
 .default-job-settings-lint: &default-job-settings-lint
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never 
     - if: $PERFORMANCE_TEST != "1"
 
 .default-phpunit-job-settings: &default-phpunit-job-settings
@@ -384,7 +386,6 @@ default:
         php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=$CI_PROJECT_DIR/core/.phpstan-baseline.php || true
         exit $EXIT_CODE
       fi
-
   artifacts:
     # Only store the baseline if the job fails.
     when: on_failure
