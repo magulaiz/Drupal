@@ -16,6 +16,9 @@ class Insert extends QueryInsert {
     $this->queryOptions['placeholder_format'] = PlaceholderType::Positional;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function execute() {
     if (!$this->preExecute()) {
       return NULL;
