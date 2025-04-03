@@ -347,8 +347,9 @@ class Condition implements ConditionInterface, \Countable {
         // Process value.
         $value_fragment = '';
         if (isset($condition['field2'])) {
-          // The key field2 is only set when we are comparing two fields with each
-          // other. The value part of the condition will be the second field.
+          // The key field2 is only set when we are comparing two fields with
+          // each other. The value part of the condition will be the second
+          // field.
           $value_fragment = $connection->escapeField($condition['field2']);
         }
         elseif ($operator['use_value']) {
