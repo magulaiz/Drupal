@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Update;
 
-use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
