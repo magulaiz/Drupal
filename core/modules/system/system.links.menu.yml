@@ -121,7 +121,7 @@ system.admin_config_system:
 system.site_information_settings:
   title: 'Basic site settings'
   parent: system.admin_config_system
-  description: 'Change site name, email address, slogan, default front page, and error pages.'
+  description: 'Change site name, email address, slogan, base URL, default front page, and error pages.'
   route_name: system.site_information_settings
   weight: -20
 system.cron_settings:
