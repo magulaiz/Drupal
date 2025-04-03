@@ -246,7 +246,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     foreach ($hook_collector->getImplementations() as $hook => $moduleImplements) {
       foreach ($moduleImplements as $module => $classImplements) {
         foreach ($classImplements[ProceduralCall::class] ?? [] as $method) {
-          // @todo Reorder these after adding!
           $this->listenersByHook[$hook][] = $method;
           $this->modulesByHook[$hook][] = $module;
           $this->invokeMap[$hook][$module][] = $method;
