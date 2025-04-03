@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Disabled option on forms and settings.
@@ -490,5 +491,23 @@ function system_preprocess_toolbar(array &$variables, $hook, $info): void {
   if (_system_is_claro_admin_and_not_active()) {
     require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
     claro_preprocess_toolbar($variables, $hook, $info);
+  }
+}
+
+/**
+ * Implements hook_entity_view_mode_presave().
+ *
+ * Transforms empty description into null.
+ *
+ * @deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use NULL
+ *  instead.
+ *
+ * @see https://www.drupal.org/node/3452614
+ * @see system_post_update_convert_empty_string_entity_view_modes_to_null()
+ */
+function system_entity_view_mode_presave(EntityInterface $entity): void {
+  if ($entity->get('description') !== NULL && trim($entity->get('description')) === '') {
+    @trigger_error("Setting description to an empty string is deprecated in drupal:10.4.0 and it must be null in drupal:12.0.0. See https://www.drupal.org/node/3452614", E_USER_DEPRECATED);
+    $entity->set('description', NULL);
   }
 }
