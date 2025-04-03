@@ -8,7 +8,7 @@
 /**
  * Implements hook_removed_post_updates().
  */
-function system_removed_post_updates() {
+function system_removed_post_updates(): array {
   return [
     'system_post_update_recalculate_configuration_entity_dependencies' => '9.0.0',
     'system_post_update_add_region_to_entity_displays' => '9.0.0',
@@ -80,8 +80,15 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
 /**
  * Uninstall the sdc module if installed.
  */
-function system_post_update_sdc_uninstall() {
+function system_post_update_sdc_uninstall(): void {
   if (\Drupal::moduleHandler()->moduleExists('sdc')) {
     \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
   }
+}
+
+/**
+ * Rebuild the container to fix HTML in RSS feeds.
+ */
+function system_post_update_remove_rss_cdata_subscriber(): void {
+  // Empty update to trigger container rebuild.
 }

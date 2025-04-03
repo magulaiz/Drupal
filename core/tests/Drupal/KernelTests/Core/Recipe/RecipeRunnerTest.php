@@ -37,7 +37,7 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertTrue($this->container->get('module_handler')->moduleExists('text'), 'The text module is installed');
     $this->assertTrue($this->container->get('module_handler')->moduleExists('node'), 'The node module is installed');
     $this->assertTrue($this->container->get('config.storage')->exists('node.settings'), 'The node.settings configuration has been created');
-    $this->assertFalse($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to FALSE');
+    $this->assertTrue($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to TRUE');
   }
 
   public function testModuleAndThemeInstall(): void {
@@ -47,7 +47,7 @@ class RecipeRunnerTest extends KernelTestBase {
     // Test the state after applying the recipe.
     $this->assertTrue($this->container->get('module_handler')->moduleExists('views'), 'The views module is installed');
     $this->assertTrue($this->container->get('module_handler')->moduleExists('node'), 'The node module is installed');
-    $this->assertTrue($this->container->get('theme_handler')->themeExists('test_basetheme'), 'The test_basetheme theme is installed');
+    $this->assertTrue($this->container->get('theme_handler')->themeExists('test_base_theme'), 'The test_base_theme theme is installed');
     $this->assertTrue($this->container->get('theme_handler')->themeExists('test_subtheme'), 'The test_subtheme theme is installed');
     $this->assertTrue($this->container->get('theme_handler')->themeExists('test_subsubtheme'), 'The test_subsubtheme theme is installed');
     $this->assertTrue($this->container->get('config.storage')->exists('node.settings'), 'The node.settings configuration has been created');
@@ -75,7 +75,7 @@ class RecipeRunnerTest extends KernelTestBase {
     // Test the state after applying the recipe.
     $this->assertTrue($this->container->get('config.storage')->exists('node.settings'), 'The node.settings configuration has been created');
     $this->assertTrue($this->container->get('config.storage')->exists('node.settings'), 'The node.settings configuration has been created');
-    $this->assertTrue($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to TRUE');
+    $this->assertFalse($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to FALSE');
     $this->assertSame('Test content type', NodeType::load('test')?->label());
     $node_type_data = $this->config('node.type.test')->get();
     $this->assertGreaterThan(0, strlen($node_type_data['uuid']), 'The node type configuration has been assigned a UUID.');
@@ -207,6 +207,23 @@ install:
   - config_test
 config:
   actions:
+    config_test.system:
+      setFoo: 'Bar'
+YAML;
+
+    $recipe = $this->createRecipe($recipe_data);
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage('The "setFoo" plugin does not exist.');
+    RecipeRunner::processRecipe($recipe);
+  }
+
+  public function testInvalidConfigActionAppliedOnConfigEntity() :void {
+    $recipe_data = <<<YAML
+name: Invalid config action
+install:
+  - config_test
+config:
+  actions:
     config_test.dynamic.recipe:
       createIfNotExists:
         label: 'Created by recipe'
@@ -215,7 +232,7 @@ YAML;
 
     $recipe = $this->createRecipe($recipe_data);
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "setBody" plugin does not exist.');
+    $this->expectExceptionMessage('The "config_test" entity does not support the "setBody" config action.');
     RecipeRunner::processRecipe($recipe);
   }
 

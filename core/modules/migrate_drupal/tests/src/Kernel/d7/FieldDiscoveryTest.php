@@ -334,7 +334,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     $this->assertCount(23, $actual_fields['node']['test_content_type']);
     foreach ($actual_fields as $entity_type_id => $bundles) {
       foreach ($bundles as $bundle => $fields) {
-        foreach ($fields as $field_name => $field_info) {
+        foreach ($fields as $field_info) {
           $this->assertArrayHasKey('field_definition', $field_info);
           $this->assertEquals($entity_type_id, $field_info['entity_type']);
           $this->assertEquals($bundle, $field_info['bundle']);
@@ -350,16 +350,18 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    */
   public function testGetSourcePlugin(): void {
     $this->assertSourcePlugin('7', FieldInstance::class, [
-      'requirements_met' => TRUE,
-      'id' => 'd7_field_instance',
-      'source_module' => 'field',
       'class' => 'Drupal\\field\\Plugin\\migrate\\source\\d7\\FieldInstance',
-      'provider' => [
+      'provider' => 'field',
+      'id' => 'd7_field_instance',
+      'providers' => [
         0 => 'field',
         1 => 'migrate_drupal',
         2 => 'migrate',
         4 => 'core',
       ],
+      'source_module' => 'field',
+      'requirements_met' => TRUE,
+      'minimum_version' => NULL,
     ]);
   }
 
