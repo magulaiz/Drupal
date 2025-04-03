@@ -283,7 +283,6 @@ class InlineBlockTest extends BrowserTestBase {
     $this->assertCount(1, $this->blockStorage->loadMultiple());
 
     // Add another block to the default.
-    // @todo add this to the trait, down to savelayout
     $this->drupalGet($prefix . '/display/default');
     $this->clickLink('Manage layout');
     $assert_session->addressEquals($prefix . '/display/default/layout');
@@ -588,7 +587,7 @@ class InlineBlockTest extends BrowserTestBase {
   /**
    * Gets the latest block entity id.
    */
-  protected function getLatestBlockEntityId() {
+  protected function getLatestBlockEntityId(): string {
     $block_ids = \Drupal::entityQuery('block_content')
       ->accessCheck(FALSE)
       ->sort('id', 'DESC')
@@ -607,7 +606,7 @@ class InlineBlockTest extends BrowserTestBase {
    * @param string $label
    *   The block type label.
    */
-  protected function createBlockContentType($id, $label) {
+  protected function createBlockContentType($id, $label): void {
     $bundle = BlockContentType::create([
       'id' => $id,
       'label' => $label,

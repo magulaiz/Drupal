@@ -201,7 +201,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Gets the latest block entity id.
    */
-  protected function getLatestBlockEntityId() {
+  protected function getLatestBlockEntityId(): string {
     $block_ids = \Drupal::entityQuery('block_content')
       ->accessCheck(FALSE)
       ->sort('id', 'DESC')

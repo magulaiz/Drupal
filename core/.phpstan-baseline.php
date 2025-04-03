@@ -22420,6 +22420,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/tests/modules/layout_builder_test/src/Plugin/SectionStorage/TestStateBasedSectionStorage.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Functional\\\\InlineBlockPrivateFilesTest\\:\\:attachFileField\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/layout_builder/tests/src/Functional/InlineBlockPrivateFilesTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Functional\\\\LayoutBuilderAccessTest\\:\\:providerTestAccessWithBundles\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -22715,12 +22721,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\InlineBlockTestBase\\:\\:createBlockContentType\\(\\) has no return type specified\\.$#',
-	'identifier' => 'missingType.return',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\FunctionalJavascript\\\\InlineBlockTestBase\\:\\:getLatestBlockEntityId\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTestBase.php',
