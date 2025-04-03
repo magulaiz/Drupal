@@ -45,7 +45,6 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     $this->checkSlots();
     $this->checkInvalidSlot();
     $this->checkEmptyProps();
-    $this->checkVariants();
   }
 
   /**
@@ -356,7 +355,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   /**
    * Ensure that components variants render.
    */
-  public function checkVariants(): void {
+  public function testVariants(): void {
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:my-cta',
@@ -368,6 +367,20 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     $crawler = $this->renderComponentRenderArray($build);
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta"][data-component-variant="red"]'));
     $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta"][data-component-variant="red"][class*="red"]'));
+
+    // If there were an existing prop named variant, we don't override that for BC reasons.
+    $build = [
+      '#type' => 'component',
+      '#component' => 'sdc_test:my-cta-with-variant-prop',
+      '#variant' => 'blue',
+      '#props' => [
+        'text' => 'Test link',
+        'variant' => 'red'
+      ],
+    ];
+    $crawler = $this->renderComponentRenderArray($build);
+    $this->assertEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="blue"]'));
+    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="red"]'));
   }
 
   /**
