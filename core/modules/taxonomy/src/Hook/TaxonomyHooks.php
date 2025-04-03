@@ -98,28 +98,6 @@ class TaxonomyHooks {
   }
 
   /**
-   * Implements hook_entity_operation().
-   */
-  #[Hook('entity_operation')]
-  public function entityOperation(EntityInterface $term): array {
-    $operations = [];
-    if ($term instanceof Term && $term->access('create')) {
-      $operations['add-child'] = [
-        'title' => $this->t('Add child'),
-        'weight' => 10,
-        'url' => Url::fromRoute('entity.taxonomy_term.add_form', [
-          'taxonomy_vocabulary' => $term->bundle(),
-        ], [
-          'query' => [
-            'parent' => $term->id(),
-          ],
-        ]),
-      ];
-    }
-    return $operations;
-  }
-
-  /**
    * @defgroup taxonomy_index Taxonomy indexing
    * @{
    * Functions to maintain taxonomy indexing.
@@ -183,5 +161,27 @@ class TaxonomyHooks {
   /**
    * @} End of "defgroup taxonomy_index".
    */
+
+  /**
+   * Implements hook_entity_operation().
+   */
+  #[Hook('entity_operation')]
+  public function entityOperation(EntityInterface $term): array {
+    $operations = [];
+    if ($term instanceof Term && $term->access('create')) {
+      $operations['add-child'] = [
+        'title' => $this->t('Add child'),
+        'weight' => 10,
+        'url' => Url::fromRoute('entity.taxonomy_term.add_form', [
+          'taxonomy_vocabulary' => $term->bundle(),
+        ], [
+          'query' => [
+            'parent' => $term->id(),
+          ],
+        ]),
+      ];
+    }
+    return $operations;
+  }
 
 }
