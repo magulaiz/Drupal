@@ -8,6 +8,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Url;
 use Drupal\layout_builder\Field\LayoutSectionItemList;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
@@ -107,7 +108,13 @@ trait LayoutBuilderTestTrait {
    *   Whether to save the layout.
    */
   protected function addInlineBlockViaUi(string $entityType, string $id, string $region, int $delta, string $blockType, string $title, string $body, bool $save = TRUE): void {
-    $this->drupalGet(\sprintf('/layout_builder/add/block/overrides/%s.%s/%d/%s/inline_block:%s', $entityType, $id, $delta, $region, $blockType));
+    $this->drupalGet(Url::fromRoute('layout_builder.add_block', [
+      'section_storage_type' => 'overrides',
+      'section_storage' => \sprintf('%s.%s', $entityType, $id),
+      'delta' => $delta,
+      'region' => $region,
+      'plugin_id' => \sprintf('inline_block:%s', $blockType),
+    ]));
     $this->submitForm([
       'settings[label]' => $title,
       'settings[block_form][body][0][value]' => $body,
@@ -133,7 +140,13 @@ trait LayoutBuilderTestTrait {
    */
   protected function removeInlineBlockViaUi(string $placeholderLabel, string $storageType, string $storageIdentifier, string $region, int $delta): void {
     $uuid = $this->getComponentUuidFromPlaceholderLabel($placeholderLabel);
-    $this->drupalGet(\sprintf('layout_builder/remove/block/%s/%s/%d/%s/%s', $storageType, $storageIdentifier, $delta, $region, $uuid));
+    $this->drupalGet(Url::fromRoute('layout_builder.remove_block', [
+      'section_storage_type' => $storageType,
+      'section_storage' => $storageIdentifier,
+      'region' => $region,
+      'delta' => $delta,
+      'uuid' => $uuid,
+    ]));
     $this->submitForm([], 'Remove');
     $this->submitForm([], 'Save layout');
   }
