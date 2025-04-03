@@ -95,7 +95,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $view = Views::getView('test_aggregate_count_function');
     $this->executeView($view);
 
-    $this->assertEquals(7, $view->result[0]->id);
+    $this->assertEquals(7, $view->result[0]->entity_test_id);
     $this->assertCount(1, $view->result, 'Make sure the count of rows is one.');
   }
 
@@ -129,7 +129,12 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     // Group by name to identify the right count.
     $results = [];
     foreach ($view->result as $item) {
-      $results[$item->entity_test_name] = $item->id;
+      if (isset($item->entity_test_id)) {
+        $results[$item->entity_test_name] = $item->entity_test_id;
+      }
+      else {
+        $results[$item->entity_test_name] = $item->id;
+      }
     }
     $aggregation_function ??= 'NULL';
     $this->assertEquals($values[0], $results['name1'], "Aggregation with $aggregation_function and groupby name: name1 returned the expected amount of results");
