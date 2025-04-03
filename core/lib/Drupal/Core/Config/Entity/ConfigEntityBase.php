@@ -236,6 +236,9 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * Sorts entities using collator.
    */
   public static function sortEntities(array &$entities): bool {
+    // En is hardcoded because Symfony\Polyfill\Intl\Icu\Collator::create() is
+    // throwing an exeption, if locale is not en. It is the only implemented 
+    // language in the polyfill.
     $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
     return uasort($entities, function ($a, $b) use ($collator) {
       return static::compare($a, $b, $collator);
