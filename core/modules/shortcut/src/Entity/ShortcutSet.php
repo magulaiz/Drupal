@@ -6,7 +6,6 @@ use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Form\SetCustomize;
 use Drupal\shortcut\Form\ShortcutSetDeleteForm;
 use Drupal\shortcut\ShortcutSetAccessControlHandler;
