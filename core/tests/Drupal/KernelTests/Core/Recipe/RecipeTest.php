@@ -48,7 +48,7 @@ class RecipeTest extends KernelTestBase {
   public function testPreExistingDifferentConfiguration(): void {
     // Install the node module, its dependencies and configuration.
     $this->container->get('module_installer')->install(['node']);
-    $this->assertFalse($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to FALSE');
+    $this->assertTrue($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to TRUE');
 
     try {
       Recipe::createFromDirectory('core/tests/fixtures/recipes/install_node_with_config');
@@ -65,7 +65,7 @@ class RecipeTest extends KernelTestBase {
     $this->container->get('module_installer')->install(['node']);
     // Change the config to match the recipe's config to prevent the exception
     // being thrown.
-    $this->config('node.settings')->set('use_admin_theme', TRUE)->save();
+    $this->config('node.settings')->set('use_admin_theme', FALSE)->save();
 
     $recipe = Recipe::createFromDirectory('core/tests/fixtures/recipes/install_node_with_config');
     $this->assertSame('core/tests/fixtures/recipes/install_node_with_config/config', $recipe->config->recipeConfigDirectory);
@@ -96,6 +96,21 @@ class RecipeTest extends KernelTestBase {
       ],
     ]);
     $this->assertIsObject($recipe);
+  }
+
+  /**
+   * Tests getting extra extension-specific info from a recipe.
+   *
+   * @covers ::getExtra
+   */
+  public function testExtra(): void {
+    $recipe = $this->createRecipe([
+      'name' => 'Getting extra info',
+      'extra' => [
+        'special_sauce' => 'Wasabi',
+      ],
+    ]);
+    $this->assertSame('Wasabi', $recipe->getExtra('special_sauce'));
   }
 
 }
