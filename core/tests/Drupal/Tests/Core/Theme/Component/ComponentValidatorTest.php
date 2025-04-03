@@ -123,7 +123,7 @@ class ComponentValidatorTest extends TestCase {
       $definition
     );
     $component_validator = new ComponentValidator();
-    $component_validator->setValidator(new Validator((new Factory())->setConstraintClass('format', UrlHelperFormatConstraint::class)));
+    $component_validator->setValidator();
     $this->assertTrue(
       $component_validator->validateProps($context, $component),
       'The valid component props threw an error.'
@@ -148,19 +148,6 @@ class ComponentValidatorTest extends TestCase {
         'my-cta',
         static::loadComponentDefinitionFromFs('my-cta'),
       ],
-      [
-        [
-          'text' => 'Can Pica',
-          // This is a valid URI but for v5.2 of justinrainbow/json-schema it
-          // does not pass validation without a custom constraint for format.
-          // We pass a custom factory and it should be used.
-          'href' => 'entity:node/1',
-          'target' => '_blank',
-          'attributes' => new Attribute(['key' => 'value']),
-        ],
-        'my-cta',
-        static::loadComponentDefinitionFromFs('my-cta'),
-      ],
       [[], 'my-banner', static::loadComponentDefinitionFromFs('my-banner')],
       [
         ['nonProp' => new \stdClass()],
@@ -168,6 +155,33 @@ class ComponentValidatorTest extends TestCase {
         static::loadComponentDefinitionFromFs('my-banner'),
       ],
     ];
+  }
+
+  /**
+   * Tests we can use a custom validator to validate props.
+   */
+  public function testCustomValidator(): void {
+    $component = new Component(
+      ['app_root' => '/fake/path/root'],
+      'sdc_test:my-cta',
+      static::loadComponentDefinitionFromFs('my-cta'),
+    );
+    $component_validator = new ComponentValidator();
+    // A validator with a constraint factory that uses a custom constraint for
+    // checking format.
+    $component_validator->setValidator(new Validator((new Factory())->setConstraintClass('format', UrlHelperFormatConstraint::class)));
+    self::assertTrue(
+      $component_validator->validateProps([
+        'text' => 'Can Pica',
+        // This is a valid URI but for v5.2 of justinrainbow/json-schema it
+        // does not pass validation without a custom constraint for format.
+        // We pass a custom factory and it should be used.
+        'href' => 'entity:node/1',
+        'target' => '_blank',
+        'attributes' => new Attribute(['key' => 'value']),
+      ], $component),
+      'The valid component props threw an error.'
+    );
   }
 
   /**
