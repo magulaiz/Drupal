@@ -289,7 +289,7 @@ function template_preprocess_input(&$variables): void {
  * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #action, #method, #attributes, #children
+ *     Properties used: #action, #method, #attributes, #children.
  */
 function template_preprocess_form(&$variables): void {
   $element = $variables['element'];
@@ -323,7 +323,11 @@ function template_preprocess_textarea(&$variables): void {
   $variables['wrapper_attributes'] = new Attribute();
   $variables['attributes'] = new Attribute($element['#attributes']);
   $variables['value'] = $element['#value'];
-  $variables['resizable'] = !empty($element['#resizable']) ? $element['#resizable'] : NULL;
+  $resizable = !empty($element['#resizable']) ? $element['#resizable'] : NULL;
+  $variables['resizable'] = $resizable;
+  if ($resizable) {
+    $variables['attributes']->addClass('resize-' . $resizable);
+  }
   $variables['required'] = !empty($element['#required']) ? $element['#required'] : NULL;
 }
 
@@ -602,9 +606,9 @@ function template_preprocess_form_element_label(&$variables): void {
  *   \Drupal::messenger()->addMessage($message);
  *   // Providing data for the redirected page is done through the session.
  *   foreach ($results as $result) {
- *     $items[] = t('Loaded node %title.', ['%title' => $result)];
+ *     $items[] = t('Loaded node %title.', ['%title' => $result]);
  *   }
- *   $session = \Drupal::getRequest()->getSession();
+ *   $session = \Drupal::request()->getSession();
  *   $session->set('my_batch_results', $items);
  * }
  * @endcode
@@ -634,7 +638,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *     Example:
  *     @code
  *     [
- *       ['callback_batch_operation_1', [$arg1)],
+ *       ['callback_batch_operation_1', [$arg1]],
  *       ['callback_batch_operation_2', [$arg2_1, $arg2_2]],
  *     ]
  *     @endcode
@@ -643,8 +647,10 @@ function template_preprocess_form_element_label(&$variables): void {
  *   - init_message: Message displayed while the processing is initialized.
  *     Defaults to t('Initializing.').
  *   - progress_message: Message displayed while processing the batch. Available
- *     placeholders are @current, @remaining, @total, @percentage, @estimate and
- *     @elapsed. Defaults to t('Completed @current of @total.').
+ *     placeholders are "@current", "@remaining", "@total", "@percentage",
+ *     phpcs:ignore Drupal.Commenting.FunctionComment.ParamCommentFullStop
+ *     "@estimate" and "@elapsed". Defaults to "t('Completed @current of
+ *     @total.')".
  *   - error_message: Message displayed if an error occurred while processing
  *     the batch. Defaults to t('An error has occurred.').
  *   - finished: Name of an implementation of callback_batch_finished(). This is
@@ -673,7 +679,7 @@ function template_preprocess_form_element_label(&$variables): void {
  *       \Drupal\Core\Queue\BatchMemory. Defaults to Batch if progressive is
  *       TRUE, or to BatchMemory if progressive is FALSE.
  */
-function batch_set($batch_definition) {
+function batch_set($batch_definition): void {
   if ($batch_definition) {
     $batch =& batch_get();
 
@@ -735,7 +741,7 @@ function batch_set($batch_definition) {
  * @param array $batch_set
  *   The batch set.
  */
-function _batch_append_set(&$batch, $batch_set) {
+function _batch_append_set(&$batch, $batch_set): void {
   $append_after_index = $batch['current_set'];
   $reached_current_set = FALSE;
   foreach ($batch['sets'] as $index => $set) {
@@ -921,7 +927,7 @@ function &batch_get() {
  * @param string $set_id
  *   The id of the set to process.
  */
-function _batch_populate_queue(&$batch, $set_id) {
+function _batch_populate_queue(&$batch, $set_id): void {
   $batch_set = &$batch['sets'][$set_id];
 
   if (isset($batch_set['operations'])) {

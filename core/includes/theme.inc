@@ -26,10 +26,9 @@ use Drupal\Core\Installer\InstallerKernel;
 /**
  * @defgroup content_flags Content markers
  * @{
- * Markers used by mark.html.twig and node_mark() to designate content.
+ * Markers used by mark.html.twig to designate content.
  *
  * @see mark.html.twig
- * @see node_mark()
  */
 
 /**
@@ -92,7 +91,7 @@ function _system_default_theme_features() {
  * @param string $path
  *   The path to search.
  */
-function drupal_find_theme_templates($cache, $extension, $path) {
+function drupal_find_theme_templates($cache, $extension, $path): array {
   $implementations = [];
 
   // Collect paths to all sub-themes grouped by base themes. These will be
@@ -330,9 +329,9 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
  *
  * @param array $variables
  *   An associative array possibly containing:
- *   - attributes['timestamp']:
- *   - timestamp:
- *   - text:
+ *   - "attributes['timestamp']:".
+ *   - "timestamp:".
+ *   - "text:".
  */
 function template_preprocess_time(&$variables): void {
   /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
@@ -620,6 +619,7 @@ function template_preprocess_links(&$variables): void {
  *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - srcset: Array of multiple URIs and sizes/multipliers.
  *   - sizes: The sizes attribute for viewport-based selection of images.
+ *     phpcs:ignore
  *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
  */
 function template_preprocess_image(&$variables): void {
@@ -1067,7 +1067,7 @@ function template_preprocess_maintenance_task_list(&$variables): void {
  *
  * @see https://www.drupal.org/node/2340341
  */
-function template_preprocess(&$variables, $hook, $info) {
+function template_preprocess(&$variables, $hook, $info): void {
   @trigger_error('template_preprocess() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement, default preprocess variables are added for all theme hooks directly in \Drupal\Core\Theme\ThemeManager. See https://www.drupal.org/node/2340341', E_USER_DEPRECATED);
 
   $themeManager = \Drupal::service('theme.manager');
@@ -1239,7 +1239,7 @@ function template_preprocess_page(&$variables): void {
  *   hook_theme_suggestions_HOOK_alter() or to $variables['attributes']['class']
  *   if the suggestions represent extra CSS classes.
  */
-function theme_get_suggestions($args, $base, $delimiter = '__') {
+function theme_get_suggestions($args, $base, $delimiter = '__'): array {
 
   // Build a list of suggested theme hooks in order of
   // specificity. One suggestion is made for every element of the current path,
