@@ -348,4 +348,14 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->fetchField();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function userRevisionIds(AccountInterface $account) {
+    return $this->database->query(
+      'SELECT [revision_id] FROM {' . $this->getRevisionDataTable() . '} WHERE [uid] = :uid ORDER BY [revision_id]',
+      [':uid' => $account->id()]
+    )->fetchCol();
+  }
+
 }

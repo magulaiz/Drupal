@@ -47,7 +47,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
 
       case 'update':
         $access_result = AccessResult::allowedIf($account->id() && $account->id() == $entity->getOwnerId() && $entity->isPublished() && $account->hasPermission('edit own comments'))
-          ->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
+          ->cachePerPermissions()->addCacheableDependency($entity);
         if (!$access_result->isAllowed()) {
           $access_result->setReason("The 'edit own comments' permission is required, the user must be the comment author, and the comment must be published.");
         }
@@ -89,6 +89,8 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         'changed',
         'cid',
         'thread',
+        'revision_user',
+        'revision_created',
       ];
       // These fields can be edited during comment creation.
       $create_only_fields = [
@@ -143,6 +145,12 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
           ->addCacheableDependency($field_definition->getConfig($commented_entity->bundle()))
           ->addCacheableDependency($commented_entity);
         return $admin_access->orIf($anonymous_access);
+      }
+
+      // Users have access to the revision log message if they have
+      // the administer comments permission.
+      if ($field_definition->getName() === 'revision_log_message') {
+        return AccessResult::allowedIfHasPermission($account, 'administer comments');
       }
     }
 

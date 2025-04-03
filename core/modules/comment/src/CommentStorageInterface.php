@@ -5,6 +5,7 @@ namespace Drupal\comment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines an interface for comment entity storage classes.
@@ -112,5 +113,16 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    *   The number of unapproved comments.
    */
   public function getUnapprovedCount();
+
+  /**
+   * Gets a list of revision IDs having a given user as comment author.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user entity.
+   *
+   * @return int[]
+   *   Comment revision IDs (in ascending order).
+   */
+  public function userRevisionIds(AccountInterface $account);
 
 }
