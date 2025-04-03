@@ -69,6 +69,11 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
     if (strtolower($name) !== $name && strpos($name, 'env(') !== 0) {
       throw new \InvalidArgumentException("Parameter names must be lowercase: $name");
     }
+
+    if (is_string($value) && str_contains($value, '%%')) {
+      $value = str_replace('%%', '%%%%', $value);
+    }
+
     parent::setParameter($name, $value);
   }
 
