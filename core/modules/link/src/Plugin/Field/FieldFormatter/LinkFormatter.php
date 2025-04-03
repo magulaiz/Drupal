@@ -272,7 +272,6 @@ class LinkFormatter extends FormatterBase {
     if (!empty($settings['class'])) {
       $options['attributes']['class'] = explode(' ', $settings['class']);
     }
-    $url->setOptions($options);
 
     if (!empty($options['attributes'])) {
       $options['attributes'] = AttributeXss::sanitizeAttributes($options['attributes']);
