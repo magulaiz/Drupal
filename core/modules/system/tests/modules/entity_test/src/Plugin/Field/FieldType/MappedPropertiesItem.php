@@ -8,6 +8,7 @@ use Drupal\Core\Entity\FieldItemStorageMapperInterface;
 use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\MapItem;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Field type where properties are mapped on load and save.
@@ -15,7 +16,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\MapItem;
 #[FieldType(
   id: 'mapped_properties_test',
   label: new TranslatableMarkup('Mapped properties field (test)'),
-  description: new TranslatableMarkupP('A field containing mapped properties.'),
+  description: new TranslatableMarkup('A field containing mapped properties.'),
 )]
 class MappedPropertiesItem extends MapItem implements FieldItemStorageMapperInterface {
 
