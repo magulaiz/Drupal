@@ -27516,7 +27516,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\node\\\\NodeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeForm.php',
 ];
 $ignoreErrors[] = [
