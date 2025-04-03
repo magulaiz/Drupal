@@ -2,14 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\file\Functional\FileFieldCreationTrait;
+use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
+use Drupal\Tests\layout_builder\Traits\LayoutBuilderTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -17,16 +21,24 @@ use Drupal\Tests\TestFileCreationTrait;
  *
  * @group layout_builder
  */
-class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
+class InlineBlockPrivateFilesTest extends BrowserTestBase {
 
   use FileFieldCreationTrait;
   use TestFileCreationTrait;
+  use LayoutBuilderTestTrait;
+  use EnableLayoutBuilderTrait;
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
     'file',
+    'contextual',
+    'block_content',
+    'layout_builder',
+    'block',
+    'node',
+    'field_ui',
   ];
 
   /**
@@ -46,12 +58,14 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->setupTestContent();
 
     // Update the test node type to not create new revisions by default. This
     // allows testing for cases when a new revision is made and when it isn't.
     $node_type = NodeType::load('bundle_with_section_field');
     $node_type->setNewRevision(FALSE);
     $node_type->save();
+
     $field_settings = [
       'file_extensions' => 'txt',
       'uri_scheme' => 'private',
@@ -65,10 +79,9 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    */
   public function testPrivateFiles(): void {
     $assert_session = $this->assertSession();
-    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
-      ->enableLayoutBuilder()
-      ->setOverridable()
-      ->save();
+
+    $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
+    $this->enableLayoutBuilder($display);
 
     // Log in as user you can only configure layouts and access content.
     $this->drupalLogin($this->drupalCreateUser([
@@ -78,23 +91,19 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
       'create and edit custom blocks',
     ]));
     $this->drupalGet('node/1/layout');
-    // @todo Occasionally SQLite has database locks here. Waiting seems to
-    //   resolve it. https://www.drupal.org/project/drupal/issues/3055983
-    $assert_session->assertWaitOnAjaxRequest();
     $file = $this->createPrivateFile('drupal.txt');
 
     $file_real_path = $this->fileSystem->realpath($file->getFileUri());
     $this->assertFileExists($file_real_path);
-    $this->addInlineFileBlockToLayout('The file', $file);
-    $this->assertSaveLayout();
+    $node = Node::load(1);
+    $this->addInlineFileBlockToLayout($node, 'The file', $file);
 
     $this->drupalGet('node/1');
     $private_href1 = $this->getFileHrefAccessibleOnNode($file);
 
     // Remove the inline block with the private file.
     $this->drupalGet('node/1/layout');
-    $this->removeInlineBlockFromLayout();
-    $this->assertSaveLayout();
+    $this->removeInlineBlockViaUi('The file', 'overrides', 'node.1', 'content', 0);
 
     $this->drupalGet('node/1');
     $assert_session->pageTextNotContains($file->label());
@@ -109,8 +118,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     $file2 = $this->createPrivateFile('2ndFile.txt');
 
     $this->drupalGet('node/1/layout');
-    $this->addInlineFileBlockToLayout('Number2', $file2);
-    $this->assertSaveLayout();
+    $this->addInlineFileBlockToLayout($node, 'Number2', $file2);
 
     $this->drupalGet('node/1');
     $private_href2 = $this->getFileHrefAccessibleOnNode($file2);
@@ -120,7 +128,6 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     $file3 = $this->createPrivateFile('3rdFile.txt');
     $this->drupalGet('node/1/layout');
     $this->replaceFileInBlock($file3);
-    $this->assertSaveLayout();
 
     $this->drupalGet('node/1');
     $private_href3 = $this->getFileHrefAccessibleOnNode($file3);
@@ -140,10 +147,10 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     $assert_session->pageTextNotContains($this->getFileSecret($file3));
     $assert_session->pageTextContains('You are not authorized to access this page');
 
+    $node = Node::load(2);
     $this->drupalGet('node/2/layout');
     $file4 = $this->createPrivateFile('drupal_4.txt');
-    $this->addInlineFileBlockToLayout('The file', $file4);
-    $this->assertSaveLayout();
+    $this->addInlineFileBlockToLayout($node, 'The file', $file4);
 
     $this->drupalGet('node/2');
     $private_href4 = $this->getFileHrefAccessibleOnNode($file4);
@@ -154,8 +161,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     // The inline block will still be attached to the previous revision of the
     // node.
     $this->drupalGet('node/2/layout');
-    $this->removeInlineBlockFromLayout();
-    $this->assertSaveLayout();
+    $this->removeInlineBlockViaUi('The file', 'overrides', 'node.2', 'content', 0);
 
     // Ensure that since the user cannot view the previous revision of the node
     // they can not view the file which is only used on that revision.
@@ -170,38 +176,36 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    *   The file entity.
    */
   protected function replaceFileInBlock(FileInterface $file): void {
-    $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $this->clickContextualLink(static::INLINE_BLOCK_LOCATOR, 'Configure');
-    $assert_session->waitForElement('css', "#drupal-off-canvas input[value='Remove']");
-    $assert_session->assertWaitOnAjaxRequest();
-    $page->find('css', '#drupal-off-canvas')->pressButton('Remove');
-    $this->attachFileToBlockForm($file);
-    $page->pressButton('Update');
-    $this->assertDialogClosedAndTextVisible($file->label(), static::INLINE_BLOCK_LOCATOR);
+    $this->drupalGet('node/1/layout');
+    $uuid = $this->getComponentUuidFromPlaceholderLabel('Number2');
+    $this->drupalGet('layout_builder/update/block/overrides/node.1/0/content/' . $uuid);
+    $page->pressButton('Remove');
+    $page->attachFileToField("files[settings_block_form_field_file_0]", $this->fileSystem->realpath($file->getFileUri()));
+
+    $this->submitForm([], 'Update');
+    $this->submitForm([], 'Save layout');
+
   }
 
   /**
    * Adds an entity block with a file.
    *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node entity.
    * @param string $title
    *   The title field value.
    * @param \Drupal\file\Entity\File $file
    *   The file entity.
    */
-  protected function addInlineFileBlockToLayout($title, File $file): void {
-    $assert_session = $this->assertSession();
+  protected function addInlineFileBlockToLayout(NodeInterface $node, string $title, File $file): void {
     $page = $this->getSession()->getPage();
-    $page->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
-    $this->assertNotEmpty($assert_session->waitForLink('Create content block'));
-    $this->clickLink('Create content block');
-    $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->fieldValueEquals('Title', '');
+    $this->drupalGet(\sprintf('/layout_builder/add/block/overrides/node.%s/0/content/inline_block:basic', $node->id()));
     $page->findField('Title')->setValue($title);
-    $this->attachFileToBlockForm($file);
-    $page->pressButton('Add block');
-    $this->assertDialogClosedAndTextVisible($file->label(), static::INLINE_BLOCK_LOCATOR);
+    $page->attachFileToField("files[settings_block_form_field_file_0]", $this->fileSystem->realpath($file->getFileUri()));
+    $this->submitForm([], 'Add block');
+    $this->submitForm([], 'Save layout');
+
   }
 
   /**
@@ -260,21 +264,6 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    */
   protected function getFileSecret(FileInterface $file): string {
     return "The secret in {$file->label()}";
-  }
-
-  /**
-   * Attaches a file to the block edit form.
-   *
-   * @param \Drupal\file\FileInterface $file
-   *   The file to be attached.
-   */
-  protected function attachFileToBlockForm(FileInterface $file): void {
-    $assert_session = $this->assertSession();
-    $page = $this->getSession()->getPage();
-    $this->assertSession()->waitForElementVisible('named', ['field', 'files[settings_block_form_field_file_0]']);
-    $page->attachFileToField("files[settings_block_form_field_file_0]", $this->fileSystem->realpath($file->getFileUri()));
-    $assert_session->assertWaitOnAjaxRequest();
-    $this->assertNotEmpty($assert_session->waitForLink($file->label()));
   }
 
   /**
