@@ -95,24 +95,22 @@ class MigrationPluginManager extends BaseMigrationPluginManager {
 
     // Check if the migration has any of the tags that trigger source_module
     // enforcement.
-    $needs_source_module = in_array('migrate_drupal', $providers, TRUE)
-      && !empty(array_intersect(
-        $definition['migration_tags'],
-        $this->getEnforcedSourceModuleTags(),
-      ));
+    $has_enforced_tags = !empty(array_intersect(
+      $definition['migration_tags'],
+      $this->getEnforcedSourceModuleTags(),
+    ));
 
-    $has_source_module = !empty($definition['source']['source_module']);
-    if (!$has_source_module) {
-      // If source_module is not defined in the migration, then check for it in
-      // the source plugin.
-      $has_source_module = !empty($source_definition['source_module']);
-    }
+    // If source_module is not defined in the migration, then check for it in
+    // the source plugin.
+    $has_source_module = !empty($definition['source']['source_module'])
+      || !empty($source_definition['source_module']);
 
-    if ($needs_source_module && !$has_source_module) {
+    $requires_migrate_drupal = in_array('migrate_drupal', $providers, TRUE);
+    if ($requires_migrate_drupal && $has_enforced_tags && !$has_source_module) {
       throw new BadPluginDefinitionException($source_id, 'source_module');
     }
 
-    if (!$needs_source_module && $has_source_module) {
+    if (!$requires_migrate_drupal && !$has_enforced_tags && $has_source_module) {
       @trigger_error("Setting the source_module property without the expected tags is deprecated in drupal:11.2.0 and will trigger an error in drupal:12.0.0. See https://www.drupal.org/node/3306373", E_USER_DEPRECATED);
     }
   }
