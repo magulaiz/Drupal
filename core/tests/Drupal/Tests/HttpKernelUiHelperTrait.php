@@ -81,6 +81,7 @@ trait HttpKernelUiHelperTrait {
     $session->visit($path);
 
     $out = $session->getPage()->getContent();
+    $this->content = $out;
 
     if ($this->htmlOutputEnabled) {
       $html_output = 'GET request to: ' . $path;
