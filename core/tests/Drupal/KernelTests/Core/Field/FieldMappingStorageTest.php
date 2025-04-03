@@ -16,8 +16,16 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
  */
 class FieldMappingStorageTest extends EntityKernelTestBase {
 
+  /**
+   * The entity definition update manager.
+   *
+   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+   */
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -26,7 +34,7 @@ class FieldMappingStorageTest extends EntityKernelTestBase {
 
   public function testFieldMappingStorage(): void {
     $definitions['data_map'] = BaseFieldDefinition::create('mapped_properties_test')
-      ->setLabel(t('Data'))
+      ->setLabel('Data')
       ->setRequired(TRUE);
 
     $this->state->set('entity_test.additional_base_field_definitions', $definitions);
