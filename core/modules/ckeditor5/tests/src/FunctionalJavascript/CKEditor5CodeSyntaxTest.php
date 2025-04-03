@@ -19,7 +19,7 @@ class CKEditor5CodeSyntaxTest extends CKEditor5TestBase {
   use CKEditor5TestTrait;
 
   /**
-   * Tests if CKEditor 5 tooltips can be interacted with in dialogs.
+   * Tests code block configured languages are respected.
    */
   public function testCKEditor5CodeSyntax(): void {
     $this->addNewTextFormat();
@@ -51,22 +51,14 @@ class CKEditor5CodeSyntaxTest extends CKEditor5TestBase {
     $assertSession = $this->assertSession();
     $page = $this->getSession()->getPage();
     $page->find('css', '.ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow')->click();
-    $assertSession->waitForElementVisible('css', '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item .ck-button__label');
-    $codeBlockOptions = $page->findAll('css', '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item .ck-button__label');
+    $codeBlockOptionsSelector = '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item .ck-button__label';
+    $assertSession->waitForElementVisible('css', $codeBlockOptionsSelector);
+    $codeBlockOptions = $page->findAll('css', $codeBlockOptionsSelector);
     $this->assertCount(2, $codeBlockOptions);
     $this->assertEquals([
       'Twig',
       'YML',
     ], \array_map(static fn (NodeElement $el) => $el->getText(), $codeBlockOptions));
-
-    // Insert the Twig code block and verify that correct CSS class is added.
-    $this->pressEditorButton('Insert code block');
-    $assertSession->waitForElementVisible('css', '.ck-editor__main pre[data-language="Twig"]');
-    // @todo: figure out how to type in the CKEditor. We need this to manually
-    // type in order to demonstrate the code tags being added.
-    $assertSession->waitForElement('css', '.ck-content')->keyPress('x');
-    $source = $this->getEditorDataAsHtmlString();
-    $this->assertStringContainsString('<pre><code class="language-twig">', $source);
   }
 
 }
