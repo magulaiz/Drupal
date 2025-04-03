@@ -143,7 +143,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
       // If the db driver is mysqli, we do not need to run the update tests for
       // db dumps prior to 11.2 when the module was introduced.
-      if (Database::getConnection()->getProvider('mysqli') && $dumpVersion && version_compare($dumpVersion, '11.2.0', '<')) {
+      if (Database::getConnection()->getProvider() === 'mysqli' && $dumpVersion && version_compare($dumpVersion, '11.2.0', '<')) {
         $this->markTestSkipped("The mysqli driver was introduced in Drupal 11.2, skip update tests from database at version {$dumpVersion}");
       }
 
