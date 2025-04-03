@@ -27,7 +27,6 @@ class RemovePathKeyTest extends UpdatePathTestBase {
    * Tests the upgrade path for removing system.file.path key.
    */
   public function testRunUpdates(): void {
-    $connection = Database::getConnection();
     $this->assertIsArray(\Drupal::config('system.file')->get('path'));
     $this->runUpdates();
     $this->assertNull(\Drupal::config('system.file')->get('path'));
