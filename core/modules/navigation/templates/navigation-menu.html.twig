@@ -28,8 +28,8 @@
     {% set item_id = ('navigation-link--' ~ item.original_link.pluginId)|clean_unique_id %}
     {% if menu_level == 0 %}
       {% set icon = {
-        icon_id: item.url.options.icon.icon|default(item.class|clean_class),
-        icon_pack: item.url.options.icon.icon_pack|default('navigation'),
+        pack_id: item.url.options.icon.pack_id|default('navigation'),
+        icon_id: item.url.options.icon.icon_id|default(item.class|clean_class),
         settings: item.url.options.icon.settings|default({ class: 'toolbar-button__icon', size: 20 })
       } %}
       {% if item.below is empty %}

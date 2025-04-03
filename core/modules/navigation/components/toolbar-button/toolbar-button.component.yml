@@ -59,7 +59,7 @@ props:
       title: Icon
       type: object
       properties:
-        icon_pack:
+        pack_id:
           title: Icon Pack
           type: string
           default: navigation

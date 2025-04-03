@@ -6,8 +6,8 @@ navigation_test.navigation__custom_item:
   route_name: "<front>"
   options:
     icon:
-      icon_pack: navigation_test
-      icon: star
+      pack_id: navigation_test
+      icon_id: star
       settings:
         class: 'toolbar-button__icon foo'
         size: 25
@@ -20,7 +20,7 @@ navigation_test.navigation__default_item:
   route_name: "<front>"
   options:
     icon:
-      icon: pencil
+      icon_id: pencil
 
 navigation_test.navigation__no_icon:
   title: "Test No Icon"
