@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hk_c_test\Hook;
+namespace Drupal\ddd_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 
 /**
  * Hooks for testing ordering.
  */
-class CAlterHooks {
+class DAlterHooks {
 
   #[Hook('test_alter')]
   public function testAlter(array &$calls): void {

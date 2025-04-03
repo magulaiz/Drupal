@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hk_d_test\Hook;
+namespace Drupal\ddd_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Attribute\RemoveHook;
 use Drupal\Core\Hook\Attribute\ReOrderHook;
 use Drupal\Core\Hook\Order\Order;
-use Drupal\hk_c_test\Hook\CHooks;
+use Drupal\ccc_hook_test\Hook\CHooks;
 
 /**
  * Hooks for testing ordering.

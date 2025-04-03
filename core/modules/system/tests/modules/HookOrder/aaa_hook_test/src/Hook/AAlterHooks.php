@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hk_a_test\Hook;
+namespace Drupal\aaa_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Order\OrderAfter;
@@ -12,7 +12,7 @@ use Drupal\Core\Hook\Order\OrderAfter;
  */
 class AAlterHooks {
 
-  #[Hook('test_alter', order: new OrderAfter(modules: ['hk_c_test']))]
+  #[Hook('test_alter', order: new OrderAfter(modules: ['ccc_hook_test']))]
   public function testAlterAfterC(array &$calls): void {
     $calls[] = __METHOD__;
   }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hk_a_test\Hook;
+namespace Drupal\aaa_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Order\Order;
@@ -28,7 +28,7 @@ class AHooks {
     return __METHOD__;
   }
 
-  #[Hook('test_hook', order: new OrderAfter(modules: ['hk_b_test']))]
+  #[Hook('test_hook', order: new OrderAfter(modules: ['bbb_hook_test']))]
   public function testHookAfterB(): string {
     return __METHOD__;
   }

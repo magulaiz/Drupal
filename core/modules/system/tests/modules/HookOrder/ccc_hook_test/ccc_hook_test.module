@@ -10,27 +10,27 @@ declare(strict_types=1);
 /**
  * Implements hook_test_hook().
  */
-function hk_c_test_test_hook(): string {
+function ccc_hook_test_test_hook(): string {
   return __FUNCTION__;
 }
 
 /**
  * Implements hook_sparse_test_hook().
  */
-function hk_c_test_sparse_test_hook(): string {
+function ccc_hook_test_sparse_test_hook(): string {
   return __FUNCTION__;
 }
 
 /**
  * Implements hook_procedural_alter().
  */
-function hk_c_test_procedural_alter(array &$calls): void {
+function ccc_hook_test_procedural_alter(array &$calls): void {
   $calls[] = __FUNCTION__;
 }
 
 /**
  * Implements hook_procedural_subtype_alter().
  */
-function hk_c_test_procedural_subtype_alter(array &$calls): void {
+function ccc_hook_test_procedural_subtype_alter(array &$calls): void {
   $calls[] = __FUNCTION__;
 }

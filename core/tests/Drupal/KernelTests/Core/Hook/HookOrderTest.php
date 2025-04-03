@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Hook;
 
-use Drupal\hk_a_test\Hook\AHooks;
-use Drupal\hk_b_test\Hook\BHooks;
-use Drupal\hk_c_test\Hook\CHooks;
-use Drupal\hk_d_test\Hook\DHooks;
+use Drupal\aaa_hook_test\Hook\AHooks;
+use Drupal\bbb_hook_test\Hook\BHooks;
+use Drupal\ccc_hook_test\Hook\CHooks;
+use Drupal\ddd_hook_test\Hook\DHooks;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
@@ -23,10 +23,10 @@ class HookOrderTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'hk_a_test',
-    'hk_b_test',
-    'hk_c_test',
-    'hk_d_test',
+    'aaa_hook_test',
+    'bbb_hook_test',
+    'ccc_hook_test',
+    'ddd_hook_test',
   ];
 
   public function testHookOrder(): void {
@@ -35,14 +35,14 @@ class HookOrderTest extends KernelTestBase {
         CHooks::class . '::testHookReOrderFirst',
         CHooks::class . '::testHookFirst',
         AHooks::class . '::testHookFirst',
-        'hk_a_test_test_hook',
+        'aaa_hook_test_test_hook',
         AHooks::class . '::testHook',
-        'hk_b_test_test_hook',
+        'bbb_hook_test_test_hook',
         BHooks::class . '::testHook',
         AHooks::class . '::testHookAfterB',
-        'hk_c_test_test_hook',
+        'ccc_hook_test_test_hook',
         CHooks::class . '::testHook',
-        'hk_d_test_test_hook',
+        'ddd_hook_test_test_hook',
         DHooks::class . '::testHook',
         AHooks::class . '::testHookLast',
       ],
@@ -62,9 +62,9 @@ class HookOrderTest extends KernelTestBase {
       [
         // OOP and procedural listeners are correctly intermixed by module
         // order.
-        'hk_a_test_sparse_test_hook',
+        'aaa_hook_test_sparse_test_hook',
         BHooks::class . '::sparseTestHook',
-        'hk_c_test_sparse_test_hook',
+        'ccc_hook_test_sparse_test_hook',
         DHooks::class . '::sparseTestHook',
       ],
       \Drupal::moduleHandler()->invokeAll('sparse_test_hook'),

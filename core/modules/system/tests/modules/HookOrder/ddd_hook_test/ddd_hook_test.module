@@ -10,6 +10,6 @@ declare(strict_types=1);
 /**
  * Implements hook_test_hook().
  */
-function hk_d_test_test_hook(): string {
+function ddd_hook_test_test_hook(): string {
   return __FUNCTION__;
 }

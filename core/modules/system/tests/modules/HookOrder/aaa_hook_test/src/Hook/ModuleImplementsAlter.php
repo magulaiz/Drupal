@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hk_a_test\Hook;
+namespace Drupal\aaa_hook_test\Hook;
 
 /**
  * Contains a replaceable callback for hook_module_implements_alter().

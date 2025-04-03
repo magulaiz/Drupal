@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hk_b_test\Hook;
+namespace Drupal\bbb_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hk_c_test\Hook;
+namespace Drupal\ccc_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Order\Order;
@@ -25,7 +25,7 @@ class CHooks {
   /**
    * This implementation is reordered from elsewhere.
    *
-   * @see \Drupal\hk_d_test\Hook\DHooks
+   * @see \Drupal\ddd_hook_test\Hook\DHooks
    */
   #[Hook('test_hook')]
   public function testHookReOrderFirst(): string {
@@ -35,7 +35,7 @@ class CHooks {
   /**
    * This implementation is removed from elsewhere.
    *
-   * @see \Drupal\hk_d_test\Hook\DHooks
+   * @see \Drupal\ddd_hook_test\Hook\DHooks
    */
   #[Hook('test_hook')]
   public function testHookRemoved(): string {

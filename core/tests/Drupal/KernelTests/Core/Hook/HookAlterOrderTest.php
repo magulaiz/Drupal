@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Hook;
 
-use Drupal\hk_a_test\Hook\AAlterHooks;
-use Drupal\hk_a_test\Hook\ModuleImplementsAlter;
-use Drupal\hk_b_test\Hook\BAlterHooks;
-use Drupal\hk_c_test\Hook\CAlterHooks;
-use Drupal\hk_d_test\Hook\DAlterHooks;
+use Drupal\aaa_hook_test\Hook\AAlterHooks;
+use Drupal\aaa_hook_test\Hook\ModuleImplementsAlter;
+use Drupal\bbb_hook_test\Hook\BAlterHooks;
+use Drupal\ccc_hook_test\Hook\CAlterHooks;
+use Drupal\ddd_hook_test\Hook\DAlterHooks;
 use Drupal\KernelTests\KernelTestBase;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
@@ -24,41 +24,41 @@ class HookAlterOrderTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'hk_a_test',
-    'hk_b_test',
-    'hk_c_test',
-    'hk_d_test',
+    'aaa_hook_test',
+    'bbb_hook_test',
+    'ccc_hook_test',
+    'ddd_hook_test',
   ];
 
   public function testProceduralModuleImplementsAlterOrder(): void {
     $this->assertAlterCallOrder($main_unaltered = [
-      'hk_a_test_procedural_alter',
-      'hk_b_test_procedural_alter',
-      'hk_c_test_procedural_alter',
+      'aaa_hook_test_procedural_alter',
+      'bbb_hook_test_procedural_alter',
+      'ccc_hook_test_procedural_alter',
     ], 'procedural');
 
     $this->assertAlterCallOrder($sub_unaltered = [
-      'hk_a_test_procedural_subtype_alter',
-      'hk_b_test_procedural_subtype_alter',
-      'hk_c_test_procedural_subtype_alter',
+      'aaa_hook_test_procedural_subtype_alter',
+      'bbb_hook_test_procedural_subtype_alter',
+      'ccc_hook_test_procedural_subtype_alter',
     ], 'procedural_subtype');
 
     $this->assertAlterCallOrder($combined_unaltered = [
-      'hk_a_test_procedural_alter',
-      'hk_a_test_procedural_subtype_alter',
-      'hk_b_test_procedural_alter',
-      'hk_b_test_procedural_subtype_alter',
-      'hk_c_test_procedural_alter',
-      'hk_c_test_procedural_subtype_alter',
+      'aaa_hook_test_procedural_alter',
+      'aaa_hook_test_procedural_subtype_alter',
+      'bbb_hook_test_procedural_alter',
+      'bbb_hook_test_procedural_subtype_alter',
+      'ccc_hook_test_procedural_alter',
+      'ccc_hook_test_procedural_subtype_alter',
     ], ['procedural', 'procedural_subtype']);
 
     $move_b_down = function (array &$implementations): void {
       // Move B to the end, no matter which hook.
-      $group = $implementations['hk_b_test'];
-      unset($implementations['hk_b_test']);
-      $implementations['hk_b_test'] = $group;
+      $group = $implementations['bbb_hook_test'];
+      unset($implementations['bbb_hook_test']);
+      $implementations['bbb_hook_test'] = $group;
     };
-    $modules = ['hk_a_test', 'hk_b_test', 'hk_c_test'];
+    $modules = ['aaa_hook_test', 'bbb_hook_test', 'ccc_hook_test'];
 
     // Test with module B moved to the end for both hooks.
     ModuleImplementsAlter::set(
@@ -73,27 +73,27 @@ class HookAlterOrderTest extends KernelTestBase {
     \Drupal::service('kernel')->rebuildContainer();
 
     $this->assertAlterCallOrder($main_altered = [
-      'hk_a_test_procedural_alter',
-      'hk_c_test_procedural_alter',
+      'aaa_hook_test_procedural_alter',
+      'ccc_hook_test_procedural_alter',
       // The implementation of B has been moved.
-      'hk_b_test_procedural_alter',
+      'bbb_hook_test_procedural_alter',
     ], 'procedural');
 
     $this->assertAlterCallOrder($sub_altered = [
-      'hk_a_test_procedural_subtype_alter',
-      'hk_c_test_procedural_subtype_alter',
+      'aaa_hook_test_procedural_subtype_alter',
+      'ccc_hook_test_procedural_subtype_alter',
       // The implementation of B has been moved.
-      'hk_b_test_procedural_subtype_alter',
+      'bbb_hook_test_procedural_subtype_alter',
     ], 'procedural_subtype');
 
     $this->assertAlterCallOrder($combined_altered = [
-      'hk_a_test_procedural_alter',
-      'hk_a_test_procedural_subtype_alter',
-      'hk_c_test_procedural_alter',
-      'hk_c_test_procedural_subtype_alter',
+      'aaa_hook_test_procedural_alter',
+      'aaa_hook_test_procedural_subtype_alter',
+      'ccc_hook_test_procedural_alter',
+      'ccc_hook_test_procedural_subtype_alter',
       // The implementation of B has been moved.
-      'hk_b_test_procedural_alter',
-      'hk_b_test_procedural_subtype_alter',
+      'bbb_hook_test_procedural_alter',
+      'bbb_hook_test_procedural_subtype_alter',
     ], ['procedural', 'procedural_subtype']);
 
     // If the altered hook is not the first one, implementations are back in
@@ -142,7 +142,7 @@ class HookAlterOrderTest extends KernelTestBase {
   }
 
   public function testProceduralOrderSideEffect(): void {
-    $this->enableModules(['hk_extra_test']);
+    $this->enableModules(['eee_hook_test']);
     // The previous test should behave exactly the same.
     $this->testProceduralModuleImplementsAlterOrder();
   }
@@ -172,7 +172,7 @@ class HookAlterOrderTest extends KernelTestBase {
       DAlterHooks::class . '::testSubtypeAlter',
     ], ['test', 'test_subtype']);
 
-    $this->disableModules(['hk_b_test']);
+    $this->disableModules(['bbb_hook_test']);
 
     $this->assertAlterCallOrder([
       CAlterHooks::class . '::testAlter',
