@@ -17,12 +17,12 @@
     html_tag: 'a',
     attributes: create_attribute().setAttribute('href', link['#url']|render|default(null)),
     modifiers: ['primary'],
-    icon: featured_page_action.icon,
+    icon: { icon_id: featured_page_action.icon },
   } only %}
 {% endfor %}
 
 {% include 'navigation:toolbar-button' with {
-  icon: 'dots',
+  icon: { icon_id: 'dots' },
   action: 'More actions'|t,
   attributes: create_attribute(
     {
