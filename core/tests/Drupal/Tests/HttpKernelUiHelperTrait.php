@@ -10,7 +10,6 @@ use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
 use Drupal\Core\Url;
-use Drupal\Tests\WebAssert;
 use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
 /**

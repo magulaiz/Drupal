@@ -106,7 +106,7 @@ trait BrowserHtmlDebugTrait {
    *
    * @see \Drupal\Tests\Listeners\VerbosePrinter::printResult()
    *
-   * @return void
+   * @phpstan-ignore missingType.return
    */
   protected function htmlOutput($message = NULL) {
     if (!$this->htmlOutputEnabled) {
@@ -126,7 +126,7 @@ trait BrowserHtmlDebugTrait {
   /**
    * Creates the directory to store browser output.
    *
-   * @return void
+   * @phpstan-ignore missingType.return
    */
   protected function initBrowserOutputFile() {
     $browserOutputFile = getenv('BROWSERTEST_OUTPUT_FILE');
