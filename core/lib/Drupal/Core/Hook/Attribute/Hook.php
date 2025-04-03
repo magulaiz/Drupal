@@ -12,7 +12,6 @@ use Drupal\Core\Hook\Order\OrderInterface;
  * Hook implementations in classes need to be marked with this attribute,
  * using one of the following techniques:
  * - On a method, use this attribute with the hook name:
- *
  *   @code
  *   #[Hook('user_cancel')]
  *   public function userCancel(...) {}
@@ -34,13 +33,13 @@ use Drupal\Core\Hook\Order\OrderInterface;
  *   @endcode
  *
  * Ordering hook implementations can be done by using the order parameter.
- *
- * @see https://www.drupal.org/node/3493962
+ * See Drupal\Core\Hook\Order\OrderInterface for more information.
  *
  * Removing hook implementations can be done by using the attribute
  * \Drupal\Core\Hook\Attribute\RemoveHook.
  *
- * @see https://www.drupal.org/node/3496786
+ * Ordering hook implementations in other modules can be done by using the
+ * attribute \Drupal\Core\Hook\Attribute\ReOrderHook.
  *
  * Classes that use this annotation on the class or on their methods are
  * automatically registered as autowired services with the class name as the

@@ -7,9 +7,9 @@ namespace Drupal\Core\Hook\Attribute;
 /**
  * Prevents procedural hook_module_implements_alter from executing.
  *
- * This allows contrib and core to maintain legacy hook_module_implements_alter
- * alongside the new attribute-based ordering. This means that a contrib module
- * can simultaneously support Drupal 11.2 and older versions of Drupal.
+ * This allows the use of the legacy hook_module_implements_alter alongside the
+ * new attribute-based ordering.Providing support for versions of Drupal older
+ * than 11.2.0.
  *
  * Marking hook_module_implements_alter as #LegacyModuleImplementsAlter will
  * prevent hook_module_implements_alter from running when attribute-based
@@ -18,7 +18,7 @@ namespace Drupal\Core\Hook\Attribute;
  * On older versions of Drupal which are not aware of attribute-based ordering,
  * only the legacy hook implementation is executed.
  *
- * For more information, see https://www.drupal.org/node/3496788.
+ * @see https://www.drupal.org/node/3496788.
  *
  * @internal
  */

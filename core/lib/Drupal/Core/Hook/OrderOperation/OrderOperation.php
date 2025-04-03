@@ -10,7 +10,7 @@ namespace Drupal\Core\Hook\OrderOperation;
 abstract class OrderOperation {
 
   /**
-   * Packs an order operation object.
+   * Converts the operation to a structure that can be stored in the container.
    *
    * @return array
    *   Packed operation.
@@ -24,7 +24,7 @@ abstract class OrderOperation {
   }
 
   /**
-   * Unpacks an order operation object.
+   * Converts the stored operation to objects that can apply ordering rules.
    *
    * @param array $packed_operation
    *   Packed operation.

@@ -139,9 +139,9 @@ class HookCollectorPass implements CompilerPassInterface {
     $container->register(ProceduralCall::class, ProceduralCall::class)
       ->addArgument($this->includes);
 
-    // Gather includes for each hook_hook_info group.
-    // We store this in $groupIncludes so moduleHandler can ensure the files
-    // are included runtime when the hooks are invoked.
+    // Gather includes for each hook_hook_info group. Store this in
+    // $groupIncludes so the module handler includes the files at runtime when
+    // the hooks are invoked.
     $groupIncludes = [];
     foreach ($this->hookInfo as $function) {
       foreach ($function() as $hook => $info) {
@@ -341,8 +341,8 @@ class HookCollectorPass implements CompilerPassInterface {
    * @internal
    *   This method is only used by ModuleHandler.
    *
-   * @todo Pass only $container when ModuleHandler::add() is removed
-   * @see https://www.drupal.org/project/drupal/issues/3481778
+   * @todo Pass only $container when ModuleHandler::add() is removed in Drupal
+   * 12.0.0.
    */
   public static function collectAllHookImplementations(array $module_list, array $skipProceduralModules = []): static {
     $modules = array_keys($module_list);
@@ -511,8 +511,7 @@ class HookCollectorPass implements CompilerPassInterface {
   /**
    * This method is only to be used by ModuleHandler.
    *
-   * @todo remove when ModuleHandler::add() is removed.
-   * @see https://www.drupal.org/project/drupal/issues/3481778
+   * @todo Remove when ModuleHandler::add() is removed in Drupal 12.0.0.
    *
    * @internal
    */
@@ -528,8 +527,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * @return array<string, array<string, array<class-string, array<string, string>>>>
    *   Hook implementation method names keyed by hook, module, class and method.
    *
-   * @todo remove when ModuleHandler::add() is removed.
-   *   See https://www.drupal.org/project/drupal/issues/3481778
+   * @todo Remove when ModuleHandler::add() is removed in Drupal 12.0.0.
    *
    * @internal
    */

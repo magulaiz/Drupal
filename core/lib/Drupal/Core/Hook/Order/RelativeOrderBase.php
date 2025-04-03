@@ -16,7 +16,7 @@ abstract readonly class RelativeOrderBase implements OrderInterface {
    * Constructor.
    *
    * @param list<string> $modules
-   *   A list of modules the implementations of which to order against.
+   *   A list of modules the implementations should order against.
    * @param list<array{class-string, string}> $classesAndMethods
    *   A list of implementations to order against, as [$class, $method].
    */
@@ -33,7 +33,7 @@ abstract readonly class RelativeOrderBase implements OrderInterface {
    * Specifies the ordering direction.
    *
    * @return bool
-   *   TRUE, if the ordered implementation should be inserted _after_ the
+   *   TRUE, if the ordered implementation should be inserted after the
    *   implementations specified in the constructor.
    */
   abstract protected function isAfter(): bool;

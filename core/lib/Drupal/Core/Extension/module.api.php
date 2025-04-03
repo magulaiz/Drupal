@@ -94,13 +94,10 @@ function hook_hook_info(): array {
 /**
  * Alter the registry of modules implementing a hook.
  *
- * This hook will be removed in 12.0.0.
- * It has been intentionally not deprecated because custom code and contributed
- * modules will still need to maintain implementations with the
- * #[LegacyModuleImplementsAlter] attribute in order to support drupal versions
- * older than 11.2.0.
- *
- * @link https://www.drupal.org/node/3496788
+ * This hook will be removed in 12.0.0. It is not deprecated in order to
+ * support the "#[LegacyModuleImplementsAlter]" attribute, used prior to Drupal
+ * 11.2.0.
+ * See https://www.drupal.org/node/3496788.
  *
  *
  * Only procedural implementations are supported for this hook.

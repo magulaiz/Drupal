@@ -490,11 +490,10 @@ class ModuleHandler implements ModuleHandlerInterface {
       return [];
     }
     if (array_keys($listener_lists) === [0]) {
-      // Only the main hook has implementations.
+      // Only the first hook has implementations.
       return $listener_lists[0];
     }
-    // Collect the lists from each hook.
-    // Group the listeners by module.
+    // Collect the lists from each hook and group the listeners by module.
     $listeners_by_identifier = [];
     $modules_by_identifier = [];
     $identifiers_by_module = [];
@@ -522,8 +521,9 @@ class ModuleHandler implements ModuleHandlerInterface {
         $identifiers_by_module[$module][] = $identifier;
       }
     }
-    // Order the modules by module list order and using
-    // hook_module_implements_alter().
+    // First we get the the modules in moduleList order, this order is module
+    // weight then alphabetical. Then we apply legacy ordering using
+    // hook_module_implements_alter(). Finally we order using order attributes.
     $modules = array_keys($identifiers_by_module);
     $modules = $this->reOrderModulesForAlter($modules, $hooks[0]);
     // Create a flat list of identifiers, using the new module order.
@@ -575,12 +575,13 @@ class ModuleHandler implements ModuleHandlerInterface {
       '@hooks' => "['" . implode("', '", $hooks) . "']",
     ];
     if ($other_module !== $module) {
-      // There is conflicting information about on behalf of which module
-      // this implementation is registered. At this point we cannot even
+      // There is conflicting information about which module this
+      // implementation is registered for. At this point we cannot even
       // be sure if the module is the one from the main hook or the extra
-      // hook.
-      // The module is mostly irrelevant for alter hooks, except for its
-      // impact on ordering.
+      // hook. This means that ordering may not work as expected and it is
+      // unclear if the intention is to execute the code multiple times. This
+      // can be resolved by using a separate method for alter hooks that
+      // implement on behalf of other modules.
       trigger_error((string) new FormattableMarkup(
         'The @implementation is registered for more than one of the alter hooks @hooks from the current ->alter() call, on behalf of different modules @module and @other_module. Only one instance will be part of the implementation list for this hook combination. For the purpose of ordering, the module @module will be used.',
         [

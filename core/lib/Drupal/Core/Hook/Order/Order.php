@@ -12,10 +12,10 @@ use Drupal\Core\Hook\OrderOperation\OrderOperation;
  */
 enum Order: int implements OrderInterface {
 
-  // This implementation should fire first.
+  // This implementation should execute first.
   case First = 1;
 
-  // This implementation should fire last.
+  // This implementation should execute last.
   case Last = 0;
 
   /**
