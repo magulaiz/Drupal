@@ -29,7 +29,6 @@ class CKEditor5CodeSyntaxTest extends CKEditor5TestBase {
       'toolbar' => [
         'items' => [
           'codeBlock',
-          'sourceEditing',
         ],
       ],
       'plugins' => [
@@ -38,9 +37,6 @@ class CKEditor5CodeSyntaxTest extends CKEditor5TestBase {
             ['label' => 'Twig', 'language' => 'twig'],
             ['label' => 'YML', 'language' => 'yml'],
           ],
-        ],
-        'ckeditor5_sourceEditing' => [
-          'allowed_tags' => [],
         ],
       ],
     ])->save();
