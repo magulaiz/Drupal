@@ -266,7 +266,6 @@ class InlineBlockTest extends BrowserTestBase {
     $this->drupalGet('node/1/layout');
     $assert_session->pageTextContains('The DEFAULT block body');
 
-    $uuid = $this->getComponentUuidFromPlaceholderLabel('Block title');
     $this->removeInlineBlockViaUi('Block title', 'overrides', 'node.1', 'content', 0);
     $cron->run();
     // Ensure entity block is not deleted because it is needed in revision.
