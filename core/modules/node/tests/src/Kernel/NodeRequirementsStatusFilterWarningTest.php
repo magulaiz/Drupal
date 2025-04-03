@@ -178,7 +178,7 @@ class NodeRequirementsStatusFilterWarningTest extends KernelTestBase {
   }
 
   /**
-   * Tests description when Views UI is enabled but user cam edit views.
+   * Tests description when Views UI is enabled but user can edit views.
    */
   public function testDescriptionWithViewsUiEnabledWithUserHavingEditViewDisplayAccess(): void {
     $this->enableModules(['views_ui']);
