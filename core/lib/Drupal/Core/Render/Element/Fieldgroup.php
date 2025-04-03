@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Render\Attribute\RenderElement;
+
 /**
  * Provides a render element for a group of form elements.
  *
@@ -13,15 +15,23 @@ namespace Drupal\Core\Render\Element;
  *
  * @see \Drupal\Core\Render\Element\Fieldset
  * @see \Drupal\Core\Render\Element\Details
- *
- * @RenderElement("fieldgroup")
  */
+#[RenderElement('fieldgroup')]
 class Fieldgroup extends Fieldset {
 
   public function getInfo() {
-    return [
-      '#attributes' => ['class' => ['fieldgroup']],
-    ] + parent::getInfo();
+    $info = parent::getInfo();
+    $info['#attributes']['class'] = ['fieldgroup'];
+    $info['#pre_render'][] = [static::class, 'preRenderAttachments'];
+    return $info;
+  }
+
+  /**
+   * Adds the fieldgroup library.
+   */
+  public static function preRenderAttachments($element): array {
+    $element['#attached']['library'][] = 'core/drupal.fieldgroup';
+    return $element;
   }
 
 }
