@@ -375,7 +375,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       '#variant' => 'blue',
       '#props' => [
         'text' => 'Test link',
-        'variant' => 'red'
+        'variant' => 'red',
       ],
     ];
     $crawler = $this->renderComponentRenderArray($build);
