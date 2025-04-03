@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_order_last_alphabetically\Hook;
+namespace Drupal\ggg_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\Order\OrderBefore;
 
 /**
  * Hook implementations for verifying ordering hooks by attributes.
@@ -19,13 +18,14 @@ use Drupal\Core\Hook\Order\OrderBefore;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookBefore {
+class TestHookAfter {
 
   /**
-   * This pair tests OrderBefore.
+   * This pair tests OrderAfter.
    */
-  #[Hook('custom_hook_test_hook_before', order: new OrderBefore(['hook_order_first_alphabetically']))]
-  public function hookBefore(): string {
+  #[Hook('custom_hook_test_hook_after')]
+  public function hookAfter(): string {
+    // This should be run before.
     return __METHOD__;
   }
 

@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_second_order_last_alphabetically\Hook;
+namespace Drupal\fff_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Order\OrderAfter;
 
 /**
  * Hook implementations for verifying ordering hooks by attributes.
@@ -18,15 +19,19 @@ use Drupal\Core\Hook\Attribute\Hook;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookAfterClassMethod {
+class TestHookOrderExtraTypes {
 
   /**
-   * This pair tests OrderAfter with a passed class and method.
+   * This pair tests OrderAfter with ExtraTypes.
    */
-  #[Hook('custom_hook_test_hook_after_class_method')]
-  public static function hookAfterClassMethod(): string {
-    // This should be run first since another hook overrides the natural order.
-    return __METHOD__;
+  #[Hook('custom_hook_extra_types1_alter',
+    order: new OrderAfter(
+      modules: ['ggg_hook_test'],
+    )
+  )]
+  public function customHookExtraTypes(array &$calls): void {
+    // This should be run after.
+    $calls[] = __METHOD__;
   }
 
 }

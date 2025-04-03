@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_order_last_alphabetically\Hook;
+namespace Drupal\ggg_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -18,14 +18,13 @@ use Drupal\Core\Hook\Attribute\Hook;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookAfter {
+class TestHookLast {
 
   /**
-   * This pair tests OrderAfter.
+   * This pair tests OrderLast.
    */
-  #[Hook('custom_hook_test_hook_after')]
-  public function hookAfter(): string {
-    // This should be run before.
+  #[Hook('custom_hook_test_hook_last')]
+  public function hookLast(): string {
     return __METHOD__;
   }
 

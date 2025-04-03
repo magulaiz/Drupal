@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_order_last_alphabetically\Hook;
+namespace Drupal\ggg_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Hook\Order\Order;
 
 /**
  * Hook implementations for verifying ordering hooks by attributes.
@@ -18,13 +19,13 @@ use Drupal\Core\Hook\Attribute\Hook;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookLast {
+class TestHookFirst {
 
   /**
-   * This pair tests OrderLast.
+   * This pair tests OrderFirst.
    */
-  #[Hook('custom_hook_test_hook_last')]
-  public function hookLast(): string {
+  #[Hook('custom_hook_test_hook_first', order: Order::First)]
+  public function hookFirst(): string {
     return __METHOD__;
   }
 

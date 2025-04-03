@@ -160,14 +160,14 @@ class HookCollectorPassTest extends KernelTestBase {
    */
   public function testHookFirst(): void {
     $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['hook_order_first_alphabetically']);
-    $module_installer->install(['hook_order_last_alphabetically']);
+    $module_installer->install(['fff_hook_test']);
+    $module_installer->install(['ggg_hook_test']);
     $module_handler = $this->container->get('module_handler');
     // Last alphabetically uses the Order::First enum to place it before
     // the implementation it would naturally come after.
     $expected_calls = [
-      'Drupal\hook_order_last_alphabetically\Hook\TestHookFirst::hookFirst',
-      'Drupal\hook_order_first_alphabetically\Hook\TestHookFirst::hookFirst',
+      'Drupal\ggg_hook_test\Hook\TestHookFirst::hookFirst',
+      'Drupal\fff_hook_test\Hook\TestHookFirst::hookFirst',
     ];
     $calls = $module_handler->invokeAll('custom_hook_test_hook_first');
     $this->assertEquals($expected_calls, $calls);
@@ -178,14 +178,14 @@ class HookCollectorPassTest extends KernelTestBase {
    */
   public function testHookAfter(): void {
     $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['hook_order_first_alphabetically']);
-    $module_installer->install(['hook_order_last_alphabetically']);
+    $module_installer->install(['fff_hook_test']);
+    $module_installer->install(['ggg_hook_test']);
     $module_handler = $this->container->get('module_handler');
     // First alphabetically uses the OrderAfter to place it after
     // the implementation it would naturally come before.
     $expected_calls = [
-      'Drupal\hook_order_last_alphabetically\Hook\TestHookAfter::hookAfter',
-      'Drupal\hook_order_first_alphabetically\Hook\TestHookAfter::hookAfter',
+      'Drupal\ggg_hook_test\Hook\TestHookAfter::hookAfter',
+      'Drupal\fff_hook_test\Hook\TestHookAfter::hookAfter',
     ];
     $calls = $module_handler->invokeAll('custom_hook_test_hook_after');
     $this->assertEquals($expected_calls, $calls);
@@ -196,14 +196,14 @@ class HookCollectorPassTest extends KernelTestBase {
    */
   public function testHookAfterClassMethod(): void {
     $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['hook_second_order_first_alphabetically']);
-    $module_installer->install(['hook_second_order_last_alphabetically']);
+    $module_installer->install(['hhh_hook_test']);
+    $module_installer->install(['iii_hook_test']);
     $module_handler = $this->container->get('module_handler');
     // First alphabetically uses the OrderAfter to place it after
     // the implementation it would naturally come before using call and method.
     $expected_calls = [
-      'Drupal\hook_second_order_last_alphabetically\Hook\TestHookAfterClassMethod::hookAfterClassMethod',
-      'Drupal\hook_second_order_first_alphabetically\Hook\TestHookAfterClassMethod::hookAfterClassMethod',
+      'Drupal\iii_hook_test\Hook\TestHookAfterClassMethod::hookAfterClassMethod',
+      'Drupal\hhh_hook_test\Hook\TestHookAfterClassMethod::hookAfterClassMethod',
     ];
     $calls = $module_handler->invokeAll('custom_hook_test_hook_after_class_method');
     $this->assertEquals($expected_calls, $calls);
@@ -214,14 +214,14 @@ class HookCollectorPassTest extends KernelTestBase {
    */
   public function testHookBefore(): void {
     $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['hook_order_first_alphabetically']);
-    $module_installer->install(['hook_order_last_alphabetically']);
+    $module_installer->install(['fff_hook_test']);
+    $module_installer->install(['ggg_hook_test']);
     $module_handler = $this->container->get('module_handler');
     // First alphabetically uses the OrderBefore to place it before
     // the implementation it would naturally come after.
     $expected_calls = [
-      'Drupal\hook_order_last_alphabetically\Hook\TestHookBefore::hookBefore',
-      'Drupal\hook_order_first_alphabetically\Hook\TestHookBefore::hookBefore',
+      'Drupal\ggg_hook_test\Hook\TestHookBefore::hookBefore',
+      'Drupal\fff_hook_test\Hook\TestHookBefore::hookBefore',
     ];
     $calls = $module_handler->invokeAll('custom_hook_test_hook_before');
     $this->assertEquals($expected_calls, $calls);
@@ -232,14 +232,14 @@ class HookCollectorPassTest extends KernelTestBase {
    */
   public function testHookOrderExtraTypes(): void {
     $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['hook_order_first_alphabetically']);
-    $module_installer->install(['hook_order_last_alphabetically']);
+    $module_installer->install(['fff_hook_test']);
+    $module_installer->install(['ggg_hook_test']);
     $module_handler = $this->container->get('module_handler');
     // First alphabetically uses the OrderAfter to place it after
     // the implementation it would naturally come before.
     $expected_calls = [
-      'Drupal\hook_order_last_alphabetically\Hook\TestHookOrderExtraTypes::customHookExtraTypes',
-      'Drupal\hook_order_first_alphabetically\Hook\TestHookOrderExtraTypes::customHookExtraTypes',
+      'Drupal\ggg_hook_test\Hook\TestHookOrderExtraTypes::customHookExtraTypes',
+      'Drupal\fff_hook_test\Hook\TestHookOrderExtraTypes::customHookExtraTypes',
     ];
     $hooks = [
       'custom_hook',
@@ -256,14 +256,14 @@ class HookCollectorPassTest extends KernelTestBase {
    */
   public function testHookLast(): void {
     $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['hook_order_first_alphabetically']);
-    $module_installer->install(['hook_order_last_alphabetically']);
+    $module_installer->install(['fff_hook_test']);
+    $module_installer->install(['ggg_hook_test']);
     $module_handler = $this->container->get('module_handler');
     // First alphabetically uses the OrderBefore to place it before
     // the implementation it would naturally come after.
     $expected_calls = [
-      'Drupal\hook_order_last_alphabetically\Hook\TestHookLast::hookLast',
-      'Drupal\hook_order_first_alphabetically\Hook\TestHookLast::hookLast',
+      'Drupal\ggg_hook_test\Hook\TestHookLast::hookLast',
+      'Drupal\fff_hook_test\Hook\TestHookLast::hookLast',
     ];
     $calls = $module_handler->invokeAll('custom_hook_test_hook_last');
     $this->assertEquals($expected_calls, $calls);
@@ -290,12 +290,12 @@ class HookCollectorPassTest extends KernelTestBase {
    */
   public function testHookOverride(): void {
     $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['hook_order_first_alphabetically']);
-    $module_installer->install(['hook_order_last_alphabetically']);
+    $module_installer->install(['fff_hook_test']);
+    $module_installer->install(['ggg_hook_test']);
     $module_handler = $this->container->get('module_handler');
     $expected_calls = [
-      'Drupal\hook_order_first_alphabetically\Hook\TestHookReOrderHookFirst::customHookOverride',
-      'Drupal\hook_order_last_alphabetically\Hook\TestHookReOrderHookLast::customHookOverride',
+      'Drupal\fff_hook_test\Hook\TestHookReOrderHookFirst::customHookOverride',
+      'Drupal\ggg_hook_test\Hook\TestHookReOrderHookLast::customHookOverride',
     ];
     $calls = $module_handler->invokeAll('custom_hook_override');
     $this->assertEquals($expected_calls, $calls);

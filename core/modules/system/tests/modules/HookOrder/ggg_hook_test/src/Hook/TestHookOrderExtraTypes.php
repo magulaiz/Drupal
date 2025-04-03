@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_order_last_alphabetically\Hook;
+namespace Drupal\ggg_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\Order\Order;
 
 /**
  * Hook implementations for verifying ordering hooks by attributes.
@@ -19,18 +18,14 @@ use Drupal\Core\Hook\Order\Order;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookReOrderHookLast {
+class TestHookOrderExtraTypes {
 
   /**
-   * This pair tests ReOrderHook.
+   * This pair tests OrderAfter with ExtraTypes.
    */
-  #[Hook('custom_hook_override', order: Order::First)]
-  public function customHookOverride(): string {
-    // This normally would run second.
-    // We override that order here with Order::First.
-    // We override, that order in hook_order_first_alphabetically with
-    // ReOrderHook.
-    return __METHOD__;
+  #[Hook('custom_hook_extra_types2_alter')]
+  public function customHookExtraTypes(array &$calls): void {
+    $calls[] = __METHOD__;
   }
 
 }

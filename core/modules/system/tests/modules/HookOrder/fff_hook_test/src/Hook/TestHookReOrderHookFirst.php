@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_order_first_alphabetically\Hook;
+namespace Drupal\fff_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Order\OrderAfter;
 use Drupal\Core\Hook\Attribute\ReOrderHook;
-use Drupal\hook_order_last_alphabetically\Hook\TestHookReOrderHookLast;
+use Drupal\ggg_hook_test\Hook\TestHookReOrderHookLast;
 
 /**
  * Hook implementations for verifying ordering hooks by attributes.

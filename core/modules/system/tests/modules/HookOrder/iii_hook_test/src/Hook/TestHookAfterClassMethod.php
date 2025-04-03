@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_order_last_alphabetically\Hook;
+namespace Drupal\iii_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 
@@ -18,14 +18,15 @@ use Drupal\Core\Hook\Attribute\Hook;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookOrderExtraTypes {
+class TestHookAfterClassMethod {
 
   /**
-   * This pair tests OrderAfter with ExtraTypes.
+   * This pair tests OrderAfter with a passed class and method.
    */
-  #[Hook('custom_hook_extra_types2_alter')]
-  public function customHookExtraTypes(array &$calls): void {
-    $calls[] = __METHOD__;
+  #[Hook('custom_hook_test_hook_after_class_method')]
+  public static function hookAfterClassMethod(): string {
+    // This should be run first since another hook overrides the natural order.
+    return __METHOD__;
   }
 
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_order_first_alphabetically\Hook;
+namespace Drupal\ggg_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\Order\Order;
@@ -19,14 +19,17 @@ use Drupal\Core\Hook\Order\Order;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookLast {
+class TestHookReOrderHookLast {
 
   /**
-   * This pair tests OrderLast.
+   * This pair tests ReOrderHook.
    */
-  #[Hook('custom_hook_test_hook_last', order: Order::Last)]
-  public function hookLast(): string {
-    // This should be run after.
+  #[Hook('custom_hook_override', order: Order::First)]
+  public function customHookOverride(): string {
+    // This normally would run second.
+    // We override that order here with Order::First.
+    // We override, that order in fff_hook_test with
+    // ReOrderHook.
     return __METHOD__;
   }
 

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_order_first_alphabetically\Hook;
+namespace Drupal\fff_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\Order\OrderAfter;
 
 /**
  * Hook implementations for verifying ordering hooks by attributes.
@@ -19,13 +18,14 @@ use Drupal\Core\Hook\Order\OrderAfter;
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookAfter {
+class TestHookBefore {
 
   /**
-   * This pair tests OrderAfter.
+   * This pair tests OrderBefore.
    */
-  #[Hook('custom_hook_test_hook_after', order: new OrderAfter(['hook_order_last_alphabetically']))]
-  public function hookAfter(): string {
+  #[Hook('custom_hook_test_hook_before')]
+  public function hookBefore(): string {
+    // This should be run second, there is another hook reordering before this.
     return __METHOD__;
   }
 

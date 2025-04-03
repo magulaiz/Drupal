@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\hook_second_order_first_alphabetically\Hook;
+namespace Drupal\ggg_hook_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-use Drupal\Core\Hook\Order\OrderAfter;
-use Drupal\hook_second_order_last_alphabetically\Hook\TestHookAfterClassMethod as TestHookAfterClassMethodForAfter;
+use Drupal\Core\Hook\Order\OrderBefore;
 
 /**
  * Hook implementations for verifying ordering hooks by attributes.
@@ -20,17 +19,13 @@ use Drupal\hook_second_order_last_alphabetically\Hook\TestHookAfterClassMethod a
  *
  * Each method pair tests one hook ordering permutation.
  */
-class TestHookAfterClassMethod {
+class TestHookBefore {
 
   /**
-   * This pair tests OrderAfter with a passed class and method.
+   * This pair tests OrderBefore.
    */
-  #[Hook('custom_hook_test_hook_after_class_method',
-    order: new OrderAfter(
-      classesAndMethods: [[TestHookAfterClassMethodForAfter::class, 'hookAfterClassMethod']],
-    )
-  )]
-  public static function hookAfterClassMethod(): string {
+  #[Hook('custom_hook_test_hook_before', order: new OrderBefore(['fff_hook_test']))]
+  public function hookBefore(): string {
     return __METHOD__;
   }
 
