@@ -25,17 +25,15 @@ class HtmlConstraintTest extends KernelTestBase {
    *   The html string to test.
    * @param array $errors
    *   An array of errors to expect.
-   * @param bool $document
-   *   True if this is a full html document, false if it is a fragment.
+   * @param string $mode
+   *   Set mode to document or fragment.
    *
    * @dataProvider htmlConstraintDataProvider
    */
-  public function testHtmlConstraint(string $html, array $errors, bool $document = FALSE): void {
+  public function testHtmlConstraint(string $html, array $errors, string $mode = 'fragment'): void {
     $definition = DataDefinition::create('string');
-    match (TRUE) {
-      $document => $definition->addConstraint('Html5', ['mode' => 'document']),
-      default => $definition->addConstraint('Html5'),
-    };
+
+    $definition->addConstraint('Html', ['mode' => $mode]);
     $testString = $this->container->get('typed_data_manager')->create($definition);
     $testString->setValue($html);
     $violations = $testString->validate();
@@ -53,7 +51,7 @@ class HtmlConstraintTest extends KernelTestBase {
     $this->expectException(InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid HTML parsing mode. the `mode` argument must be "fragment" or "document".');
     $definition = DataDefinition::create('string');
-    $definition->addConstraint('Html5', ['mode' => 'unsupported']);
+    $definition->addConstraint('Html', ['mode' => 'unsupported']);
     $testString = $this->container->get('typed_data_manager')->create($definition);
     $testString->setValue("<p>Test</p>");
     $testString->validate();
@@ -70,29 +68,32 @@ class HtmlConstraintTest extends KernelTestBase {
       'valid_document' => [
         'html' => "<!doctype html>\n<html>\n<head></head><body><p>test</p></body></html>",
         'errors' => [],
-        'document' => TRUE,
+        'mode' => 'document',
       ],
       'invalid_document' => [
         'html' => "<!doctype html>\n<html>\n<head></head><body><p>test</a></body></html>",
         'errors' => ['Line 0, Col 0: Could not find closing tag for a'],
-        'document' => TRUE,
+        'mode' => 'document',
       ],
       'valid_document_parsed_as_fragment' => [
         'html' => "<!doctype html>\n<html>\n<head></head><body><p>test</p></body></html>",
         'errors' => ['Line 0, Col 0: Illegal placement of DOCTYPE tag. Ignoring: html'],
+        'mode' => 'fragment',
       ],
       'valid_fragment' => [
         'html' => '<p>test</p>',
         'errors' => [],
+        'mode' => 'fragment',
       ],
       'invalid_fragment' => [
         'html' => '<p>test</a>',
         'errors' => ['Line 0, Col 0: Could not find closing tag for a'],
+        'mode' => 'fragment',
       ],
       'valid_fragment_parsed_as_document'  => [
         'html' => '<p>test</p>',
         'errors' => ['Line 0, Col 0: No DOCTYPE specified.'],
-        'document' => TRUE,
+        'mode' => 'document',
       ],
     ];
   }
