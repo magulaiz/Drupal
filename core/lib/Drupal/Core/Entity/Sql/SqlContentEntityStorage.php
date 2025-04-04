@@ -751,6 +751,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     try {
       $transaction = $this->database->startTransaction();
       parent::delete($entities);
+      $transaction->yield();
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
@@ -804,6 +805,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     try {
       $transaction = $this->database->startTransaction();
       $return = parent::save($entity);
+      $transaction->yield();
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
@@ -854,6 +856,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // Insert the entity data in the dedicated tables.
       $this->saveToDedicatedTables($entity, FALSE, []);
+
+      $transaction->yield();
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
