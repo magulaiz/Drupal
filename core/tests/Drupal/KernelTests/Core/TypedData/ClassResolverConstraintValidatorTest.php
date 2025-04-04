@@ -106,6 +106,8 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
+   * Test missing method case.
+   *
    * Tests that the ClassResolver constraint throws an exception when the
    * method does not exist.
    */
@@ -120,6 +122,8 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
+   * Test missing class case.
+   *
    * Tests that the ClassResolver constraint throws an exception when the
    * class does not exist.
    */
