@@ -383,6 +383,9 @@ class CommentForm extends ContentEntityForm {
     $is_new = $this->entity->isNew();
     $field_name = $comment->getFieldName();
     $uri = $entity->toUrl();
+    if (!$uri instanceof Url) {
+      $uri = Url::fromRoute('<current>');
+    }
     $logger = $this->logger('comment');
 
     if ($this->currentUser->hasPermission('post comments') && ($this->currentUser->hasPermission('administer comments') || $entity->{$field_name}->status == CommentItemInterface::OPEN)) {
