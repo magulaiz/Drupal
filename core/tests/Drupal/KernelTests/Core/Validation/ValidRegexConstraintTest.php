@@ -64,15 +64,15 @@ class ValidRegexConstraintTest extends KernelTestBase {
     return [
       'invalid no ending delimiter' => [
         'regex' => '/test',
-        'message' => 'The value "/test" is not valid: Internal error.',
+        'message' => 'The value "/test" is not a valid regular expression: Internal error.',
       ],
       'invalid bad character class' => [
         'regex' => '%[0-9%',
-        'message' => 'The value "%[0-9%" is not valid: Internal error.',
+        'message' => 'The value "%[0-9%" is not a valid regular expression: Internal error.',
       ],
       'invalid no delimiters' => [
         'regex' => 'no_delimiters',
-        'message' => 'The value "no_delimiters" is not valid: Internal error.',
+        'message' => 'The value "no_delimiters" is not a valid regular expression: Internal error.',
       ],
       'valid simple regex' => [
         'regex' => '/test/',
