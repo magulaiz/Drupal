@@ -6,7 +6,6 @@ namespace Drupal\Core\Extension\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
