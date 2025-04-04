@@ -117,7 +117,7 @@ class ComponentValidatorTest extends TestCase {
         'description' => 'Title must be string',
       ],
     ];
-    yield 'invalid variant (type)' => [$cta_with_invalid_slot_type];
+    yield 'invalid slot (type)' => [$cta_with_invalid_slot_type];
   }
 
   /**
