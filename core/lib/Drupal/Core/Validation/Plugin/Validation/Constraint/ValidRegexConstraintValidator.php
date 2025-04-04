@@ -30,9 +30,7 @@ class ValidRegexConstraintValidator extends ConstraintValidator {
     }
 
     $value = (string) $value;
-    set_error_handler(function () {}, E_WARNING);
-    $valid_regex = preg_match($value, "") !== FALSE;
-    restore_error_handler();
+    $valid_regex = @preg_match($value, "") !== FALSE;
     if (!$valid_regex || preg_last_error() !== PREG_NO_ERROR) {
       // The violation builder uses preg_match and will clear the error, so
       // capture it now.
