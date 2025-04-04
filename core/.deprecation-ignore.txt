@@ -29,9 +29,15 @@
 # PHPUnit 10.
 %The "PHPUnit\\Framework\\TestCase::__construct\(\)" method is considered internal.*You should not extend it from "Drupal\\[^"]+"%
 
-# Twig 3.
-%Since twig/twig 3.12: Twig Filter "spaceless" is deprecated%
-
 # Symfony 7.2
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_length" option is deprecated and will be ignored in Symfony 8.0.%
 %Since symfony/http-foundation 7.2: NativeSessionStorage's "sid_bits_per_character" option is deprecated and will be ignored in Symfony 8.0.%
+
+# PHPUnit 12.
+%The "Drupal\\Core\\Database\\Query\\Select::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
+%The "Drupal\\Core\\Database\\Query\\Select::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
+%The "Drupal\\Core\\Database\\Query\\SelectExtender::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
+%The "Drupal\\Core\\Database\\Query\\SelectExtender::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
+%The "Drupal\\Core\\Entity\\Query\\QueryBase::hasAllTags\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
+%The "Drupal\\Core\\Entity\\Query\\QueryBase::hasAnyTag\(\)" method will require a new "string \.\.\. \$tags" argument in the next major version of its interface%
+

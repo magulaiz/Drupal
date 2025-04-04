@@ -36,7 +36,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
 
-// cspell:ignore exitcode wwwrun
+// cspell:ignore exitcode testbots wwwrun
 
 // Define some colors for display.
 // A nice calming green.
@@ -226,7 +226,7 @@ exit($status);
 /**
  * Print help text.
  */
-function simpletest_script_help() {
+function simpletest_script_help(): void {
   global $args;
 
   echo <<<EOF
@@ -473,29 +473,40 @@ function simpletest_script_parse_args() {
 /**
  * Initialize script variables and perform general setup requirements.
  */
-function simpletest_script_init() {
+function simpletest_script_init(): void {
   global $args, $php;
 
   $host = 'localhost';
   $path = '';
   $port = '80';
+  $php = "";
 
   // Determine location of php command automatically, unless a command line
   // argument is supplied.
-  if (!empty($args['php'])) {
-    $php = $args['php'];
-  }
-  elseif ($php_env = getenv('_')) {
+  if ($php_env = getenv('_')) {
     // '_' is an environment variable set by the shell. It contains the command
     // that was executed.
     $php = $php_env;
   }
-  elseif ($sudo = getenv('SUDO_COMMAND')) {
+
+  if ($sudo = getenv('SUDO_COMMAND')) {
     // 'SUDO_COMMAND' is an environment variable set by the sudo program.
-    // Extract only the PHP interpreter, not the rest of the command.
-    [$php] = explode(' ', $sudo, 2);
+    // This will be set if the script is run directly by sudo or if the
+    // script is run under a shell started by sudo.
+    if (str_contains($sudo, basename(__FILE__))) {
+      // This script may have been directly run by sudo. $php may have the
+      // path to sudo from getenv('_') if run with the -E option.
+      // Extract what may be the PHP interpreter.
+      [$php] = explode(' ', $sudo, 2);
+    }
   }
-  else {
+
+  if (!empty($args['php'])) {
+    // Caller has specified path to php. Override auto-detection.
+    $php = $args['php'];
+  }
+
+  if ($php == "") {
     simpletest_script_print_error('Unable to automatically determine the path to the PHP interpreter. Supply the --php command line argument.');
     simpletest_script_help();
     exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
@@ -622,7 +633,7 @@ function simpletest_script_init() {
  *   database file specified by --sqlite (if any) is set up. Otherwise, database
  *   connections are prepared only.
  */
-function simpletest_script_setup_database($new = FALSE) {
+function simpletest_script_setup_database($new = FALSE): void {
   global $args;
 
   // If there is an existing Drupal installation that contains a database
@@ -648,12 +659,9 @@ function simpletest_script_setup_database($new = FALSE) {
     $databases['default'] = Database::getConnectionInfo('default');
   }
 
-  // If there is no default database connection for tests, we cannot continue.
-  if (!isset($databases['default']['default'])) {
-    simpletest_script_print_error('Missing default database connection for tests. Use --dburl to specify one.');
-    exit(SIMPLETEST_SCRIPT_EXIT_FAILURE);
+  if (isset($databases['default']['default'])) {
+    Database::addConnectionInfo('default', 'default', $databases['default']['default']);
   }
-  Database::addConnectionInfo('default', 'default', $databases['default']['default']);
 }
 
 /**
@@ -848,7 +856,7 @@ function simpletest_script_run_phpunit(TestRun $test_run, $class) {
 /**
  * Run a single test, bootstrapping Drupal if needed.
  */
-function simpletest_script_run_one_test(TestRun $test_run, $test_class) {
+function simpletest_script_run_one_test(TestRun $test_run, $test_class): void {
   global $args;
 
   try {
@@ -1063,7 +1071,7 @@ function simpletest_script_get_test_list() {
 /**
  * Sort tests by test type and number of public methods.
  */
-function sort_tests_by_type_and_methods(array &$tests) {
+function sort_tests_by_type_and_methods(array &$tests): void {
   usort($tests, function ($a, $b) {
     if (get_test_type_weight($a) === get_test_type_weight($b)) {
       return get_test_class_method_count($b) <=> get_test_class_method_count($a);
@@ -1160,8 +1168,8 @@ function place_tests_into_bins(array $tests, int $bin_count) {
 /**
  * Initialize the reporter.
  */
-function simpletest_script_reporter_init() {
-  global $args, $test_list, $results_map;
+function simpletest_script_reporter_init(): void {
+  global $args, $test_list, $results_map, $php;
 
   $results_map = [
     'pass' => 'Pass',
@@ -1171,6 +1179,7 @@ function simpletest_script_reporter_init() {
 
   echo "\n";
   echo "Drupal test run\n";
+  echo "Using PHP Binary: $php\n";
   echo "---------------\n";
   echo "\n";
 
@@ -1206,7 +1215,7 @@ function simpletest_script_reporter_init() {
  * @param int|null $duration
  *   The time taken for the test to complete.
  */
-function simpletest_script_reporter_display_summary($class, $results, $duration = NULL) {
+function simpletest_script_reporter_display_summary($class, $results, $duration = NULL): void {
   // Output all test results vertically aligned.
   // Cut off the class name after 60 chars, and pad each group with 3 digits
   // by default (more than 999 assertions are rare).
@@ -1226,7 +1235,7 @@ function simpletest_script_reporter_display_summary($class, $results, $duration 
 /**
  * Display jUnit XML test results.
  */
-function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInterface $test_run_results_storage) {
+function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInterface $test_run_results_storage): void {
   global $args, $test_ids, $results_map;
 
   try {
@@ -1251,7 +1260,7 @@ function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInter
         }
         $test_class = $result->test_class;
         if (!isset($xml_files[$test_class])) {
-          $doc = new DomDocument('1.0');
+          $doc = new DOMDocument('1.0', 'utf-8');
           $root = $doc->createElement('testsuite');
           $root = $doc->appendChild($root);
           $xml_files[$test_class] = ['doc' => $doc, 'suite' => $root];
@@ -1309,7 +1318,7 @@ function simpletest_script_reporter_write_xml_results(TestRunResultsStorageInter
 /**
  * Stop the test timer.
  */
-function simpletest_script_reporter_timer_stop() {
+function simpletest_script_reporter_timer_stop(): void {
   echo "\n";
   $end = Timer::stop('run-tests');
   echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval((int) ($end['time'] / 1000));
@@ -1319,7 +1328,7 @@ function simpletest_script_reporter_timer_stop() {
 /**
  * Display test results.
  */
-function simpletest_script_reporter_display_results(TestRunResultsStorageInterface $test_run_results_storage) {
+function simpletest_script_reporter_display_results(TestRunResultsStorageInterface $test_run_results_storage): void {
   global $args, $test_ids, $results_map;
 
   if ($args['verbose']) {
@@ -1359,7 +1368,7 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
  * @param object $result
  *   The result object to format.
  */
-function simpletest_script_format_result($result) {
+function simpletest_script_format_result($result): void {
   global $args, $results_map, $color;
 
   $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
@@ -1386,7 +1395,7 @@ function simpletest_script_format_result($result) {
  * @param string $message
  *   The message to print.
  */
-function simpletest_script_print_error($message) {
+function simpletest_script_print_error($message): void {
   simpletest_script_print("  ERROR: $message\n", SIMPLETEST_SCRIPT_COLOR_FAIL);
 }
 
@@ -1398,7 +1407,7 @@ function simpletest_script_print_error($message) {
  * @param int $color_code
  *   The color code to use for coloring.
  */
-function simpletest_script_print($message, $color_code) {
+function simpletest_script_print($message, $color_code): void {
   global $args;
   if ($args['color']) {
     echo "\033[" . $color_code . "m" . $message . "\033[0m";
@@ -1451,7 +1460,7 @@ function simpletest_script_color_code($status) {
  *
  * @see http://php.net/manual/function.levenshtein.php
  */
-function simpletest_script_print_alternatives($string, $array, $degree = 4) {
+function simpletest_script_print_alternatives($string, $array, $degree = 4): void {
   $alternatives = [];
   foreach ($array as $item) {
     $lev = levenshtein($string, $item);
