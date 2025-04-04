@@ -52,7 +52,7 @@ class HelpPageOrderTest extends KernelTestBase {
    */
   public function testHelp(): void {
     $pos = 0;
-    $this->drupalGet('admin/help');
+    $this->drupalGet('/admin/help');
     $page_text = $this->getTextContent();
     foreach ($this->stringOrder as $item) {
       $new_pos = strpos($page_text, $item, $pos);

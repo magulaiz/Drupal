@@ -53,17 +53,12 @@ class ExperimentalHelpTest extends KernelTestBase {
   /**
    * Verifies that a warning message is displayed for experimental modules.
    */
-  public function testExperimentalHelpDisplaysWarning(): void {
-    $this->drupalGet('admin/help/experimental_module_test');
+  public function testExperimentalHelp(): void {
+    $this->drupalGet('/admin/help/experimental_module_test');
     $this->assertSession()->statusMessageContains('This module is experimental.', 'warning');
-  }
 
-  /**
-   * Verifies that a warning message is displayed for experimental modules.
-   */
-  public function testNormalHelpDoesNotDisplayWarning(): void {
     // Regular modules should not display the message.
-    $this->drupalGet('admin/help/help_page_test');
+    $this->drupalGet('/admin/help/help_page_test');
     $this->assertSession()->statusMessageNotContains('This module is experimental.');
 
     // Ensure the actual help page is displayed to avoid a false positive.

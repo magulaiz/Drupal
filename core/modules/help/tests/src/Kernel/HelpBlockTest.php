@@ -52,27 +52,17 @@ class HelpBlockTest extends KernelTestBase {
    * Logs in users, tests help pages.
    */
   public function testHelp(): void {
-    $this->drupalGet('help_page_test/has_help');
+    $this->drupalGet('/help_page_test/has_help');
     $this->assertSession()->pageTextContains('I have help!');
     $this->assertSession()->pageTextContains($this->helpBlock->label());
-  }
 
-  /**
-   * The help block should not appear when there is no help.
-   */
-  public function testNoHelp(): void {
-    $this->drupalGet('help_page_test/no_help');
+    // The help block should not appear when there is no help.
+    $this->drupalGet('/help_page_test/no_help');
     $this->assertSession()->pageTextNotContains($this->helpBlock->label());
-  }
 
-  /**
-   * Test multiple help implementations.
-   *
-   * Ensure that if two hook_help() implementations both return a render array
-   * the output is as expected.
-   */
-  public function testMultipleHelp(): void {
-    $this->drupalGet('help_page_test/test_array');
+    // Ensure that if two hook_help() implementations both return a render array
+    // the output is as expected.
+    $this->drupalGet('/help_page_test/test_array');
     $this->assertSession()->pageTextContains('Help text from more_help_page_test_help module.');
     $this->assertSession()->pageTextContains('Help text from help_page_test_help module.');
   }

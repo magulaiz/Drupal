@@ -48,25 +48,17 @@ class NoHelpTest extends KernelTestBase {
    * Ensures modules not implementing help do not appear on admin/help.
    */
   public function testMainPageNoHelp(): void {
-    $this->drupalGet('admin/help');
+    $this->drupalGet('/admin/help');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Module overviews are provided by modules');
     $this->assertFalse(\Drupal::moduleHandler()->hasImplementations('help', 'menu_test'), 'The menu_test module does not implement hook_help');
     // Make sure the test module menu_test does not display a help link on
     // admin/help.
     $this->assertSession()->pageTextNotContains(\Drupal::service('extension.list.module')->getName('menu_test'));
-  }
 
-  /**
-   * Test module overview help page.
-   *
-   * Ensure that the module overview help page for a module that does not
-   * implement hook_help() results in a 404.
-   */
-  public function testModuleOverviewPageNoHelp(): void {
     // Ensure that the module overview help page for a module that does not
     // implement hook_help() results in a 404.
-    $this->drupalGet('admin/help/menu_test');
+    $this->drupalGet('/admin/help/menu_test');
     $this->assertSession()->statusCodeEquals(404);
   }
 
