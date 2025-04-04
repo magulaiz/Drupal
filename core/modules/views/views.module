@@ -10,7 +10,6 @@ use Drupal\field\FieldStorageConfigInterface;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
-use Drupal\views\ViewsConfigUpdater;
 
 /**
  * Implements hook_help().
