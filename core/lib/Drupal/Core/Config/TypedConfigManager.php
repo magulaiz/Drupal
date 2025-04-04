@@ -267,7 +267,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   /**
    * {@inheritdoc}
    */
-  public function processDefinition(&$definition, $plugin_id) {
+  public function processDefinition(&$definition, $plugin_id): void {
     parent::processDefinition($definition, $plugin_id);
     static::validateType($definition, $plugin_id);
   }
@@ -275,7 +275,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   /**
    * {@inheritdoc}
    */
-  public function setCachedDefinitions($definitions) {
+  public function setCachedDefinitions($definitions): void {
     assert($this->definitions === NULL);
     parent::setCachedDefinitions($definitions);
     assert($this->definitions !== NULL);

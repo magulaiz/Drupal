@@ -664,7 +664,7 @@ class ConfigSchemaTest extends KernelTestBase {
    * @return \Generator
    *   Test scenarios.
    */
-  public function providerTestInvalidConfigSchemaDefinitions(): \Generator {
+  public static function providerTestInvalidConfigSchemaDefinitions(): \Generator {
     yield 'INVALID: a naïve `type: vector`' => [
       <<<YAML
 vector:
