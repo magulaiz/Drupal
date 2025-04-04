@@ -87,11 +87,11 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 26,
-      'CacheGetCount' => 42,
+      'CacheGetCount' => 49,
       'CacheGetCountByBin' => [
         'config' => 8,
+        'bootstrap' => 12,
         'data' => 8,
-        'bootstrap' => 5,
         'discovery' => 13,
         'entity' => 2,
         'default' => 4,
@@ -147,11 +147,11 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
       'CacheGetCount' => 19,
       'CacheGetCountByBin' => [
         'config' => 6,
+        'bootstrap' => 3,
         'data' => 1,
         'discovery' => 5,
         'entity' => 1,
         'default' => 1,
-        'bootstrap' => 3,
         'dynamic_page_cache' => 2,
       ],
       'CacheSetCount' => 0,
@@ -206,14 +206,14 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 15,
-      'CacheGetCount' => 43,
+      'CacheGetCount' => 50,
       'CacheGetCountByBin' => [
         'config' => 8,
+        'bootstrap' => 11,
         'data' => 8,
         'discovery' => 13,
         'entity' => 2,
         'default' => 4,
-        'bootstrap' => 4,
         'dynamic_page_cache' => 2,
         'jsonapi_normalizations' => 2,
       ],
