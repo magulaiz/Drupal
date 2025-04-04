@@ -1650,9 +1650,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       $embedded_tables = [];
       $is_default_revision = FALSE;
-      // Not sure about the change on the next line. It fixes the
-      // EntityDuplicateTest.
-      if ($this->jsonStorageCurrentRevisionTable && ($entity->isDefaultRevision() || ($entity->getRevisionId() == $entity->getLoadedRevisionId()))) {
+      if ($this->jsonStorageCurrentRevisionTable && $entity->isDefaultRevision()) {
         $embedded_tables[] = ['table' => $this->jsonStorageCurrentRevisionTable, 'update action' => 'replace'];
         $is_default_revision = TRUE;
       }
