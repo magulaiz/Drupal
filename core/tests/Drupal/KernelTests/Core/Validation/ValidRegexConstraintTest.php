@@ -16,23 +16,6 @@ use Drupal\KernelTests\KernelTestBase;
 class ValidRegexConstraintTest extends KernelTestBase {
 
   /**
-   * Typed string data to test.
-   *
-   * @var \Drupal\Core\TypedData\Plugin\DataType\StringData
-   */
-  protected StringData $testString;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $definition = DataDefinition::create('string')
-      ->addConstraint('ValidRegex');
-    $this->testString = $this->container->get('typed_data_manager')->create($definition);
-  }
-
-  /**
    * Tests regex values.
    *
    * @param string $regex
@@ -43,8 +26,12 @@ class ValidRegexConstraintTest extends KernelTestBase {
    * @dataProvider validRegexConstraintDataProvider
    */
   public function testValidRegexConstraint(string $regex, ?string $message = NULL): void {
-    $this->testString->setValue($regex);
-    $violations = $this->testString->validate();
+    $definition = DataDefinition::create('string')
+      ->addConstraint('ValidRegex');
+    $test_string = $this->container->get('typed_data_manager')->create($definition);
+
+    $test_string->setValue($regex);
+    $violations = $test_string->validate();
     if (!$message) {
       $this->assertCount(0, $violations);
       return;
