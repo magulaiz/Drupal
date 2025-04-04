@@ -111,9 +111,9 @@ text:
 # An arbitrary string of HTML.
 html_fragment:
   type: string
-  label: 'HTML'
+  label: 'HTML snippet'
   constraints:
-    Html5:
+    Html:
       mode: fragment
 
 # A full HTML document.
@@ -121,7 +121,7 @@ html_document:
   type: string
   label: 'HTML document'
   constraints:
-    Html5:
+    Html:
       mode: document
 
 # A UUID.

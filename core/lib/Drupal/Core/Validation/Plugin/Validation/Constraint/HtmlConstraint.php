@@ -15,7 +15,7 @@ use Drupal\Core\Validation\Attribute\Constraint;
  * Determines if a string is valid HTML5.
  */
 #[Constraint(
-  id: 'Html5',
+  id: 'Html',
   label: new TranslatableMarkup('Valid HTML', [], ['context' => 'Validation'])
 )]
 class HtmlConstraint extends SymfonyConstraint {
