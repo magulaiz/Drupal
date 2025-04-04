@@ -43,6 +43,7 @@ services:
     arguments:
       $appRoot: '%app.root%'
   Drupal\package_manager\FailureMarker: {}
+  Drupal\package_manager\EventSubscriber\ConfigSubscriber: {}
   Drupal\package_manager\EventSubscriber\UpdateDataSubscriber: {}
   Drupal\package_manager\EventSubscriber\ChangeLogger:
     calls:
