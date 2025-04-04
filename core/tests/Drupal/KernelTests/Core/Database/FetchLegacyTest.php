@@ -20,6 +20,9 @@ class FetchLegacyTest extends DatabaseTestBase {
    */
   #[IgnoreDeprecations]
   public function testQueryFetchObject(): void {
+    if ($this->connection->driver() === 'mysqli') {
+      $this->markTestSkipped("This test is not relevant for the mysqli database driver.");
+    }
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in query() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in prepareStatement() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
@@ -39,6 +42,9 @@ class FetchLegacyTest extends DatabaseTestBase {
    */
   #[IgnoreDeprecations]
   public function testQueryFetchArray(): void {
+    if ($this->connection->driver() === 'mysqli') {
+      $this->markTestSkipped("This test is not relevant for the mysqli database driver.");
+    }
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in query() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in prepareStatement() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
@@ -59,6 +65,9 @@ class FetchLegacyTest extends DatabaseTestBase {
    */
   #[IgnoreDeprecations]
   public function testQueryFetchNum(): void {
+    if ($this->connection->driver() === 'mysqli') {
+      $this->markTestSkipped("This test is not relevant for the mysqli database driver.");
+    }
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in query() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in prepareStatement() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
     $this->expectDeprecation("Passing the 'fetch' key as an integer to \$options in execute() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use a case of \Drupal\Core\Database\FetchAs enum instead. See https://www.drupal.org/node/3488338");
