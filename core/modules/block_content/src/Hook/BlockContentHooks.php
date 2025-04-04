@@ -2,6 +2,7 @@
 
 namespace Drupal\block_content\Hook;
 
+use Drupal\block\BlockConfigUpdater;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block_content\BlockContentInterface;
@@ -18,6 +19,10 @@ use Drupal\Core\Hook\Attribute\Hook;
 class BlockContentHooks {
 
   use StringTranslationTrait;
+
+  public function __construct(
+    private readonly BlockConfigUpdater $blockConfigUpdater,
+  ) {}
 
   /**
    * Implements hook_help().
@@ -158,6 +163,14 @@ class BlockContentHooks {
       }
     }
     return $operations;
+  }
+
+  /**
+   * Implements hook_ENTITY_TYPE_presave().
+   */
+  #[Hook('block_presave')]
+  public function blockPreSave(BlockInterface $block): void {
+    $this->blockConfigUpdater->updateBlock($block);
   }
 
 }
