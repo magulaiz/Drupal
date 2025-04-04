@@ -232,7 +232,7 @@ system.performance:
           type: boolean
           label: 'Compress JavaScript files.'
 
-# When `system.performance:fast_404.enabled = false`...
+# When `system.performance:fast_404.enabled = false`.
 system.performance.fast_404.*:
   type: mapping
   label: 'Fast 404'
@@ -243,7 +243,7 @@ system.performance.fast_404.*:
       type: boolean
       label: 'Fast 404 enabled'
 
-# When `system.performance:fast_404.enabled = true`...
+# When `system.performance:fast_404.enabled = true`.
 system.performance.fast_404.1:
   type: system.performance.fast_404.*
   label: 'Fast 404 settings'
