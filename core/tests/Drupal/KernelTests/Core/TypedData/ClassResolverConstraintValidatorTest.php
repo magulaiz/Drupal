@@ -32,14 +32,32 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
     $this->typedData = $this->container->get('typed_data_manager');
     $this->container->set('test.service', new class() {
 
+      /**
+       * Dummy method to return TRUE.
+       *
+       * @return bool
+       *   TRUE.
+       */
       public function returnTrue(): bool {
         return TRUE;
       }
 
+      /**
+       * Dummy method to return FALSE.
+       *
+       * @return bool
+       *   FALSE.
+       */
       public function returnFalse(): bool {
         return FALSE;
       }
 
+      /**
+       * Dummy method to return a truthy value.
+       *
+       * @return string
+       *   A string that evaluates to TRUE.
+       */
       public function returnNotTrue(): string {
         return 'true';
       }
@@ -87,6 +105,10 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
     }
   }
 
+  /**
+   * Tests that the ClassResolver constraint throws an exception when the
+   * method does not exist.
+   */
   public function testNonExistingMethod(): void {
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['classOrService' => 'test.service', 'method' => 'missingMethod']);
@@ -97,6 +119,10 @@ class ClassResolverConstraintValidatorTest extends KernelTestBase {
     $typed_data->validate();
   }
 
+  /**
+   * Tests that the ClassResolver constraint throws an exception when the
+   * class does not exist.
+   */
   public function testNonExistingClass(): void {
     $definition = DataDefinition::create('integer')
       ->addConstraint('ClassResolver', ['classOrService' => '\Drupal\NonExisting\Class', 'method' => 'boo']);
