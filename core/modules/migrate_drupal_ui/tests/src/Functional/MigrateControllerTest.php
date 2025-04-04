@@ -26,11 +26,6 @@ class MigrateControllerTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected $defaultTheme = 'stark';
 
   /**
