@@ -79,22 +79,10 @@ class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
     $data->setValue(NULL);
     $this->assertCount(0, $data->validate());
 
+    // Anything but a module or theme should raise an exception.
     $definition->setConstraints(['ExtensionExists' => 'profile']);
-    $data = $typed_data->create($definition, 'minimal');
-
-    // Assuming 'minimal' profile is installed.
-    $violations = $data->validate();
-    $this->assertCount(0, $violations);
-
-    // Check an uninstalled profile by setting a fake profile name.
-    $data->setValue('fake_profile');
-    $violations = $data->validate();
-    $this->assertCount(1, $violations);
-    $this->assertSame("Profile 'fake_profile' does not exists.", (string) $violations->get(0)->getMessage());
-
-    // NULL should not trigger a validation error: a value may be nullable.
-    $data->setValue(NULL);
-    $this->assertCount(0, $data->validate());
+    $this->expectExceptionMessage("Unknown extension type: 'profile'");
+    $data->validate();
   }
 
 }

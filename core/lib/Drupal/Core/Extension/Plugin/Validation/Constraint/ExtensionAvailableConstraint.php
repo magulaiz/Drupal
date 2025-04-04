@@ -9,27 +9,34 @@ use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
- * Checks that the value is the name of an installed extension.
+ * Check if a module is available.
  */
 #[Constraint(
-  id: 'ExtensionExists',
+  id: 'ExtensionAvailable',
   label: new TranslatableMarkup('Extension exists', [], ['context' => 'Validation'])
 )]
-class ExtensionExistsConstraint extends SymfonyConstraint {
+class ExtensionAvailableConstraint extends SymfonyConstraint {
 
   /**
    * The error message for a non-existent module.
    *
    * @var string
    */
-  public string $moduleMessage = "Module '@name' is not installed.";
+  public string $moduleNotExistsMessage = "Module '@name' does not exists.";
 
   /**
    * The error message for a non-existent theme.
    *
    * @var string
    */
-  public string $themeMessage = "Theme '@name' is not installed.";
+  public string $themeNotExistsMessage = "Theme '@name' does not exists.";
+
+  /**
+   * The error message for a non-existent profile.
+   *
+   * @var string
+   */
+  public string $profileNotExistsMessage = "Profile '@name' does not exists.";
 
   /**
    * The type of extension to look for. Can be 'module' or 'theme'.

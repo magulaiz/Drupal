@@ -12,9 +12,8 @@ core.extension:
           constraints:
             NotBlank: []
             ExtensionName: []
-            ExtensionExists:
+            ExtensionAvailable:
               type: module
-              mustBeInstalled: false
       sequence:
         type: weight
         label: 'Weight'
@@ -26,9 +25,8 @@ core.extension:
           constraints:
             NotBlank: []
             ExtensionName: []
-            ExtensionExists:
+            ExtensionAvailable:
               type: theme
-              mustBeInstalled: false
       sequence:
         type: weight
         label: 'Weight'
@@ -45,4 +43,4 @@ core.extension:
         NotBlank:
           allowNull: true
         ExtensionName: []
-        ExtensionExists: profile
+        ExtensionAvailable: profile
