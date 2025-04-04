@@ -8,6 +8,8 @@ use Drupal\Core\Database\Connection as BaseConnection;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\Core\Database\Statement\PlaceholderType;
+use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Drupal\mysql\Driver\Database\mysql\Connection as BaseMySqlConnection;
 
@@ -133,6 +135,28 @@ class Connection extends BaseMySqlConnection {
     }
 
     return $mysqli;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function placeholderFormat(): PlaceholderType {
+    return PlaceholderType::Positional;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
+    try {
+      $query = $this->preprocessStatement($query, $options);
+      $statement = new $this->statementWrapperClass($this, $this->connection, $query, $options, $allow_row_count);
+    }
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleStatementException($e, $query, $options);
+    }
+
+    return $statement;
   }
 
   /**

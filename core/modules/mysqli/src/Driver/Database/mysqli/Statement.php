@@ -6,6 +6,7 @@ namespace Drupal\mysqli\Driver\Database\mysqli;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\Statement\PlaceholderType;
 use Drupal\Core\Database\Statement\StatementBase;
 
 /**
@@ -84,11 +85,16 @@ class Statement extends StatementBase {
       // Prepare the lower-level statement if it's not been prepared already.
       if (!$this->hasClientStatement()) {
         // Replace named placeholders with positional ones if needed.
-        $this->paramsPositions = array_flip(array_keys($args));
-        $converter = new NamedPlaceholderConverter();
-        $converter->parse($this->queryString, $args);
-        [$convertedQueryString, $args] = [$converter->getConvertedSQL(), $converter->getConvertedParameters()];
-        $this->clientStatement = $this->clientConnection->prepare($convertedQueryString);
+        if (($this->driverOpts['placeholder_format'] ?? PlaceholderType::Named) === PlaceholderType::Positional) {
+          $executableQueryString = $this->queryString;
+        }
+        else {
+          $this->paramsPositions = array_flip(array_keys($args));
+          $converter = new NamedPlaceholderConverter();
+          $converter->parse($this->queryString, $args);
+          [$executableQueryString, $args] = [$converter->getConvertedSQL(), $converter->getConvertedParameters()];
+        }
+        $this->clientStatement = $this->clientConnection->prepare($executableQueryString);
       }
       else {
         // Transform the $args to positional.

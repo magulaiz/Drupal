@@ -2,19 +2,13 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
-use Drupal\Core\Database\PlaceholderType;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
+use Drupal\Core\Database\Statement\PlaceholderType;
 
 /**
  * MySQL implementation of \Drupal\Core\Database\Query\Insert.
  */
 class Insert extends QueryInsert {
-
-  public function __construct(Connection $connection, string $table, array $options = []) {
-    parent::__construct($connection, $table, $options);
-    // @todo For testing, remove later.
-    $this->queryOptions['placeholder_format'] = PlaceholderType::Positional;
-  }
 
   /**
    * {@inheritdoc}
@@ -31,12 +25,11 @@ class Insert extends QueryInsert {
       $values = [];
       foreach ($this->insertValues as $insert_values) {
         foreach ($insert_values as $value) {
-          if ($this->queryOptions['placeholder_format'] === PlaceholderType::Named) {
-            $values[':db_insert_placeholder_' . $max_placeholder++] = $value;
-          }
-          else {
-            $values[$max_placeholder++] = $value;
-          }
+          $placeholderKey = match ($this->connection->placeholderFormat()) {
+            PlaceholderType::Named => ':db_insert_placeholder_' . $max_placeholder++,
+            PlaceholderType::Positional => $max_placeholder++,
+          };
+          $values[$placeholderKey] = $value;
         }
       }
     }
@@ -44,13 +37,14 @@ class Insert extends QueryInsert {
       $values = $this->fromQuery->getArguments();
     }
 
-    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
+    $options = array_merge($this->queryOptions, ['placeholder_format' => $this->connection->placeholderFormat()]);
+    $statement = $this->connection->prepareStatement((string) $this, $options);
     try {
-      $stmt->execute($values, $this->queryOptions);
+      $statement->execute($values, $this->queryOptions);
       $last_insert_id = $this->connection->lastInsertId();
     }
     catch (\Exception $e) {
-      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $values, $this->queryOptions);
+      $this->connection->exceptionHandler()->handleExecutionException($e, $statement, $values, $this->queryOptions);
     }
 
     // Re-initialize the values array so that we can re-use this query.
