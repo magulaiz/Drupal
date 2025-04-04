@@ -261,15 +261,25 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
 
       // Fetch any routes that aren't already loaded. Fetch cacheable routes
       // from the persistent cache and prepare cache ids for that.
-      $cids = [];
+      $bootstrap_cids = [];
+      $data_cids = [];
       foreach ($routes_to_load as $key => $route_name) {
         if (in_array($route_name, $this->cacheableRoutes, TRUE)) {
-          $cids[$route_name] = static::ROUTE_LOAD_CID_PREFIX . $route_name;
-          unset($routes_to_load[$key]);
+          $bootstrap_cids[$route_name] = static::ROUTE_LOAD_CID_PREFIX . $route_name;
+        }
+        else {
+          $data_cids[$route_name] = static::ROUTE_LOAD_CID_PREFIX . $route_name;
+        }
+        unset($routes_to_load[$key]);
+      }
+
+      if ($caches = $this->bootstrapCache->getMultiple($bootstrap_cids)) {
+        foreach ($caches as $cid => $cache) {
+          $this->serializedRoutes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
         }
       }
 
-      if ($caches = $this->bootstrapCache->getMultiple($cids)) {
+      if ($caches = $this->cache->getMultiple($data_cids)) {
         foreach ($caches as $cid => $cache) {
           $this->serializedRoutes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
         }
@@ -278,8 +288,11 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       // Only cache identifiers that couldn't be fetched from cache are still
       // in the list, merge them back into routes to load from the database
       // and then do so.
-      if (!empty($cids)) {
-        $routes_to_load = array_merge($routes_to_load, array_keys($cids));
+      if (!empty($bootstrap_cids)) {
+        $routes_to_load = array_merge($routes_to_load, array_keys($bootstrap_cids));
+      }
+      if (!empty($data_cids)) {
+        $routes_to_load = array_merge($routes_to_load, array_keys($data_cids));
       }
       if (!empty($routes_to_load)) {
         try {
@@ -288,17 +301,27 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
           $this->serializedRoutes += $routes;
 
           // Write back cache items for items that were attempted to be fetched.
-          $items = [];
+          $bootstrap_items = [];
+          $data_items = [];
           foreach ($routes as $route_name => $route) {
-            if (isset($cids[$route_name])) {
-              $items[static::ROUTE_LOAD_CID_PREFIX . $route_name] = [
+            if (isset($bootstrap_cids[$route_name])) {
+              $bootstrap_items[static::ROUTE_LOAD_CID_PREFIX . $route_name] = [
+                'data' => $route,
+                'tags' => ['routes'],
+              ];
+            }
+            else {
+              $data_items[static::ROUTE_LOAD_CID_PREFIX . $route_name] = [
                 'data' => $route,
                 'tags' => ['routes'],
               ];
             }
           }
-          if ($items) {
-            $this->bootstrapCache->setMultiple($items);
+          if ($bootstrap_items) {
+            $this->bootstrapCache->setMultiple($bootstrap_items);
+          }
+          if ($data_items) {
+            $this->cache->setMultiple($data_items);
           }
         }
         catch (\Exception) {
