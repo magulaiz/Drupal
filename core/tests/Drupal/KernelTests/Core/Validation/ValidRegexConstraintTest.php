@@ -36,7 +36,7 @@ class ValidRegexConstraintTest extends KernelTestBase {
    * Tests regex values.
    *
    * @param string $regex
-   *   The value to test
+   *   The value to test.
    * @param string|null $message
    *   The expected error message, if any.
    *

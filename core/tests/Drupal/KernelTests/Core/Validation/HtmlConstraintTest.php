@@ -19,7 +19,7 @@ class HtmlConstraintTest extends KernelTestBase {
    * Tests regex values.
    *
    * @param string $html
-   *   The html string to test
+   *   The html string to test.
    * @param array $errors
    *   An array of errors to expect.
    * @param bool $document
