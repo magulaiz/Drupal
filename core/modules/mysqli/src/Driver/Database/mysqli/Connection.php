@@ -155,6 +155,7 @@ class Connection extends BaseMySqlConnection {
     catch (\Exception $e) {
       $this->exceptionHandler()->handleStatementException($e, $query, $options);
     }
+    throw new \LogicException('Unhandled statement preparation error');
   }
 
   /**
