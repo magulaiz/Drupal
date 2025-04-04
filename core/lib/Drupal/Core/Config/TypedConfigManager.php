@@ -363,7 +363,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *     arbitrary values.
    *   - "list": for any list type (in core, only "sequence")
    *   - "complex": for any complex type (in core, only "mapping")
-   *   - "scalar": for any other type (in core, primitives like "string", "boolean", etc.)
+   *   - "scalar": for any other type (in core, primitives like "string", etc.)
    *   - "no-data-definition": for an invalid definition class.
    */
   private static function getShape(array $definition): string {
@@ -373,7 +373,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       // Optional: default is set later, in ::getDefinitionWithReplacements().
       !isset($definition['definition_class']) => 'scalar',
       // The three normal shapes:
-      // - (for ALL data, a data definition must exist to describe its structure)
+      // - (for ALL data, a data definition must exist describing its structure)
       // - for data containing more than a single value, the Typed Data objects
       //   must implement TraversableTypedDataInterface, and two kinds of
       //   traversable data are supported:
@@ -395,7 +395,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * Validates the absence of circular config schema type references.
    *
    * @param array $definition
-   *   A config schema type definition
+   *   A config schema type definition.
    * @param string $plugin_id
    *   A config schema type ID.
    *

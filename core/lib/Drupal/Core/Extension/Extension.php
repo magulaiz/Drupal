@@ -113,6 +113,7 @@ class Extension {
    * Returns the absolute path of the extension.
    *
    * @return string
+   *   The absolute path of the extension.
    */
   public function getAbsolutePath(): string {
     return $this->root . DIRECTORY_SEPARATOR . $this->getPath();
