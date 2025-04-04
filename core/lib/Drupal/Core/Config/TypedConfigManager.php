@@ -303,9 +303,11 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    *   Thrown if the config schema type definition is:
-   *   - incomplete
-   *   - its `class` does not subclass PrimitiveInterface nor ArrayElement
-   *   - its `definition_class` does not implement DataDefinitionInterface.
+   *   - incomplete (missing 'class' when defining a new type)
+   *   - its `class` does not subclass PrimitiveInterface for scalar types
+   *   - its `class` does not extend ArrayElement for list or complex types
+   *   - its `definition_class` does not implement DataDefinitionInterface
+   *   - it contains a circular type reference
    */
   protected function validateType(array $definition, string $id): void {
     // If a config schema does not define a new type, but uses an existing one,
