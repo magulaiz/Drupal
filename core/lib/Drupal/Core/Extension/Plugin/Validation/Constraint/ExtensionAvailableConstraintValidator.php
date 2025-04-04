@@ -20,20 +20,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ExtensionAvailableConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected ModuleHandlerInterface $moduleHandler;
-
-  /**
-   * The theme handler service.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected ThemeHandlerInterface $themeHandler;
-
-  /**
    * Constructs a ExtensionExistsConstraintValidator object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -48,14 +34,12 @@ class ExtensionAvailableConstraintValidator extends ConstraintValidator implemen
    *   The profile extension list.
    */
   public function __construct(
-    ModuleHandlerInterface $module_handler,
-    ThemeHandlerInterface $theme_handler,
+    protected readonly ModuleHandlerInterface $module_handler,
+    protected readonly ThemeHandlerInterface $theme_handler,
     protected readonly ModuleExtensionList $moduleExtensionList,
     protected readonly ThemeExtensionList $themeExtensionList,
     protected readonly ProfileExtensionList $profileExtensionList,
   ) {
-    $this->moduleHandler = $module_handler;
-    $this->themeHandler = $theme_handler;
   }
 
   /**

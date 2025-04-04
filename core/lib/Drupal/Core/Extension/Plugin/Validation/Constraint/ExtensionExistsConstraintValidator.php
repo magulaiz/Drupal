@@ -18,40 +18,17 @@ use Symfony\Component\Validator\ConstraintValidator;
 class ExtensionExistsConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected ModuleHandlerInterface $moduleHandler;
-
-  /**
-   * The theme handler service.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected ThemeHandlerInterface $themeHandler;
-
-  /**
-   * The profile extension list.
-   *
-   * @var \Drupal\Core\Extension\ProfileExtensionList
-   */
-  protected ProfileExtensionList $profileExtensionList;
-
-  /**
    * Constructs a ExtensionExistsConstraintValidator object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
    *   The theme handler service.
-   * @param \Drupal\Core\Extension\ProfileExtensionList $profile_extension_list
-   *   The profile extension list.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ProfileExtensionList $profile_extension_list) {
-    $this->moduleHandler = $module_handler;
-    $this->themeHandler = $theme_handler;
-    $this->profileExtensionList = $profile_extension_list;
+  public function __construct(
+    protected readonly ModuleHandlerInterface $moduleHandler,
+    protected readonly ThemeHandlerInterface $themeHandler,
+  ) {
   }
 
   /**
@@ -61,7 +38,6 @@ class ExtensionExistsConstraintValidator extends ConstraintValidator implements 
     return new static(
       $container->get('module_handler'),
       $container->get('theme_handler'),
-      $container->get(ProfileExtensionList::class)
     );
   }
 
