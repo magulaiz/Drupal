@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\KernelTests\KernelTestBase;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\HttpKernelUiHelperTrait;
