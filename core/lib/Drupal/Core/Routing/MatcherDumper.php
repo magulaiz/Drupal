@@ -92,6 +92,7 @@ class MatcherDumper implements MatcherDumperInterface {
     // states due to random failures.
     try {
       $transaction = $this->connection->startTransaction();
+
       // We don't use truncate, because it is not guaranteed to be transaction
       // safe.
       try {
@@ -141,6 +142,25 @@ class MatcherDumper implements MatcherDumperInterface {
         // Insert all new routes.
         $insert->execute();
       }
+
+      // Split the aliases into chunks to avoid big INSERT queries.
+      $alias_chunks = array_chunk($this->routes->getAliases(), 50, TRUE);
+      foreach ($alias_chunks as $aliases) {
+        $insert = $this->connection->insert($this->tableName)->fields([
+          'name',
+          'route',
+          'alias',
+        ]);
+        foreach ($aliases as $name => $alias) {
+          $insert->values([
+            'name' => $name,
+            'route' => serialize($alias),
+            'alias' => $alias->getId(),
+          ]);
+        }
+        $insert->execute();
+      }
+
       $transaction->yield();
     }
     catch (\Exception $e) {
@@ -243,9 +263,15 @@ class MatcherDumper implements MatcherDumperInterface {
           'default' => 0,
           'size' => 'small',
         ],
+        'alias' => [
+          'description' => 'The alias of the route, if applicable.',
+          'type' => 'varchar_ascii',
+          'length' => 255,
+        ],
       ],
       'indexes' => [
         'pattern_outline_parts' => ['pattern_outline', 'number_parts'],
+        'alias' => ['alias'],
       ],
       'primary key' => ['name'],
     ];

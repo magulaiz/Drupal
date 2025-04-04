@@ -13,6 +13,8 @@ use Drupal\Core\Database\Transaction\TransactionManagerBase;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
 
+// cspell:ignore Tinky Winky Dipsy
+
 /**
  * Tests the transactions, using the explicit Transaction::yield() method.
  *
@@ -25,12 +27,12 @@ use Drupal\Core\Database\TransactionOutOfOrderException;
  *
  * Call structure:
  *   transactionOuterLayer()
- *     Start transaction
+ *     Start transaction "A"
  *     transactionInnerLayer()
- *       Start transaction (does nothing in database)
- *       [Maybe decide to roll back]
+ *       Start transaction "B" (does nothing in database)
+ *       [Maybe decide to roll back "B"]
  *     Do more stuff
- *     Should still be in transaction A
+ *     Should still be in transaction "A"
  *
  * These method can be overridden by non-core database driver if their
  * transaction behavior is different from core. For example, both oci8 (Oracle)
@@ -118,13 +120,8 @@ class TransactionYieldTest extends DatabaseTestBase {
    *
    * @param string $suffix
    *   Suffix to add to field values to differentiate tests.
-   * @param bool $rollback
-   *   Whether or not to try rolling back the transaction when we're done.
-   * @param bool $ddl_statement
-   *   Whether to execute a DDL statement during the inner transaction.
    */
-  protected function transactionOuterLayer(string $suffix, bool $rollback = FALSE, bool $ddl_statement = FALSE): void {
-    $depth = $this->connection->transactionManager()->stackDepth();
+  protected function transactionOuterLayer(string $suffix): void {
     $txn = $this->connection->startTransaction();
 
     // Insert a single row into the testing table.
@@ -139,17 +136,9 @@ class TransactionYieldTest extends DatabaseTestBase {
 
     // We're already in a transaction, but we call ->transactionInnerLayer
     // to nest another transaction inside the current one.
-    $this->transactionInnerLayer($suffix, $rollback, $ddl_statement);
+    $this->transactionInnerLayer($suffix);
 
     $this->assertTrue($this->connection->inTransaction(), 'In transaction after calling nested transaction.');
-
-    if ($rollback) {
-      // Roll back the transaction, if requested.
-      // This rollback should propagate to the last savepoint.
-      $txn->rollBack();
-      $this->assertSame($depth, $this->connection->transactionManager()->stackDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
-      return;
-    }
 
     $txn->yield();
   }
@@ -162,12 +151,8 @@ class TransactionYieldTest extends DatabaseTestBase {
    *
    * @param string $suffix
    *   Suffix to add to field values to differentiate tests.
-   * @param bool $rollback
-   *   Whether or not to try rolling back the transaction when we're done.
-   * @param bool $ddl_statement
-   *   Whether to execute a DDL statement during the transaction.
    */
-  protected function transactionInnerLayer(string $suffix, bool $rollback = FALSE, bool $ddl_statement = FALSE): void {
+  protected function transactionInnerLayer(string $suffix): void {
     $depth = $this->connection->transactionManager()->stackDepth();
     // Start a transaction. If we're being called from ->transactionOuterLayer,
     // then we're already in a transaction. Normally, that would make starting
@@ -176,7 +161,7 @@ class TransactionYieldTest extends DatabaseTestBase {
     $txn = $this->connection->startTransaction();
 
     $depth2 = $this->connection->transactionManager()->stackDepth();
-    $this->assertGreaterThan($depth, $depth2, 'Transaction depth has increased with new transaction.');
+    $this->assertSame($depth + 1, $depth2, 'Transaction depth has increased with new transaction.');
 
     // Insert a single row into the testing table.
     $this->connection->insert('test')
@@ -187,30 +172,6 @@ class TransactionYieldTest extends DatabaseTestBase {
       ->execute();
 
     $this->assertTrue($this->connection->inTransaction(), 'In transaction inside nested transaction.');
-
-    if ($ddl_statement) {
-      $table = [
-        'fields' => [
-          'id' => [
-            'type' => 'serial',
-            'unsigned' => TRUE,
-            'not null' => TRUE,
-          ],
-        ],
-        'primary key' => ['id'],
-      ];
-      $this->connection->schema()->createTable('database_test_1', $table);
-
-      $this->assertTrue($this->connection->inTransaction(), 'In transaction inside nested transaction.');
-    }
-
-    if ($rollback) {
-      // Roll back the transaction, if requested.
-      // This rollback should propagate to the last savepoint.
-      $txn->rollBack();
-      $this->assertSame($depth, $this->connection->transactionManager()->stackDepth(), 'Transaction has rolled back to the last savepoint after calling rollBack().');
-      return;
-    }
 
     $txn->yield();
   }
@@ -257,7 +218,7 @@ class TransactionYieldTest extends DatabaseTestBase {
    */
   public function testRollbackRootWithActiveSavepoint(): void {
     $transaction = $this->createRootTransaction();
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint = $this->createFirstSavepointTransaction();
 
     // Try to rollback root. Since a savepoint is active, this should fail.
@@ -381,7 +342,7 @@ class TransactionYieldTest extends DatabaseTestBase {
    * Tests savepoint transaction duplicated rollback.
    */
   public function testRollbackTwiceSameSavepoint(): void {
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $transaction = $this->createRootTransaction();
     $savepoint = $this->createFirstSavepointTransaction();
 
@@ -416,13 +377,13 @@ class TransactionYieldTest extends DatabaseTestBase {
    * Tests savepoint transaction rollback failure when later savepoints exist.
    */
   public function testRollbackSavepointWithLaterSavepoint(): void {
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $transaction = $this->createRootTransaction();
     $savepoint1 = $this->createFirstSavepointTransaction();
 
     // Starts another savepoint transaction. Corresponds to 'SAVEPOINT
     // savepoint_2' on the database.
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint2 = $this->connection->startTransaction();
     $this->assertTrue($this->connection->inTransaction());
     $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
@@ -441,6 +402,9 @@ class TransactionYieldTest extends DatabaseTestBase {
 
   /**
    * Tests commit does not fail when committing after DDL.
+   *
+   * In core, SQLite and PostgreSql databases support transactional DDL, MySql
+   * does not.
    */
   public function testCommitAfterDdl(): void {
     $transaction = $this->createRootTransaction();
@@ -676,6 +640,7 @@ class TransactionYieldTest extends DatabaseTestBase {
       $transaction3 = $this->connection->startTransaction();
       $this->insertRow('row');
       $transaction3->yield();
+      $this->assertRowPresent('row');
       $transaction->rollBack();
       $this->assertRowAbsent('row');
     }
@@ -698,6 +663,8 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->assertEquals(ClientConnectionTransactionState::Active, $reflectionMethod->invoke($this->connection->transactionManager()));
     $this->insertRow('row');
     $this->executeDDLStatement();
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
+    $this->assertEquals(ClientConnectionTransactionState::Voided, $reflectionMethod->invoke($this->connection->transactionManager()));
 
     // Try to rollback the root transaction. Since the DDL already committed
     // it, it should fail.
@@ -766,6 +733,7 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->connection->truncate('test')
       ->execute();
     $this->postTransactionCallbackAction = NULL;
+    $this->assertSame(0, $this->connection->transactionManager()->stackDepth());
   }
 
   /**
@@ -981,12 +949,12 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->assertSame(3, $this->connection->transactionManager()->stackDepth());
     // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_3'
     // on the database.
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint3 = $this->connection->startTransaction();
     $this->assertSame(4, $this->connection->transactionManager()->stackDepth());
     // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_4'
     // on the database.
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint4 = $this->connection->startTransaction();
     $this->assertSame(5, $this->connection->transactionManager()->stackDepth());
 
@@ -1013,7 +981,7 @@ class TransactionYieldTest extends DatabaseTestBase {
    */
   public function testCommitWithActiveSavepoint(): void {
     $transaction = $this->createRootTransaction();
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis
     $savepoint1 = $this->createFirstSavepointTransaction('', FALSE);
 
     // Starts a savepoint transaction. Corresponds to 'SAVEPOINT savepoint_2'
@@ -1052,6 +1020,23 @@ class TransactionYieldTest extends DatabaseTestBase {
     $this->expectException(TransactionNameNonUniqueException::class);
     $this->expectExceptionMessage("savepoint_1 is already in use.");
     $this->connection->startTransaction('savepoint_1');
+  }
+
+  /**
+   * Tests for arbitrary transaction names.
+   */
+  public function testArbitraryTransactionNames(): void {
+    $transaction = $this->createRootTransaction('TinkyWinky', FALSE);
+    // Despite setting a name, the root transaction is always named
+    // 'drupal_transaction'.
+    $this->assertSame('drupal_transaction', $transaction->name());
+
+    $savepoint1 = $this->createFirstSavepointTransaction('Dipsy', FALSE);
+    $this->assertSame('Dipsy', $savepoint1->name());
+
+    $this->expectException(TransactionNameNonUniqueException::class);
+    $this->expectExceptionMessage("Dipsy is already in use.");
+    $this->connection->startTransaction('Dipsy');
   }
 
   /**
