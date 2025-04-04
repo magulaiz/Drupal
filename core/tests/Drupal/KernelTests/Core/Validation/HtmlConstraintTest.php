@@ -12,11 +12,14 @@ use Symfony\Component\Validator\Exception\InvalidArgumentException;
  * Test class for Html constraint.
  *
  * @group Validation
+ *
+ * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\HtmlConstraint
+ * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\HtmlConstraintValidator
  */
 class HtmlConstraintTest extends KernelTestBase {
 
   /**
-   * Tests regex values.
+   * Tests html constraint.
    *
    * @param string $html
    *   The html string to test.
