@@ -70,6 +70,11 @@ class Condition implements ConditionInterface, \Countable {
   protected $queryPlaceholderIdentifier;
 
   /**
+   * The placeholder type, named or positional.
+   */
+  protected readonly PlaceholderType $placeholderType;
+
+  /**
    * Contains the string version of the Condition.
    *
    * @var string
@@ -81,14 +86,15 @@ class Condition implements ConditionInterface, \Countable {
    *
    * @param string $conjunction
    *   The operator to use to combine conditions: 'AND' or 'OR'.
-   * @param \Drupal\Core\Database\Statement\PlaceholderType $placeholderType
+   * @param \Drupal\Core\Database\Statement\PlaceholderType|null $placeholderType
    *   The placeholder type, named or positional.
    */
   public function __construct(
     $conjunction,
-    protected readonly PlaceholderType $placeholderType,
+    PlaceholderType $placeholderType = NULL,
   ) {
     $this->conditions['#conjunction'] = $conjunction;
+    $this->placeholderType = $placeholderType ?? PlaceholderType::Named;
   }
 
   /**
