@@ -6,9 +6,7 @@ namespace Drupal\Tests\block\Unit;
 
 use Drupal\block\BlockRepository;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -18,21 +16,29 @@ use Drupal\Tests\UnitTestCase;
 class BlockRepositoryTest extends UnitTestCase {
 
   /**
+   * The block repository.
+   *
    * @var \Drupal\block\BlockRepository
    */
   protected $blockRepository;
 
   /**
+   * The block storage or a mock.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $blockStorage;
 
   /**
+   * The theme for the test.
+   *
    * @var string
    */
   protected $theme;
 
   /**
+   * The context handler of a mock.
+   *
    * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $contextHandler;
@@ -56,15 +62,6 @@ class BlockRepositoryTest extends UnitTestCase {
         'center',
         'bottom',
       ]);
-
-    $language_manager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
-    $language_manager->expects($this->any())
-      ->method('getCurrentLanguage')
-      ->with()
-      ->willReturn(new Language(['id' => 'en']));
-    $container = new ContainerBuilder();
-    $container->set('language_manager', $language_manager);
-    \Drupal::setContainer($container);
 
     $theme_manager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $theme_manager->expects($this->atLeastOnce())
