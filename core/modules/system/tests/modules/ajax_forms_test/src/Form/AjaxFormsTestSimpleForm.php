@@ -144,6 +144,9 @@ class AjaxFormsTestSimpleForm extends FormBase {
     return $form;
   }
 
+  /**
+   * Ajax callback for the test text field.
+   */
   public static function textfieldCallback($form) {
     return $form;
   }
