@@ -118,6 +118,9 @@ class ComponentValidatorTest extends TestCase {
       ],
     ];
     yield 'invalid slot (type)' => [$cta_with_invalid_slot_type];
+
+    $invalid_variants = static::loadComponentDefinitionFromFs('invalid-variants-cta');
+    yield 'invalid variants' => [$invalid_variants];
   }
 
   /**
