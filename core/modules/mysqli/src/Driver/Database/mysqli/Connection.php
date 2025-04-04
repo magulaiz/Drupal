@@ -150,13 +150,11 @@ class Connection extends BaseMySqlConnection {
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
     try {
       $query = $this->preprocessStatement($query, $options);
-      $statement = new $this->statementWrapperClass($this, $this->connection, $query, $options, $allow_row_count);
+      return new Statement($this, $this->connection, $query, $options, $allow_row_count);
     }
     catch (\Exception $e) {
       $this->exceptionHandler()->handleStatementException($e, $query, $options);
     }
-
-    return $statement;
   }
 
   /**
