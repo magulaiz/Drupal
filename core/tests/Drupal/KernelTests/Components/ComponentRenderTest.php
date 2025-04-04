@@ -359,28 +359,28 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:my-cta',
-      '#variant' => 'red',
+      '#variant' => 'primary',
       '#props' => [
         'text' => 'Test link',
       ],
     ];
     $crawler = $this->renderComponentRenderArray($build);
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta"][data-component-variant="red"]'));
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta"][data-component-variant="red"][class*="red"]'));
+    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta"][data-component-variant="primary"]'));
+    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta"][data-component-variant="primary"][class*="my-cta-primary"]'));
 
     // If there were an existing prop named variant, we don't override that for BC reasons.
     $build = [
       '#type' => 'component',
       '#component' => 'sdc_test:my-cta-with-variant-prop',
-      '#variant' => 'blue',
+      '#variant' => 'tertiary',
       '#props' => [
         'text' => 'Test link',
-        'variant' => 'red',
+        'variant' => 'secondary',
       ],
     ];
     $crawler = $this->renderComponentRenderArray($build);
-    $this->assertEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="blue"]'));
-    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="red"]'));
+    $this->assertEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="tertiary"]'));
+    $this->assertNotEmpty($crawler->filter('#sdc-wrapper a[data-component-id="sdc_test:my-cta-with-variant-prop"][data-component-variant="secondary"]'));
   }
 
   /**

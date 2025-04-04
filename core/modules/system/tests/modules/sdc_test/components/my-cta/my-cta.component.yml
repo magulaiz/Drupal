@@ -27,15 +27,12 @@ props:
       type: Drupal\Core\Template\Attribute
       name: Attributes
 variants:
-  default:
-    title: Default
-    description: My default variant
-  green:
-    title: Green
-    description: My green variant
-  blue:
-    title: Blue
-    description: My blue variant
-  red:
-    title: Red
-    description: My red variant
+  primary:
+    title: Primary
+    description: My primary variant
+  secondary:
+    title: Secondary
+    description: My secondary variant
+  tertiary:
+    title: Tertiary
+    description: My tertiary variant

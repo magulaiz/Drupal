@@ -27,9 +27,9 @@ props:
       type: string
       title: Variant Prop
       enum:
-        - ''
-        - red
-        - blue
+        - primary
+        - secondary
+        - tertiary
     attributes:
       type: Drupal\Core\Template\Attribute
       name: Attributes
