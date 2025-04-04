@@ -91,7 +91,7 @@ class Condition implements ConditionInterface, \Countable {
    */
   public function __construct(
     $conjunction,
-    PlaceholderType $placeholderType = NULL,
+    ?PlaceholderType $placeholderType = NULL,
   ) {
     $this->conditions['#conjunction'] = $conjunction;
     $this->placeholderType = $placeholderType ?? PlaceholderType::Named;
