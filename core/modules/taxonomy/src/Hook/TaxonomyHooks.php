@@ -180,6 +180,7 @@ class TaxonomyHooks {
     }
   }
 
+  // phpcs:ignore Drupal.Commenting.InlineComment.DocBlock
   /**
    * @} End of "defgroup taxonomy_index".
    */
