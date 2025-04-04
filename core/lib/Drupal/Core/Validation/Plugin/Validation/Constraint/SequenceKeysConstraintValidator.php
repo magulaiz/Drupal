@@ -13,6 +13,9 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
+/**
+ * Validates that all the keys of a sequence match the specified constraints.
+ */
 class SequenceKeysConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   public function __construct(
