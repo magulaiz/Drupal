@@ -1,0 +1,4 @@
+name: Default
+slots:
+  label: "My Bootstrap textfield"
+#name: "foo"

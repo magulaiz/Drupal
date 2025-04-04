@@ -1,0 +1,31 @@
+name: Default
+slots:
+  header: "Card"
+  content:
+    - type: component
+      component: "core_sdc_form:card_body"
+      slots:
+        content:
+          - type: component
+            component: "core_sdc_form:mytextfield"
+            slots:
+              label: "My Bootstrap textfield"
+            name: "foo"
+          - type: component
+            component: "core_sdc_form:myselect"
+            slots:
+              label: "My Bootstrap select"
+            props:
+              options:
+                1: One
+                2: Two
+                3: Three
+            name: "bar"
+          - type: component
+            component: "core_sdc_form:myradios"
+            props:
+              options:
+                1: One
+                2: Two
+                3: Three
+            name: "baz"
