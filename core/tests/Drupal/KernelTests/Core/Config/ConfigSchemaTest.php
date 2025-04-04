@@ -655,7 +655,10 @@ class ConfigSchemaTest extends KernelTestBase {
       $this->expectException(InvalidPluginDefinitionException::class);
       $this->expectExceptionMessage($expected_exception_message);
     }
-    $container->get('config.typed')->getDefinitions();
+    $definitions = $container->get('config.typed')->getDefinitions();
+
+    // If there was no exception, we expect to get the definitions.
+    $this->assertIsArray($definitions);
   }
 
   /**
