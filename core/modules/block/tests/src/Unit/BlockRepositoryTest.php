@@ -196,4 +196,39 @@ class BlockRepositoryTest extends UnitTestCase {
     $this->assertEquals(['config:block.block.block_id'], $cacheable_metadata['top']->getCacheTags());
   }
 
+  /**
+   * Tests that we don't check access for blocks in inactive regions.
+   *
+   * @covers ::getVisibleBlocksPerRegion
+   */
+  public function testGetVisibleBlocksPerRegionWithInactiveRegion(): void {
+    $block = $this->createMock('Drupal\block\BlockInterface');
+    $block->expects($this->never())
+      ->method('access');
+    $block->expects($this->once())
+      ->method('getRegion')
+      ->willReturn('inactive_region');
+    $blocks['block_id'] = $block;
+
+    $this->blockStorage->expects($this->once())
+      ->method('loadByProperties')
+      ->with(['theme' => $this->theme])
+      ->willReturn($blocks);
+    $result = [];
+    $cacheable_metadata = [];
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
+      $result[$region] = [];
+      foreach ($resulting_blocks as $plugin_id => $block) {
+        $result[$region][] = $plugin_id;
+      }
+    }
+
+    $expected = [
+      'top' => [],
+      'center' => [],
+      'bottom' => [],
+    ];
+    $this->assertEquals($expected, $result);
+  }
+
 }
