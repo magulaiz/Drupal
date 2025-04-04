@@ -8,6 +8,7 @@
  * customized by user themes.
  */
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -510,6 +511,7 @@ function template_preprocess_links(&$variables): void {
       $heading['attributes'] = new Attribute($heading['attributes']);
     }
 
+    $cache = CacheableMetadata::createFromRenderArray($variables);
     $variables['links'] = [];
     foreach ($links as $key => $link) {
       $item = [];
@@ -540,6 +542,17 @@ function template_preprocess_links(&$variables): void {
       // convert this jQuery selector to a CSS selector:
       // jQuery('li:has("a.is-active")')
       if (isset($link['url'])) {
+        /** @var \Drupal\Core\Url $url */
+        $url = $link['url'];
+        // Entity access uses orIf to sum access results, but routing uses
+        // andIf, where neutral currently denies access, so to not show links to
+        // entity routes we must deny unless the result is allow.
+        $link_element['#access'] = $url->access(return_as_object: TRUE);
+        $cache->addCacheableDependency($link_element['#access']);
+        if (!$link_element['#access']->isAllowed()) {
+          // Templates expect inaccessible links to not be included.
+          continue;
+        }
         if (!empty($variables['set_active_class'])) {
 
           // Also enable set_active_class for the contained link.
@@ -559,8 +572,6 @@ function template_preprocess_links(&$variables): void {
             $li_attributes['data-drupal-link-query'] = Json::encode($query);
           }
 
-          /** @var \Drupal\Core\Url $url */
-          $url = $link['url'];
           if ($url->isRouted()) {
             // Add a "data-drupal-link-system-path" attribute to let the
             // drupal.active-link library know the path in a standardized
@@ -589,6 +600,7 @@ function template_preprocess_links(&$variables): void {
       // Add the item to the list of links.
       $variables['links'][$key] = $item;
     }
+    $cache->applyTo($variables);
   }
 }
 

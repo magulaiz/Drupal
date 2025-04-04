@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\router_test;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\user\UserInterface;
@@ -112,6 +114,19 @@ class TestControllers {
       ],
       '#markup' => \Drupal::requestStack()->getCurrentRequest()->getUri(),
     ];
+  }
+
+  public function test28(): array {
+    return [
+      '#cache' => [
+        'url',
+      ],
+      '#markup' => \Drupal::requestStack()->getCurrentRequest()->getUri(),
+    ];
+  }
+
+  public function test28Access(): AccessResultInterface {
+    return AccessResult::allowed()->addCacheTags(['router-test-28']);
   }
 
   public function testRouteName(Request $request) {
