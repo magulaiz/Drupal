@@ -119,9 +119,22 @@ class ComponentValidatorTest extends TestCase {
     ];
     yield 'invalid slot (type)' => [$cta_with_invalid_slot_type];
 
-    $invalid_variants = static::loadComponentDefinitionFromFs('invalid-variants-cta');
-    yield 'invalid variants' => [$invalid_variants];
-  }
+    $cta_with_invalid_variant_type = $valid_cta;
+    $cta_with_invalid_variant_type['variants'] = [
+      'valid_variant' => [
+        'title' => 'Valid variant',
+        'description' => 'Valid variant description',
+      ],
+      'invalid_variant' => [
+        'title' => [
+          'hello' => 'Invalid variant',
+          'world' => 'Invalid variant',
+        ],
+        'description' => 'Title must be string',
+      ],
+    ];
+    yield 'invalid variant (type)' => [$cta_with_invalid_variant_type];
+ }
 
   /**
    * Tests that valid props are handled properly.
