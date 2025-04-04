@@ -15,6 +15,7 @@ use Drupal\user\Entity\Role;
  * Tests file listing page functionality.
  *
  * @group file
+ * @group #slow
  */
 class FileListingTest extends FileFieldTestBase {
 
