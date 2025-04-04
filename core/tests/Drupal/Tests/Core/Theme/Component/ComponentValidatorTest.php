@@ -134,7 +134,7 @@ class ComponentValidatorTest extends TestCase {
       ],
     ];
     yield 'invalid variant (type)' => [$cta_with_invalid_variant_type];
- }
+  }
 
   /**
    * Tests that valid props are handled properly.
