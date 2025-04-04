@@ -26,7 +26,7 @@ class SequenceKeysConstraintValidator extends ConstraintValidator implements Con
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('validation.constraint'),
       $container->get(ClassResolverInterface::class)

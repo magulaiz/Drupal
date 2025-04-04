@@ -61,7 +61,7 @@ class ExtensionAvailableConstraintValidator extends ConstraintValidator implemen
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('module_handler'),
       $container->get('theme_handler'),
