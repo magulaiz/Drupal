@@ -23,46 +23,64 @@ class ThemeInstaller implements ThemeInstallerInterface {
   use StringTranslationTrait;
 
   /**
+   * The theme handler.
+   *
    * @var \Drupal\Core\Extension\ThemeHandlerInterface
    */
   protected $themeHandler;
 
   /**
+   * The configuration factory.
+   *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
   /**
+   * The configuration installer.
+   *
    * @var \Drupal\Core\Config\ConfigInstallerInterface
    */
   protected $configInstaller;
 
   /**
+   * The module handler.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
+   * The State service.
+   *
    * @var \Drupal\Core\State\StateInterface
    */
   protected $state;
 
   /**
+   * The configuration manager.
+   *
    * @var \Drupal\Core\Config\ConfigManagerInterface
    */
   protected $configManager;
 
   /**
+   * The CSS collection optimizer.
+   *
    * @var \Drupal\Core\Asset\AssetCollectionOptimizerInterface
    */
   protected $cssCollectionOptimizer;
 
   /**
+   * The route building service.
+   *
    * @var \Drupal\Core\Routing\RouteBuilderInterface
    */
   protected $routeBuilder;
 
   /**
+   * The logger service.
+   *
    * @var \Psr\Log\LoggerInterface
    */
   protected $logger;

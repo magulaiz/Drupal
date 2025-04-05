@@ -549,6 +549,8 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
+   * Gets the list of events listeners for the given hook.
+   *
    * @param string $hook
    *   The name of the hook.
    *

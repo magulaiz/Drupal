@@ -20,6 +20,8 @@ abstract class AttributeBase implements AttributeInterface {
   protected string|null $provider = NULL;
 
   /**
+   * Constructs the attribute.
+   *
    * @param string $id
    *   The attribute class ID.
    */

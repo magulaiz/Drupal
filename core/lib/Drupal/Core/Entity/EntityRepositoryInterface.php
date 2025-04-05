@@ -7,6 +7,7 @@ namespace Drupal\Core\Entity;
  */
 interface EntityRepositoryInterface {
 
+  // phpcs:ignore Drupal.Commenting.DocComment.MissingShort
   /**
    * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
