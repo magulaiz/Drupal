@@ -6,18 +6,18 @@
  * Available variables:
  * - content: The content for this layout.
  * - attributes: HTML attributes for the layout <div>.
- * - content.#settings.hide_logo: Whether to hide the logo.
- * - content.#settings.logo_path: The path to the logo image if logo_managed
- *   in navigation.settings configuration has been set.
- * - content.#settings.logo_width: The width of the logo image. Available if
- *   logo_path points to a valid image file.
- * - content.#settings.logo_height: The height of the logo image. Available if
- *   logo_path points to a valid image file.
+ * - settings: layout settings. The following are related to the logo:
+ *   - hide_logo: Whether to hide the logo.
+ *   - logo_path: The path to the logo image if logo_managed
+ *     in navigation.settings configuration has been set.
+ *   - logo_width: The width of the logo image. Available if
+ *     logo_path points to a valid image file.
+ *   - settings.logo_height: The height of the logo image. Available if
+ *     logo_path points to a valid image file.
  * @ingroup themeable
  */
 #}
 {% set control_bar_attributes = create_attribute() %}
-{% set settings = content['#settings'] %}
 
 <div {{ control_bar_attributes.addClass('admin-toolbar-control-bar').setAttribute('data-drupal-admin-styles', '') }}>
   <div class="admin-toolbar-control-bar__content">
