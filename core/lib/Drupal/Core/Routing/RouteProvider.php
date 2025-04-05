@@ -53,13 +53,6 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   protected $routes = [];
 
   /**
-   * A cache of already-loaded serialized routes, keyed by route name.
-   *
-   * @var string[]
-   */
-  protected $serializedRoutes = [];
-
-  /**
    * The current path.
    *
    * @var \Drupal\Core\Path\CurrentPathStack
@@ -111,7 +104,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *
    * @var string[]
    */
-  protected array $cacheableRoutes = [];
+  protected array $fastCacheRoutes = [];
 
   /**
    * Constructs a new PathMatcher.
@@ -239,13 +232,13 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   }
 
   /**
-   * Sets routes that are worth caching.
+   * Sets routes that are worth caching in a fast chained cache backend.
    *
    * @param array $routes
-   *   List of routes.
+   *   List of route names.
    */
-  public function setCacheableRoutes(array $routes): void {
-    $this->cacheableRoutes = array_merge($this->cacheableRoutes, $routes);
+  public function setFastCacheRoutes(array $routes): void {
+    $this->fastCacheRoutes = array_merge($this->fastCacheRoutes, $routes);
   }
 
   /**
@@ -256,38 +249,38 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       throw new \InvalidArgumentException('You must specify the route names to load');
     }
 
-    $routes_to_load = array_diff($names, array_keys($this->routes), array_keys($this->serializedRoutes));
+    $routes_to_load = array_diff($names, array_keys($this->routes));
     if ($routes_to_load) {
 
       // Fetch any routes that aren't already loaded. Fetch cacheable routes
       // from the persistent cache and prepare cache ids for that.
       $bootstrap_cids = [];
       $data_cids = [];
-      foreach ($routes_to_load as $key => $route_name) {
-        if (in_array($route_name, $this->cacheableRoutes, TRUE)) {
+      foreach ($routes_to_load as $route_name) {
+        if (in_array($route_name, $this->fastCacheRoutes, TRUE)) {
           $bootstrap_cids[$route_name] = static::ROUTE_LOAD_CID_PREFIX . $route_name;
         }
         else {
           $data_cids[$route_name] = static::ROUTE_LOAD_CID_PREFIX . $route_name;
         }
-        unset($routes_to_load[$key]);
       }
 
-      if ($caches = $this->bootstrapCache->getMultiple($bootstrap_cids)) {
-        foreach ($caches as $cid => $cache) {
-          $this->serializedRoutes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
+      if ($bootstrap_cids) {
+        foreach ($this->bootstrapCache->getMultiple($bootstrap_cids) as $cid => $cache) {
+          $this->routes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
         }
       }
 
-      if ($caches = $this->cache->getMultiple($data_cids)) {
-        foreach ($caches as $cid => $cache) {
-          $this->serializedRoutes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
+      if ($data_cids) {
+        foreach ($this->cache->getMultiple($data_cids) as $cid => $cache) {
+          $this->routes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
         }
       }
 
       // Only cache identifiers that couldn't be fetched from cache are still
       // in the list, merge them back into routes to load from the database
       // and then do so.
+      $routes_to_load = [];
       if (!empty($bootstrap_cids)) {
         $routes_to_load = array_merge($routes_to_load, array_keys($bootstrap_cids));
       }
@@ -297,8 +290,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       if (!empty($routes_to_load)) {
         try {
           $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => $routes_to_load]);
-          $routes = $result->fetchAllKeyed();
-          $this->serializedRoutes += $routes;
+          $routes = array_map('unserialize', $result->fetchAllKeyed());
+          $this->routes += $routes;
 
           // Write back cache items for items that were attempted to be fetched.
           $bootstrap_items = [];
@@ -335,15 +328,6 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    */
   public function getRoutesByNames($names) {
     $this->preLoadRoutes($names);
-
-    foreach ($names as $name) {
-      // The specified route name might not exist or might be serialized.
-      if (!isset($this->routes[$name]) && isset($this->serializedRoutes[$name])) {
-        $this->routes[$name] = unserialize($this->serializedRoutes[$name]);
-        unset($this->serializedRoutes[$name]);
-      }
-    }
-
     return array_intersect_key($this->routes, array_flip($names));
   }
 

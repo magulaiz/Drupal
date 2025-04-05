@@ -48,6 +48,7 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
     // warmed, wait one second to ensure that the request finished processing.
     $this->drupalGet('');
     sleep(1);
+    $this->drupalGet('');
 
     $url = Url::fromRoute('jsonapi.node--article.individual', ['entity' => $node->uuid()])->toString();
     $performance_data = $this->collectPerformanceData(function () use ($url) {
@@ -87,10 +88,10 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 26,
-      'CacheGetCount' => 49,
+      'CacheGetCount' => 42,
       'CacheGetCountByBin' => [
         'config' => 8,
-        'bootstrap' => 12,
+        'bootstrap' => 5,
         'data' => 8,
         'discovery' => 13,
         'entity' => 2,
@@ -206,10 +207,10 @@ class JsonApiPerformanceTest extends PerformanceTestBase {
 
     $expected = [
       'QueryCount' => 15,
-      'CacheGetCount' => 50,
+      'CacheGetCount' => 43,
       'CacheGetCountByBin' => [
         'config' => 8,
-        'bootstrap' => 11,
+        'bootstrap' => 4,
         'data' => 8,
         'discovery' => 13,
         'entity' => 2,

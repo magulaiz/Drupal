@@ -167,7 +167,7 @@ class RoutePreloaderTest extends UnitTestCase {
       ->willReturn($request);
 
     $this->routeProvider->expects($this->once())
-      ->method('setCacheableRoutes')
+      ->method('setFastCacheRoutes')
       ->with(['test2']);
     $this->state->expects($this->once())
       ->method('get')

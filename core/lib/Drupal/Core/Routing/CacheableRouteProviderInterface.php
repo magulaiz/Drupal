@@ -23,6 +23,6 @@ interface CacheableRouteProviderInterface extends RouteProviderInterface {
    * @param string[] $routes
    *   List of routes.
    */
-  public function setCacheableRoutes(array $routes): void;
+  public function setFastCacheRoutes(array $routes): void;
 
 }

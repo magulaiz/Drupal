@@ -49,7 +49,7 @@ class RoutePreloader implements EventSubscriberInterface {
     if ($this->routeProvider instanceof CacheableRouteProviderInterface && $event->getRequest()->getRequestFormat() == 'html') {
       $routes = $this->state->get('routing.non_admin_routes', []);
       if ($routes) {
-        $this->routeProvider->setCacheableRoutes($routes);
+        $this->routeProvider->setFastCacheRoutes($routes);
       }
     }
   }
