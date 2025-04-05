@@ -4,6 +4,7 @@ namespace Drupal\sqlite\Driver\Database\sqlite;
 
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementPrefetchIterator;
+use Doctrine\SqlFormatter\Tokenizer;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Statement.
@@ -78,7 +79,11 @@ class Statement extends StatementPrefetchIterator implements StatementInterface 
         }
       }
     }
-
+global $xx; if($xx) {
+  dump($query);
+//  $t = new Tokenizer();
+//  dump($t->tokenize($query));
+}
     return $this->clientConnection->prepare($query);
   }
 
