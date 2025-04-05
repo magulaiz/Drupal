@@ -7,6 +7,7 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 use Masterminds\HTML5;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\InvalidArgumentException;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
@@ -22,6 +23,11 @@ class HtmlConstraintValidator extends ConstraintValidator {
     if (!$constraint instanceof HtmlConstraint) {
       throw new UnexpectedTypeException($constraint, HtmlConstraint::class);
     }
+
+    if (!in_array($constraint->mode, ['fragment', 'document'])) {
+      throw new InvalidArgumentException('Invalid HTML parsing mode. the `mode` argument must be "fragment" or "document".');
+    }
+
     if ($value === NULL) {
       return;
     }
