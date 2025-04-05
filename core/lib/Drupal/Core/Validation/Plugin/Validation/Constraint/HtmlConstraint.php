@@ -25,6 +25,20 @@ class HtmlConstraint extends SymfonyConstraint {
    *
    * @var "fragment"|"document"
    */
-  public string $mode = 'fragment';
+  public string $mode;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultOption(): ?string {
+    return 'mode';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRequiredOptions(): array {
+    return ['mode'];
+  }
 
 }
