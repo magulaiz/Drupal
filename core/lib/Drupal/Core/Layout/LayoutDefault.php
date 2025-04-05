@@ -96,7 +96,7 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
    *
    * @return \Drupal\Core\Layout\LayoutDefinition
    */
-  // phpcs:ignore Drupal.Commenting.FunctionComment.MissingReturnComment
+  // phpcs:ignore Drupal.Commenting.FunctionComment.Missing, Drupal.Commenting.FunctionComment.MissingReturnComment
   public function getPluginDefinition() {
     return parent::getPluginDefinition();
   }

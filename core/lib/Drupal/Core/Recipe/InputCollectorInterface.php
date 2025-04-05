@@ -11,6 +11,9 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
  */
 interface InputCollectorInterface {
 
+  /**
+   * Collects an input value.
+   */
   public function collectValue(string $name, DataDefinitionInterface $definition, mixed $default_value): mixed;
 
 }
