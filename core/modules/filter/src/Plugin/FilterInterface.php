@@ -267,6 +267,10 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * @return string|null
    *   Translated text to display as a tip, or NULL if this filter has no tip.
    *
+   * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is
+   *   no replacement.
+   *
+   * @see https://www.drupal.org/node/000000
    * @todo Split into getSummaryItem() and buildGuidelines().
    */
   public function tips($long = FALSE);

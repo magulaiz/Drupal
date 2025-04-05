@@ -384,6 +384,8 @@ class FilterAdminTest extends BrowserTestBase {
 
   /**
    * Tests whether filter tips page is not HTML escaped.
+   *
+   * @group legacy
    */
   public function testFilterTipHtmlEscape(): void {
     $this->drupalLogin($this->adminUser);
