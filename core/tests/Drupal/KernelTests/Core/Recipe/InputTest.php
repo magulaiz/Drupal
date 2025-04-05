@@ -291,6 +291,9 @@ YAML
     RecipeRunner::processRecipe($recipe);
   }
 
+  /**
+   * Tests that the askHidden prompt forwards arguments correctly.
+   */
   public function testAskHiddenPromptArgumentsForwarded(): void {
     $input = $this->createMock(InputInterface::class);
     $output = $this->createMock(OutputInterface::class);
@@ -317,4 +320,3 @@ YAML
   }
 
 }
-
