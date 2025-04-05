@@ -125,7 +125,7 @@ class RouteProviderTest extends KernelTestBase {
   public function testCandidateOutlines(): void {
 
     $connection = Database::getConnection();
-    $provider = new TestRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+    $provider = new TestRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes', NULL, $this->cache);
 
     $parts = ['node', '5', 'edit'];
 
@@ -181,7 +181,7 @@ class RouteProviderTest extends KernelTestBase {
    */
   public function testOutlinePathMatch(): void {
     $connection = Database::getConnection();
-    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+    $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes', NULL, $this->cache);
 
     $this->fixtures->createTables($connection);
 
@@ -696,7 +696,7 @@ class RouteProviderTest extends KernelTestBase {
    */
   public function testGetRoutesByPatternWithLongPatterns(): void {
     $connection = Database::getConnection();
-    $provider = new TestRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
+    $provider = new TestRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes', NULL, $this->cache);
 
     $this->fixtures->createTables($connection);
     // This pattern has only 3 parts, so we will get candidates, but no routes,

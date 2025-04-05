@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Statement\FetchAs;
@@ -108,6 +107,13 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   protected $extraCacheKeyParts = [];
 
   /**
+   * A list of routes that are worth caching.
+   *
+   * @var string[]
+   */
+  protected array $cacheableRoutes = [];
+
+  /**
    * Constructs a new PathMatcher.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -127,8 +133,10 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *   'router'.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   (Optional) The language manager.
+   * @param \Drupal\Core\Cache\CacheBackendInterface|null $bootstrapCache
+   *   The bootstrap cache.
    */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', ?LanguageManagerInterface $language_manager = NULL) {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', ?LanguageManagerInterface $language_manager = NULL, protected ?CacheBackendInterface $bootstrapCache = NULL) {
     $this->connection = $connection;
     $this->state = $state;
     $this->currentPath = $current_path;
@@ -137,6 +145,10 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     $this->pathProcessor = $path_processor;
     $this->tableName = $table;
     $this->languageManager = $language_manager ?: \Drupal::languageManager();
+    if ($bootstrapCache === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the bootstrapCache argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3503843', E_USER_DEPRECATED);
+      $this->bootstrapCache = \Drupal::service('cache.bootstrap');
+    }
   }
 
   /**
@@ -227,6 +239,16 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
   }
 
   /**
+   * Sets routes that are worth caching.
+   *
+   * @param array $routes
+   *   List of routes.
+   */
+  public function setCacheableRoutes(array $routes): void {
+    $this->cacheableRoutes = array_merge($this->cacheableRoutes, $routes);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function preLoadRoutes($names) {
@@ -237,23 +259,74 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     $routes_to_load = array_diff($names, array_keys($this->routes), array_keys($this->serializedRoutes));
     if ($routes_to_load) {
 
-      $cid = static::ROUTE_LOAD_CID_PREFIX . hash('sha512', serialize($routes_to_load));
-      if ($cache = $this->cache->get($cid)) {
-        $routes = $cache->data;
+      // Fetch any routes that aren't already loaded. Fetch cacheable routes
+      // from the persistent cache and prepare cache ids for that.
+      $bootstrap_cids = [];
+      $data_cids = [];
+      foreach ($routes_to_load as $key => $route_name) {
+        if (in_array($route_name, $this->cacheableRoutes, TRUE)) {
+          $bootstrap_cids[$route_name] = static::ROUTE_LOAD_CID_PREFIX . $route_name;
+        }
+        else {
+          $data_cids[$route_name] = static::ROUTE_LOAD_CID_PREFIX . $route_name;
+        }
+        unset($routes_to_load[$key]);
       }
-      else {
+
+      if ($caches = $this->bootstrapCache->getMultiple($bootstrap_cids)) {
+        foreach ($caches as $cid => $cache) {
+          $this->serializedRoutes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
+        }
+      }
+
+      if ($caches = $this->cache->getMultiple($data_cids)) {
+        foreach ($caches as $cid => $cache) {
+          $this->serializedRoutes[substr($cid, strlen(static::ROUTE_LOAD_CID_PREFIX))] = $cache->data;
+        }
+      }
+
+      // Only cache identifiers that couldn't be fetched from cache are still
+      // in the list, merge them back into routes to load from the database
+      // and then do so.
+      if (!empty($bootstrap_cids)) {
+        $routes_to_load = array_merge($routes_to_load, array_keys($bootstrap_cids));
+      }
+      if (!empty($data_cids)) {
+        $routes_to_load = array_merge($routes_to_load, array_keys($data_cids));
+      }
+      if (!empty($routes_to_load)) {
         try {
           $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => $routes_to_load]);
           $routes = $result->fetchAllKeyed();
+          $this->serializedRoutes += $routes;
 
-          $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
+          // Write back cache items for items that were attempted to be fetched.
+          $bootstrap_items = [];
+          $data_items = [];
+          foreach ($routes as $route_name => $route) {
+            if (isset($bootstrap_cids[$route_name])) {
+              $bootstrap_items[static::ROUTE_LOAD_CID_PREFIX . $route_name] = [
+                'data' => $route,
+                'tags' => ['routes'],
+              ];
+            }
+            else {
+              $data_items[static::ROUTE_LOAD_CID_PREFIX . $route_name] = [
+                'data' => $route,
+                'tags' => ['routes'],
+              ];
+            }
+          }
+          if ($bootstrap_items) {
+            $this->bootstrapCache->setMultiple($bootstrap_items);
+          }
+          if ($data_items) {
+            $this->cache->setMultiple($data_items);
+          }
         }
         catch (\Exception) {
-          $routes = [];
         }
       }
-
-      $this->serializedRoutes += $routes;
     }
   }
 
