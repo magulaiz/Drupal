@@ -12,11 +12,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\MenuInterface;
 
 /**
- * @group Plugin
- * @group Validation
- *
  * @covers \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint
  * @covers \Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraintValidator
+ *
+ * @group Plugin
+ * @group Validation
  */
 class PluginExistsConstraintValidatorTest extends KernelTestBase {
 

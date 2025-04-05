@@ -10,8 +10,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @group Messenger
  * @coversDefaultClass \Drupal\Core\Messenger\Messenger
+ * @group Messenger
  */
 class MessengerTest extends KernelTestBase {
 

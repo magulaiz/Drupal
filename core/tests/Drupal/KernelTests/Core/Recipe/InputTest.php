@@ -21,8 +21,8 @@ use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
- * @group Recipe
  * @covers \Drupal\Core\Recipe\InputConfigurator
+ * @group Recipe
  */
 class InputTest extends KernelTestBase {
 

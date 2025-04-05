@@ -11,11 +11,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * @group Entity
- * @group Validation
- *
  * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraint
  * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\EntityBundleExistsConstraintValidator
+ *
+ * @group Entity
+ * @group Validation
  */
 class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
 
