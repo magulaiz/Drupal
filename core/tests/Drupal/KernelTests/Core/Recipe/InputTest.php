@@ -17,7 +17,9 @@ use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\StyleInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
@@ -289,4 +291,30 @@ YAML
     RecipeRunner::processRecipe($recipe);
   }
 
+  public function testAskHiddenPromptArgumentsForwarded(): void {
+    $input = $this->createMock(InputInterface::class);
+    $output = $this->createMock(OutputInterface::class);
+    $io = new SymfonyStyle($input, $output);
+
+    $recipe = $this->createRecipe(<<<YAML
+name: 'Prompt askHidden Test'
+input:
+  foo:
+    data_type: string
+    description: Foo
+    prompt:
+      method: askHidden
+    default:
+      source: value
+      value: bar
+YAML
+    );
+    $collector = new ConsoleInputCollector($input, $io);
+    // askHidden prompt should have an ArgumentCountError rather than a general
+    // error.
+    $this->expectException(\ArgumentCountError::class);
+    $recipe->input->collectAll($collector);
+  }
+
 }
+
