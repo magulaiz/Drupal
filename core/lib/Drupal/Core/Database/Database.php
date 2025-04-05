@@ -537,6 +537,8 @@ abstract class Database {
     $driver = self::getDriverList()
       ->includeTestDrivers($include_test_drivers)
       ->get($driverNamespace);
+    $connection_class = $driverNamespace . '\\Connection';
+    $autoloadInfo = $driver->getAutoloadInfo();
 
     // Set up an additional autoloader. We don't use the main autoloader as
     // this method can be called before Drupal is installed and is never
@@ -544,21 +546,19 @@ abstract class Database {
     $additional_class_loader = new ClassLoader();
     $additional_class_loader->addPsr4($driverNamespace . '\\', $driver->getPath());
     $additional_class_loader->register();
-    $connection_class = $driverNamespace . '\\Connection';
-    if (!class_exists($connection_class)) {
-      throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$connection_class' does not exist");
-    }
 
     // When the database driver is extending another database driver, then
     // add autoload info for the parent database driver as well.
-    $autoloadInfo = $driver->getAutoloadInfo();
     if (isset($autoloadInfo['dependencies'])) {
       foreach ($autoloadInfo['dependencies'] as $dependency) {
         $additional_class_loader->addPsr4($dependency['namespace'] . '\\', $dependency['autoload']);
       }
     }
-
     $additional_class_loader->register(TRUE);
+
+    if (!class_exists($connection_class)) {
+      throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$connection_class' does not exist");
+    }
 
     $options = $connection_class::createConnectionOptionsFromUrl($url, $root);
 
