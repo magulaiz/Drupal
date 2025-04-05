@@ -6,7 +6,6 @@ namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
-use Symfony\Component\Validator\Exception\InvalidArgumentException;
 use Drupal\Core\Validation\Attribute\Constraint;
 
 /**
