@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
- * @group Pager
- *
  * @coversDefaultClass \Drupal\Core\Pager\PagerManager
+ *
+ * @group Pager
  */
 class PagerManagerTest extends KernelTestBase {
 

@@ -14,6 +14,8 @@ use Drupal\entity_test\Entity\EntityTestRev;
 class EntityDuplicateTest extends EntityKernelTestBase {
 
   /**
+   * The entity storage.
+   *
    * @var \Drupal\Core\Entity\ContentEntityStorageInterface
    */
   protected $entityTestRevStorage;

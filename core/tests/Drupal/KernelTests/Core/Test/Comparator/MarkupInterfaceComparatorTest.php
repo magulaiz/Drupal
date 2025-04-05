@@ -25,11 +25,15 @@ use SebastianBergmann\Comparator\ComparisonFailure;
 class MarkupInterfaceComparatorTest extends KernelTestBase {
 
   /**
+   * The markup comparator.
+   *
    * @var \Drupal\TestTools\Comparator\MarkupInterfaceComparator
    */
   protected $comparator;
 
   /**
+   * The comparator factory.
+   *
    * @var \SebastianBergmann\Comparator\Factory
    */
   protected $factory;

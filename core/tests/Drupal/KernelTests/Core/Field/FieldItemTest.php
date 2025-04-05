@@ -18,6 +18,8 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 class FieldItemTest extends EntityKernelTestBase {
 
   /**
+   * The field name.
+   *
    * @var string
    */
   protected $fieldName;

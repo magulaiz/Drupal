@@ -28,6 +28,11 @@ class MappingTest extends KernelTestBase {
   ];
 
   /**
+   * @covers ::getDynamicallyValidKeys())
+   * @covers ::getOptionalKeys())
+   * @covers ::getRequiredKeys
+   * @covers ::getValidKeys
+   *
    * @dataProvider providerMappingInterpretation
    */
   public function testMappingInterpretation(

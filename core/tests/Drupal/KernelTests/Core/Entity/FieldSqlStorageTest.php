@@ -35,6 +35,8 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   protected $fieldName;
 
   /**
+   * The cardinality of the field.
+   *
    * @var int
    */
   protected $fieldCardinality;

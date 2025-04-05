@@ -13,11 +13,11 @@ use Symfony\Component\Validator\Exception\LogicException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
 /**
- * @group Entity
- * @group Validation
- *
  * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraint
  * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\ImmutablePropertiesConstraintValidator
+ *
+ * @group Entity
+ * @group Validation
  */
 class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
 
