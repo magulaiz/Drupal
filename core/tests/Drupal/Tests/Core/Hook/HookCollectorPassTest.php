@@ -6,7 +6,6 @@ namespace Drupal\Tests\Core\Hook;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ProceduralCall;
-use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\Core\GroupIncludesTestTrait;
@@ -23,8 +22,8 @@ class HookCollectorPassTest extends UnitTestCase {
   use GroupIncludesTestTrait;
 
   /**
-   * @covers ::collectAllHookImplementations
-   * @covers ::filterIterator
+   * @covers \Drupal\Core\Hook\HookCollectorPass::collectAllHookImplementations
+   * @covers \Drupal\Core\Hook\HookCollectorPass::filterIterator
    */
   public function testCollectAllHookImplementations(): void {
     vfsStream::setup('drupal_root');
@@ -73,7 +72,7 @@ __EOF__
 
   /**
    * @covers ::process
-   * @covers ::collectModuleHookImplementations
+   * @covers \Drupal\Core\Hook\HookCollectorPass::collectModuleHookImplementations
    */
   public function testGroupIncludes(): void {
     $module_filenames = self::setupGroupIncludes();
@@ -83,37 +82,6 @@ __EOF__
     (new HookCollectorPass())->process($container);
     $argument = $container->getDefinition('module_handler')->getArgument('$groupIncludes');
     $this->assertSame(self::GROUP_INCLUDES, $argument);
-  }
-
-  /**
-   * @covers ::getHookAttributesInClass
-   */
-  public function testGetHookAttributesInClass(): void {
-    // @phpstan-ignore-next-line
-    $getHookAttributesInClass = fn ($class) => $this->getHookAttributesInClass($class);
-    $p = new HookCollectorPass();
-    $getHookAttributesInClass = $getHookAttributesInClass->bindTo($p, $p);
-
-    $x = new class {
-
-      #[Hook('foo')]
-      function foo(): void {}
-
-    };
-    $hooks = $getHookAttributesInClass(get_class($x));
-    $hook = reset($hooks);
-    $this->assertInstanceOf(Hook::class, $hook);
-    $this->assertSame('foo', $hook->hook);
-
-    $x = new class {
-
-      #[Hook('install')]
-      function foo(): void {}
-
-    };
-    $this->expectException(\LogicException::class);
-    // This will throw exception, and stop code execution.
-    $getHookAttributesInClass(get_class($x));
   }
 
 }

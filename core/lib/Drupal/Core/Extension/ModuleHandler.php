@@ -7,6 +7,8 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Hook\Attribute\LegacyHook;
 use Drupal\Core\Hook\HookCollectorPass;
+use Drupal\Core\Hook\OrderOperation\OrderOperation;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -59,36 +61,76 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $includeFileKeys = [];
 
   /**
+   * Lists of implementation callables by hook.
+   *
+   * @var array<string, list<callable>>
+   */
+  protected array $listenersByHook = [];
+
+  /**
+   * Lists of module names by hook.
+   *
+   * The indices are exactly the same as in $listenersByHook.
+   *
+   * @var array<string, list<string>>
+   */
+  protected array $modulesByHook = [];
+
+  /**
    * Hook and module keyed list of listeners.
    *
-   * @var array
+   * @var array<string, array<string, list<callable>>>
    */
   protected array $invokeMap = [];
+
+  /**
+   * Ordering rules by hook name.
+   *
+   * @var array<string, list<\Drupal\Core\Hook\OrderOperation\OrderOperation>>
+   */
+  protected array $orderingRules = [];
 
   /**
    * Constructs a ModuleHandler object.
    *
    * @param string $root
    *   The app root.
-   * @param array $module_list
+   * @param array<string, array{type: string, pathname: string, filename: string}> $module_list
    *   An associative array whose keys are the names of installed modules and
    *   whose values are Extension class parameters. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   The event dispatcher.
-   * @param array $hookImplementationsMap
+   * @param array<string, array<class-string, array<string, string>>> $hookImplementationsMap
    *   An array keyed by hook, classname, method and the value is the module.
-   * @param array $groupIncludes
-   *   An array of .inc files to get helpers from.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger.
+   * @param array<string, list<string>> $groupIncludes
+   *   Lists of *.inc file paths that contain procedural implementations, keyed
+   *   by hook name.
+   * @param array<string, list<string>> $packedOrderOperations
+   *   Ordering rules by hook name, serialized.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, protected EventDispatcherInterface $eventDispatcher, protected array $hookImplementationsMap, protected array $groupIncludes = []) {
+  public function __construct(
+    $root,
+    array $module_list,
+    protected EventDispatcherInterface $eventDispatcher,
+    protected array $hookImplementationsMap,
+    protected ?LoggerInterface $logger = NULL,
+    protected array $groupIncludes = [],
+    protected array $packedOrderOperations = [],
+  ) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
       $this->moduleList[$name] = new Extension($this->root, $module['type'], $module['pathname'], $module['filename']);
+    }
+    if ($this->logger === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:11.2.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3515207', E_USER_DEPRECATED);
+      $this->logger = \Drupal::service('logger.channel.default');
     }
   }
 
@@ -211,6 +253,9 @@ class ModuleHandler implements ModuleHandlerInterface {
     foreach ($hook_collector->getImplementations() as $hook => $moduleImplements) {
       foreach ($moduleImplements as $module => $classImplements) {
         foreach ($classImplements[ProceduralCall::class] ?? [] as $method) {
+          // @todo Reorder these after adding!
+          $this->listenersByHook[$hook][] = $method;
+          $this->modulesByHook[$hook][] = $module;
           $this->invokeMap[$hook][$module][] = $method;
         }
       }
@@ -310,10 +355,9 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function invokeAllWith(string $hook, callable $callback): void {
-    foreach ($this->getHookListeners($hook) as $module => $listeners) {
-      foreach ($listeners as $listener) {
-        $callback($listener, $module);
-      }
+    foreach ($this->getFlatHookListeners($hook) as $i => $listener) {
+      $module = $this->modulesByHook[$hook][$i];
+      $callback($listener, $module);
     }
   }
 
@@ -415,14 +459,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     // specific variants of it, as in the case of ['form', 'form_FORM_ID'].
     if (is_array($type)) {
       $cid = implode(',', $type);
-      $extra_types = $type;
-      $type = array_shift($extra_types);
-      // Allow if statements in this function to use the faster isset() rather
-      // than !empty() both when $type is passed as a string, or as an array
-      // with one item.
-      if (empty($extra_types)) {
-        unset($extra_types);
-      }
     }
     else {
       $cid = $type;
@@ -432,40 +468,138 @@ class ModuleHandler implements ModuleHandlerInterface {
     // list of functions to call, and on subsequent calls, iterate through them
     // quickly.
     if (!isset($this->alterEventListeners[$cid])) {
-      $this->alterEventListeners[$cid] = [];
-      $hook = $type . '_alter';
-      $hook_listeners = $this->getHookListeners($hook);
-      if (isset($extra_types)) {
-        // For multiple hooks, we need $modules to contain every module that
-        // implements at least one of them in the correct order.
-        foreach ($extra_types as $extra_type) {
-          foreach ($this->getHookListeners($extra_type . '_alter') as $module => $listeners) {
-            if (isset($hook_listeners[$module])) {
-              $hook_listeners[$module] = array_merge($hook_listeners[$module], $listeners);
-            }
-            else {
-              $hook_listeners[$module] = $listeners;
-              $extra_modules = TRUE;
-            }
-          }
-        }
-      }
-      // If any modules implement one of the extra hooks that do not implement
-      // the primary hook, we need to add them to the $modules array in their
-      // appropriate order.
-      $modules = array_keys($hook_listeners);
-      if (isset($extra_modules)) {
-        $modules = $this->reOrderModulesForAlter($modules, $hook);
-      }
-      foreach ($modules as $module) {
-        foreach ($hook_listeners[$module] ?? [] as $listener) {
-          $this->alterEventListeners[$cid][] = $listener;
-        }
-      }
+      $hooks = is_array($type)
+        ? array_map(static fn (string $type) => $type . '_alter', $type)
+        : [$type . '_alter'];
+      $this->alterEventListeners[$cid] = $this->getCombinedListeners(...$hooks);
     }
     foreach ($this->alterEventListeners[$cid] as $listener) {
       $listener($data, $context1, $context2);
     }
+  }
+
+  /**
+   * Builds a list of listeners for an alter hook.
+   *
+   * @param string $main_hook
+   *   The primary alter hook, e.g. 'form_alter'.
+   * @param string ...$extra_hooks
+   *   Additional alter hooks, e.g. 'form_FORM_ID_alter'.
+   *
+   * @return list<callable>
+   *   List of implementation callables.
+   */
+  protected function getCombinedListeners(string $main_hook, string ...$extra_hooks): array {
+    $extra_listeners_by_hook = $extra_hooks
+      ? array_filter(array_map(
+        $this->getHookListeners(...),
+        array_combine($extra_hooks, $extra_hooks),
+      ))
+      : [];
+    if (!$extra_listeners_by_hook) {
+      // No extra hooks were provided in the call, or none of them has any
+      // listeners.
+      return $this->getFlatHookListeners($main_hook);
+    }
+    // Combine the listeners from all hooks that are part of the ->alter() call.
+    // At first they need to be grouped by module.
+    $listeners_by_module = $this->getHookListeners($main_hook);
+    foreach ($extra_listeners_by_hook as $extra_listeners_by_module) {
+      foreach ($extra_listeners_by_module as $module => $extra_listeners) {
+        foreach ($extra_listeners as $extra_listener) {
+          $listeners_by_module[$module][] = $extra_listener;
+        }
+      }
+    }
+    $modules = array_keys($listeners_by_module);
+    $modules = $this->reOrderModulesForAlter($modules, $main_hook);
+    // Convert the list into a different structure to pass to the hook order
+    // operations.
+    $listeners_by_identifier = [];
+    $modules_by_identifier = [];
+    $identifiers = [];
+    foreach ($modules as $module) {
+      foreach ($listeners_by_module[$module] ?? [] as $listener) {
+        $identifier = is_array($listener)
+          ? get_class($listener[0]) . '::' . $listener[1]
+          : ProceduralCall::class . '::' . $listener;
+        // Detect if the implementation is already part of the list.
+        // In general, a method can implement more than one hook. However, if
+        // both of these hooks are part of the same ->alter() call, that is
+        // almost always by mistake.
+        if ($other_module = $modules_by_identifier[$identifier] ?? NULL) {
+          $log_message_replacements = [
+            '@implementation' => is_array($listener)
+              ? ('method ' . $identifier . '()')
+              : ('function ' . $listener[1] . '()'),
+            '@hooks' => "['" . implode("', '", [$main_hook, ...$extra_hooks]) . "']",
+          ];
+          if ($other_module !== $module) {
+            // There is conflicting information about on behalf of which module
+            // this implementation is registered. At this point we cannot even
+            // be sure if the module is the one from the main hook or the extra
+            // hook.
+            // The module is mostly irrelevant for alter hooks, except for its
+            // impact on ordering.
+            $this->logger->warning(
+              'The @implementation is registered for more than one of the alter hooks @hooks from the current ->alter() call, on behalf of different modules @module and @other_module. Only one instance will be part of the implementation list for this hook combination. For the purpose of ordering, the module @module will be used.',
+              [
+                ...$log_message_replacements,
+                '@module' => "'$module'",
+                '@other_module' => "'$other_module'",
+              ],
+            );
+          }
+          else {
+            // There is no conflict, but probably one or more redundant #[Hook]
+            // attributes should be removed.
+            $this->logger->notice(
+              'The @implementation is registered for more than one of the alter hooks @hooks from the current ->alter() call. Only one instance will be part of the implementation list for this hook combination.',
+              $log_message_replacements,
+            );
+          }
+          // Don't add an identifier more than once.
+          continue;
+        }
+        $listeners_by_identifier[$identifier] = $listener;
+        $modules_by_identifier[$identifier] = $module;
+        $identifiers[] = $identifier;
+      }
+    }
+    foreach ([$main_hook, ...$extra_hooks] as $hook) {
+      foreach ($this->getHookOrderingRules($hook) as $rule) {
+        $rule->apply($identifiers, $modules_by_identifier);
+        // Order operations must not:
+        // - Insert duplicate keys.
+        // - Change the array to be not a list.
+        // - Add or remove values.
+        assert($identifiers === array_unique($identifiers));
+        assert(array_is_list($identifiers));
+        assert(!array_diff($identifiers, array_keys($modules_by_identifier)));
+        assert(!array_diff(array_keys($modules_by_identifier), $identifiers));
+      }
+    }
+    $identifiers = array_values(array_unique($identifiers));
+    return array_map(
+      static fn (string $identifier) => $listeners_by_identifier[$identifier],
+      $identifiers,
+    );
+  }
+
+  /**
+   * Gets ordering rules for a hook.
+   *
+   * @param string $hook
+   *   Hook name.
+   *
+   * @return list<\Drupal\Core\Hook\OrderOperation\OrderOperation>
+   *   List of order operations for the hook.
+   */
+  protected function getHookOrderingRules(string $hook): array {
+    return $this->orderingRules[$hook] ??= array_map(
+      OrderOperation::unpack(...),
+      $this->packedOrderOperations[$hook] ?? [],
+    );
   }
 
   /**
@@ -549,14 +683,37 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
+   * Gets hook listeners by module.
+   *
    * @param string $hook
    *   The name of the hook.
    *
-   * @return array
+   * @return array<string, list<callable>>
    *   A list of event listeners implementing this hook.
    */
   protected function getHookListeners(string $hook): array {
     if (!isset($this->invokeMap[$hook])) {
+      $this->invokeMap[$hook] = [];
+      foreach ($this->getFlatHookListeners($hook) as $i => $listener) {
+        $module = $this->modulesByHook[$hook][$i];
+        $this->invokeMap[$hook][$module][] = $listener;
+      }
+    }
+
+    return $this->invokeMap[$hook] ?? [];
+  }
+
+  /**
+   * Gets a list of hook listener callbacks.
+   *
+   * @param string $hook
+   *   The hook name.
+   *
+   * @return list<callable>
+   *   A list of hook implementation callables.
+   */
+  protected function getFlatHookListeners(string $hook): array {
+    if (!isset($this->listenersByHook[$hook])) {
       foreach ($this->eventDispatcher->getListeners("drupal_hook.$hook") as $listener) {
         if (is_array($listener) && is_object($listener[0])) {
           $module = $this->hookImplementationsMap[$hook][get_class($listener[0])][$listener[1]];
@@ -569,7 +726,8 @@ class ModuleHandler implements ModuleHandlerInterface {
             $callable = $listener;
           }
           if (isset($this->moduleList[$module])) {
-            $this->invokeMap[$hook][$module][] = $callable;
+            $this->listenersByHook[$hook][] = $callable;
+            $this->modulesByHook[$hook][] = $module;
           }
         }
       }
@@ -580,7 +738,8 @@ class ModuleHandler implements ModuleHandlerInterface {
         }
       }
     }
-    return $this->invokeMap[$hook] ?? [];
+
+    return $this->listenersByHook[$hook] ?? [];
   }
 
 }
