@@ -493,7 +493,6 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    */
   public function reset() {
     $this->routes = [];
-    $this->serializedRoutes = [];
     $this->cacheTagInvalidator->invalidateTags(['routes']);
   }
 
