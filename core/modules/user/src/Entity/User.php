@@ -510,6 +510,7 @@ class User extends ContentEntityBase implements UserInterface {
         // that.
         'UserName' => [],
         'UserNameUnique' => [],
+        'UserNameNoSuspiciousCharacters' => [],
       ]);
     $fields['name']->getItemDefinition()->setClass('\Drupal\user\UserNameItem');
 
