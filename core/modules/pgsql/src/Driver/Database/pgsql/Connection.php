@@ -173,8 +173,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       // the preparation than to actually ready statements for re-use. If in
       // doubt, reset to FALSE and measure performance.
       \PDO::ATTR_EMULATE_PREPARES => TRUE,
-      // Convert numeric values to strings when fetching.
-      \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     ];
 
     try {

@@ -101,8 +101,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     ];
     $connection_options['pdo'] += [
       \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
-      // Convert numeric values to strings when fetching.
-      \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     ];
 
     try {
