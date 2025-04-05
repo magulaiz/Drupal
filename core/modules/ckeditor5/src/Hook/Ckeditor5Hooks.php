@@ -123,15 +123,6 @@ class Ckeditor5Hooks {
           by the CKEditor 5 configuration. Manually removing tags would break
           enabled functionality, and any manually added tags would be removed by
           CKEditor 5 on render.');
-        // The media_filter_format_edit_form_validate validator is not needed
-        // with CKEditor 5 as it exists to enforce the inclusion of specific
-        // allowed tags that are added automatically by CKEditor 5. The
-        // validator is removed so it does not conflict with the automatic
-        // addition of those allowed tags.
-        $key = array_search('media_filter_format_edit_form_validate', $form['#validate']);
-        if ($key !== FALSE) {
-          unset($form['#validate'][$key]);
-        }
       }
     }
     // Override the AJAX callbacks for changing editors, so multiple areas of
