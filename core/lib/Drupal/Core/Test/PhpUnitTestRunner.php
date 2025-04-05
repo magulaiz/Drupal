@@ -54,6 +54,39 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   }
 
   /**
+   * Runs a PHPUnit-based test.
+   *
+   * @param \Drupal\Core\Test\TestRunResultsStorageInterface $test_run_results_storage
+   *   The test run result storage.
+   * @param int|string $test_id
+   *   The test ID.
+   * @param class-string $test_class
+   *   A fully qualified test class name.
+   * @param bool $colors
+   *   Whether to use colors in output.
+   * @param bool $suppressDeprecations
+   *   If TRUE, disables the deprecation reporting.
+   *
+   * @return array
+   *   The results.
+   */
+  public function runPhpUnitOnSingleTestClass(
+    TestRunResultsStorageInterface $test_run_results_storage,
+    int|string $test_id,
+    string $test_class,
+    bool $colors,
+    bool $suppressDeprecations,
+  ): array {
+    $test_run = TestRun::get($test_run_results_storage, $test_id);
+    $start = microtime(TRUE);
+    $results = $this->execute($test_run, $test_class, $status, $colors, $suppressDeprecations);
+    $time = microtime(TRUE) - $start;
+    $this->processPhpUnitResults($test_run, $results);
+    $summaries = $this->summarizeResults($results);
+    return [$summaries, $status, $time];
+  }
+
+  /**
    * Returns the path to use for PHPUnit's --log-junit option.
    *
    * @param int $test_id
@@ -103,22 +136,25 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @param string $log_junit_file_path
    *   A filepath to use for PHPUnit's --log-junit option.
    * @param int|null $status
-   *   (optional) The exit status code of the PHPUnit process will be assigned
-   *   to this variable.
+   *   The exit status code of the PHPUnit process will be assigned to this
+   *   variable.
    * @param string[]|null $output
-   *   (optional) The output by running the phpunit command. If provided, this
-   *   array will contain the lines output by the command.
+   *   The output by running the phpunit command. If provided, this array will
+   *   contain the lines output by the command.
    * @param bool $colors
-   *   (optional) Whether to use colors in output. Defaults to FALSE.
+   *   Whether to use colors in output. Defaults to FALSE.
+   * @param bool $suppressDeprecations
+   *   If TRUE, disables the deprecation reporting. Defaults to FALSE.
    *
    * @internal
    */
   protected function runCommand(
     string $test_class_name,
     string $log_junit_file_path,
-    ?int &$status = NULL,
-    ?array &$output = NULL,
-    bool $colors = FALSE,
+    ?int &$status,
+    ?array &$output,
+    bool $colors,
+    bool $suppressDeprecations,
   ): void {
     global $base_url;
     $process_environment_variables = [];
@@ -153,10 +189,15 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $command[] = '--colors=always';
     }
 
-    // If the deprecation handler bridge is active, we need to fail when there
-    // are deprecations that get reported (i.e. not ignored or expected).
-    if (DeprecationHandler::getConfiguration() !== FALSE) {
-      $command[] = '--fail-on-deprecation';
+    if ($suppressDeprecations) {
+      $process_environment_variables['SYMFONY_DEPRECATIONS_HELPER'] = 'disabled';
+    }
+    else {
+      // If the deprecation handler bridge is active, we need to fail when there
+      // are deprecations that get reported (i.e. not ignored or expected).
+      if (DeprecationHandler::getConfiguration() !== FALSE) {
+        $command[] = '--fail-on-deprecation';
+      }
     }
 
     // Add to the command the file containing the test class to be run.
@@ -176,13 +217,15 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Test\TestRun $test_run
    *   The test run object.
-   * @param string $test_class_name
+   * @param class-string $test_class_name
    *   A fully qualified test class name.
    * @param int|null $status
-   *   (optional) The exit status code of the PHPUnit process will be assigned
-   *   to this variable.
+   *   The exit status code of the PHPUnit process will be assigned to this
+   *   variable.
    * @param bool $colors
-   *   (optional) Whether to use colors in output. Defaults to FALSE.
+   *   Whether to use colors in output. Defaults to FALSE.
+   * @param bool $suppressDeprecations
+   *   If TRUE, disables the deprecation reporting. Defaults to FALSE.
    *
    * @return array
    *   The parsed results of PHPUnit's JUnit XML output, in the format of
@@ -193,13 +236,14 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   public function execute(
     TestRun $test_run,
     string $test_class_name,
-    ?int &$status = NULL,
-    bool $colors = FALSE,
+    ?int &$status,
+    bool $colors,
+    bool $suppressDeprecations,
   ): array {
     $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
     // Store output from our test run.
     $output = [];
-    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $colors);
+    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $colors, $suppressDeprecations);
 
     if ($status == TestStatus::PASS) {
       return JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
@@ -276,6 +320,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
           break;
       }
     }
+
     return $summaries;
   }
 
