@@ -17,7 +17,7 @@
     html_tag: 'a',
     attributes: create_attribute().setAttribute('href', link['#url']|render|default(null)),
     modifiers: ['primary'],
-    icon: { icon_id: featured_page_action.icon },
+    icon: featured_page_action.icon,
   } only %}
 {% endfor %}
 
