@@ -88,8 +88,6 @@ class RecipeTest extends KernelTestBase {
 
   /**
    * Tests processing a recipe.
-   *
-   * @covers ::processRecipe
    */
   public function testExampleRecipe(): void {
     // The example recipe imports all the configurations from the node module
@@ -105,8 +103,6 @@ class RecipeTest extends KernelTestBase {
 
   /**
    * Tests creating a recipe with a missing implicitly required module.
-   *
-   * @covers ::createRecipe
    */
   public function testImplicitlyRequiredModule(): void {
     $this->disableModules(['user']);
