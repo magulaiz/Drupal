@@ -13,6 +13,7 @@ use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Statement\FetchAs;
+use Drupal\Core\Database\Statement\PlaceholderType;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 
@@ -387,6 +388,16 @@ abstract class Connection {
    */
   public function quoteIdentifiers($sql) {
     return str_replace(['[', ']'], $this->identifierQuotes, $sql);
+  }
+
+  /**
+   * Returns the default placeholder type for SQL statements.
+   *
+   * @return \Drupal\Core\Database\PlaceholderType
+   *   The default placeholder type for SQL statements.
+   */
+  public function placeholderFormat(): PlaceholderType {
+    return PlaceholderType::Named;
   }
 
   /**
@@ -968,7 +979,7 @@ abstract class Connection {
     // Creating an instance of the class Drupal\Core\Database\Query\Condition
     // should only be created from the database layer. This will allow database
     // drivers to override the default Condition class.
-    return new Condition($conjunction);
+    return new Condition($conjunction, $this->placeholderFormat());
   }
 
   /**

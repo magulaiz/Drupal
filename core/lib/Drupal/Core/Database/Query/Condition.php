@@ -4,6 +4,8 @@ namespace Drupal\Core\Database\Query;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\InvalidQueryException;
+use Drupal\Core\Database\Statement\PlaceholderType;
+use Doctrine\SqlFormatter\Tokenizer;
 
 /**
  * Generic class for a series of conditions in a query.
@@ -69,6 +71,11 @@ class Condition implements ConditionInterface, \Countable {
   protected $queryPlaceholderIdentifier;
 
   /**
+   * The placeholder type, named or positional.
+   */
+  protected readonly PlaceholderType $placeholderType;
+
+  /**
    * Contains the string version of the Condition.
    *
    * @var string
@@ -80,9 +87,15 @@ class Condition implements ConditionInterface, \Countable {
    *
    * @param string $conjunction
    *   The operator to use to combine conditions: 'AND' or 'OR'.
+   * @param \Drupal\Core\Database\Statement\PlaceholderType|null $placeholderType
+   *   The placeholder type, named or positional.
    */
-  public function __construct($conjunction) {
+  public function __construct(
+    $conjunction,
+    ?PlaceholderType $placeholderType = NULL,
+  ) {
     $this->conditions['#conjunction'] = $conjunction;
+    $this->placeholderType = $placeholderType ?? PlaceholderType::Named;
   }
 
   /**
@@ -307,13 +320,26 @@ class Condition implements ConditionInterface, \Countable {
             else {
               // Right hand part is a normal value. Replace the value with a
               // placeholder and add the value as an argument.
-              $placeholder = ':db_condition_placeholder_' . $queryPlaceholder->nextPlaceholder();
-              $value_fragment[] = $placeholder;
-              $arguments[$placeholder] = $value;
+              $placeholderKey = match ($this->placeholderType) {
+                PlaceholderType::Named => ':db_condition_placeholder_' . $queryPlaceholder->nextPlaceholder(),
+                PlaceholderType::Positional => $queryPlaceholder->nextPlaceholder(),
+              };
+              $value_fragment[] = match ($this->placeholderType) {
+                PlaceholderType::Named => $placeholderKey,
+                PlaceholderType::Positional => '?',
+              };
+              $arguments[$placeholderKey] = $value;
             }
           }
           $value_fragment = $operator['prefix'] . implode($operator['delimiter'], $value_fragment) . $operator['postfix'];
         }
+
+global $xx; if($xx) {
+  $xa = trim(implode(' ', [$field_fragment, $operator_fragment, $value_fragment]));
+  dump([$xa]);
+  $t = new Tokenizer();
+  dump($t->tokenize($xa));
+}
 
         // Concatenate the left hand part, operator and right hand part.
         $condition_fragments[] = trim(implode(' ', [$field_fragment, $operator_fragment, $value_fragment]));
@@ -322,7 +348,10 @@ class Condition implements ConditionInterface, \Countable {
       // Concatenate all conditions using the conjunction and brackets around
       // the individual conditions to assure the proper evaluation order.
       $this->stringVersion = count($condition_fragments) > 1 ? '(' . implode(") $conjunction (", $condition_fragments) . ')' : implode($condition_fragments);
-      $this->arguments = $arguments;
+      $this->arguments = match ($this->placeholderType) {
+        PlaceholderType::Named => $arguments,
+        PlaceholderType::Positional => array_values($arguments),
+      };
       $this->changed = FALSE;
     }
   }
