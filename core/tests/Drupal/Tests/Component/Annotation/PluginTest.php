@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Annotation;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Drupal\Component\Annotation\Plugin;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Drupal\Component\Annotation\Plugin
- * @group Annotation
- */
+#[CoversClass(Plugin::class)]
+#[Group('Annotation')]
 class PluginTest extends TestCase {
 
   /**
-   * @covers ::__construct
-   * @covers ::parse
-   * @covers ::get
+   * @legacy-covers ::__construct
+   * @legacy-covers ::parse
+   * @legacy-covers ::get
    */
   public function testGet(): void {
     // Assert all values are accepted through constructor and default value is
@@ -51,7 +51,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @covers ::getProvider
+   * @legacy-covers ::getProvider
    */
   public function testGetProvider(): void {
     $plugin = new Plugin(['provider' => 'example']);
@@ -59,7 +59,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @covers ::setProvider
+   * @legacy-covers ::setProvider
    */
   public function testSetProvider(): void {
     $plugin = new Plugin([]);
@@ -68,7 +68,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @covers ::getId
+   * @legacy-covers ::getId
    */
   public function testGetId(): void {
     $plugin = new Plugin(['id' => 'example']);
@@ -76,7 +76,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @covers ::getClass
+   * @legacy-covers ::getClass
    */
   public function testGetClass(): void {
     $plugin = new Plugin(['class' => 'example']);
@@ -84,7 +84,7 @@ class PluginTest extends TestCase {
   }
 
   /**
-   * @covers ::setClass
+   * @legacy-covers ::setClass
    */
   public function testSetClass(): void {
     $plugin = new Plugin([]);

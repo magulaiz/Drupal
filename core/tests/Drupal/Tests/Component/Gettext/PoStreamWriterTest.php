@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Gettext;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoStreamWriter;
@@ -12,10 +15,8 @@ use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-/**
- * @coversDefaultClass \Drupal\Component\Gettext\PoStreamWriter
- * @group Gettext
- */
+#[CoversClass(PoStreamWriter::class)]
+#[Group('Gettext')]
 class PoStreamWriterTest extends TestCase {
 
   use ProphecyTrait;
@@ -51,7 +52,7 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * @covers ::getURI
+   * @legacy-covers ::getURI
    */
   public function testGetUriException(): void {
     $this->expectException(\Exception::class);
@@ -61,9 +62,9 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * @covers ::writeItem
-   * @dataProvider providerWriteData
+   * @legacy-covers ::writeItem
    */
+  #[DataProvider('providerWriteData')]
   public function testWriteItem($poContent, $expected, $long): void {
     if ($long) {
       $this->expectException(\Exception::class);
@@ -105,7 +106,7 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * @covers ::close
+   * @legacy-covers ::close
    */
   public function testCloseException(): void {
     $this->expectException(\Exception::class);

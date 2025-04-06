@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\ClassFinder;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\ClassFinder\ClassFinder;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Drupal\Component\ClassFinder\ClassFinder
- * @group ClassFinder
- */
+#[CoversClass(ClassFinder::class)]
+#[Group('ClassFinder')]
 class ClassFinderTest extends TestCase {
 
   /**
-   * @covers ::findFile
+   * @legacy-covers ::findFile
    */
   public function testFindFile(): void {
     $finder = new ClassFinder();

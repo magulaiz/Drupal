@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\CoversNothing;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
 use org\bovigo\vfs\vfsStream;
@@ -11,12 +15,9 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Drupal\Component\Annotation\Plugin\Discovery\AnnotatedClassDiscovery
- *
- * @group Annotation
- * @group Plugin
- */
+#[CoversClass(AnnotatedClassDiscovery::class)]
+#[Group('Annotation')]
+#[Group('Plugin')]
 class AnnotatedClassDiscoveryTest extends TestCase {
 
   /**
@@ -53,11 +54,9 @@ class AnnotatedClassDiscoveryTest extends TestCase {
 
   /**
    * Make sure AnnotatedClassDiscovery never tries to autoload bad annotations.
-   *
-   * @dataProvider provideBadAnnotations
-   *
-   * @coversNothing
    */
+  #[CoversNothing]
+  #[DataProvider('provideBadAnnotations')]
   public function testAutoloadBadAnnotations($annotation): void {
     // Set up a class file in vfsStream.
     vfsStreamWrapper::register();

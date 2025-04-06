@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\PhpStorage;
 
+use PHPUnit\Framework\Attributes\Medium;
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Random;
@@ -11,6 +12,7 @@ use Drupal\Component\Utility\Random;
 /**
  * Base test class for MTime protected storage.
  */
+#[Medium]
 abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
 
   /**
@@ -74,8 +76,6 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
    * mtime too.
    *
    * We need to delay over 1 second for mtime test.
-   *
-   * @medium
    */
   public function testSecurity(): void {
     $php = new $this->storageClass($this->settings);

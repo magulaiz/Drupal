@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Serialization;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Drupal\Component\Serialization\Json;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Drupal\Component\Serialization\Json
- * @group Serialization
- */
+#[CoversClass(Json::class)]
+#[Group('Serialization')]
 class JsonTest extends TestCase {
 
   /**

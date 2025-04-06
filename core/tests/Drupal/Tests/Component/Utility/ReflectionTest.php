@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Utility;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Drupal\Component\Utility\Reflection;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Drupal\Component\Utility\Reflection
- * @group Utility
- */
+#[CoversClass(Reflection::class)]
+#[Group('Utility')]
 class ReflectionTest extends TestCase {
 
   /**
@@ -19,9 +20,9 @@ class ReflectionTest extends TestCase {
    * @param \ReflectionParameter $parameter
    *   The reflection parameter.
    *
-   * @covers ::getParameterClassName
-   * @dataProvider providerGetParameterClassName
+   * @legacy-covers ::getParameterClassName
    */
+  #[DataProvider('providerGetParameterClassName')]
   public function testGetParameterClassName(?string $expected, \ReflectionParameter $parameter): void {
     $this->assertEquals($expected, Reflection::getParameterClassName($parameter));
   }
