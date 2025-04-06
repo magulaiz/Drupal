@@ -130,15 +130,16 @@ final class NavigationRenderer {
     if ($storage) {
       foreach ($storage->getSections() as $delta => $section) {
         $build[$delta] = $section->toRenderArray([]);
-        $build[$delta]['#cache']['contexts'] = ['user.permissions', 'theme', 'languages:language_interface'];
       }
     }
     // The render array is built based on decisions made by SectionStorage
     // plugins and therefore it needs to depend on the accumulated
     // cacheability of those decisions.
-    $cacheability->addCacheableDependency($logo_settings)
-      ->addCacheableDependency($this->configFactory->get('navigation.block_layout'));
-    $cacheability->applyTo($build);
+    CacheableMetadata::createFromRenderArray($build)
+      ->addCacheableDependency($cacheability)
+      ->addCacheableDependency($logo_settings)
+      ->addCacheableDependency($this->configFactory->get('navigation.block_layout'))
+      ->applyTo($build);
 
     $module_path = $this->requestStack->getCurrentRequest()->getBasePath() . '/' . $this->moduleExtensionList->getPath('navigation');
     $asset_url = $module_path . '/assets/fonts/inter-var.woff2';
