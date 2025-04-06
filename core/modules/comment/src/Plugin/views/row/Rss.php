@@ -102,7 +102,7 @@ class Rss extends RssPluginBase {
       ],
       [
         'key' => 'dc:creator',
-        'value' => $comment->getAuthorName(),
+        'value' => $comment->getOwner()->getDisplayName(),
       ],
       [
         'key' => 'guid',
