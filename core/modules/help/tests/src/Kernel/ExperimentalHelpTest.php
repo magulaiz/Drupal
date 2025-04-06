@@ -2,16 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\HttpKernelUiHelperTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\user\UserInterface;
 
 /**
  * Verifies help for experimental modules.
  *
  * @group help
  */
-class ExperimentalHelpTest extends BrowserTestBase {
+class ExperimentalHelpTest extends KernelTestBase {
+
+  use HttpKernelUiHelperTrait;
+  use UserCreationTrait;
 
   /**
    * Modules to install.
@@ -25,38 +31,34 @@ class ExperimentalHelpTest extends BrowserTestBase {
     'help',
     'experimental_module_test',
     'help_page_test',
+    'user',
+    'system',
   ];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * The admin user.
-   *
-   * @var \Drupal\user\UserInterface
    */
-  protected $adminUser;
+  protected UserInterface $adminUser;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['access help pages']);
+    $this->installEntitySchema('user');
+    $this->adminUser = $this->createUser(['access help pages']);
+    $this->setCurrentUser($this->adminUser);
   }
 
   /**
    * Verifies that a warning message is displayed for experimental modules.
    */
   public function testExperimentalHelp(): void {
-    $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/help/experimental_module_test');
+    $this->drupalGet('/admin/help/experimental_module_test');
     $this->assertSession()->statusMessageContains('This module is experimental.', 'warning');
 
     // Regular modules should not display the message.
-    $this->drupalGet('admin/help/help_page_test');
+    $this->drupalGet('/admin/help/help_page_test');
     $this->assertSession()->statusMessageNotContains('This module is experimental.');
 
     // Ensure the actual help page is displayed to avoid a false positive.

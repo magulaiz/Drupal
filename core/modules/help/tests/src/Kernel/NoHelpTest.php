@@ -2,16 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\HttpKernelUiHelperTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Verify no help is displayed for modules not providing any help.
  *
  * @group help
  */
-class NoHelpTest extends BrowserTestBase {
+class NoHelpTest extends KernelTestBase {
+
+  use HttpKernelUiHelperTrait;
+  use UserCreationTrait;
 
   /**
    * Modules to install.
@@ -20,12 +25,7 @@ class NoHelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['help', 'menu_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['help', 'menu_test', 'user', 'system'];
 
   /**
    * The user who will be created.
@@ -39,16 +39,16 @@ class NoHelpTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['access help pages']);
+    $this->installEntitySchema('user');
+    $this->adminUser = $this->createUser(['access help pages']);
+    $this->setCurrentUser($this->adminUser);
   }
 
   /**
    * Ensures modules not implementing help do not appear on admin/help.
    */
   public function testMainPageNoHelp(): void {
-    $this->drupalLogin($this->adminUser);
-
-    $this->drupalGet('admin/help');
+    $this->drupalGet('/admin/help');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Module overviews are provided by modules');
     $this->assertFalse(\Drupal::moduleHandler()->hasImplementations('help', 'menu_test'), 'The menu_test module does not implement hook_help');
@@ -58,7 +58,7 @@ class NoHelpTest extends BrowserTestBase {
 
     // Ensure that the module overview help page for a module that does not
     // implement hook_help() results in a 404.
-    $this->drupalGet('admin/help/menu_test');
+    $this->drupalGet('/admin/help/menu_test');
     $this->assertSession()->statusCodeEquals(404);
   }
 

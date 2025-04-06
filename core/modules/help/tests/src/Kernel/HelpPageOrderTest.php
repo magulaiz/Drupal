@@ -2,33 +2,33 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\help\Functional;
+namespace Drupal\Tests\help\Kernel;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\HttpKernelUiHelperTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Verify the order of the help page.
  *
  * @group help
  */
-class HelpPageOrderTest extends BrowserTestBase {
+class HelpPageOrderTest extends KernelTestBase {
+
+  use HttpKernelUiHelperTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['help', 'help_page_test'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
+  protected static $modules = ['help', 'help_page_test', 'system', 'user'];
 
   /**
    * Strings to search for on admin/help, in order.
    *
    * @var string[]
    */
-  protected $stringOrder = [
+  protected array $stringOrder = [
     'Module overviews are provided',
     'This description should appear',
   ];
@@ -38,14 +38,13 @@ class HelpPageOrderTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('user');
 
     // Create and log in user.
-    $account = $this->drupalCreateUser([
+    $account = $this->createUser([
       'access help pages',
-      'view the administration theme',
-      'administer permissions',
     ]);
-    $this->drupalLogin($account);
+    $this->setCurrentUser($account);
   }
 
   /**
@@ -53,7 +52,7 @@ class HelpPageOrderTest extends BrowserTestBase {
    */
   public function testHelp(): void {
     $pos = 0;
-    $this->drupalGet('admin/help');
+    $this->drupalGet('/admin/help');
     $page_text = $this->getTextContent();
     foreach ($this->stringOrder as $item) {
       $new_pos = strpos($page_text, $item, $pos);
