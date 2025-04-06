@@ -39,13 +39,6 @@ use Symfony\Component\DependencyInjection\Reference;
 class TaggedHandlersPass implements CompilerPassInterface {
 
   /**
-   * Service tag information keyed by tag name.
-   *
-   * @var array
-   */
-  protected $tagCache = [];
-
-  /**
    * {@inheritdoc}
    *
    * Finds services tagged with 'service_collector' or 'service_id_collector',
@@ -103,20 +96,12 @@ class TaggedHandlersPass implements CompilerPassInterface {
    *   If at least one tagged service is required but none are found.
    */
   public function process(ContainerBuilder $container): void {
-    // Avoid using ContainerBuilder::findTaggedServiceIds() as that results in
-    // additional iterations around all the service definitions.
-    foreach ($container->getDefinitions() as $id => $definition) {
-      foreach ($definition->getTags() as $name => $info) {
-        $this->tagCache[$name][$id] = $info;
-      }
-    }
-
-    foreach ($this->tagCache['service_collector'] ?? [] as $consumer_id => $tags) {
+    foreach ($container->findTaggedServiceIds('service_collector') as $consumer_id => $tags) {
       foreach ($tags as $pass) {
         $this->processServiceCollectorPass($pass, $consumer_id, $container);
       }
     }
-    foreach ($this->tagCache['service_id_collector'] ?? [] as $consumer_id => $tags) {
+    foreach ($container->findTaggedServiceIds('service_id_collector') as $consumer_id => $tags) {
       foreach ($tags as $pass) {
         $this->processServiceIdCollectorPass($pass, $consumer_id, $container);
       }
@@ -175,7 +160,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
     // Find all tagged handlers.
     $handlers = [];
     $extra_arguments = [];
-    foreach ($this->tagCache[$tag] ?? [] as $id => $attributes) {
+    foreach ($container->findTaggedServiceIds($tag) as $id => $attributes) {
       // Validate the interface.
       $handler = $container->getDefinition($id);
       if (!is_a($handler->getClass(), $interface, TRUE)) {
@@ -235,7 +220,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
 
     // Find all tagged handlers.
     $handlers = [];
-    foreach ($this->tagCache[$tag] ?? [] as $id => $attributes) {
+    foreach ($container->findTaggedServiceIds($tag) ?? [] as $id => $attributes) {
       $handlers[$id] = $attributes[0]['priority'] ?? 0;
     }
 

@@ -19,6 +19,13 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInterface {
 
   /**
+   * Tag cache.
+   *
+   * @var array
+   */
+  protected array $tagCache;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(?ParameterBagInterface $parameterBag = NULL) {
@@ -78,6 +85,27 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
   public function __sleep(): array {
     assert(FALSE, 'The container was serialized.');
     return array_keys(get_object_vars($this));
+  }
+
+  /**
+   * Record a tagged service.
+   *
+   * @param $id
+   *   The service id.
+   * @param string $name
+   *   The name of the tag.
+   * @param array $tag
+   *   The tag attributes.
+   */
+  public function addTag($id, string $name, array $tag): void {
+    $this->tagCache[$name][$id][] = $tag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function findTaggedServiceIds(string $name, bool $throwOnAbstract = FALSE): array {
+    return $throwOnAbstract ? parent::findTaggedServiceIds($name, $throwOnAbstract) : ($this->tagCache[$name] ?? []);
   }
 
 }

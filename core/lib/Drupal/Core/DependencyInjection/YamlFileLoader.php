@@ -388,6 +388,7 @@ class YamlFileLoader
             }
 
             $definition->addTag($name, $tag);
+            $this->container->addTag($id, $name, $tag);
         }
 
         if (null !== $decorates = $service['decorates'] ?? null) {
