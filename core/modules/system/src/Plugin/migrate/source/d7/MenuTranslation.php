@@ -2,7 +2,7 @@
 
 namespace Drupal\system\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\system\Plugin\migrate\source\Menu;
 
 // cspell:ignore objectindex plid textgroup
@@ -15,7 +15,7 @@ use Drupal\system\Plugin\migrate\source\Menu;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_menu_translation',
   source_module: 'i18n_menu',
 )]

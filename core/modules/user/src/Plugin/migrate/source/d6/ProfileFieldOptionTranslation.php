@@ -2,7 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\user\Plugin\migrate\source\ProfileField;
 
 // cspell:ignore nprofile objectid
@@ -15,7 +15,7 @@ use Drupal\user\Plugin\migrate\source\ProfileField;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_profile_field_option_translation',
   source_module: 'i18nprofile',
 )]

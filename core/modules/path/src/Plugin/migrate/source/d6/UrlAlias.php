@@ -2,7 +2,7 @@
 
 namespace Drupal\path\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\path\Plugin\migrate\source\UrlAliasBase;
 
 /**
@@ -13,7 +13,7 @@ use Drupal\path\Plugin\migrate\source\UrlAliasBase;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_url_alias',
   source_module: 'path',
 )]

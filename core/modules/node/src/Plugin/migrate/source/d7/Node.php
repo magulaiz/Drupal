@@ -2,14 +2,14 @@
 
 namespace Drupal\node\Plugin\migrate\source\d7;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\migrate\Attribute\MigrateSource;
-use Drupal\migrate\Row;
-use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
+use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore tnid
@@ -45,7 +45,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_node',
   source_module: 'node',
 )]

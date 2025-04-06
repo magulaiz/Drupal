@@ -2,7 +2,7 @@
 
 namespace Drupal\field\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 
 /**
  * Drupal 7 field instance per view mode source class.
@@ -13,7 +13,7 @@ use Drupal\migrate\Attribute\MigrateSource;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_field_instance_per_view_mode',
   source_module: 'field',
 )]

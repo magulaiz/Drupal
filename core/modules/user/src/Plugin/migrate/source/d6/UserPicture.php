@@ -2,7 +2,7 @@
 
 namespace Drupal\user\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * @todo Support default picture?
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_user_picture',
   source_module: 'user',
 )]

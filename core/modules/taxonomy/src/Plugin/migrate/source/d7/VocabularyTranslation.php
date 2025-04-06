@@ -2,7 +2,7 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\source\d7;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 
 // cspell:ignore objectid objectindex plid textgroup
 
@@ -14,7 +14,7 @@ use Drupal\migrate\Attribute\MigrateSource;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_taxonomy_vocabulary_translation',
   source_module: 'i18n_taxonomy',
 )]

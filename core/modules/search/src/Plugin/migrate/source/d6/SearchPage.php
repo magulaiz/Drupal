@@ -2,7 +2,7 @@
 
 namespace Drupal\search\Plugin\migrate\source\d6;
 
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
 
 /**
@@ -14,7 +14,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\Variable;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd6_search_page',
   source_module: 'search',
 )]

@@ -4,12 +4,12 @@ namespace Drupal\migrate_drupal\Plugin\migrate\source;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Entity\DependencyTrait;
-use Drupal\migrate\Attribute\MigrateSource;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\Plugin\migrate\source\EmptySource as BaseEmptySource;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\migrate\source\EmptySource as BaseEmptySource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Source returning an empty row with Drupal specific config dependencies.
@@ -20,7 +20,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
  * @see \Drupal\migrate\Plugin\migrate\source\EmptySource
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'md_empty',
   source_module: 'system',
 )]

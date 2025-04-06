@@ -3,9 +3,9 @@
 namespace Drupal\menu_link_content\Plugin\migrate\source;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\migrate\Attribute\MigrateSource;
-use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 // cspell:ignore mlid objectid plid textgroup tsid
 
@@ -41,7 +41,7 @@ use Drupal\migrate\Row;
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'menu_link',
   source_module: 'menu',
 )]

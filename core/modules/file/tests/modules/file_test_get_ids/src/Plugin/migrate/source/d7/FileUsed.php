@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Drupal\file_test_get_ids\Plugin\migrate\source\d7;
 
 use Drupal\file\Plugin\migrate\source\d7\File;
-use Drupal\migrate\Attribute\MigrateSource;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
 
 /**
  * Drupal 7 file source from database restricted to used files.
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'd7_file_used',
   source_module: 'file',
 )]

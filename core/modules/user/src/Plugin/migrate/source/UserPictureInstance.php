@@ -2,9 +2,9 @@
 
 namespace Drupal\user\Plugin\migrate\source;
 
-use Drupal\migrate\Attribute\MigrateSource;
-use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
+use Drupal\migrate_drupal\Attribute\MigrateDrupalSource;
+use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
  * Drupal 6/7 user picture field instance source from database.
@@ -16,7 +16,7 @@ use Drupal\migrate\Plugin\migrate\source\DummyQueryTrait;
  *
  * @todo Support default picture?
  */
-#[MigrateSource(
+#[MigrateDrupalSource(
   id: 'user_picture_instance',
   source_module: 'user',
 )]
