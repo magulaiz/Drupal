@@ -19,6 +19,7 @@
         "behat/mink-browserkit-driver": "^2.2",
         "colinodell/psr-testlogger": "^1.2",
         "composer/composer": "^2.8.1",
+        "cweagans/composer-patches": "^1.7",
         "drupal/coder": "^8.3.10",
         "justinrainbow/json-schema": "^5.2",
         "lullabot/mink-selenium2-driver": "^1.7.3",
@@ -65,10 +66,16 @@
             "drupal/core-vendor-hardening": true,
             "php-http/discovery": true,
             "phpstan/extension-installer": true,
-            "tbachert/spi": false
+            "tbachert/spi": false,
+            "cweagans/composer-patches": true
         }
     },
     "extra": {
+        "patches": {
+            "php-tuf/composer-stager": {
+                "Pass FileSyncer timeout to AbstractProcessRunner::run": "./composer-stager-414.patch"
+            }
+        },
         "_readme": [
             "By default Drupal loads the autoloader from ./vendor/autoload.php.",
             "To change the autoloader you can edit ./autoload.php.",
