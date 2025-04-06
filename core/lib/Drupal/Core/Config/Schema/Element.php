@@ -71,7 +71,7 @@ abstract class Element extends TypedData {
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager.
    */
-  public function setTypedConfig(TypedConfigManagerInterface $typed_config) {
+  public function setTypedConfig(TypedConfigManagerInterface $typed_config): void {
     $this->typedConfig = $typed_config;
   }
 

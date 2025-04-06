@@ -11,6 +11,7 @@ use Drupal\Core\Config\ConfigNameException;
 use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Config\TypedConfigManager;
 use Drupal\Core\Config\InstallStorage;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ConfigImportModuleUninstallValidatorInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -421,7 +422,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    * @param string $name
    *   The configuration name.
    */
-  protected function validateName($name) {
+  protected function validateName(string $name): void {
     try {
       Config::validateName($name);
     }
@@ -437,7 +438,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    * @param string $name
    *   The configuration name.
    */
-  protected function validateSchema($name) {
+  protected function validateSchema(string $name): void {
     $config_data = $this->configImporter
       ->getStorageComparer()
       ->getSourceStorage()
@@ -459,7 +460,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    * @return \Drupal\Core\Config\TypedConfigManagerInterface
    *   The typed config manager.
    */
-  protected function getTypedConfig() {
+  protected function getTypedConfig(): TypedConfigManagerInterface {
     if (!isset($this->typedConfig)) {
       // Construct a TypedConfigManager will access to all schema even if the
       // module or theme that provides it is uninstalled.
