@@ -259,6 +259,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
    *   The service container.
    *
    * @return class-string|null
+   *   The resolved class-string.
    */
   protected function resolveDefinitionClass(Definition $definition, ContainerBuilder $container): ?string {
     $class = $definition->getClass();
