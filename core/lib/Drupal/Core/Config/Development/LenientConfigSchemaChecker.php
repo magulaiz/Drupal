@@ -18,14 +18,14 @@ class LenientConfigSchemaChecker extends ConfigSchemaChecker {
    *
    * @var \Drupal\Core\Messenger\MessengerInterface
    */
-  protected $messenger;
+  protected MessengerInterface $messenger;
 
   /**
    * The logger to save the warning.
    *
    * @var \Psr\Log\LoggerInterface
    */
-  protected $logger;
+  protected LoggerInterface $logger;
 
   /**
    * Constructs the ConfigSchemaChecker object.
@@ -51,7 +51,7 @@ class LenientConfigSchemaChecker extends ConfigSchemaChecker {
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The configuration event.
    */
-  public function onConfigSave(ConfigCrudEvent $event) {
+  public function onConfigSave(ConfigCrudEvent $event): void {
     try {
       parent::onConfigSave($event);
     }
