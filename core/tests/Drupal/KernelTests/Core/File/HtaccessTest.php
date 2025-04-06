@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\File;
 
+use ColinODell\PsrTestLogger\TestLogger;
+use Drupal\Core\File\HtaccessWriter;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -89,6 +92,26 @@ class HtaccessTest extends KernelTestBase {
     $this->assertFilePermissions($stream . '/.htaccess', 0444);
 
     $this->assertTrue($this->htaccessWriter->write($stream));
+  }
+
+  /**
+   * @covers ::ensure
+   */
+  public function testHtaccessEnsureDisabled(): void {
+    $this->setSetting('auto_create_htaccess', FALSE);
+    $streamWrapperManager = $this->prophesize(StreamWrapperManagerInterface::class);
+    $logger = new TestLogger();
+    $htaccessWriter = new HtaccessWriter($logger, $streamWrapperManager->reveal(), Settings::getInstance());
+    $htaccessWriter->ensure();
+    $this->assertTrue($logger->hasWarningThatContains('Auto-creating htaccess disabled.'));
+  }
+
+  /**
+   * @covers ::write
+   */
+  public function testHtaccessSaveDisabled(): void {
+    $this->setSetting('auto_create_htaccess', FALSE);
+    $this->assertFalse($this->htaccessWriter->write($this->public, FALSE));
   }
 
   /**

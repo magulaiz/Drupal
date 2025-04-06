@@ -15,36 +15,42 @@ use Psr\Log\LoggerInterface;
 class HtaccessWriter implements HtaccessWriterInterface {
 
   /**
-   * The stream wrapper manager.
+   * The settings.
    *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
+   * @var \Drupal\Core\Site\Settings
    */
-  protected $streamWrapperManager;
-
-  /**
-   * The logger.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected $logger;
+  protected Settings $settings;
 
   /**
    * Htaccess constructor.
    *
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
+   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
    *   The stream wrapper manager.
+   * @param \Drupal\Core\Site\Settings|null $settings
+   *   The settings.
    */
-  public function __construct(LoggerInterface $logger, StreamWrapperManagerInterface $stream_wrapper_manager) {
-    $this->logger = $logger;
-    $this->streamWrapperManager = $stream_wrapper_manager;
+  public function __construct(
+    protected LoggerInterface $logger,
+    protected StreamWrapperManagerInterface $streamWrapperManager,
+    ?Settings $settings = NULL,
+  ) {
+    if (!$settings) {
+      @trigger_error('Calling HtaccessWriter::__construct() without the $settings argument is deprecated in drupal:11.2.0 and will be required before drupal:12.0.0. See https://www.drupal.org/node/3249817', E_USER_DEPRECATED);
+      $settings = \Drupal::service('settings');
+    }
+    $this->settings = $settings;
   }
 
   /**
    * {@inheritdoc}
    */
   public function ensure() {
+    if (!$this->settings->get('auto_create_htaccess', TRUE)) {
+      $this->logger->warning('Auto-creating htaccess disabled.');
+      return;
+    }
     try {
       foreach ($this->defaultProtectedDirs() as $protected_dir) {
         $this->write($protected_dir->getPath(), $protected_dir->isPrivate());
@@ -83,6 +89,10 @@ class HtaccessWriter implements HtaccessWriterInterface {
    * @see \Drupal\Component\FileSecurity\FileSecurity::writeHtaccess()
    */
   public function write($directory, $deny_public_access = TRUE, $force_overwrite = FALSE) {
+    if (!$this->settings->get('auto_create_htaccess', TRUE)) {
+      $this->logger->error('Auto-creating htaccess disabled.');
+      return FALSE;
+    }
     if (StreamWrapperManager::getScheme($directory)) {
       $directory = $this->streamWrapperManager->normalizeUri($directory);
     }
