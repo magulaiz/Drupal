@@ -9,6 +9,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\ErrorHandler\BufferingLogger;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Tests that HTTP exceptions are logged correctly.
@@ -59,6 +60,25 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
     if ($logs[0][2]['channel'] === 'client error') {
       $this->assertArrayNotHasKey('@backtrace_string', $logs[0][2]);
     }
+  }
+
+  public static function exceptionDataProvider(): array {
+    return [
+      // When a BadRequestException is thrown, DefaultHttpExceptionSubscriber
+      // will rethrow the exception.
+      [400, 'client error', RfcLogLevel::WARNING, HttpException::class],
+      [401, 'client error', RfcLogLevel::WARNING],
+      [403, 'access denied', RfcLogLevel::WARNING],
+      [404, 'page not found', RfcLogLevel::WARNING],
+      [405, 'client error', RfcLogLevel::WARNING],
+      [408, 'client error', RfcLogLevel::WARNING],
+      // Do not check the 500 status code here because it would be caught by
+      // Drupal\Core\EventSubscriberExceptionTestSiteSubscriber which has lower
+      // priority.
+      [501, 'php', RfcLogLevel::ERROR],
+      [502, 'php', RfcLogLevel::ERROR],
+      [503, 'php', RfcLogLevel::ERROR],
+    ];
   }
 
   /**
