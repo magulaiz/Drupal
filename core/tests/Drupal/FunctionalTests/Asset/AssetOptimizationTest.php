@@ -81,10 +81,12 @@ class AssetOptimizationTest extends BrowserTestBase {
     $this->config('system.performance')->set('css', [
       'preprocess' => TRUE,
       'gzip' => TRUE,
+      'brotli' => TRUE,
     ])->save();
     $this->config('system.performance')->set('js', [
       'preprocess' => TRUE,
       'gzip' => TRUE,
+      'brotli' => TRUE,
     ])->save();
     $this->requestPage();
     $session = $this->getSession();
@@ -110,7 +112,7 @@ class AssetOptimizationTest extends BrowserTestBase {
       // condition is not really possible since it relies on timing. However, by
       // changing the case of the part of the URL that is handled by Drupal
       // routing, we can force the request to be served by Drupal.
-      $this->assertAggregate(str_replace($this->fileAssetsPath, strtoupper($this->fileAssetsPath), $url), TRUE, 'text/css');
+      $this->assertAggregate(str_replace($this->fileAssetsPath, strtoupper($this->fileAssetsPath), $url), TRUE, 'text/css', FALSE);
       $this->assertAggregate($url, FALSE, 'text/css');
       $this->assertInvalidAggregates($url);
     }
@@ -131,8 +133,10 @@ class AssetOptimizationTest extends BrowserTestBase {
    *   (optional) Is the result from PHP or disk? Defaults to TRUE (PHP).
    * @param string|null $content_type
    *   The expected content type, or NULL to skip checking.
+   * @param bool $test_compression
+   *   Test gzip/brotli compression.
    */
-  protected function assertAggregate(string $url, bool $from_php = TRUE, ?string $content_type = NULL): void {
+  protected function assertAggregate(string $url, bool $from_php = TRUE, ?string $content_type = NULL, bool $test_compression = TRUE): void {
     $url = $this->getAbsoluteUrl($url);
     if (!stripos($url, $this->fileAssetsPath) !== FALSE) {
       return;
@@ -151,6 +155,48 @@ class AssetOptimizationTest extends BrowserTestBase {
     else {
       $this->assertArrayNotHasKey('X-Generator', $headers);
     }
+
+    // Only test this when the file is returned by the web server and not by Drupal.
+    if ($test_compression) {
+      $this->assertGzip($url);
+      $this->assertBrotli($url);
+    }
+  }
+
+  /**
+   * Tests gzip compression.
+   *
+   * @param string $url
+   *   The source URL.
+   */
+  protected function assertGzip(string $url): void {
+    $this->getSession()->setRequestHeader('Accept-Encoding', 'gzip');
+    $this->getSession()->visit($url);
+    $this->assertSession()->statusCodeEquals(200);
+
+    /*
+     * Guzzle decodes the gzip response automatically
+     * but adds the original Content-Encoding value in this header.
+     */
+    $this->assertSession()->responseHeaderEquals('x-encoded-content-encoding', 'gzip');
+  }
+
+  /**
+   * Tests brotli compression.
+   *
+   * @param string $url
+   *   The source URL.
+   */
+  protected function assertBrotli(string $url): void {
+    $this->getSession()->setRequestHeader('Accept-Encoding', 'br');
+    $this->getSession()->visit($url);
+    $this->assertSession()->statusCodeEquals(200);
+
+    /*
+     * Guzzle decodes the brotli response automatically
+     * but adds the original Content-Encoding value in this header.
+     */
+    $this->assertSession()->responseHeaderEquals('x-encoded-content-encoding', 'br');
   }
 
   /**
