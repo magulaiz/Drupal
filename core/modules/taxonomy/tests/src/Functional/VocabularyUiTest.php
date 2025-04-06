@@ -104,7 +104,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertSession()->responseContains(new FormattableMarkup('Are you sure you want to delete the vocabulary %name?', ['%name' => $edit['name']]));
     $this->submitForm([], 'Delete');
     $this->assertSession()->responseContains(new FormattableMarkup('Deleted vocabulary %name.', ['%name' => $edit['name']]));
-    $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
+    \Drupal::service('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($edit['vid']), 'Vocabulary not found.');
   }
 
@@ -129,7 +129,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->submitForm($edit, 'Save');
 
     // Load the vocabularies from the database.
-    $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
+    \Drupal::service('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $new_vocabularies = Vocabulary::loadMultiple();
 
     // Check that the weights are saved in the database correctly.
@@ -169,7 +169,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     $this->assertSession()->pageTextContains('Created new vocabulary');
 
     // Check the created vocabulary.
-    $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
+    \Drupal::service('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $vocabulary = Vocabulary::load($vid);
     $this->assertNotEmpty($vocabulary, 'Vocabulary found.');
 
@@ -182,7 +182,7 @@ class VocabularyUiTest extends TaxonomyTestBase {
     // Confirm deletion.
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains("Deleted vocabulary {$vocabulary->label()}.");
-    $this->container->get('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
+    \Drupal::service('entity_type.manager')->getStorage('taxonomy_vocabulary')->resetCache();
     $this->assertNull(Vocabulary::load($vid), 'Vocabulary not found.');
   }
 

@@ -52,7 +52,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('A welcome message with further instructions has been sent to your email address.');
 
     /** @var EntityStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')->getStorage('user');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('user');
     $accounts = $storage->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertTrue($new_user->isActive(), 'New account is active after registration.');
@@ -67,7 +67,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->drupalGet('user/register');
     $this->submitForm($edit, 'Create new account');
-    $this->container->get('entity_type.manager')->getStorage('user')->resetCache();
+    \Drupal::service('entity_type.manager')->getStorage('user')->resetCache();
     $accounts = $storage->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertFalse($new_user->isActive(), 'New account is blocked until approved by an administrator.');
@@ -101,8 +101,8 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass2]'] = $new_pass;
     $this->drupalGet('user/register');
     $this->submitForm($edit, 'Create new account');
-    $this->container->get('entity_type.manager')->getStorage('user')->resetCache();
-    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+    \Drupal::service('entity_type.manager')->getStorage('user')->resetCache();
+    $accounts = \Drupal::service('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertNotNull($new_user, 'New account successfully created with matching passwords.');
@@ -130,7 +130,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The username ' . $name . ' has not been activated or is blocked.');
 
     // Activate the new account.
-    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+    $accounts = \Drupal::service('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $admin_user = $this->drupalCreateUser(['administer users']);
@@ -279,7 +279,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->submitForm($edit, 'Create new account');
 
     // Check user fields.
-    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+    $accounts = \Drupal::service('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertEquals($name, $new_user->getAccountName(), 'Username matches.');
@@ -377,7 +377,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['test_user_field[0][value]'] = $value;
     $this->submitForm($edit, 'Create new account');
     // Check user fields.
-    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+    $accounts = \Drupal::service('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertEquals($value, $new_user->test_user_field->value, 'The field value was correctly saved.');
@@ -400,7 +400,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $this->submitForm($edit, 'Create new account');
     // Check user fields.
-    $accounts = $this->container->get('entity_type.manager')->getStorage('user')
+    $accounts = \Drupal::service('entity_type.manager')->getStorage('user')
       ->loadByProperties(['name' => $name, 'mail' => $mail]);
     $new_user = reset($accounts);
     $this->assertEquals($value, $new_user->test_user_field[0]->value, 'The field value was correctly saved.');

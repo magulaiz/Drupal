@@ -51,7 +51,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
    */
   public function testNodeFormSaveWithoutRevision(): void {
     $this->drupalLogin($this->editor);
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
 
     // Set page revision setting 'create new revision'. This will mean new
     // revisions are created by default when the node is edited.
@@ -125,12 +125,12 @@ class NodeRevisionsUiTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id() . '/revisions');
 
     // Assert the old revision message.
-    $date = $this->container->get('date.formatter')->format($nodes[0]->revision_timestamp->value, 'short');
+    $date = \Drupal::service('date.formatter')->format($nodes[0]->revision_timestamp->value, 'short');
     $url = new Url('entity.node.revision', ['node' => $nodes[0]->id(), 'node_revision' => $nodes[0]->getRevisionId()]);
     $this->assertSession()->responseContains(Link::fromTextAndUrl($date, $url)->toString() . ' by ' . $editor);
 
     // Assert the current revision message.
-    $date = $this->container->get('date.formatter')->format($nodes[1]->revision_timestamp->value, 'short');
+    $date = \Drupal::service('date.formatter')->format($nodes[1]->revision_timestamp->value, 'short');
     $this->assertSession()->responseContains($nodes[1]->toLink($date)->toString() . ' by ' . $editor . '<p class="revision-log">' . $revision_log . '</p>');
   }
 

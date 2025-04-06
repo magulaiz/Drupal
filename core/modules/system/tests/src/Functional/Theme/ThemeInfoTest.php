@@ -50,9 +50,9 @@ class ThemeInfoTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->themeInstaller = $this->container->get('theme_installer');
-    $this->themeManager = $this->container->get('theme.manager');
-    $this->state = $this->container->get('state');
+    $this->themeInstaller = \Drupal::service('theme_installer');
+    $this->themeManager = \Drupal::service('theme.manager');
+    $this->state = \Drupal::service('state');
   }
 
   /**

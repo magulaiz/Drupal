@@ -63,14 +63,14 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $source_field = $this->randomString();
     $page->fillField('field_media_test[0][value]', $source_field);
     $page->pressButton('Save');
-    $media_id = $this->container->get('entity_type.manager')
+    $media_id = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
       ->accessCheck(FALSE)
       ->execute();
     $media_id = reset($media_id);
     /** @var \Drupal\media\MediaInterface $media */
-    $media = $this->container->get('entity_type.manager')
+    $media = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $this->assertSame($media->getRevisionLogMessage(), $revision_log_message);
@@ -86,7 +86,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->fillField('name[0][value]', $media_name2);
     $page->pressButton('Save');
     /** @var \Drupal\media\MediaInterface $media */
-    $media = $this->container->get('entity_type.manager')
+    $media = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $this->assertSame($media->getName(), $media_name2);
@@ -97,7 +97,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $edit['uid[0][target_id]'] = '';
     $this->submitForm($edit, 'Save');
     /** @var \Drupal\media\MediaInterface $media */
-    $media = $this->container->get('entity_type.manager')
+    $media = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $uid = $media->getOwnerId();
@@ -133,7 +133,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $media_id);
     $assert_session->statusCodeEquals(404);
     /** @var \Drupal\media\MediaInterface $media */
-    $media = $this->container->get('entity_type.manager')
+    $media = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $this->assertSame($media->getRevisionLogMessage(), $revision_log_message);
@@ -144,7 +144,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->uncheckField('status[value]');
     $page->pressButton('Save');
     /** @var \Drupal\media\MediaInterface $media */
-    $media = $this->container->get('entity_type.manager')
+    $media = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $this->assertFalse($media->isPublished());
@@ -219,7 +219,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $page->fillField('name[0][value]', $this->randomMachineName());
     $page->fillField('field_media_test[0][value]', $this->randomString());
     $page->pressButton('Save');
-    $media_id = $this->container->get('entity_type.manager')
+    $media_id = \Drupal::service('entity_type.manager')
       ->getStorage('media')
       ->getQuery()
       ->accessCheck(FALSE)
@@ -246,9 +246,9 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    */
   public function testMediaCollectionRoute(): void {
     /** @var \Drupal\Core\Entity\EntityStorageInterface $media_storage */
-    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
+    $media_storage = \Drupal::service('entity_type.manager')->getStorage('media');
 
-    $this->container->get('module_installer')->uninstall(['views']);
+    \Drupal::service('module_installer')->uninstall(['views']);
 
     // Create a media type and media item.
     $media_type = $this->createMediaType('test');

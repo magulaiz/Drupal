@@ -116,7 +116,7 @@ class DisplayTest extends WebDriverTestBase {
   public function testPageContextualLinks(): void {
     $view = View::load('test_display');
     $view->enable()->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     // Create node so the view has content and the contextual area is higher
     // than 0 pixels.

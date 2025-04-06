@@ -152,7 +152,7 @@ class ElementsLabelsTest extends BrowserTestBase {
    */
   protected function testFormsInThemeLessEnvironments(): void {
     $form = $this->getFormWithLimitedProperties();
-    $render_service = $this->container->get('renderer');
+    $render_service = \Drupal::service('renderer');
     // This should not throw any notices.
     $render_service->renderInIsolation($form);
   }

@@ -143,7 +143,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       'revision' => (string) (int) $new_revision,
     ];
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     if (is_numeric($nid_or_type)) {
       $nid = $nid_or_type;
       $node = $node_storage->load($nid);
@@ -168,7 +168,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
     $field_num = count($node->{$field_name});
     foreach ($files as $i => $file) {
       $delta = $field_num + $i;
-      $file_path = $this->container->get('file_system')->realpath($file->getFileUri());
+      $file_path = \Drupal::service('file_system')->realpath($file->getFileUri());
       $name = 'files[' . $field_name . '_' . $delta . ']';
       if ($field_storage->getCardinality() != 1) {
         $name .= '[]';
@@ -220,7 +220,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Asserts that a file exists in the database.
    */
   public function assertFileEntryExists($file, $message = NULL) {
-    $this->container->get('entity_type.manager')->getStorage('file')->resetCache();
+    \Drupal::service('entity_type.manager')->getStorage('file')->resetCache();
     $db_file = File::load($file->id());
     $message = $message ?? new FormattableMarkup('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
     $this->assertEquals($file->getFileUri(), $db_file->getFileUri(), $message);
@@ -230,7 +230,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * Asserts that a file does not exist in the database.
    */
   public function assertFileEntryNotExists($file, $message) {
-    $this->container->get('entity_type.manager')->getStorage('file')->resetCache();
+    \Drupal::service('entity_type.manager')->getStorage('file')->resetCache();
     $message = $message ?? new FormattableMarkup('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
     $this->assertNull(File::load($file->id()), $message);
   }

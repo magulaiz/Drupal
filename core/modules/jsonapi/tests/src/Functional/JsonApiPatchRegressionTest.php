@@ -49,7 +49,7 @@ class JsonApiPatchRegressionTest extends JsonApiFunctionalTestBase {
    */
   public function testBundleSpecificTargetEntityTypeFromIssue2953207(): void {
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['comment'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['comment'], TRUE), 'Installed modules.');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'test_comment_type');
     $this->rebuildAll();
 
@@ -209,7 +209,7 @@ class JsonApiPatchRegressionTest extends JsonApiFunctionalTestBase {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
     // Set up data model.
-    $this->assertTrue($this->container->get('module_installer')->install(['datetime'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['datetime'], TRUE), 'Installed modules.');
     $this->drupalCreateContentType(['type' => 'page']);
     $this->rebuildAll();
     FieldStorageConfig::create([
@@ -340,7 +340,7 @@ class JsonApiPatchRegressionTest extends JsonApiFunctionalTestBase {
     // Set the site language to Russian.
     $this->config('system.site')->set('langcode', 'ru')->set('default_langcode', 'ru')->save(TRUE);
     // Install a "custom" entity type that is not translatable.
-    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
     // Clear and rebuild caches and routes.
     $this->rebuildAll();
     // Create a test entity.

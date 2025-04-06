@@ -93,7 +93,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
       'translatable' => FALSE,
     ])->save();
 
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay($this->entityTypeId, $this->entityTypeId, 'default')
       ->setComponent('field_reference', [
         'type' => 'entity_reference_entity_view',
@@ -166,7 +166,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
       $this->fieldName => [['value' => $this->randomMachineName(16)]],
     ];
     $id = $this->createEntity($values, $default_langcode);
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
 
     // Create a translation that is not published to test view access.
@@ -309,7 +309,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    */
   protected function doTestWorkflows(UserInterface $user, $expected_status): void {
     $default_langcode = $this->langcodes[0];
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
     $options = ['language' => $languages[$default_langcode], 'absolute' => TRUE];
     $this->drupalLogin($user);
 

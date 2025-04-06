@@ -61,7 +61,7 @@ class NodeFormSaveChangedTimeTest extends BrowserTestBase {
    * Tests the changed time after API and FORM save without changes.
    */
   public function testChangedTimeAfterSaveWithoutChanges(): void {
-    $storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $node = $storage->load(1);
     $changed_timestamp = $node->getChangedTime();
     $node->save();

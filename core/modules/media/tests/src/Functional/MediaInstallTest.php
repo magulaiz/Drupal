@@ -39,7 +39,7 @@ class MediaInstallTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
 
     // Uninstall the media module.
-    $this->container->get('module_installer')->uninstall(['media'], FALSE);
+    \Drupal::service('module_installer')->uninstall(['media'], FALSE);
 
     $this->drupalGet('/admin/modules');
     $page->checkField('modules[media][enable]');

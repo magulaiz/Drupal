@@ -60,7 +60,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
     $web_assert->fieldExists('settings[site_information][site_name]');
     // Confirm the branding block does not include 'site_information' section
     // when the site name is overridden.
-    $this->container->get('state')->set('settings_tray_override_test.site_name', TRUE);
+    \Drupal::service('state')->set('settings_tray_override_test.site_name', TRUE);
     $this->drupalGet('user');
     $this->openBlockForm($this->getBlockSelector($branding_block));
     $web_assert->fieldNotExists('settings[site_information][site_name]');
@@ -93,7 +93,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
 
     // Confirm the menu block does not include menu section when the menu is
     // overridden.
-    $this->container->get('state')->set('settings_tray_override_test.menu', TRUE);
+    \Drupal::service('state')->set('settings_tray_override_test.menu', TRUE);
     $this->drupalGet('user');
     $web_assert->pageTextContains('This is on the menu');
     $menu_with_overrides = \Drupal::configFactory()->get('system.menu.main')->get();
@@ -138,7 +138,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
 
     // Confirm the block Settings Tray functionality is disabled when block is
     // overridden.
-    $this->container->get('state')->set('settings_tray_override_test.block', TRUE);
+    \Drupal::service('state')->set('settings_tray_override_test.block', TRUE);
     $overridden_block->save();
     $block_config = \Drupal::configFactory()->getEditable('block.block.overridden_block');
     $block_config->set('settings', $block_config->get('settings'))->save();

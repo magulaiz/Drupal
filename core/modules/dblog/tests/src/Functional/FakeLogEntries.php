@@ -55,7 +55,7 @@ trait FakeLogEntries {
       'timestamp'   => \Drupal::time()->getRequestTime(),
     ];
 
-    $logger = $this->container->get('logger.dblog');
+    $logger = \Drupal::service('logger.dblog');
     $message = $log['message'] . ' Entry #';
     for ($i = 0; $i < $count; $i++) {
       $log['message'] = $message . $i;

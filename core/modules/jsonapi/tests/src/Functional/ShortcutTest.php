@@ -186,7 +186,7 @@ class ShortcutTest extends ResourceTestBase {
     $this->assertCount(0, $doc['data']);
 
     // Assign the alternate shortcut set to the current user.
-    $this->container->get('entity_type.manager')->getStorage('shortcut_set')->assignUser($alternate_shortcut_set, $this->account);
+    \Drupal::service('entity_type.manager')->getStorage('shortcut_set')->assignUser($alternate_shortcut_set, $this->account);
 
     // 1 result because the alternate shortcut set is now assigned to the
     // current user.

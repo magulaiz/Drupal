@@ -55,5 +55,6 @@ parameters:
 
 rules:
   - Drupal\PHPStan\Rules\ComponentTestDoesNotExtendCoreTest
+  - Drupal\PHPStan\Rules\FunctionalTestDoesNotAccessContainerGet
   - PHPStan\Rules\Functions\MissingFunctionReturnTypehintRule
   - PHPStan\Rules\Methods\MissingMethodReturnTypehintRule

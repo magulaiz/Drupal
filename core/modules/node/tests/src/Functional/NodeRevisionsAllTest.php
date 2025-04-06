@@ -112,7 +112,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
    * Checks node revision operations.
    */
   public function testRevisions(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $nodes = $this->nodes;
     $logs = $this->revisionLogs;
 
@@ -148,7 +148,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
     // Confirm that revisions revert properly.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/revert");
     $this->submitForm([], 'Revert');
-    $this->assertSession()->pageTextContains("Basic page {$nodes[1]->getTitle()} has been reverted to the revision from {$this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime())}.");
+    $this->assertSession()->pageTextContains("Basic page {$nodes[1]->getTitle()} has been reverted to the revision from " . \Drupal::service('date.formatter')->format($nodes[1]->getRevisionCreationTime()) . ".");
     $reverted_node = $node_storage->load($node->id());
     $this->assertSame($nodes[1]->body->value, $reverted_node->body->value, 'Node reverted correctly.');
 
@@ -170,7 +170,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
     // Confirm revisions delete properly.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete");
     $this->submitForm([], 'Delete');
-    $this->assertSession()->pageTextContains("Revision from {$this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime())} of Basic page {$nodes[1]->getTitle()} has been deleted.");
+    $this->assertSession()->pageTextContains("Revision from " . \Drupal::service('date.formatter')->format($nodes[1]->getRevisionCreationTime()) . " of Basic page {$nodes[1]->getTitle()} has been deleted.");
     $nids = \Drupal::entityQuery('node')
       ->allRevisions()
       ->accessCheck(FALSE)
@@ -190,7 +190,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
       ->execute();
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert");
     $this->submitForm([], 'Revert');
-    $this->assertSession()->pageTextContains("Basic page {$nodes[2]->getTitle()} has been reverted to the revision from {$this->container->get('date.formatter')->format($old_revision_date)}.");
+    $this->assertSession()->pageTextContains("Basic page {$nodes[2]->getTitle()} has been reverted to the revision from " . \Drupal::service('date.formatter')->format($old_revision_date) . ".");
 
     // Create 50 more revisions in order to trigger paging on the revisions
     // overview screen.

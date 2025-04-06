@@ -23,7 +23,7 @@ class FileFieldPathTest extends FileFieldTestBase {
    */
   public function testUploadPath(): void {
     /** @var \Drupal\node\NodeStorageInterface $node_storage */
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $type_name = 'article';
     $this->createFileField($field_name, 'node', $type_name);
@@ -37,7 +37,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $node = $node_storage->load($nid);
     /** @var \Drupal\file\FileInterface $node_file */
     $node_file = $node->{$field_name}->entity;
-    $date_formatter = $this->container->get('date.formatter');
+    $date_formatter = \Drupal::service('date.formatter');
     $expected_filename =
       'public://' .
       $date_formatter->format(\Drupal::time()->getRequestTime(), 'custom', 'Y') . '-' .

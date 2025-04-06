@@ -260,7 +260,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertSession()->linkByHrefNotExists($style_path . '/effects/' . $uuids['image_crop'] . '/delete');
     // Refresh the image style information and verify that the effect was
     // actually deleted.
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $style = $entity_type_manager->getStorage('image_style')->loadUnchanged($style->id());
     $this->assertFalse($style->getEffects()->has($uuids['image_crop']), "Effect with ID {$uuids['image_crop']} no longer found on image style {$style->label()}");
 
@@ -273,7 +273,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalGet($style_path);
     $this->submitForm(['new' => 'image_rotate'], 'Add');
     $this->submitForm($edit, 'Add effect');
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $style = $entity_type_manager->getStorage('image_style')->loadUnchanged($style_name);
     $this->assertCount(6, $style->getEffects(), 'Rotate effect with transparent background was added.');
 
@@ -420,7 +420,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertSession()->pageTextContains('Scale 12×19');
 
     // Try to edit a nonexistent effect.
-    $uuid = $this->container->get('uuid');
+    $uuid = \Drupal::service('uuid');
     $this->drupalGet('admin/config/media/image-styles/manage/' . $style_name . '/effects/' . $uuid->generate());
     $this->assertSession()->statusCodeEquals(404);
   }
@@ -492,8 +492,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertSession()->responseContains(\Drupal::service('file_url_generator')->transformRelative($style->buildUrl($original_uri)));
 
     // Copy config to sync, and delete the image style.
-    $sync = $this->container->get('config.storage.sync');
-    $active = $this->container->get('config.storage');
+    $sync = \Drupal::service('config.storage.sync');
+    $active = \Drupal::service('config.storage');
     // Remove the image field from the display, to avoid a dependency error
     // during import.
     EntityViewDisplay::load('node.article.default')

@@ -65,7 +65,7 @@ class EntityDisplayFormBaseTest extends BrowserTestBase {
    * Ensures the entity is not affected when there are no applicable formatters.
    */
   public function testNoApplicableFormatters(): void {
-    $storage = $this->container->get('entity_type.manager')->getStorage('entity_form_display');
+    $storage = \Drupal::service('entity_type.manager')->getStorage('entity_form_display');
     $id = 'entity_test.entity_test.default';
 
     $entity_before = $storage->load($id);

@@ -41,7 +41,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     static::setFieldTranslatable($this->entityTypeId, $this->bundle, $this->fieldName, FALSE);
 
     /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
-    $entity_field_manager = $this->container->get('entity_field.manager');
+    $entity_field_manager = \Drupal::service('entity_field.manager');
     $entity_field_manager->clearCachedFieldDefinitions();
     $definitions = $entity_field_manager->getFieldDefinitions($this->entityTypeId, $this->bundle);
     $this->assertFalse($definitions[$this->fieldName]->isTranslatable());
@@ -78,7 +78,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
    */
   public function testHiddenWidgets(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $id = $this->createEntity(['title' => $this->randomString()], 'en');
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $entity_type_manager

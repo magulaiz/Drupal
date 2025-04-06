@@ -28,7 +28,7 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
     // The new_dependency_test before the update is just an empty info.yml file.
     // The code of the new_dependency_test module is after the update and
     // contains the dependency on the new_dependency_test_with_service module.
-    $extension_config = $this->container->get('config.factory')->getEditable('core.extension');
+    $extension_config = \Drupal::service('config.factory')->getEditable('core.extension');
     $extension_config
       ->set('module.new_dependency_test', 0)
       ->set('module', module_config_sort($extension_config->get('module')))
@@ -48,16 +48,16 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
     // Running the updates enables the dependency.
     $this->runUpdates();
 
-    $this->assertArrayHasKey('new_dependency_test', $this->container->get('config.factory')->get('core.extension')->get('module'));
-    $this->assertArrayHasKey('new_dependency_test_with_service', $this->container->get('config.factory')->get('core.extension')->get('module'));
+    $this->assertArrayHasKey('new_dependency_test', \Drupal::service('config.factory')->get('core.extension')->get('module'));
+    $this->assertArrayHasKey('new_dependency_test_with_service', \Drupal::service('config.factory')->get('core.extension')->get('module'));
 
     // Tests that the new services are available and working as expected.
-    $this->assertEquals('Hello', $this->container->get('new_dependency_test_with_service.service')->greet());
-    $this->assertEquals('Hello', $this->container->get('new_dependency_test.dependent')->greet());
-    $this->assertEquals('Hello', $this->container->get('new_dependency_test.alias')->greet());
-    $this->assertEquals('Hello World', $this->container->get('new_dependency_test.hard_dependency')->greet());
-    $this->assertEquals('Hello World', $this->container->get('new_dependency_test.optional_dependency')->greet());
-    $this->assertEquals('Hello', $this->container->get('new_dependency_test.setter_injection')->greet());
+    $this->assertEquals('Hello', \Drupal::service('new_dependency_test_with_service.service')->greet());
+    $this->assertEquals('Hello', \Drupal::service('new_dependency_test.dependent')->greet());
+    $this->assertEquals('Hello', \Drupal::service('new_dependency_test.alias')->greet());
+    $this->assertEquals('Hello World', \Drupal::service('new_dependency_test.hard_dependency')->greet());
+    $this->assertEquals('Hello World', \Drupal::service('new_dependency_test.optional_dependency')->greet());
+    $this->assertEquals('Hello', \Drupal::service('new_dependency_test.setter_injection')->greet());
 
     // Tests that existing decorated services work as expected during update.
     $this->assertTrue(\Drupal::state()->get('new_dependency_test_update_8001.decorated_service'), 'The new_dependency_test.another_service service is decorated');

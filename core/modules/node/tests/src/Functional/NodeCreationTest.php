@@ -93,7 +93,7 @@ class NodeCreationTest extends NodeTestBase {
     // Verify that pages do not show submitted information by default.
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextNotContains($node->getOwner()->getAccountName());
-    $this->assertSession()->pageTextNotContains($this->container->get('date.formatter')->format($node->getCreatedTime()));
+    $this->assertSession()->pageTextNotContains(\Drupal::service('date.formatter')->format($node->getCreatedTime()));
 
     // Change the node type setting to show submitted by information.
     /** @var \Drupal\node\NodeTypeInterface $node_type */
@@ -103,7 +103,7 @@ class NodeCreationTest extends NodeTestBase {
 
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($node->getOwner()->getAccountName());
-    $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getCreatedTime()));
+    $this->assertSession()->pageTextContains(\Drupal::service('date.formatter')->format($node->getCreatedTime()));
 
     // Check if the node revision checkbox is not rendered on node creation
     // form.

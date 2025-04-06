@@ -128,7 +128,7 @@ class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
 
       // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should
       // display "Tue".
-      $formatted_date = $this->container->get('date.formatter')->format(494015820, $id, NULL, 'America/New_York', 'de');
+      $formatted_date = \Drupal::service('date.formatter')->format(494015820, $id, NULL, 'America/New_York', 'de');
       $this->assertEquals('Tue', $formatted_date, 'Got the right formatted date using the date format translation pattern.');
     }
   }

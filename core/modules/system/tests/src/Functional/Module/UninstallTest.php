@@ -35,7 +35,7 @@ class UninstallTest extends BrowserTestBase {
   public function testUserPermsUninstalled(): void {
     // Uninstalls the module_test module, so hook_modules_uninstalled()
     // is executed.
-    $this->container->get('module_installer')->uninstall(['module_test']);
+    \Drupal::service('module_installer')->uninstall(['module_test']);
 
     // Are the perms defined by module_test removed?
     $roles = array_filter(Role::loadMultiple(), fn(RoleInterface $role) => $role->hasPermission('module_test perm'));
@@ -193,7 +193,7 @@ class UninstallTest extends BrowserTestBase {
 
     $message = 'Exception thrown when installing module_installer_config_test with an invalid configuration file.';
     try {
-      $this->container->get('module_installer')->install(['module_installer_config_test']);
+      \Drupal::service('module_installer')->install(['module_installer_config_test']);
       $this->fail($message);
     }
     catch (EntityMalformedException) {

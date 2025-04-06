@@ -411,7 +411,7 @@ class FieldWebTest extends ViewTestBase {
    */
   public function testFieldClasses(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
+    $renderer = \Drupal::service('renderer');
     $view = Views::getView('test_field_classes');
     $view->initHandlers();
 

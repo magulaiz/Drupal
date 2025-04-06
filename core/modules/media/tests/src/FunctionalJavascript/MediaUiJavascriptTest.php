@@ -80,7 +80,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     // We need to clear the statically cached field definitions to account for
     // fields that have been created by API calls in this test, since they exist
     // in a separate memory space from the web server.
-    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     // Assert that the field and field storage were created.
     $media_type = MediaType::load($machine_name);
     $source = $media_type->getSource();
@@ -94,7 +94,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $this->assertFalse($storage->isLocked(), 'Source field storage definition was not locked.');
 
     /** @var \Drupal\media\MediaTypeInterface $media_type_storage */
-    $media_type_storage = $this->container->get('entity_type.manager')->getStorage('media_type');
+    $media_type_storage = \Drupal::service('entity_type.manager')->getStorage('media_type');
     $this->testMediaType = $media_type_storage->load(strtolower($name));
 
     // Check if all action links exist.
@@ -162,7 +162,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     $assert_session->fieldValueEquals('Attribute 2', MediaSourceInterface::METADATA_FIELD_EMPTY);
 
     /** @var \Drupal\media\MediaTypeInterface $loaded_media_type */
-    $loaded_media_type = $this->container->get('entity_type.manager')
+    $loaded_media_type = \Drupal::service('entity_type.manager')
       ->getStorage('media_type')
       ->load($this->testMediaType->id());
     $this->assertSame($loaded_media_type->id(), $this->testMediaType->id());
@@ -178,7 +178,7 @@ class MediaUiJavascriptTest extends MediaJavascriptTestBase {
     // We need to clear the statically cached field definitions to account for
     // fields that have been created by API calls in this test, since they exist
     // in a separate memory space from the web server.
-    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     // Test that a media item being created with default status to "FALSE",
     // will be created unpublished.

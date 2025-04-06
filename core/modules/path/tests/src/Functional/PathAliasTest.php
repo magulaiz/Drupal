@@ -142,7 +142,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->container->get('path_alias.manager')->cacheClear();
+    \Drupal::service('path_alias.manager')->cacheClear();
     // Confirm that previous alias no longer works.
     $this->drupalGet($previous);
     $this->assertSession()->pageTextNotContains($node1->label());
@@ -441,7 +441,7 @@ class PathAliasTest extends PathTestBase {
     // Enable the inline_form_errors module and try this again. This module
     // improves validation with a link in the error message(s) to the fields
     // which have invalid input.
-    $this->assertTrue($this->container->get('module_installer')->install(['inline_form_errors'], TRUE), 'Installed inline_form_errors.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['inline_form_errors'], TRUE), 'Installed inline_form_errors.');
     // Attempt to edit the second node again, as before.
     $this->drupalGet('node/' . $node_two->id() . '/edit');
     $this->submitForm($edit, 'Preview');

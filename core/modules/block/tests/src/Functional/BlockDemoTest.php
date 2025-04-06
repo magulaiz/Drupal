@@ -35,7 +35,7 @@ class BlockDemoTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // Confirm we have access to the block demo page for the default theme.
-    $config = $this->container->get('config.factory')->get('system.theme');
+    $config = \Drupal::service('config.factory')->get('system.theme');
     $default_theme = $config->get('default');
     $this->drupalGet('admin/structure/block/demo/' . $default_theme);
     $this->assertSession()->statusCodeEquals(200);
@@ -54,7 +54,7 @@ class BlockDemoTest extends BrowserTestBase {
 
     foreach ($themes as $theme) {
       // Install theme.
-      $this->container->get('theme_installer')->install([$theme]);
+      \Drupal::service('theme_installer')->install([$theme]);
       // Confirm access to the block demo page for the theme.
       $this->drupalGet('admin/structure/block/demo/' . $theme);
       $this->assertSession()->statusCodeEquals(200);

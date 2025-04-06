@@ -46,7 +46,7 @@ class ConfigImportUITest extends BrowserTestBase {
 
     $this->webUser = $this->drupalCreateUser(['synchronize configuration']);
     $this->drupalLogin($this->webUser);
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
+    $this->copyConfig(\Drupal::service('config.storage'), \Drupal::service('config.storage.sync'));
   }
 
   /**
@@ -56,7 +56,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $name = 'system.site';
     $dynamic_name = 'config_test.dynamic.new';
     /** @var \Drupal\Core\Config\StorageInterface $sync */
-    $sync = $this->container->get('config.storage.sync');
+    $sync = \Drupal::service('config.storage.sync');
 
     $this->drupalGet('admin/config/development/configuration');
     $this->assertSession()->pageTextContains('The staged configuration is identical to the active configuration.');
@@ -248,14 +248,14 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Acquire a fake-lock on the import mechanism.
     $config_importer = $this->configImporter();
-    $this->container->get('lock.persistent')->acquire($config_importer::LOCK_NAME);
+    \Drupal::service('lock.persistent')->acquire($config_importer::LOCK_NAME);
 
     // Attempt to import configuration and verify that an error message appears.
     $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextContains('Another request may be synchronizing configuration already.');
 
     // Release the lock, just to keep testing sane.
-    $this->container->get('lock.persistent')->release($config_importer::LOCK_NAME);
+    \Drupal::service('lock.persistent')->release($config_importer::LOCK_NAME);
 
     // Verify site name has not changed.
     $this->assertNotEquals($this->config('system.site')->get('name'), $new_site_name);
@@ -282,7 +282,7 @@ class ConfigImportUITest extends BrowserTestBase {
    * Tests the screen that shows differences between active and sync.
    */
   public function testImportDiff(): void {
-    $sync = $this->container->get('config.storage.sync');
+    $sync = \Drupal::service('config.storage.sync');
     $config_name = 'config_test.system';
     $change_key = 'foo';
     $remove_key = '404';
@@ -383,7 +383,7 @@ class ConfigImportUITest extends BrowserTestBase {
    * Tests that the Configuration module cannot be uninstalled during config sync.
    */
   public function testConfigUninstallConfigException(): void {
-    $sync = $this->container->get('config.storage.sync');
+    $sync = \Drupal::service('config.storage.sync');
 
     $core_extension = $this->config('core.extension')->get();
     unset($core_extension['module']['config']);
@@ -401,7 +401,7 @@ class ConfigImportUITest extends BrowserTestBase {
    * Prepares a site name update by modifying the synchronized configuration.
    */
   public function prepareSiteNameUpdate($new_site_name): void {
-    $sync = $this->container->get('config.storage.sync');
+    $sync = \Drupal::service('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
     $config_data['name'] = $new_site_name;
@@ -414,8 +414,8 @@ class ConfigImportUITest extends BrowserTestBase {
   public function testImportErrorLog(): void {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
-    $sync = $this->container->get('config.storage.sync');
-    $uuid = $this->container->get('uuid');
+    $sync = \Drupal::service('config.storage.sync');
+    $uuid = \Drupal::service('uuid');
 
     $values_primary = [
       'uuid' => $uuid->generate(),
@@ -467,7 +467,7 @@ class ConfigImportUITest extends BrowserTestBase {
    */
   public function testEntityBundleDelete(): void {
     \Drupal::service('module_installer')->install(['node']);
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
+    $this->copyConfig(\Drupal::service('config.storage'), \Drupal::service('config.storage.sync'));
 
     $node_type = $this->drupalCreateContentType();
     $node = $this->drupalCreateNode(['type' => $node_type->id()]);
@@ -514,12 +514,12 @@ class ConfigImportUITest extends BrowserTestBase {
     \Drupal::service('theme_installer')->install(['test_subtheme']);
     $this->rebuildContainer();
 
-    $sync = $this->container->get('config.storage.sync');
-    $this->copyConfig($this->container->get('config.storage'), $sync);
+    $sync = \Drupal::service('config.storage.sync');
+    $this->copyConfig(\Drupal::service('config.storage'), $sync);
     $core = $sync->read('core.extension');
     // Node depends on text.
     unset($core['module']['text']);
-    $module_data = $this->container->get('extension.list.module')->getList();
+    $module_data = \Drupal::service('extension.list.module')->getList();
     $this->assertTrue(isset($module_data['node']->requires['text']), 'The Node module depends on the Text module.');
     unset($core['theme']['test_base_theme']);
     $theme_data = \Drupal::service('extension.list.theme')->reset()->getList();

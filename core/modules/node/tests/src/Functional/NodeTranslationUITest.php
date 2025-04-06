@@ -98,7 +98,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $default_langcode = $this->langcodes[0];
     $values[$default_langcode] = ['title' => [['value' => $this->randomMachineName()]]];
     $this->entityId = $this->createEntity($values[$default_langcode], $default_langcode);
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $entity = $storage->load($this->entityId);
 
@@ -156,10 +156,10 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function doTestPublishedStatus(): void {
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $entity = $storage->load($this->entityId);
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
 
     $statuses = [
       TRUE,
@@ -192,10 +192,10 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function doTestAuthoringInfo(): void {
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $entity = $storage->load($this->entityId);
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
     $values = [];
 
     // Post different base field information for each translation.
@@ -208,7 +208,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         'promote' => (bool) mt_rand(0, 1),
       ];
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-      $date_formatter = $this->container->get('date.formatter');
+      $date_formatter = \Drupal::service('date.formatter');
       $edit = [
         'uid[0][target_id]' => $user->getAccountName(),
         'created[0][value][date]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'Y-m-d'),
@@ -241,7 +241,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $article = $this->drupalCreateNode(['type' => 'article', 'langcode' => $this->langcodes[0]]);
 
     // Set up the default admin theme and use it for node editing.
-    $this->container->get('theme_installer')->install(['claro']);
+    \Drupal::service('theme_installer')->install(['claro']);
     $edit = [];
     $edit['admin_theme'] = 'claro';
     $edit['use_admin_theme'] = TRUE;
@@ -396,7 +396,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    *   The translation values to be found.
    */
   protected function doTestTranslations($path, array $values): void {
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, ['language' => $languages[$langcode]]);
       $this->assertSession()->pageTextContains($values[$langcode]['title'][0]['value']);
@@ -411,7 +411,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    */
   protected function doTestAlternateHreflangLinks(Node $node): void {
     $url = $node->toUrl();
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
     $url->setAbsolute();
     $urls = [];
     $translations = [];
@@ -477,10 +477,10 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function doTestTranslationEdit(): void {
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $entity = $storage->load($this->entityId);
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
     $type_name = node_get_type_label($entity);
 
     foreach ($this->langcodes as $langcode) {

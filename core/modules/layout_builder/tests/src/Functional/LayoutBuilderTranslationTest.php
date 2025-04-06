@@ -151,7 +151,7 @@ class LayoutBuilderTranslationTest extends ContentTranslationTestBase {
       $this->fieldName => [['value' => 'The untranslated field value']],
       'name' => 'Test entity',
     ], $this->langcodes[0]);
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $this->entity = $storage->load($id);
   }

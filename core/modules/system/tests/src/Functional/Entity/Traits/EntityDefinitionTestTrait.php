@@ -471,9 +471,9 @@ trait EntityDefinitionTestTrait {
 
     $this->state->set('entity_test_update.entity_type', $entity_type);
 
-    $this->container->get('entity_type.manager')->clearCachedDefinitions();
-    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
-    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+    \Drupal::service('entity_type.manager')->clearCachedDefinitions();
+    \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
     return $entity_type;
   }

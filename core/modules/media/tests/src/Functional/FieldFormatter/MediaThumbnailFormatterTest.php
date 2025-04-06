@@ -59,7 +59,7 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
     ])->save();
 
     // Alter the form display.
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', 'article')
       ->setComponent('field_media_reference', [
         'type' => 'entity_reference_autocomplete',
@@ -114,7 +114,7 @@ class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
    */
   private function changeMediaReferenceFieldLinkType(string $type): void {
     // Change the display to use the media thumbnail formatter with image link.
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay('node', 'article', 'default')
       ->setComponent('field_media_reference', [
         'type' => 'media_thumbnail',

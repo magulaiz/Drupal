@@ -40,7 +40,7 @@ class ImageDimensionsTest extends BrowserTestBase {
    * Tests styled image dimensions cumulatively.
    */
   public function testImageDimensions(): void {
-    $image_factory = $this->container->get('image.factory');
+    $image_factory = \Drupal::service('image.factory');
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');
     $file = reset($files);

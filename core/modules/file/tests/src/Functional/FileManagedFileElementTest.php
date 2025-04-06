@@ -201,7 +201,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     $fid = $this->getLastFileId();
     /** @var \Drupal\file\FileInterface $file */
-    $file = $this->container->get('entity_type.manager')->getStorage('file')->load($fid);
+    $file = \Drupal::service('entity_type.manager')->getStorage('file')->load($fid);
     $file->setPermanent();
     $file->save();
     $this->assertTrue(\Drupal::service('file_system')->delete($file->getFileUri()));

@@ -231,7 +231,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session->pageTextContains('The DEFAULT block body');
 
     /** @var \Drupal\node\NodeStorageInterface $node_storage */
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $original_revision_id = $node_storage->getLatestRevisionId(1);
 
     // Create a new revision.
@@ -536,7 +536,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   public function testAddWorkFlow(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $type_storage = $this->container->get('entity_type.manager')->getStorage('block_content_type');
+    $type_storage = \Drupal::service('entity_type.manager')->getStorage('block_content_type');
     foreach ($type_storage->loadByProperties() as $type) {
       $type->delete();
     }

@@ -68,7 +68,7 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
     parent::setUp();
 
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $this->storage = $entity_type_manager->getStorage($this->entityTypeId);
 
     // @todo Remove this line once https://www.drupal.org/node/2945928 is fixed.
@@ -95,7 +95,7 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
     \Drupal::service('entity_type.bundle.info')->clearCachedBundles();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
-    $router_builder = $this->container->get('router.builder');
+    $router_builder = \Drupal::service('router.builder');
     $router_builder->rebuildIfNeeded();
   }
 

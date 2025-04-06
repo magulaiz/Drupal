@@ -61,7 +61,7 @@ class FilterTest extends ViewTestBase {
    */
   public function testFilterQuery(): void {
     // Check that we can find the test filter plugin.
-    $plugin = $this->container->get('plugin.manager.views.filter')->createInstance('test_filter');
+    $plugin = \Drupal::service('plugin.manager.views.filter')->createInstance('test_filter');
     $this->assertInstanceOf(FilterPlugin::class, $plugin);
 
     $view = Views::getView('test_filter');

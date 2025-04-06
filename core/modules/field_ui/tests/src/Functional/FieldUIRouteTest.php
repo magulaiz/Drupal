@@ -95,7 +95,7 @@ class FieldUIRouteTest extends BrowserTestBase {
       'label' => 'Test',
       'targetEntityType' => 'user',
     ])->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $edit = ['display_modes_custom[test]' => TRUE];
     $this->drupalGet('admin/config/people/accounts/display');
@@ -109,7 +109,7 @@ class FieldUIRouteTest extends BrowserTestBase {
       'label' => 'Test',
       'targetEntityType' => 'user',
     ])->save();
-    $this->container->get('router.builder')->rebuildIfNeeded();
+    \Drupal::service('router.builder')->rebuildIfNeeded();
 
     $edit = ['display_modes_custom[test]' => TRUE];
     $this->drupalGet('admin/config/people/accounts/form-display');

@@ -86,7 +86,7 @@ class CKEditor5MarkupTest extends CKEditor5TestBase {
 
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
-    $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
+    $image_upload_field->attachFile(\Drupal::service('file_system')->realpath($image->uri));
     $assert_session->waitForElementVisible('css', '.ck-widget.image');
 
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-balloon-panel .ck-text-alternative-form'));
@@ -98,7 +98,7 @@ class CKEditor5MarkupTest extends CKEditor5TestBase {
 
     $uploaded_image = File::load(1);
     $image_uuid = $uploaded_image->uuid();
-    $image_url = $this->container->get('file_url_generator')->generateString($uploaded_image->getFileUri());
+    $image_url = \Drupal::service('file_url_generator')->generateString($uploaded_image->getFileUri());
     $this->drupalGet('node/1');
     $this->assertNotEmpty($assert_session->waitForElement('xpath', sprintf('//img[@alt="</em> Kittens & llamas are cute" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_uuid)));
 

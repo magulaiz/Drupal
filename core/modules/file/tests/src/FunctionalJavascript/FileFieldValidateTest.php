@@ -47,7 +47,7 @@ class FileFieldValidateTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $this->drupalGet('node/add/article');
     $image_file = current($this->getTestFiles('image'));
-    $image_path = $this->container->get('file_system')->realpath($image_file->uri);
+    $image_path = \Drupal::service('file_system')->realpath($image_file->uri);
     $page->attachFileToField('files[' . $field_name . '_0]', $image_path);
     $elements = $page->waitFor(10, function () use ($page) {
       return $page->findAll('css', '.messages--error');

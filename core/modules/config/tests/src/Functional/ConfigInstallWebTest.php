@@ -93,10 +93,10 @@ class ConfigInstallWebTest extends BrowserTestBase {
     //   in-memory changes that haven't been saved!
     //   In other words: This test passes even without this reset, but it
     //   shouldn't.
-    $this->container->get('config.factory')->reset();
+    \Drupal::service('config.factory')->reset();
 
     // Disable and uninstall the integration module.
-    $this->container->get('module_installer')->uninstall(['config_integration_test']);
+    \Drupal::service('module_installer')->uninstall(['config_integration_test']);
 
     // Verify the integration module's config was uninstalled.
     $config_static = $this->config($default_config);

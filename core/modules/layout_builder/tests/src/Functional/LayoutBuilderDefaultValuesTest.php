@@ -169,7 +169,7 @@ class LayoutBuilderDefaultValuesTest extends BrowserTestBase {
     // Switch theme to starterkit_theme so that layout builder components will
     // have block classes.
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
-    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install(['starterkit_theme']);
     $this->config('system.theme')
       ->set('default', 'starterkit_theme')

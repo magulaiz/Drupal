@@ -354,7 +354,7 @@ class CommentTest extends ResourceTestBase {
     // comment and uninstall the query access test module.
     $this->revokePermissionsFromTestedRole(['administer comments']);
     $this->entity->setPublished()->save();
-    $this->assertTrue($this->container->get('module_installer')->uninstall(['jsonapi_test_field_filter_access'], TRUE), 'Uninstalled modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->uninstall(['jsonapi_test_field_filter_access'], TRUE), 'Uninstalled modules.');
     // ?filter[spotlight.LABEL]: 1 result. Just as already tested above in
     // ::doTestCollectionFilterAccessForPublishableEntities().
     $collection_filter_url = $collection_url->setOption('query', ["filter[spotlight.subject]" => $this->entity->label()]);

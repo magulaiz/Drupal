@@ -60,7 +60,7 @@ class SearchNodeDiacriticsTest extends BrowserTestBase {
     $this->drupalCreateNode(['body' => [['value' => $body_text]]]);
 
     // Update the search index.
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Refresh variables after the treatment.
     $this->refreshVariables();

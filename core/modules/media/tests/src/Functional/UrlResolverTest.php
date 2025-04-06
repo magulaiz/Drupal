@@ -77,7 +77,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
   public function testEndpointMatching($url, $resource_url): void {
     $this->assertSame(
       $resource_url,
-      $this->container->get('media.oembed.url_resolver')->getResourceUrl($url)
+      \Drupal::service('media.oembed.url_resolver')->getResourceUrl($url)
     );
   }
 
@@ -87,12 +87,12 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    * @depends testEndpointMatching
    */
   public function testResourceUrlAlterHook(): void {
-    $this->container->get('module_installer')->install(['media_test_oembed']);
+    \Drupal::service('module_installer')->install(['media_test_oembed']);
 
     // Much like FunctionalTestSetupTrait::installModulesFromClassProperty()
     // after module install the rebuilt container needs to be used.
     $this->container = \Drupal::getContainer();
-    $resource_url = $this->container->get('media.oembed.url_resolver')
+    $resource_url = \Drupal::service('media.oembed.url_resolver')
       ->getResourceUrl('https://vimeo.com/14782834');
 
     $this->assertStringContainsString('altered=1', parse_url($resource_url, PHP_URL_QUERY));
@@ -135,7 +135,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    */
   public function testUrlDiscovery($url, $resource_url): void {
     $this->assertSame(
-      $this->container->get('media.oembed.url_resolver')->getResourceUrl($url),
+      \Drupal::service('media.oembed.url_resolver')->getResourceUrl($url),
       $resource_url
     );
   }

@@ -29,7 +29,7 @@ class RebuildScriptTest extends BrowserTestBase {
    * Tests redirect in rebuild.php.
    */
   public function testRebuild(): void {
-    $cache = $this->container->get('cache.default');
+    $cache = \Drupal::service('cache.default');
 
     $cache->set('rebuild_test', TRUE);
     $this->drupalGet(Url::fromUri('base:core/rebuild.php'));

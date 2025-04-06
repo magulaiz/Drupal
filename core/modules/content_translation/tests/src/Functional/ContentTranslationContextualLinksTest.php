@@ -89,7 +89,7 @@ class ContentTranslationContextualLinksTest extends BrowserTestBase {
       'bundle' => $this->bundle,
       'label' => 'Test text-field',
     ])->save();
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getFormDisplay('node', $this->bundle)
       ->setComponent('field_test_text', [
         'type' => 'text_textfield',

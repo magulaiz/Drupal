@@ -72,20 +72,20 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   protected function testConfig(): void {
     // Just connect directly to the config table so we don't need to worry about
     // the cache layer.
-    $active_config_storage = $this->container->get('config.storage');
+    $active_config_storage = \Drupal::service('config.storage');
 
-    $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
+    $default_config_storage = new FileStorage(\Drupal::service('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
     $this->assertDefaultConfig($default_config_storage, $active_config_storage);
 
-    $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
+    $default_config_storage = new FileStorage(\Drupal::service('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
     $this->assertDefaultConfig($default_config_storage, $active_config_storage);
 
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when
     // Demo Umami profile modules are enabled.
-    $names = $this->container->get('config.storage')->listAll();
+    $names = \Drupal::service('config.storage')->listAll();
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
-    $typed_config = $this->container->get('config.typed');
+    $typed_config = \Drupal::service('config.typed');
     foreach ($names as $name) {
       $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());
@@ -121,7 +121,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    */
   protected function assertDefaultConfig(StorageInterface $default_config_storage, StorageInterface $active_config_storage): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
-    $config_manager = $this->container->get('config.manager');
+    $config_manager = \Drupal::service('config.manager');
 
     foreach ($default_config_storage->listAll() as $config_name) {
       if ($active_config_storage->exists($config_name)) {
@@ -173,7 +173,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
 
     // Check that admin is able to edit the node.
-    $nodes = $this->container->get('entity_type.manager')
+    $nodes = \Drupal::service('entity_type.manager')
       ->getStorage('node')
       ->loadByProperties(['title' => 'Deep mediterranean quiche']);
     $node = reset($nodes);
@@ -277,7 +277,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $this->assertTrue($this->drupalUserIsLoggedIn($account), "User {$account->getAccountName()} successfully logged in.");
 
     $this->loggedInUser = $account;
-    $this->container->get('current_user')->setAccount($account);
+    \Drupal::service('current_user')->setAccount($account);
   }
 
   /**
@@ -291,7 +291,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     $this->drupalLogin($account);
     $web_assert = $this->assertSession();
 
-    $nodes = $this->container->get('entity_type.manager')
+    $nodes = \Drupal::service('entity_type.manager')
       ->getStorage('node')
       ->loadByProperties(['title' => 'Deep mediterranean quiche']);
     /** @var \Drupal\node\Entity\Node $recipe_node */

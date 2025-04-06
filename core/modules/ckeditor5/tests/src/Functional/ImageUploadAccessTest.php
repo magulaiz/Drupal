@@ -48,8 +48,8 @@ class ImageUploadAccessTest extends ImageUploadTest {
 
     // Ensure lock failures are reported correctly.
     $d = 'public://inline-images/test.jpg';
-    $f = $this->container->get('file_system')->getDestinationFilename($d, FileExists::Rename);
-    $this->container->get('lock')
+    $f = \Drupal::service('file_system')->getDestinationFilename($d, FileExists::Rename);
+    \Drupal::service('lock')
       ->acquire('file:ckeditor5:' . Crypt::hashBase64($f));
     $response = $this->uploadRequest($url, $test_image, 'test.jpg');
     $this->assertSame(503, $response->getStatusCode());

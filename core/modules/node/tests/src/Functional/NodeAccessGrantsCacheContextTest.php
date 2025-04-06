@@ -113,6 +113,8 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
       if ($uid > 0) {
         $this->drupalLogin($this->userMapping[$uid]);
       }
+      // @todo switch to \Drupal::service().
+      // @phpstan-ignore functionalTest.noContainerGet
       $this->assertSame($context, $this->container->get('cache_context.user.node_grants')->getContext('view'));
     }
     $this->drupalLogout();
@@ -172,6 +174,8 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
     ]);
 
     // Uninstall the node_access_test module
+    // @todo switch to \Drupal::service().
+    // @phpstan-ignore functionalTest.noContainerGet
     $this->container->get('module_installer')->uninstall(['node_access_test']);
     drupal_static_reset('node_access_view_all_nodes');
     $this->assertUserCacheContext([

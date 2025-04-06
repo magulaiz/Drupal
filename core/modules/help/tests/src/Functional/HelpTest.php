@@ -187,7 +187,7 @@ class HelpTest extends BrowserTestBase {
    */
   protected function getModuleList() {
     $modules = [];
-    $module_data = $this->container->get('extension.list.module')->getList();
+    $module_data = \Drupal::service('extension.list.module')->getList();
     \Drupal::moduleHandler()->invokeAllWith(
       'help',
       function (callable $hook, string $module) use (&$modules, $module_data) {

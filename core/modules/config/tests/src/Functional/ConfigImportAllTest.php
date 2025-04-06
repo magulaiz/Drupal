@@ -61,7 +61,7 @@ class ConfigImportAllTest extends ModuleTestBase {
   public function testInstallUninstall(): void {
 
     // Get a list of modules to install.
-    $all_modules = $this->container->get('extension.list.module')->getList();
+    $all_modules = \Drupal::service('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
       // Filter out contrib, hidden, testing, experimental, and deprecated
       // modules. We also don't need to enable modules that are already enabled.
@@ -85,7 +85,7 @@ class ConfigImportAllTest extends ModuleTestBase {
     }
 
     // Export active config to sync.
-    $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
+    $this->copyConfig(\Drupal::service('config.storage'), \Drupal::service('config.storage.sync'));
 
     $this->resetAll();
 
@@ -161,17 +161,17 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     // Ensure that we have no configuration changes to import.
     $storage_comparer = new StorageComparer(
-      $this->container->get('config.storage.sync'),
-      $this->container->get('config.storage')
+      \Drupal::service('config.storage.sync'),
+      \Drupal::service('config.storage')
     );
     $this->assertSame($storage_comparer->getEmptyChangelist(), $storage_comparer->createChangelist()->getChangelist());
 
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when
     // all modules are enabled.
-    $names = $this->container->get('config.storage')->listAll();
+    $names = \Drupal::service('config.storage')->listAll();
     /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
-    $typed_config = $this->container->get('config.typed');
+    $typed_config = \Drupal::service('config.typed');
     foreach ($names as $name) {
       $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());

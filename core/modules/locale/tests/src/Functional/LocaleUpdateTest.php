@@ -141,7 +141,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->assertSession()->responseContains('<label for="edit-langcodes-de" class="visually-hidden">Update German</label>');
     $this->assertSession()->pageTextContains('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test');
     /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-    $date_formatter = $this->container->get('date.formatter');
+    $date_formatter = \Drupal::service('date.formatter');
     $this->assertSession()->pageTextContains('Contributed module one (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
     $this->assertSession()->pageTextContains('Contributed module two (' . $date_formatter->format($this->timestampNew, 'html_date') . ')');
 

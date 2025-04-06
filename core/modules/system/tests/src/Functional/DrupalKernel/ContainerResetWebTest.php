@@ -33,7 +33,7 @@ class ContainerResetWebTest extends BrowserTestBase {
     parent::setUp();
     ConfigurableLanguage::createFromLangcode('es')->save();
     // Create translations for testing.
-    $locale_storage = $this->container->get('locale.storage');
+    $locale_storage = \Drupal::service('locale.storage');
     $langcode = 'es';
     $source = $locale_storage->createString(['source' => 'Before the container was reset.'])->save();
     $locale_storage->createTranslation([

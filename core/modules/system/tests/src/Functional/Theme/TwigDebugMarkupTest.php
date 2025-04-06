@@ -29,7 +29,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
    */
   public function testTwigDebugMarkup(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
+    $renderer = \Drupal::service('renderer');
     $extension = twig_extension();
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();
@@ -41,7 +41,7 @@ class TwigDebugMarkupTest extends BrowserTestBase {
     $this->rebuildContainer();
     $this->resetAll();
 
-    $cache = $this->container->get('theme.registry')->get();
+    $cache = \Drupal::service('theme.registry')->get();
     // Create array of Twig templates.
     $templates = drupal_find_theme_templates($cache, $extension, $this->getThemePath('test_theme'));
     $templates += drupal_find_theme_templates($cache, $extension, $this->getModulePath('node'));

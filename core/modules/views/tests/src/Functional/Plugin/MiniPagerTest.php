@@ -165,7 +165,7 @@ class MiniPagerTest extends ViewTestBase {
 
     // Stark and Stable9 are handled below.
     $themes = ['olivero', 'claro', 'starterkit_theme'];
-    $this->container->get('theme_installer')->install($themes);
+    \Drupal::service('theme_installer')->install($themes);
 
     foreach ($themes as $theme) {
       $this->config('system.theme')->set('default', $theme)->save();
@@ -176,7 +176,7 @@ class MiniPagerTest extends ViewTestBase {
     // The core views template and Stable9 use a different class structure than
     // other core themes.
     $themes = ['stark', 'stable9'];
-    $this->container->get('theme_installer')->install($themes);
+    \Drupal::service('theme_installer')->install($themes);
     foreach ($themes as $theme) {
       $this->config('system.theme')->set('default', $theme)->save();
       $this->drupalGet('test_mini_pager');

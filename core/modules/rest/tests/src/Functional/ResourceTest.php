@@ -136,7 +136,7 @@ class ResourceTest extends BrowserTestBase {
       ->grantPermission('restful post serialization_test')
       ->save();
 
-    $serialized = $this->container->get('serializer')->serialize(['foo', 'bar'], 'json');
+    $serialized = \Drupal::service('serializer')->serialize(['foo', 'bar'], 'json');
     $request_options = [
       RequestOptions::HEADERS => ['Content-Type' => 'application/json'],
       RequestOptions::BODY => $serialized,

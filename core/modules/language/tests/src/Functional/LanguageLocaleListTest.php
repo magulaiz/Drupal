@@ -38,7 +38,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Add a default locale storage for all these tests.
-    $this->storage = $this->container->get('locale.storage');
+    $this->storage = \Drupal::service('locale.storage');
   }
 
   /**

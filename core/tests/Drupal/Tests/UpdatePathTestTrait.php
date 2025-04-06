@@ -92,7 +92,7 @@ trait UpdatePathTestTrait {
       // Ensure that the container is updated if any modules are installed or
       // uninstalled during the update.
       /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
-      $module_handler = $this->container->get('module_handler');
+      $module_handler = \Drupal::service('module_handler');
       $config_module_list = $this->config('core.extension')->get('module');
       $module_handler_list = $module_handler->getModuleList();
       $modules_installed = FALSE;
@@ -130,12 +130,12 @@ trait UpdatePathTestTrait {
       // The config schema can be incorrect while the update functions are being
       // executed. But once the update has been completed, it needs to be valid
       // again. Assert the schema of all configuration objects now.
-      $names = $this->container->get('config.storage')->listAll();
+      $names = \Drupal::service('config.storage')->listAll();
 
       // Allow tests to opt out of checking specific configuration.
       $exclude = $this->getConfigSchemaExclusions();
       /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
-      $typed_config = $this->container->get('config.typed');
+      $typed_config = \Drupal::service('config.typed');
       foreach ($names as $name) {
         if (in_array($name, $exclude, TRUE)) {
           // Skip checking schema if the config is listed in the

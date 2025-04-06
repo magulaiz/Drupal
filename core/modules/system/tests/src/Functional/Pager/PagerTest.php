@@ -44,7 +44,7 @@ class PagerTest extends BrowserTestBase {
     \Drupal::database()->delete('watchdog')->execute();
 
     // Insert 300 log messages.
-    $logger = $this->container->get('logger.factory')->get('pager_test');
+    $logger = \Drupal::service('logger.factory')->get('pager_test');
     for ($i = 0; $i < 300; $i++) {
       $logger->debug($this->randomString());
     }
@@ -196,7 +196,7 @@ class PagerTest extends BrowserTestBase {
    */
   public function testPagerEllipsis(): void {
     // Insert 100 extra log messages to get 9 pages.
-    $logger = $this->container->get('logger.factory')->get('pager_test');
+    $logger = \Drupal::service('logger.factory')->get('pager_test');
     for ($i = 0; $i < 100; $i++) {
       $logger->debug($this->randomString());
     }
@@ -205,7 +205,7 @@ class PagerTest extends BrowserTestBase {
     $this->assertCount(0, $elements, 'No ellipsis has been set.');
 
     // Insert an extra 50 log messages to get 10 pages.
-    $logger = $this->container->get('logger.factory')->get('pager_test');
+    $logger = \Drupal::service('logger.factory')->get('pager_test');
     for ($i = 0; $i < 50; $i++) {
       $logger->debug($this->randomString());
     }

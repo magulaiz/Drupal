@@ -57,7 +57,7 @@ class TableDragTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->state = $this->container->get('state');
+    $this->state = \Drupal::service('state');
   }
 
   /**

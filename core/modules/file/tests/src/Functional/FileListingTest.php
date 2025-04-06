@@ -81,7 +81,7 @@ class FileListingTest extends FileFieldTestBase {
    * Tests file overview with different user permissions.
    */
   public function testFileListingPages(): void {
-    $file_usage = $this->container->get('file.usage');
+    $file_usage = \Drupal::service('file.usage');
     // Users without sufficient permissions should not see file listing.
     $this->drupalLogin($this->baseUser);
     $this->drupalGet('admin/content/files');

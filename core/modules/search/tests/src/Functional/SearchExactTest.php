@@ -52,7 +52,7 @@ class SearchExactTest extends BrowserTestBase {
     $node = $this->drupalCreateNode($settings);
 
     // Update the search index.
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Refresh variables after the treatment.
     $this->refreshVariables();
@@ -84,7 +84,7 @@ class SearchExactTest extends BrowserTestBase {
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
     $this->assertSession()->pageTextContains($user->getAccountName());
-    $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
+    $this->assertSession()->pageTextContains(\Drupal::service('date.formatter')->format($node->getChangedTime(), 'short'));
 
     // Check that with post settings turned off the user and changed date
     // information is not displayed.
@@ -94,7 +94,7 @@ class SearchExactTest extends BrowserTestBase {
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'Search');
     $this->assertSession()->pageTextNotContains($user->getAccountName());
-    $this->assertSession()->pageTextNotContains($this->container->get('date.formatter')->format($node->getChangedTime(), 'short'));
+    $this->assertSession()->pageTextNotContains(\Drupal::service('date.formatter')->format($node->getChangedTime(), 'short'));
 
   }
 

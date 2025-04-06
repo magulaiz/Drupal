@@ -283,8 +283,8 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
   public function testAlterInfo(): void {
     $this->drupalLogin($this->adminUser);
 
-    $this->container->get('state')->set('config_translation_test_config_translation_info_alter', TRUE);
-    $this->container->get('plugin.manager.config_translation.mapper')->clearCachedDefinitions();
+    \Drupal::service('state')->set('config_translation_test_config_translation_info_alter', TRUE);
+    \Drupal::service('plugin.manager.config_translation.mapper')->clearCachedDefinitions();
 
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');
@@ -299,7 +299,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
   public function testSequenceTranslation(): void {
     $this->drupalLogin($this->adminUser);
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
-    $config_factory = $this->container->get('config.factory');
+    $config_factory = \Drupal::service('config.factory');
 
     $expected = [
       'kitten',
@@ -320,7 +320,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
     $this->drupalGet('admin/config/media/file-system/translate/fr/add');
     $this->submitForm($edit, 'Save translation');
 
-    $this->container->get('language.config_factory_override')
+    \Drupal::service('language.config_factory_override')
       ->setLanguage(new Language(['id' => 'fr']));
 
     $expected = [

@@ -319,7 +319,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     // that hold a list of languages.
     $this->rebuildContainer();
 
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
 
     // Enable browser and URL language detection.
     $edit = [
@@ -354,7 +354,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $this->drupalGet('');
 
     /** @var \Drupal\Core\Routing\UrlGenerator $generator */
-    $generator = $this->container->get('url_generator');
+    $generator = \Drupal::service('url_generator');
 
     // Verify the English URL is correct
     $english_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['en']]);

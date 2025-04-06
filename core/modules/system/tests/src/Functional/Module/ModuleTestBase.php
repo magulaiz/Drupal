@@ -146,7 +146,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       else {
         $message = 'Module "%s" is not enabled.';
       }
-      $this->assertEquals($enabled, $this->container->get('module_handler')->moduleExists($module), sprintf($message, $module));
+      $this->assertEquals($enabled, \Drupal::service('module_handler')->moduleExists($module), sprintf($message, $module));
     }
   }
 

@@ -43,7 +43,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Add a default locale storage for all these tests.
-    $this->storage = $this->container->get('locale.storage');
+    $this->storage = \Drupal::service('locale.storage');
 
     // Enable import of translations. By default this is disabled for automated
     // tests.
@@ -135,7 +135,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Formatting the date 8 / 27 / 1985 @ 13:37 EST with pattern D should
     // display "Tue".
-    $formatted_date = $this->container->get('date.formatter')->format(494015820, $type = 'medium', NULL, 'America/New_York', $this->langcode);
+    $formatted_date = \Drupal::service('date.formatter')->format(494015820, $type = 'medium', NULL, 'America/New_York', $this->langcode);
     $this->assertEquals('Tue', $formatted_date, 'Got the right formatted date using the date format translation pattern.');
 
     // Assert strings from image module config are not available.

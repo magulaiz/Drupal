@@ -113,7 +113,7 @@ class EditorAdminTest extends BrowserTestBase {
     $formats = ['monoceros' => 'Monoceros', 'tattoo' => 'Tattoo'];
 
     // Install the node module.
-    $this->container->get('module_installer')->install(['node']);
+    \Drupal::service('module_installer')->install(['node']);
     $this->resetAll();
     // Create a new node type and attach the 'body' field to it.
     $node_type = NodeType::create(['type' => $this->randomMachineName(), 'name' => $this->randomString()]);
@@ -198,8 +198,8 @@ class EditorAdminTest extends BrowserTestBase {
    * Enables the unicorn editor.
    */
   protected function enableUnicornEditor(): void {
-    if (!$this->container->get('module_handler')->moduleExists('editor_test')) {
-      $this->container->get('module_installer')->install(['editor_test']);
+    if (!\Drupal::service('module_handler')->moduleExists('editor_test')) {
+      \Drupal::service('module_installer')->install(['editor_test']);
     }
   }
 

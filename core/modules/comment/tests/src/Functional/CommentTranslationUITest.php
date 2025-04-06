@@ -88,7 +88,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     // translatable.
     $this->addDefaultCommentField('node', 'page', 'comment');
     // Mark this bundle as translatable.
-    $this->container->get('content_translation.manager')->setEnabled('comment', 'comment_article', TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled('comment', 'comment_article', TRUE);
   }
 
   /**
@@ -164,10 +164,10 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function doTestAuthoringInfo(): void {
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $entity = $storage->load($this->entityId);
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
     $values = [];
 
     // Post different authoring information for each translation.
@@ -179,7 +179,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
         'created' => \Drupal::time()->getRequestTime() - mt_rand(0, 1000),
       ];
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
-      $date_formatter = $this->container->get('date.formatter');
+      $date_formatter = \Drupal::service('date.formatter');
       $edit = [
         'uid' => $user->getAccountName() . ' (' . $user->id() . ')',
         'date[date]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'Y-m-d'),
@@ -218,10 +218,10 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function doTestTranslationEdit(): void {
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $entity = $storage->load($this->entityId);
-    $languages = $this->container->get('language_manager')->getLanguages();
+    $languages = \Drupal::service('language_manager')->getLanguages();
 
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.

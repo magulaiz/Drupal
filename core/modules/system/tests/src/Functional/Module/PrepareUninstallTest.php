@@ -187,7 +187,7 @@ class PrepareUninstallTest extends BrowserTestBase {
 
     // Test an entity type without a label.
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage('entity_test_no_label');
     $storage->create([
       'id' => $this->randomMachineName(),

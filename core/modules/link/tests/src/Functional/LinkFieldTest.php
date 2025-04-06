@@ -474,7 +474,7 @@ class LinkFieldTest extends BrowserTestBase {
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE): string {
     if ($reset) {
-      $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
+      \Drupal::service('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     }
     $entity = EntityTest::load($id);
     $display = \Drupal::service('entity_display.repository')
@@ -506,7 +506,7 @@ class LinkFieldTest extends BrowserTestBase {
       ],
     ])->save();
 
-    $entityTypeManager = $this->container->get('entity_type.manager');
+    $entityTypeManager = \Drupal::service('entity_type.manager');
     $entityTypeManager
       ->getStorage('entity_form_display')
       ->load('entity_test.entity_test.default')

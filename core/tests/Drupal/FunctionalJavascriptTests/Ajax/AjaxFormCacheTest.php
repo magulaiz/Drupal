@@ -49,7 +49,7 @@ class AjaxFormCacheTest extends WebDriverTestBase {
    * Tests AJAX forms in blocks.
    */
   public function testBlockForms(): void {
-    $this->container->get('module_installer')->install(['block', 'search']);
+    \Drupal::service('module_installer')->install(['block', 'search']);
     $this->rebuildContainer();
     $this->drupalLogin($this->rootUser);
 
@@ -84,7 +84,7 @@ class AjaxFormCacheTest extends WebDriverTestBase {
    * Tests AJAX forms on pages with a query string.
    */
   public function testQueryString(): void {
-    $this->container->get('module_installer')->install(['block']);
+    \Drupal::service('module_installer')->install(['block']);
     $this->drupalLogin($this->rootUser);
 
     $this->drupalPlaceBlock('ajax_forms_test_block');

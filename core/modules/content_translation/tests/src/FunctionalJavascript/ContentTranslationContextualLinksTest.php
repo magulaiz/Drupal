@@ -44,7 +44,7 @@ class ContentTranslationContextualLinksTest extends WebDriverTestBase {
     $this->drupalCreateContentType(['type' => 'page']);
 
     // Enable content translation.
-    $content_translation_manager = $this->container->get('content_translation.manager');
+    $content_translation_manager = \Drupal::service('content_translation.manager');
     $content_translation_manager->setEnabled('node', 'page', TRUE);
     $this->rebuildContainer();
 

@@ -28,7 +28,7 @@ class BlockWeightUpdateTest extends UpdatePathTestBase {
   public function testRunUpdates() {
     // Find a block and change it to have a null weight.
     /** @var \Drupal\Core\Database\Connection $database */
-    $database = $this->container->get('database');
+    $database = \Drupal::service('database');
     $block = $database->select('config', 'c')
       ->fields('c', ['data'])
       ->condition('name', 'block.block.claro_content')

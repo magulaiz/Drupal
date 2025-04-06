@@ -130,7 +130,7 @@ trait ResourceResponseTestTrait {
       $entity = $this->entity;
       $collected_responses = [];
       foreach ($field_names as $public_field_name) {
-        $resource_type = $this->container->get('jsonapi.resource_type.repository')->get($entity->getEntityTypeId(), $entity->bundle());
+        $resource_type = \Drupal::service('jsonapi.resource_type.repository')->get($entity->getEntityTypeId(), $entity->bundle());
         $field_name = $resource_type->getInternalName($public_field_name);
         $field_access = static::entityFieldAccess($entity, $field_name, 'view', $this->account);
         if (!$field_access->isAllowed()) {

@@ -217,7 +217,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
   protected function getHighestConfigurableLanguageWeight(): int {
     $max_weight = 0;
 
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage('configurable_language');
     $storage->resetCache();
     /** @var \Drupal\Core\Language\LanguageInterface[] $languages */

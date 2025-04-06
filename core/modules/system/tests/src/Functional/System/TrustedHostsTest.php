@@ -68,9 +68,9 @@ class TrustedHostsTest extends BrowserTestBase {
    * @see \Drupal\Core\Http\TrustedHostsRequestFactory
    */
   public function testFakeRequests(): void {
-    $this->container->get('module_installer')->install(['trusted_hosts_test']);
+    \Drupal::service('module_installer')->install(['trusted_hosts_test']);
 
-    $host = $this->container->get('request_stack')->getCurrentRequest()->getHost();
+    $host = \Drupal::service('request_stack')->getCurrentRequest()->getHost();
     $settings['settings']['trusted_host_patterns'] = (object) [
       'value' => ['^' . preg_quote($host) . '$'],
       'required' => TRUE,
@@ -86,11 +86,11 @@ class TrustedHostsTest extends BrowserTestBase {
    * Tests that shortcut module works together with host verification.
    */
   public function testShortcut(): void {
-    $this->container->get('module_installer')->install(['block', 'shortcut']);
+    \Drupal::service('module_installer')->install(['block', 'shortcut']);
     $this->rebuildContainer();
 
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = $this->container->get('entity_type.manager');
+    $entity_type_manager = \Drupal::service('entity_type.manager');
     $shortcut_storage = $entity_type_manager->getStorage('shortcut');
 
     $shortcut = $shortcut_storage->create([
@@ -121,9 +121,9 @@ class TrustedHostsTest extends BrowserTestBase {
    * @see \Drupal\Core\Http\TrustedHostsRequestFactory
    */
   public function testRequestBags(): void {
-    $this->container->get('module_installer')->install(['trusted_hosts_test']);
+    \Drupal::service('module_installer')->install(['trusted_hosts_test']);
 
-    $host = $this->container->get('request_stack')->getCurrentRequest()->getHost();
+    $host = \Drupal::service('request_stack')->getCurrentRequest()->getHost();
     $settings['settings']['trusted_host_patterns'] = (object) [
       'value' => ['^' . preg_quote($host) . '$'],
       'required' => TRUE,

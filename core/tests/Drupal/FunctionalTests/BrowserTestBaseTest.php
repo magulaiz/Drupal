@@ -160,7 +160,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $edit = ['bananas' => 'green'];
     $this->submitForm($edit, 'Save', 'form-test-form-test-object');
 
-    $config_factory = $this->container->get('config.factory');
+    $config_factory = \Drupal::service('config.factory');
     $value = $config_factory->get('form_test.object')->get('bananas');
     $this->assertSame('green', $value);
 
@@ -490,7 +490,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // The 'Australia/Sydney' time zone is also set in
     // FunctionalTestSetupTrait::initConfig().
-    $config_factory = $this->container->get('config.factory');
+    $config_factory = \Drupal::service('config.factory');
     $value = $config_factory->get('system.date')->get('timezone.default');
     $this->assertEquals($expected, $value);
 
@@ -556,7 +556,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   public function testSessionOnRequest(): void {
     /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
-    $session = $this->container->get('request_stack')->getSession();
+    $session = \Drupal::service('request_stack')->getSession();
 
     $session->set('some-val', 'do-not-cleanup');
     $this->assertEquals('do-not-cleanup', $session->get('some-val'));

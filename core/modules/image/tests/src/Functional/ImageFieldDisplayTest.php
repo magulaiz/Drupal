@@ -57,8 +57,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    */
   public function _testImageFieldFormatters($scheme): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $renderer = \Drupal::service('renderer');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $field_settings = ['alt_field_required' => 0];
     $instance = $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => $scheme], $field_settings);
@@ -241,8 +241,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    */
   public function testImageFieldSettings(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $renderer = \Drupal::service('renderer');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $test_image = current($this->drupalGetTestFiles('image'));
     [, $test_image_extension] = explode('.', $test_image->filename);
     $field_name = $this->randomMachineName();
@@ -360,8 +360,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    */
   public function testImageLoadingAttribute(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $renderer = \Drupal::service('renderer');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $field_settings = ['alt_field_required' => 0];
     $instance = $this->createImageField($field_name, 'node', 'article', [], $field_settings);
@@ -474,9 +474,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    */
   public function testImageFieldDefaultImage(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
+    $renderer = \Drupal::service('renderer');
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     // Create a new image field.
     $field_name = $this->randomMachineName();
     $this->createImageField($field_name, 'node', 'article');

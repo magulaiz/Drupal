@@ -66,7 +66,7 @@ final class RevisionVersionHistoryTranslatableTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('css', 'table tbody tr', 2);
 
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
-    $storage = $this->container->get('entity_type.manager')->getStorage($entity->getEntityTypeId());
+    $storage = \Drupal::service('entity_type.manager')->getStorage($entity->getEntityTypeId());
     $firstRevision = $storage->loadRevision($firstRevisionId);
 
     $this->assertSession()->linkByHrefExists($firstRevision->toUrl('revision-revert-form')->toString());

@@ -139,7 +139,7 @@ class ConfigEntityListTest extends BrowserTestBase {
 
     // Test that config entities that do not support status, do not have
     // enable/disable operations.
-    $controller = $this->container->get('entity_type.manager')
+    $controller = \Drupal::service('entity_type.manager')
       ->getListBuilder('config_test_no_status');
 
     $list = $controller->load();

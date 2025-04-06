@@ -79,7 +79,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     $this->entity = EntityTest::create([
       'type' => 'entity_test',
       'name' => $this->randomString(),
-      'time_field' => $this->container->get('datetime.time')->getRequestTime(),
+      'time_field' => \Drupal::service('datetime.time')->getRequestTime(),
     ]);
     $this->entity->save();
   }

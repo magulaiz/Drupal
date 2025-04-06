@@ -154,7 +154,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $sort_by = $page->findField('settings[handler_settings][sort][field]');
     $this->assertNotEmpty($sort_by);
     $this->assertFalse($sort_by->isVisible(), 'The "sort by" options are hidden.');
-    $bundles = $this->container->get('entity_type.bundle.info')->getBundleInfo($entity_type_id);
+    $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type_id);
     foreach ($bundles as $bundle_name => $bundle_info) {
       $this->assertSession()->fieldExists('settings[handler_settings][target_bundles][' . $bundle_name . ']');
     }
@@ -329,7 +329,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertTrue($assert_session->waitForText('The views entity selection mode requires a view.'));
 
     // Enable the entity_reference_test module which creates an eligible view.
-    $this->container->get('module_installer')
+    \Drupal::service('module_installer')
       ->install(['entity_reference_test']);
     $this->resetAll();
     $this->drupalGet($bundle_path . '/fields/' . $field_name);

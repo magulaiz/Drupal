@@ -527,7 +527,7 @@ class NodeTest extends ResourceTestBase {
     $this->assertCount(0, $doc['data']);
 
     // Assert bubbling of cacheability from query alter hook.
-    $this->assertTrue($this->container->get('module_installer')->install(['node_access_test'], TRUE), 'Installed modules.');
+    $this->assertTrue(\Drupal::service('module_installer')->install(['node_access_test'], TRUE), 'Installed modules.');
     node_access_rebuild();
     $this->rebuildAll();
     $response = $this->request('GET', $collection_filter_url, $request_options);

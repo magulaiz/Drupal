@@ -118,7 +118,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     // Install the config_test module and ensure that the override from the
     // install profile is used. Optional configuration can override
     // configuration in a modules config/install directory.
-    $this->container->get('module_installer')->install(['config_test']);
+    \Drupal::service('module_installer')->install(['config_test']);
     $this->rebuildContainer();
     $config_test_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertEquals('Default install profile override', $config_test_storage->load('dotted.default')->label(), 'The config_test entity is overridden by the profile optional configuration.');
@@ -130,7 +130,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
     $this->assertNull($config_test_storage->load('completely_new'), 'The completely new optional config_test entity with unmet dependencies is not created.');
 
     // Installing dblog creates the optional configuration.
-    $this->container->get('module_installer')->install(['dblog']);
+    \Drupal::service('module_installer')->install(['dblog']);
     $this->rebuildContainer();
     $this->assertEquals('Override', $config_test_storage->load('override_unmet')->label(), 'The optional config_test entity is overridden by the profile optional configuration and is installed when its dependencies are met.');
     $config_test_new = $config_test_storage->load('completely_new');
@@ -139,7 +139,7 @@ class ConfigInstallProfileOverrideTest extends BrowserTestBase {
 
     // Install another module that provides optional configuration and ensure
     // that deleted profile configuration is not re-created.
-    $this->container->get('module_installer')->install(['config_other_module_config_test']);
+    \Drupal::service('module_installer')->install(['config_other_module_config_test']);
     $this->rebuildContainer();
     $config_test_storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $this->assertNull($config_test_storage->load('completely_new'));

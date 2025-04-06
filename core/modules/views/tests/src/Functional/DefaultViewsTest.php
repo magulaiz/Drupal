@@ -138,7 +138,7 @@ class DefaultViewsTest extends ViewTestBase {
    */
   public function testDefaultViews(): void {
     // Get all default views.
-    $controller = $this->container->get('entity_type.manager')->getStorage('view');
+    $controller = \Drupal::service('entity_type.manager')->getStorage('view');
     $views = $controller->loadMultiple();
 
     foreach ($views as $name => $view_storage) {

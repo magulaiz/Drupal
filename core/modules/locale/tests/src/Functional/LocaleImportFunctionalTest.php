@@ -276,7 +276,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     $this->assertSame('.', (string) $this->t('st', [], ['langcode' => 'hr', 'context' => 'Day ordinal suffix']), 'Day ordinal suffix context is working.');
 
     // Ensure that the date formatter applies the right translation context.
-    $formatted_date = $this->container->get('date.formatter')->format(483820620, 'custom', 'jS F Y', 'America/New_York', 'hr');
+    $formatted_date = \Drupal::service('date.formatter')->format(483820620, 'custom', 'jS F Y', 'America/New_York', 'hr');
     $this->assertEquals('1. Svibanj 1985', $formatted_date, 'Got the right formatted date using the date format translation pattern.');
   }
 
@@ -348,7 +348,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     // Check for the source strings we are going to translate. Adding the
     // custom language should have made the process to export configuration
     // strings to interface translation executed.
-    $locale_storage = $this->container->get('locale.storage');
+    $locale_storage = \Drupal::service('locale.storage');
     foreach ($config_strings as $config_string) {
       $string = $locale_storage->findString(['source' => $config_string[0], 'context' => '', 'type' => 'configuration']);
       $this->assertNotEmpty($string, 'Configuration strings have been created upon installation.');

@@ -108,7 +108,7 @@ class FileVideoFormatterTest extends FileMediaFormatterTestBase {
     $assert_session->elementExists('css', "video[height='600'] > source[src='$file_url'][type='video/mp4']");
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $displayRepository */
-    $displayRepository = $this->container->get('entity_display.repository');
+    $displayRepository = \Drupal::service('entity_display.repository');
     $entityDisplay = $displayRepository->getViewDisplay('entity_test', 'entity_test', 'full');
     $fieldName = $field_config->get('field_name');
     $fieldDisplay = $entityDisplay->getComponent($fieldName);

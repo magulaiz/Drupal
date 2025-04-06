@@ -78,7 +78,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
 
     // Reload the user and reset the timezone in AccountProxy::setAccount().
     \Drupal::entityTypeManager()->getStorage('user')->resetCache();
-    $this->container->get('current_user')->setAccount(User::load($test_user->id()));
+    \Drupal::service('current_user')->setAccount(User::load($test_user->id()));
 
     // Create a date object with an unspecified timezone, which should
     // end up using the user timezone.

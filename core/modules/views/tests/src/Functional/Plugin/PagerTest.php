@@ -408,7 +408,7 @@ class PagerTest extends ViewTestBase {
     $view->save();
 
     $themes = ['stark', 'olivero', 'claro', 'starterkit_theme', 'stable9'];
-    $this->container->get('theme_installer')->install($themes);
+    \Drupal::service('theme_installer')->install($themes);
 
     foreach ($themes as $theme) {
       $this->config('system.theme')->set('default', $theme)->save();
@@ -504,7 +504,7 @@ class PagerTest extends ViewTestBase {
     $view->save();
 
     // Enable locale, config_translation and language module.
-    $this->container->get('module_installer')->install(['locale', 'language', 'config_translation']);
+    \Drupal::service('module_installer')->install(['locale', 'language', 'config_translation']);
     $this->resetAll();
 
     $admin_user = $this->drupalCreateUser([
@@ -518,7 +518,7 @@ class PagerTest extends ViewTestBase {
     $langcode = 'nl';
 
     // Add a default locale storage for this test.
-    $this->localeStorage = $this->container->get('locale.storage');
+    $this->localeStorage = \Drupal::service('locale.storage');
 
     // Add Dutch language programmatically.
     ConfigurableLanguage::createFromLangcode($langcode)->save();
@@ -558,12 +558,12 @@ class PagerTest extends ViewTestBase {
    */
   public function testPagerLocale(): void {
     // Enable locale and language module.
-    $this->container->get('module_installer')->install(['locale', 'language']);
+    \Drupal::service('module_installer')->install(['locale', 'language']);
     $this->resetAll();
     $langcode = 'nl';
 
     // Add a default locale storage for this test.
-    $this->localeStorage = $this->container->get('locale.storage');
+    $this->localeStorage = \Drupal::service('locale.storage');
 
     // Add Dutch language programmatically.
     ConfigurableLanguage::createFromLangcode($langcode)->save();

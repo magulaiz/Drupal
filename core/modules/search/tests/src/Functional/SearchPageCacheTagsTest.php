@@ -61,7 +61,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     $this->node = $this->drupalCreateNode(['title' => 'bike shed shop']);
     $this->node->setOwner($this->searchingUser);
     $this->node->save();
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
   }
 
   /**
@@ -140,7 +140,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
   public function testSearchTagsBubbling(): void {
 
     // Install field UI module.
-    $this->container->get('module_installer')->install(['field_ui']);
+    \Drupal::service('module_installer')->install(['field_ui']);
     $this->resetAll();
 
     // Creates a new content type that will have an entity reference.
@@ -174,7 +174,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('bike shed shop');
 
     // Refresh the search index.
-    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
+    \Drupal::service('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Log in with searching user again.
     $this->drupalLogin($this->searchingUser);

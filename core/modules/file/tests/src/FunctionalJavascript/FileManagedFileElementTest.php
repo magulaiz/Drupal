@@ -70,7 +70,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           // Upload, then Submit.
           $last_fid_prior = $this->getLastFileId();
           $this->drupalGet($path);
-          $this->getSession()->getPage()->attachFileToField($file_field_name, $this->container->get('file_system')->realpath($filename));
+          $this->getSession()->getPage()->attachFileToField($file_field_name, \Drupal::service('file_system')->realpath($filename));
           $uploaded_file = $this->assertSession()->waitForElement('css', '.file--mime-text-plain');
           $this->assertNotEmpty($uploaded_file);
           $last_fid = $this->getLastFileId();
@@ -91,7 +91,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
 
           // Upload, then Remove, then Submit.
           $this->drupalGet($path);
-          $this->getSession()->getPage()->attachFileToField($file_field_name, $this->container->get('file_system')->realpath($filename));
+          $this->getSession()->getPage()->attachFileToField($file_field_name, \Drupal::service('file_system')->realpath($filename));
           $uploaded_file = $this->assertSession()->waitForElement('css', '.file--mime-text-plain');
           $this->assertNotEmpty($uploaded_file);
           if ($multiple) {

@@ -80,7 +80,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     ]);
     $this->type2 = $type2->id();
 
-    $this->entityTypeManager = $this->container->get('entity_type.manager');
+    $this->entityTypeManager = \Drupal::service('entity_type.manager');
     $this->getSession()->resizeWindow(1100, 800);
   }
 

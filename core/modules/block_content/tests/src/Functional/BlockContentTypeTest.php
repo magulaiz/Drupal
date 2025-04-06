@@ -209,8 +209,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->createBlockContentType(['id' => 'bar']);
 
     // Get the content block storage.
-    $storage = $this->container
-      ->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage('block_content');
 
     // Install all themes.

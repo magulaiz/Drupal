@@ -108,7 +108,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
     parent::setUp();
 
     // Set up a HTTP client that accepts relative URLs.
-    $this->httpClient = $this->container->get('http_client_factory')
+    $this->httpClient = \Drupal::service('http_client_factory')
       ->fromOptions(['base_uri' => $this->baseUrl]);
 
     // Create Basic page and Article node types.

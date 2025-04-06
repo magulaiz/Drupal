@@ -47,8 +47,8 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->themeInstaller = $this->container->get('theme_installer');
-    $this->themeManager = $this->container->get('theme.manager');
+    $this->themeInstaller = \Drupal::service('theme_installer');
+    $this->themeManager = \Drupal::service('theme.manager');
     $this->themeInstaller->install(['claro']);
 
     // Create user with sufficient permissions to have the shortcut toolbar menu

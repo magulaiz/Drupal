@@ -148,7 +148,7 @@ class EntityAddUITest extends BrowserTestBase {
     // display has to be deleted first to prevent schema errors when fields
     // attached to the deleted bundle are themselves deleted, which triggers
     // an update of the form display.
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getFormDisplay('entity_test_mul', 'entity_test_mul')
       ->delete();
     EntityTestHelper::deleteBundle('entity_test_mul', 'entity_test_mul');

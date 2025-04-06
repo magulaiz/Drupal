@@ -115,7 +115,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     $menu_link = $this->cssSelect('nav.block-menu ul.menu a');
     $this->assertEquals('Test menu link', $menu_link[0]->getText());
-    $this->container->get('module_installer')->install(['menu_ui', 'menu_link_content']);
+    \Drupal::service('module_installer')->install(['menu_ui', 'menu_link_content']);
 
     // Update the menu link.
     $this->drupalGet("admin/structure/menu/link/views_view:views.test_page_display_menu.page_3/edit");
@@ -155,11 +155,11 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->drupalLogin($account);
     // Use distinct default and administrative themes for this test.
     /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
-    $theme_handler = $this->container->get('theme_handler');
+    $theme_handler = \Drupal::service('theme_handler');
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
-    $theme_installer = $this->container->get('theme_installer');
+    $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install(['claro']);
-    $this->container->get('config.factory')
+    \Drupal::service('config.factory')
       ->getEditable('system.theme')
       ->set('admin', 'claro')
       ->set('default', 'stable')
@@ -171,7 +171,7 @@ class DisplayPageWebTest extends ViewTestBase {
 
     $view = $this->config('views.view.test_page_display');
     $view->set('display.page_3.display_options.use_admin_theme', TRUE)->save();
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
 
     // Check that the page was served with the administrative theme.
     $this->drupalGet('test_page_display_200');
@@ -191,7 +191,7 @@ class DisplayPageWebTest extends ViewTestBase {
     $view->initDisplay('page_1');
     $view->displayHandlers->get('page_1')->overrideOption('path', $path);
     $view->save();
-    $this->container->get('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
     // Check if we successfully changed the path.
     $this->drupalGet($path);
     $this->assertSession()->statusCodeEquals(200);

@@ -65,7 +65,7 @@ class ManageFieldsTest extends BrowserTestBase {
     $bundle = $node_type->id();
 
     /** @var \Drupal\field\FieldStorageConfigInterface $storage */
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage('field_storage_config')
       ->create([
         'type' => 'string',
@@ -74,7 +74,7 @@ class ManageFieldsTest extends BrowserTestBase {
       ]);
     $storage->save();
 
-    $this->container->get('entity_type.manager')
+    \Drupal::service('entity_type.manager')
       ->getStorage('field_config')
       ->create([
         'field_storage' => $storage,
@@ -88,12 +88,12 @@ class ManageFieldsTest extends BrowserTestBase {
     // the correct text (which comes from the FieldItemBase class).
     $element = $assert_session->elementExists('css', '#highlander');
     $summary = $assert_session->elementExists('css', '.field-settings-summary-cell > ul > li', $element);
-    $field_label = $this->container->get('plugin.manager.field.field_type')->getDefinitions()['string']['label'];
+    $field_label = \Drupal::service('plugin.manager.field.field_type')->getDefinitions()['string']['label'];
     $this->assertEquals($field_label, $summary->getText());
 
     // Add an entity reference field, and check that its summary is custom.
     /** @var \Drupal\field\FieldStorageConfigInterface $storage */
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage('field_storage_config')
       ->create([
         'type' => 'entity_reference',
@@ -105,7 +105,7 @@ class ManageFieldsTest extends BrowserTestBase {
       ]);
     $storage->save();
 
-    $this->container->get('entity_type.manager')
+    \Drupal::service('entity_type.manager')
       ->getStorage('field_config')
       ->create([
         'field_storage' => $storage,
@@ -269,7 +269,7 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->submitForm($edit, 'Continue');
 
     /** @var \Drupal\field\FieldStorageConfigInterface $storage */
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage('field_storage_config')
       ->create([
         'type' => 'test_field',
@@ -278,7 +278,7 @@ class ManageFieldsTest extends BrowserTestBase {
       ]);
     $storage->save();
 
-    $this->container->get('entity_type.manager')
+    \Drupal::service('entity_type.manager')
       ->getStorage('field_config')
       ->create([
         'field_storage' => $storage,
@@ -322,7 +322,7 @@ class ManageFieldsTest extends BrowserTestBase {
     $bundle = $node_type->id();
 
     /** @var \Drupal\field\FieldStorageConfigInterface $storage */
-    $storage = $this->container->get('entity_type.manager')
+    $storage = \Drupal::service('entity_type.manager')
       ->getStorage('field_storage_config')
       ->create([
         'type' => 'test_field',
@@ -331,7 +331,7 @@ class ManageFieldsTest extends BrowserTestBase {
       ]);
     $storage->save();
 
-    $this->container->get('entity_type.manager')
+    \Drupal::service('entity_type.manager')
       ->getStorage('field_config')
       ->create([
         'field_storage' => $storage,

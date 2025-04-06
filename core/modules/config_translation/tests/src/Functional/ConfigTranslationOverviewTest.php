@@ -75,7 +75,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     foreach ($this->langcodes as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
     }
-    $this->localeStorage = $this->container->get('locale.storage');
+    $this->localeStorage = \Drupal::service('locale.storage');
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalPlaceBlock('page_title_block');
   }
@@ -161,7 +161,7 @@ class ConfigTranslationOverviewTest extends BrowserTestBase {
     $original_label = 'Default';
     $overridden_label = 'Overridden label';
 
-    $config_test_storage = $this->container->get('entity_type.manager')->getStorage('config_test');
+    $config_test_storage = \Drupal::service('entity_type.manager')->getStorage('config_test');
 
     // Set up an override.
     $settings['config']['config_test.dynamic.dotted.default']['label'] = (object) [

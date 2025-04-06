@@ -66,7 +66,7 @@ abstract class FileMediaFormatterTestBase extends BrowserTestBase {
     ]);
     $field_config->save();
 
-    $this->container->get('entity_display.repository')
+    \Drupal::service('entity_display.repository')
       ->getViewDisplay('entity_test', 'entity_test', 'full')
       ->setComponent($field_name, [
         'type' => $formatter,

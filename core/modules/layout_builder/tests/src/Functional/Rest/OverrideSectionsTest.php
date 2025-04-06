@@ -34,7 +34,7 @@ class OverrideSectionsTest extends LayoutRestTestBase {
     parent::setUp();
     // @todo Figure why field definitions have to cleared in
     //   https://www.drupal.org/project/drupal/issues/2985882.
-    $this->container->get('entity_field.manager')->clearCachedFieldDefinitions();
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
   }
 
   /**

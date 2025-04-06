@@ -55,7 +55,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
       $this->assertSession()->fieldExists($id);
       $options = [];
       /** @var \Drupal\Core\Language\LanguageManagerInterface $language_manager */
-      $language_manager = $this->container->get('language_manager');
+      $language_manager = \Drupal::service('language_manager');
       foreach ($language_manager->getLanguages($flags) as $langcode => $language) {
         $options[$langcode] = $language->isLocked() ? "- {$language->getName()} -" : $language->getName();
       }
@@ -75,7 +75,7 @@ class LanguageSelectElementTest extends BrowserTestBase {
   public function testHiddenLanguageSelectElement(): void {
     // Disable the language module, so that the language select field will not
     // be rendered.
-    $this->container->get('module_installer')->uninstall(['language']);
+    \Drupal::service('module_installer')->uninstall(['language']);
     $this->drupalGet('form-test/language_select');
     // Check that the language fields were rendered on the page.
     $ids = ['edit-languages-all', 'edit-languages-configurable', 'edit-languages-locked', 'edit-languages-config-and-locked'];

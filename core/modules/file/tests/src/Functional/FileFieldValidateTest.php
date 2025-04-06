@@ -28,7 +28,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
    * Tests the required property on file fields.
    */
   public function testRequired(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = $this->randomMachineName();
     $storage = $this->createFileField($field_name, 'node', $type_name, [], ['required' => '1']);
@@ -76,7 +76,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
    * Tests the max file size validator.
    */
   public function testFileMaxSize(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name, [], ['required' => '1']);
@@ -126,7 +126,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
    * Tests file extension checking.
    */
   public function testFileExtension(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = $this->randomMachineName();
     $this->createFileField($field_name, 'node', $type_name);
@@ -166,7 +166,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
    * Checks that a file can always be removed if it does not pass validation.
    */
   public function testFileRemoval(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $type_name = 'article';
     $field_name = 'file_test';
     $this->createFileField($field_name, 'node', $type_name);

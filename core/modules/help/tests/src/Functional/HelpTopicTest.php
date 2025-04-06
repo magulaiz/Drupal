@@ -141,14 +141,14 @@ class HelpTopicTest extends BrowserTestBase {
 
     // Uninstall the test module and verify the topics are gone, after
     // reloading page.
-    $this->container->get('module_installer')->uninstall(['help_topics_test']);
+    \Drupal::service('module_installer')->uninstall(['help_topics_test']);
     $this->drupalGet('admin/help');
     $session->linkNotExists('ABC Help Test module');
     $session->linkNotExists('ABC Help Test');
     $session->linkExists('XYZ Help Test theme');
 
     // Uninstall the test theme and verify the topic is gone.
-    $this->container->get('theme_installer')->uninstall(['help_topics_test_theme']);
+    \Drupal::service('theme_installer')->uninstall(['help_topics_test_theme']);
     $this->drupalGet('admin/help');
     $session->linkNotExists('XYZ Help Test theme');
   }

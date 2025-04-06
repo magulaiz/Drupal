@@ -59,7 +59,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
       'type' => 'page',
     ]);
 
-    $node_search_plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $node_search_plugin = \Drupal::service('plugin.manager.search')->createInstance('node_search');
     // Update the search index.
     $node_search_plugin->updateIndex();
     $search_index = \Drupal::service('search.index');
@@ -96,7 +96,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
       'type' => 'page',
     ]);
 
-    $node_search_plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+    $node_search_plugin = \Drupal::service('plugin.manager.search')->createInstance('node_search');
     // Update the search index.
     $node_search_plugin->updateIndex();
 

@@ -58,7 +58,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->fileUrlGenerator = $this->container->get('file_url_generator');
+    $this->fileUrlGenerator = \Drupal::service('file_url_generator');
 
     // Create user.
     $this->adminUser = $this->drupalCreateUser([
@@ -187,8 +187,8 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    */
   protected function doTestResponsiveImageFieldFormatters($scheme, $empty_styles = FALSE): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = $this->container->get('renderer');
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $renderer = \Drupal::service('renderer');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => $scheme]);
     // Create a new node with an image attached. Make sure we use a large image
@@ -219,7 +219,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       'type' => 'responsive_image_test',
       'settings' => ResponsiveImageFormatter::defaultSettings(),
     ];
-    $display = $this->container->get('entity_type.manager')
+    $display = \Drupal::service('entity_type.manager')
       ->getStorage('entity_view_display')
       ->load('node.article.default');
     if (!$display) {
@@ -229,7 +229,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         'mode' => 'default',
         'status' => TRUE,
       ];
-      $display = $this->container->get('entity_type.manager')->getStorage('entity_view_display')->create($values);
+      $display = \Drupal::service('entity_type.manager')->getStorage('entity_view_display')->create($values);
     }
     $display->setComponent($field_name, $display_options)->save();
 
@@ -383,7 +383,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         'image_mapping' => 'thumbnail',
       ])
       ->save();
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public']);
     // Create a new node with an image attached.
@@ -459,7 +459,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
         'image_mapping' => $large_style->id(),
       ])
       ->save();
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
     $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public']);
     // Create a new node with an image attached.
@@ -541,7 +541,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseMatches('/picture/');
 
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
-    $this->container->get('entity_type.manager')->getStorage('node')->resetCache([$nid]);
+    \Drupal::service('entity_type.manager')->getStorage('node')->resetCache([$nid]);
     $node = Node::load($nid);
 
     // Use the responsive image formatter linked to file formatter.

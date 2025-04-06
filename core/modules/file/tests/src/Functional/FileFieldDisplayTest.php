@@ -76,7 +76,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
 
     // Check that the default formatter is displaying with the file name.
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
     $node = $node_storage->load($nid);
     $node_file = File::load($node->{$field_name}->target_id);
     $file_link = [

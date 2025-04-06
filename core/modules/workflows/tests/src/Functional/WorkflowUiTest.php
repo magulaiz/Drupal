@@ -117,7 +117,7 @@ class WorkflowUiTest extends BrowserTestBase {
    * Tests the creation of a workflow through the UI.
    */
   public function testWorkflowCreation(): void {
-    $workflow_storage = $this->container->get('entity_type.manager')->getStorage('workflow');
+    $workflow_storage = \Drupal::service('entity_type.manager')->getStorage('workflow');
     $this->drupalLogin($this->createUser(['access administration pages', 'administer workflows']));
     $this->drupalGet('admin/config/workflow');
     $this->assertSession()->linkByHrefExists('admin/config/workflow/workflows');
@@ -303,7 +303,7 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Example global workflow setting');
     $this->submitForm(['type_settings[example_setting]' => 'Extra global settings'], 'Save');
 
-    $workflow_storage = $this->container->get('entity_type.manager')->getStorage('workflow');
+    $workflow_storage = \Drupal::service('entity_type.manager')->getStorage('workflow');
     $workflow = $workflow_storage->loadUnchanged('test');
     $this->assertEquals('Extra global settings', $workflow->getTypePlugin()->getConfiguration()['example_setting']);
   }
@@ -330,7 +330,7 @@ class WorkflowUiTest extends BrowserTestBase {
     $this->submitForm(['id' => 101112, 'label' => 101112, 'from[456]' => 456, 'to' => 789], 'Save');
     $this->assertSession()->pageTextContains('Created 101112 transition.');
 
-    $workflow = $this->container->get('entity_type.manager')->getStorage('workflow')->loadUnchanged(123);
+    $workflow = \Drupal::service('entity_type.manager')->getStorage('workflow')->loadUnchanged(123);
     $this->assertEquals(123, $workflow->id());
     $this->assertEquals(456, $workflow->getTypePlugin()->getState(456)->id());
     $this->assertEquals(101112, $workflow->getTypePlugin()->getTransition(101112)->id());

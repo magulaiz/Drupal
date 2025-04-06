@@ -29,7 +29,7 @@ class CachedDataUITest extends UITestBase {
   public function testCacheData(): void {
     $views_admin_user_uid = $this->fullAdminUser->id();
 
-    $temp_store = $this->container->get('tempstore.shared')->get('views');
+    $temp_store = \Drupal::service('tempstore.shared')->get('views');
     // The view should not be locked.
     $this->assertNull($temp_store->getMetadata('test_view'), 'The view is not locked.');
 

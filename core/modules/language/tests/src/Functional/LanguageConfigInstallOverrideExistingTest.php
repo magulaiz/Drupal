@@ -28,7 +28,7 @@ class LanguageConfigInstallOverrideExistingTest extends BrowserTestBase {
    */
   public function testLanguageConfigInstallOverrideExisting(): void {
     /** @var \Drupal\Core\Config\StorageInterface $storage */
-    $storage = $this->container->get('config.storage');
+    $storage = \Drupal::service('config.storage');
     $config = $this->config('language.types');
 
     // The negotiation methods that have been removed should be disabled after
