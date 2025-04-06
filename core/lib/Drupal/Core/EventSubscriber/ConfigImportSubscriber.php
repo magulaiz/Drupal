@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigImporter;
@@ -468,7 +469,8 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
       $this->typedConfig = new TypedConfigManager(
         $this->configImporter->getStorageComparer()->getSourceStorage(),
         $schema_storage,
-        new MemoryBackend('ConfigImportSubscriber'),
+        // @todo At least the time service needs to be injected properly.
+        new MemoryBackend(new Time()),
         $this->moduleHandler
       );
     }
