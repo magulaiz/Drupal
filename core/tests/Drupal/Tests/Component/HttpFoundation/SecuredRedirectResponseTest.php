@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\HttpFoundation;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -11,17 +13,16 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Test secure redirect base class.
- *
- * @group Routing
- * @coversDefaultClass \Drupal\Component\HttpFoundation\SecuredRedirectResponse
  */
+#[CoversClass(SecuredRedirectResponse::class)]
+#[Group('Routing')]
 class SecuredRedirectResponseTest extends TestCase {
 
   /**
    * Tests copying of redirect response.
    *
-   * @covers ::createFromRedirectResponse
-   * @covers ::fromResponse
+   * @legacy-covers ::createFromRedirectResponse
+   * @legacy-covers ::fromResponse
    */
   public function testRedirectCopy(): void {
     $redirect = new RedirectResponse('/magic_redirect_url', 301, ['x-cache-foobar' => 123]);

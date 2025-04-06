@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Plugin;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use Drupal\Component\Plugin\PluginManagerBase;
+use PHPUnit\Framework\Attributes\Group;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\Mapper\MapperInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-/**
- * @coversDefaultClass \Drupal\Component\Plugin\PluginManagerBase
- * @group Plugin
- */
+#[CoversClass(PluginManagerBase::class)]
+#[Group('Plugin')]
 class PluginManagerBaseTest extends TestCase {
 
   use ProphecyTrait;
@@ -47,7 +48,7 @@ class PluginManagerBaseTest extends TestCase {
   /**
    * Tests createInstance() with no fallback methods.
    *
-   * @covers ::createInstance
+   * @legacy-covers ::createInstance
    */
   public function testCreateInstance(): void {
     $manager = new StubPluginManagerBase();
@@ -66,7 +67,7 @@ class PluginManagerBaseTest extends TestCase {
   /**
    * Tests createInstance() with a fallback method.
    *
-   * @covers ::createInstance
+   * @legacy-covers ::createInstance
    */
   public function testCreateInstanceFallback(): void {
     // We use our special stub class which extends PluginManagerBase and also
@@ -92,7 +93,7 @@ class PluginManagerBaseTest extends TestCase {
   }
 
   /**
-   * @covers ::getInstance
+   * @legacy-covers ::getInstance
    */
   public function testGetInstance(): void {
     $options = [
@@ -109,7 +110,7 @@ class PluginManagerBaseTest extends TestCase {
   }
 
   /**
-   * @covers ::getInstance
+   * @legacy-covers ::getInstance
    */
   public function testGetInstanceWithoutMapperShouldThrowException(): void {
     $options = [

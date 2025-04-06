@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\DependencyInjection;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use Drupal\Component\DependencyInjection\PhpArrayContainer;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @coversDefaultClass \Drupal\Component\DependencyInjection\PhpArrayContainer
- * @group DependencyInjection
- */
+#[CoversClass(PhpArrayContainer::class)]
+#[Group('DependencyInjection')]
 class PhpArrayContainerTest extends ContainerTest {
 
   /**
