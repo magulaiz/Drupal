@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Render;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Component\Render\MarkupInterface;
 use PHPUnit\Framework\TestCase;
@@ -11,18 +14,16 @@ use Prophecy\Prophet;
 
 /**
  * Tests the HtmlEscapedText class.
- *
- * @coversDefaultClass \Drupal\Component\Render\HtmlEscapedText
- * @group utility
  */
+#[CoversClass(HtmlEscapedText::class)]
+#[Group('utility')]
 class HtmlEscapedTextTest extends TestCase {
 
   /**
-   * @covers ::__toString
-   * @covers ::jsonSerialize
-   *
-   * @dataProvider providerToString
+   * @legacy-covers ::__toString
+   * @legacy-covers ::jsonSerialize
    */
+  #[DataProvider('providerToString')]
   public function testToString($text, $expected, $message): void {
     $escapable_string = new HtmlEscapedText($text);
     $this->assertEquals($expected, (string) $escapable_string, $message);
@@ -58,7 +59,7 @@ class HtmlEscapedTextTest extends TestCase {
   }
 
   /**
-   * @covers ::count
+   * @legacy-covers ::count
    */
   public function testCount(): void {
     $string = 'Can I have a <em>kitten</em>';

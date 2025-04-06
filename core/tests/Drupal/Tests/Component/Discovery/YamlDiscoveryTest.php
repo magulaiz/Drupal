@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Discovery;
 
+use PHPUnit\Framework\Attributes\Group;
 use Drupal\Component\Discovery\YamlDiscovery;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
@@ -14,9 +15,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * YamlDiscovery component unit tests.
- *
- * @group Discovery
  */
+#[Group('Discovery')]
 class YamlDiscoveryTest extends TestCase {
 
   /**

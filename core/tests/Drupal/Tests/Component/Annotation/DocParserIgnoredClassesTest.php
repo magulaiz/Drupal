@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Annotation;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Drupal\Component\Annotation\Doctrine\DocParser;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Annotation\Doctrine\DocParser
- *
- * @group Annotation
+ * Tests Drupal\Component\Annotation\Doctrine\DocParser.
  */
+#[CoversClass(DocParser::class)]
+#[Group('Annotation')]
 class DocParserIgnoredClassesTest extends TestCase {
 
   /**

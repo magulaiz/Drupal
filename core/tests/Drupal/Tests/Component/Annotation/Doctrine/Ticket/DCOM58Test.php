@@ -16,10 +16,9 @@ use PHPUnit\Framework\TestCase;
  *
  * Run this test in a separate process as it includes code that might have side
  * effects.
- *
- * @group DCOM58
- * @runTestsInSeparateProcesses
  */
+#[\PHPUnit\Framework\Attributes\Group('DCOM58')]
+#[\PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses]
 class DCOM58Test extends TestCase
 {
     protected function setUp(): void

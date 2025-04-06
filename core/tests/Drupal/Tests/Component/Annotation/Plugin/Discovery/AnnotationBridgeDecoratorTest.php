@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Annotation\Plugin\Discovery;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
@@ -12,15 +14,16 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
- * @coversDefaultClass \Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator
- * @group Plugin
+ * Tests Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator.
  */
+#[CoversClass(AnnotationBridgeDecorator::class)]
+#[Group('Plugin')]
 class AnnotationBridgeDecoratorTest extends TestCase {
 
   use ProphecyTrait;
 
   /**
-   * @covers ::getDefinitions
+   * @legacy-covers ::getDefinitions
    */
   public function testGetDefinitions(): void {
     $definitions = [];
