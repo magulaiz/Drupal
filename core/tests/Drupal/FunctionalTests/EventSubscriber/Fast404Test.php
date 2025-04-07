@@ -80,7 +80,6 @@ class Fast404Test extends BrowserTestBase {
     // X-Generator header.
     $this->assertSession()->responseHeaderContains('X-Generator', 'Drupal');
 
-    // @todo This should move into another test, not a browser test.
     // Make sure we cannot end up with invalid config
     $config = $this->config('system.performance');
     $config->set('fast_404', ['enabled' => FALSE])
