@@ -87,6 +87,8 @@ trait QueryTrait {
         ->compare("%alias.target_entity_id", "base_table.$id_field")
         ->condition("%alias.workspace", $active_workspace->id())
       );
+      // Add the revision field to the query.
+      $this->mongodbSelect->addField('workspace_association', 'target_entity_revision_id');
     }
 
     return $this;

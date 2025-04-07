@@ -392,7 +392,7 @@ class Query extends CoreQuery {
   protected function result() {
     if ($this->count) {
       try {
-        if ($this->allRevisions) {
+        if ($this->allRevisions && !$this->mongodbSelect->getMetaData('active_workspace_id')) {
           // For an entity query with the options all revisions the returned
           // revision_id must be located from the embedded all revisions table.
           // All other entity queries return the current revision_id from the base

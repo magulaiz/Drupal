@@ -64,6 +64,7 @@ class Condition extends CoreCondition {
   public function addConditions(&$conditionContainer, &$condition) {
     $entityTypeId = $this->mongodbQuery->getMetaData('entity_type');
     $allRevisions = $this->mongodbQuery->getMetaData('all_revisions');
+    $activeWorkspaceId = $this->mongodbQuery->getMetaData('active_workspace_id');
 
     // This variable ensures grouping works correctly. For example:
     // ->condition('tags', 2, '>')
@@ -116,7 +117,7 @@ class Condition extends CoreCondition {
       $table_mapping = $storage->getTableMapping();
       // Check whether this field is stored in a dedicated table.
       if ($field_storage && $table_mapping->requiresDedicatedTableStorage($field_storage)) {
-        if ($entity_type->isRevisionable() && $allRevisions) {
+        if ($entity_type->isRevisionable() && ($allRevisions || $activeWorkspaceId)) {
           $data_table = $storage->getJsonStorageAllRevisionsTable();
         }
         elseif ($entity_type->isRevisionable() && !$allRevisions) {
@@ -277,7 +278,7 @@ class Condition extends CoreCondition {
       else {
         // Check whether this field is stored in a dedicated table.
         $data_table = NULL;
-        if ($entity_type->isRevisionable() && $allRevisions) {
+        if ($entity_type->isRevisionable() && ($allRevisions || $activeWorkspaceId)) {
           $data_table = $storage->getJsonStorageAllRevisionsTable();
         }
         elseif ($entity_type->isRevisionable() && !$allRevisions) {
@@ -344,7 +345,7 @@ class Condition extends CoreCondition {
         // The default langcode key is by default revisionable and translatable.
         // We cannot use those parameters and we must look at the entity type.
         if ($mongodb_column == $entity_type->getKey('default_langcode')) {
-          if ($entity_type->isRevisionable() && $allRevisions) {
+          if ($entity_type->isRevisionable() && ($allRevisions || $activeWorkspaceId)) {
             $data_table = $storage->getJsonStorageAllRevisionsTable();
           }
           elseif ($entity_type->isRevisionable() && !$allRevisions) {
@@ -355,7 +356,7 @@ class Condition extends CoreCondition {
           }
         }
 
-        if ($entity_type->isRevisionable() && !$allRevisions) {
+        if ($entity_type->isRevisionable() && (!$allRevisions && !$activeWorkspaceId)) {
           $data_table = $storage->getJsonStorageCurrentRevisionTable();
         }
 

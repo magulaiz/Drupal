@@ -6,7 +6,6 @@ namespace Drupal\Tests\workspaces\Kernel;
 
 // cspell:ignore differring
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -614,17 +613,14 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $query->pager(10);
     $result = $query->execute();
 
-    if (Database::getConnection()->driver() != 'mongodb') {
-      // @todo The assertion fails for MongoDB. Needs to be fixed.
-      $this->assertSame([3 => '2', 1 => '1'], $result);
-    }
+    $this->assertSame([3 => '2', 1 => '1'], $result);
   }
 
   /**
    * Tests the Entity Query relationship API with workspaces.
    */
   public function testEntityQueryRelationship(): void {
-    if (Database::getConnection()->driver() == 'mongodb') {
+    if (\Drupal::database()->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support entity query with relationships.');
     }
 
@@ -860,10 +856,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
         ->accessCheck(FALSE)
         ->condition('title', 'stage node 1')
         ->execute();
-      if (Database::getConnection()->driver() != 'mongodb') {
-        // @todo The assertion fails for MongoDB. Needs to be fixed.
-        $this->assertEquals([$stage_node->getRevisionId() => $stage_node->id()], $result);
-      }
+      $this->assertEquals([$stage_node->getRevisionId() => $stage_node->id()], $result);
     });
 
     // Check that the 'stage' workspace was not persisted by the workspace
@@ -908,7 +901,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       });
       $view = Views::getView('frontpage');
       $view->execute();
-      if (Database::getConnection()->driver() != 'mongodb') {
+      if (\Drupal::database()->driver() != 'mongodb') {
         // @todo The assertion fails for MongoDB. Needs to be fixed.
         $this->assertIdenticalResultset($view, $expected_frontpage, ['nid' => 'nid']);
       }
@@ -918,7 +911,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       $this->setRawContent($output);
       foreach ($expected_values as $expected_entity_values) {
         if ($expected_entity_values[$entity_keys['published']] === TRUE && $expected_entity_values['default_revision'] === TRUE) {
-          if (Database::getConnection()->driver() != 'mongodb') {
+          if (\Drupal::database()->driver() != 'mongodb') {
             // @todo The assertion fails for MongoDB. Needs to be fixed.
             $this->assertRaw($expected_entity_values[$entity_keys['label']]);
           }
@@ -1074,7 +1067,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       }
 
       $result = $query->execute();
-      if (Database::getConnection()->driver() != 'mongodb') {
+      if (\Drupal::database()->driver() != 'mongodb') {
         // @todo The assertion fails for MongoDB. Needs to be fixed.
         $this->assertEquals([$expected_value[$revision_key] => $expected_value[$id_key]], $result);
       }
@@ -1203,10 +1196,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
         4 => 1,
       ],
     ];
-    if (\Drupal::database()->driver() !== 'mongodb') {
-      // @todo The assertion fails for MongoDB. Needs to be fixed.
-      $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnTarget());
-    }
+    $this->assertEquals($expected, $workspace_publisher->getDifferringRevisionIdsOnTarget());
 
     // Check that there are no more revisions to push after publishing.
     $this->workspaces['stage']->publish();

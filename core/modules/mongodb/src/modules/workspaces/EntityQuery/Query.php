@@ -75,7 +75,36 @@ class Query extends BaseQuery {
    */
   protected function result() {
     try {
-      if (!$this->count && !$this->allRevisions) {
+      if (!$this->count && $this->mongodbSelect->getMetaData('active_workspace_id')) {
+        // Return a keyed array of results. The key is either the revision_id
+        // or the entity_id depending on whether the entity type supports
+        // revisions. The value is always the entity id.
+        $results = $this->mongodbSelect->execute()->fetchAll();
+
+        $entities = [];
+        foreach ($results as $record) {
+          $revision_id = NULL;
+          if (isset($record->target_entity_revision_id)) {
+            $revision_id = $record->target_entity_revision_id;
+          }
+          elseif (isset($record->workspace_association_target_entity_revision_id)) {
+            $revision_id = $record->workspace_association_target_entity_revision_id;
+          }
+          elseif (isset($record->{$this->mongodbRevisionField})) {
+            $revision_id = $record->{$this->mongodbRevisionField};
+          }
+
+          if ($revision_id !== NULL && isset($record->{$this->mongodbIdField})) {
+            $entities[$revision_id] = $record->{$this->mongodbIdField};
+          }
+        }
+
+        // Apply pager.
+        $this->applyPager($entities);
+
+        return $entities;
+      }
+      elseif (!$this->count && !$this->allRevisions) {
         if (empty($this->sort)) {
           // Return a keyed array of results. The key is either the revision_id
           // or the entity_id depending on whether the entity type supports
@@ -99,6 +128,10 @@ class Query extends BaseQuery {
               $entities[$revision_id] = $record->{$this->mongodbIdField};
             }
           }
+
+          // Apply pager.
+          $this->applyPager($entities);
+
           return $entities;
         }
         else {
@@ -115,6 +148,10 @@ class Query extends BaseQuery {
             $keys = array_slice(array_flip($results), $this->range['start'], $this->range['length']);
             $results = array_intersect_key($results, array_flip($keys));
           }
+
+          // Apply pager.
+          $this->applyPager($results);
+
           return $results;
         }
       }
@@ -122,6 +159,18 @@ class Query extends BaseQuery {
     }
     catch (MongodbSQLException) {
       return [];
+    }
+  }
+
+  /**
+   * Apply the pager to the results.
+   *
+   * @param $entities
+   *   The entities to apply the pager on.
+   */
+  protected function applyPager(&$entities): void {
+    if (!empty($this->pager) && is_array($this->pager)) {
+      $entities = array_slice($entities, intval($this->pager['start']), intval($this->pager['limit']), TRUE);
     }
   }
 
