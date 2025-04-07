@@ -22,14 +22,10 @@
     attach(context) {
       // Start by finding all potentially active links.
       const path = drupalSettings.path;
-      const queryString = JSON.stringify(path.currentQuery);
-      const querySelector = queryString
-        ? `[data-drupal-link-query="${CSS.escape(queryString)}"]`
-        : ':not([data-drupal-link-query])';
+      path.currentQuery = path.currentQuery ?? [];
       const originalSelectors = [
         `[data-drupal-link-system-path="${CSS.escape(path.currentPath)}"]`,
       ];
-      let selectors;
 
       // If this is the front page, we have to check for the <front> path as
       // well.
@@ -38,7 +34,7 @@
       }
 
       // Add language filtering.
-      selectors = [].concat(
+      const selectors = [].concat(
         // Links without any hreflang attributes (most of them).
         originalSelectors.map((selector) => `${selector}:not([hreflang])`),
         // Links with hreflang equals to the current language.
@@ -47,16 +43,21 @@
         ),
       );
 
-      // Add query string selector for pagers, exposed filters.
-      selectors = selectors.map((current) => current + querySelector);
-
       // Query the DOM.
-      const activeLinks = context.querySelectorAll(selectors.join(','));
-      const il = activeLinks.length;
-      for (let i = 0; i < il; i++) {
-        activeLinks[i].classList.add('is-active');
-        activeLinks[i].setAttribute('aria-current', 'page');
-      }
+      context.querySelectorAll(selectors.join(',')).forEach(function (link) {
+        // Check if the link does not contain query parameters that
+        // don't match the current query.
+        const queryMatch =
+          !link.hasAttribute('data-drupal-link-query') ||
+          !Object.entries(
+            JSON.parse(link.getAttribute('data-drupal-link-query')),
+          ).find(([key, value]) => value !== (path.currentQuery[key] || null));
+
+        if (queryMatch) {
+          link.classList.add('is-active');
+          link.setAttribute('aria-current', 'page');
+        }
+      });
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
