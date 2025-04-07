@@ -313,8 +313,8 @@ function system_preprocess_block(&$variables): void {
   switch ($variables['base_plugin_id']) {
     case 'system_branding_block':
       $variables['site_logo'] = '';
-      if ($variables['content']['site_logo']['#access'] && $variables['content']['site_logo']['#uri']) {
-        $variables['site_logo'] = $variables['content']['site_logo']['#uri'];
+      if (isset($variables['content']['site_logo']['#access']) && $variables['content']['site_logo']['#access'] === TRUE) {
+        $variables['site_logo'] = $variables['content']['site_logo'];
       }
       $variables['site_name'] = '';
       if ($variables['content']['site_name']['#access'] && $variables['content']['site_name']['#markup']) {
