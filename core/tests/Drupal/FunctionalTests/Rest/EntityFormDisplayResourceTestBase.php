@@ -110,8 +110,8 @@ abstract class EntityFormDisplayResourceTestBase extends ConfigEntityResourceTes
         ],
       ],
       'hidden' => [
-        'promote',
-        'sticky',
+        'promote' => TRUE,
+        'sticky' => TRUE,
       ],
       'id' => 'node.camelids.default',
       'langcode' => 'en',
