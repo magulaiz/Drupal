@@ -13,7 +13,7 @@ services:
   Drupal\media\OEmbed\UrlResolverInterface: '@media.oembed.url_resolver'
   media.oembed.provider_repository:
     class: Drupal\media\OEmbed\ProviderRepository
-    arguments: ['@http_client', '@config.factory', '@datetime.time', '@keyvalue', '@logger.factory']
+    arguments: ['@http_client', '@config.factory', '@datetime.clock', '@keyvalue', '@logger.factory']
   Drupal\media\OEmbed\ProviderRepositoryInterface: '@media.oembed.provider_repository'
   media.oembed.resource_fetcher:
     class: Drupal\media\OEmbed\ResourceFetcher
