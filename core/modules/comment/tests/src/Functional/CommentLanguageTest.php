@@ -162,6 +162,26 @@ class CommentLanguageTest extends BrowserTestBase {
         $this->assertSession()->responseContains($value);
       }
     }
+
+    // Test clicking on comment titles and verifying pages load correctly.
+    $this->drupalGet('admin/content/comment');
+    
+    // Get all comment links on the page
+    $comment_links = $this->xpath('//td[contains(@class, "views-field-subject")]//a');
+    
+    foreach ($comment_links as $link) {
+      // Get the href attribute
+      $href = $link->getAttribute('href');
+      
+      // Click the link
+      $this->clickLink($link->getText());
+      
+      // Assert we're on a valid page (no 404 or other errors)
+      $this->assertSession()->statusCodeEquals(200);
+      
+      // Go back to the comment listing
+      $this->drupalGet('admin/content/comment');
+    }
   }
 
 }
