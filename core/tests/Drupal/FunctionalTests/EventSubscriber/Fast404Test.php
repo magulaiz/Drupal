@@ -88,9 +88,9 @@ class Fast404Test extends BrowserTestBase {
       ->clear('fast_404.html')
       ->save();
 
-    # Should not be able to enable without the proper settings.
+    // Should not be able to enable without the proper settings.
     $this->expectException(SchemaIncompleteException::class);
-    $config->set('fast_404', ['enabled' => true])
+    $config->set('fast_404', ['enabled' => TRUE])
       ->save();
   }
 
