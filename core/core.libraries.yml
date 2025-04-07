@@ -800,7 +800,7 @@ internal.jquery.form:
     url: https://raw.githubusercontent.com/jquery-form/form/master/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/jquery-form/jquery.form.min.js: { minified: true }
+    assets/vendor/jquery-form/jquery.form.min.js: { minified: true, weight: -19 }
   dependencies:
     - core/jquery
 
