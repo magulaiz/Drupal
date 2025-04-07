@@ -104,7 +104,7 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
       $language = $this->languageManager->getLanguage($id);
       if ($language) {
         // Make sure the name is translatable using the current interface language
-        $translated_name = $this->t($language->getName());
+        $translated_name = $this->languageManager->getLanguageConfigOverride($id)->get('label');
         $links->links[$id]['title'] = $translated_name ?? $language->getName();
       }
     }
