@@ -11,7 +11,6 @@ use Drupal\comment\CommentViewBuilder;
 use Drupal\comment\CommentViewsData;
 use Drupal\comment\Form\DeleteForm;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\Number;
@@ -365,7 +364,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
    */
   public function getCommentedEntity() {
     $language = $this->language()->getId();
-    /** @var EntityInterface $entity */
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $this->get('entity_id')->entity;
     if ($entity?->hasTranslation($language)) {
       return $entity->getTranslation($language);
