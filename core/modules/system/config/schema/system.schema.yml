@@ -219,7 +219,7 @@ system.performance:
           type: boolean
           label: 'Compress CSS files'
     fast_404:
-      type: system.performance.fast_404.*
+      type: system.performance.fast_404.[enabled]
       label: 'Fast 404 settings'
     js:
       type: mapping
@@ -242,17 +242,22 @@ system.performance.fast_404.*:
     enabled:
       type: boolean
       label: 'Fast 404 enabled'
+
+# When `system.performance:fast_404.enabled = true`.
+system.performance.fast_404.1:
+  type: system.performance.fast_404.*
+  label: 'Fast 404 settings'
+  constraints:
+    FullyValidatable: ~
+  mapping:
     paths:
-      requiredKey: false
       type: regex
       label: 'Regular expression of paths to match'
     exclude_paths:
-      requiredKey: false
       type: regex
       label: 'Regular expression of paths to NOT match'
     html:
       # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
-      requiredKey: false
       type: html_document
       label: 'Fast 404 page HTML'
 
