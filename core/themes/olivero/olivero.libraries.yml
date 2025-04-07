@@ -27,7 +27,7 @@ global-styling:
       css/components/fieldset.css: {}
       css/components/field.css: {}
       css/components/form.css: {}
-      css/components/form-boolean.css: {}
+#      css/components/form-boolean.css: {}
       css/components/form-text.css: {}
       css/components/form-textarea.css: {}
       css/components/form-select.css: {}

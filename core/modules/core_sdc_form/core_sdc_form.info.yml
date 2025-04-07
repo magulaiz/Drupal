@@ -1,0 +1,4 @@
+name: Core SDC form
+type: module
+package: Configuration
+core_version_requirement: ^9.3 || ^10 || ^11

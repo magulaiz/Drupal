@@ -1,0 +1,39 @@
+core_sdc_form.1:
+  path: '/sdc-form/1'
+  defaults:
+    _controller: 'Drupal\core_sdc_form\Controller\FormInComponent::build'
+    _title: 'Form in component'
+  requirements:
+    _access: 'TRUE'
+
+core_sdc_form.2:
+  path: '/sdc-form/2'
+  defaults:
+    _form: 'Drupal\core_sdc_form\Form\ComponentInFormNotWorking'
+    _title: 'Component in form (not working)'
+  requirements:
+    _access: 'TRUE'
+
+core_sdc_form.3:
+  path: '/sdc-form/3'
+  defaults:
+    _form: 'Drupal\core_sdc_form\Form\ComponentInFormWorking'
+    _title: 'Component in form'
+  requirements:
+    _access: 'TRUE'
+
+core_sdc_form.4:
+  path: '/sdc-form/4'
+  defaults:
+    _form: 'Drupal\core_sdc_form\Form\ComponentFormElementWorking'
+    _title: 'Component as form element'
+  requirements:
+    _access: 'TRUE'
+
+core_sdc_form.5:
+  path: '/sdc-form/5'
+  defaults:
+    _form: 'Drupal\core_sdc_form\Form\FullComponentWorking'
+    _title: 'Full component'
+  requirements:
+    _access: 'TRUE'

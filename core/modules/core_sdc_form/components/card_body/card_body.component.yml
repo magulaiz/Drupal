@@ -1,0 +1,10 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: "(Card body)"
+description: "Internal: to be used in the 'Card' component, because a card can have multiple 'Card body' components."
+slots:
+  content:
+    title: Content
+    description: "Free content outside of any wrapper."
+props:
+  type: object
+  properties: { }

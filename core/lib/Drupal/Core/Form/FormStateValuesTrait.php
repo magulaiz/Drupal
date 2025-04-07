@@ -77,6 +77,10 @@ trait FormStateValuesTrait {
    * Implements \Drupal\Core\Form\FormStateInterface::setValueForElement()
    */
   public function setValueForElement(array $element, $value) {
+    if (!empty($element['#name'])) {
+      return $this->setValue($element['#name'], $value);
+    }
+
     return $this->setValue($element['#parents'], $value);
   }
 

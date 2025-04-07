@@ -462,10 +462,16 @@ class Renderer implements RendererInterface {
     // has an empty #children attribute, render the children now. This is the
     // same process as Renderer::render() but is inlined for speed.
     if ((!$theme_is_implemented || isset($elements['#render_children'])) && empty($elements['#children'])) {
-      foreach ($children as $key) {
-        $elements['#children'] .= $this->doRender($elements[$key]);
+      if (isset($elements['#type']) && $elements['#type'] === 'component') {
+        $elements['#children'] .= $this->doRender($elements['inline-template']);
+        $elements['#children'] = Markup::create($elements['#children']);
       }
-      $elements['#children'] = Markup::create($elements['#children']);
+      else {
+        foreach ($children as $key) {
+          $elements['#children'] .= $this->doRender($elements[$key]);
+        }
+        $elements['#children'] = Markup::create($elements['#children']);
+      }
     }
 
     // If #theme is not implemented and the element has raw #markup as a

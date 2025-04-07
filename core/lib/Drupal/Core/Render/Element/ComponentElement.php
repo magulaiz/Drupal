@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Render\Element;
 
-use Drupal\Core\Render\Attribute\RenderElement;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
@@ -32,8 +32,8 @@ use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
  *
  * @see \Drupal\Core\Render\Element\Textarea
  */
-#[RenderElement('component')]
-class ComponentElement extends RenderElementBase {
+#[FormElement('component')]
+class ComponentElement extends FormElementBase {
 
   use DoTrustedCallbackTrait;
 
@@ -62,6 +62,22 @@ class ComponentElement extends RenderElementBase {
       ),
       $props
     );
+
+    // Handle children as slots.
+    $children = Element::children($element, TRUE);
+    foreach ($children as $key) {
+      $element['#slots'][$key] = $element[$key];
+    }
+
+    // This component is a form component.
+    if (!empty($element['#name'])) {
+      $props['form_state'] = [
+        'name' => $element['#name'],
+        'value' => $element['#value'] ?? $element['#default_value'] ?? NULL,
+        'required' => $element['#required'] ?? FALSE,
+      ];
+    }
+
     $inline_template = $this->generateComponentTemplate(
       $element['#component'],
       $element['#slots'],

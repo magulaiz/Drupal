@@ -1,0 +1,12 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: "Bootstrap radios"
+status: experimental
+props:
+  type: object
+  properties:
+    id:
+      title: ID
+      type: string
+    options:
+      title: Options
+      type: object

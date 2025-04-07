@@ -1,0 +1,13 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Accordion
+description: "Render content in a box that expands and collapses vertically."
+slots:
+  title:
+    title: Title
+    description: "Item title."
+  content:
+    title: Content
+    description: "Accordion item content."
+props:
+  type: object
+  properties: { }

@@ -1,0 +1,12 @@
+{% set id = id|default('myselect-' ~ random()) %}
+
+<div{{ attributes.addClass('mb-3') }}>
+  <label class="form-label" for="{{ id }}">
+    {{ label }}
+  </label>
+  <select class="form-select" id="{{ id }}" name="{{ form_state.name }}">
+    {% for value, option in options %}
+      <option value="{{ value }}"{{ (value == form_state.value) ? ' selected="selected"' }}>{{ option }}</option>
+    {% endfor %}
+  </select>
+</div>
