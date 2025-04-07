@@ -13,7 +13,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\language\Plugin\Derivative\LanguageBlock as LanguageBlockDeriver;
-use Drupal\Core\StringTranslationTrait;
 
 /**
  * Provides a 'Language switcher' block.
@@ -106,7 +105,7 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
       if ($language) {
         // Make sure the name is translatable using the current interface language
         $translated_name = $this->t($language->getName());
-        $links->links[$id]['title'] = $translated_name;
+        $links->links[$id]['title'] = $translated_name ?? $language->getName();
       }
     }
     if (isset($links->links)) {
