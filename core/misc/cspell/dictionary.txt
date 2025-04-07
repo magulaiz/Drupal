@@ -189,6 +189,7 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
+eacute
 editables
 egulias
 elbonia
@@ -228,10 +229,12 @@ fdiv
 fieldable
 fieldapi
 fieldblock
+fieldbody
 fieldgroup
 fieldgroups
 fieldlayout
 fieldnames
+fieldnid
 fieldsets
 filemime
 filetransfer
