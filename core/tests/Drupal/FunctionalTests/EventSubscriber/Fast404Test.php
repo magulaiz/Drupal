@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\EventSubscriber;
 
+use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
 
@@ -78,6 +79,20 @@ class Fast404Test extends BrowserTestBase {
     // Fast 404s returned via the exception subscriber still have the
     // X-Generator header.
     $this->assertSession()->responseHeaderContains('X-Generator', 'Drupal');
+
+    // @todo This should move into another test, not a browser test.
+    // Make sure we cannot end up with invalid config
+    $config = $this->config('system.performance');
+    $config->set('fast_404', ['enabled' => FALSE])
+      ->clear('fast_404.exclude_paths')
+      ->clear('fast_404.paths')
+      ->clear('fast_404.html')
+      ->save();
+
+    # Should not be able to enable without the proper settings.
+    $this->expectException(SchemaIncompleteException::class);
+    $config->set('fast_404', ['enabled' => true])
+      ->save();
   }
 
   /**
