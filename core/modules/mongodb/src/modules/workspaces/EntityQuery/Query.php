@@ -165,10 +165,10 @@ class Query extends BaseQuery {
   /**
    * Apply the pager to the results.
    *
-   * @param $entities
+   * @param array $entities
    *   The entities to apply the pager on.
    */
-  protected function applyPager(&$entities): void {
+  protected function applyPager(array &$entities): void {
     if (!empty($this->pager) && is_array($this->pager)) {
       $entities = array_slice($entities, intval($this->pager['start']), intval($this->pager['limit']), TRUE);
     }
