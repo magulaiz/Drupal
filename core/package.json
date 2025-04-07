@@ -59,6 +59,7 @@
     "@drupal/once": "^1.0.1",
     "@floating-ui/dom": "^1.6.12",
     "@gitlab-formatters/stylelint-formatter-gitlab": "^1.0.2",
+    "axe-core": "^4.10",
     "backbone": "^1.6.0",
     "chokidar": "^4.0.1",
     "ckeditor5": "~44.0.0",

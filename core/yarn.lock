@@ -2464,6 +2464,7 @@ __metadata:
     "@drupal/once": "npm:^1.0.1"
     "@floating-ui/dom": "npm:^1.6.12"
     "@gitlab-formatters/stylelint-formatter-gitlab": "npm:^1.0.2"
+    axe-core: "npm:^4.10"
     backbone: "npm:^1.6.0"
     chokidar: "npm:^4.0.1"
     ckeditor5: "npm:~44.0.0"
@@ -2917,6 +2918,13 @@ __metadata:
   dependencies:
     possible-typed-array-names: "npm:^1.0.0"
   checksum: 10c0/d07226ef4f87daa01bd0fe80f8f310982e345f372926da2e5296aecc25c41cab440916bbaa4c5e1034b453af3392f67df5961124e4b586df1e99793a1374bdb2
+  languageName: node
+  linkType: hard
+
+"axe-core@npm:^4.10":
+  version: 4.10.2
+  resolution: "axe-core@npm:4.10.2"
+  checksum: 10c0/0e20169077de96946a547fce0df39d9aeebe0077f9d3eeff4896518b96fde857f80b98f0d4279274a7178791744dd5a54bb4f322de45b4f561ffa2586ff9a09d
   languageName: node
   linkType: hard
 
