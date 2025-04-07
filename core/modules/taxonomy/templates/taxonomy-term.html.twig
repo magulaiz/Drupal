@@ -27,7 +27,7 @@
 #}
 <div{{ attributes }}>
   {{ title_prefix }}
-  {% if name and not page %}
+  {% if name %}
     <h2><a href="{{ url }}">{{ name }}</a></h2>
   {% endif %}
   {{ title_suffix }}
