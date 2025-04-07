@@ -126,7 +126,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     // Verify that link language is properly handled.
     $node3->addTranslation('it', [
       'title' => $this->randomString(),
-      'promote' => 1,
+      'promote' => TRUE,
     ])->save();
     $id = 'node:node=' . $node3->id() . ':changed=' . $node3->getChangedTime() . '&langcode=it';
     $this->drupalGet('node', ['language' => ConfigurableLanguage::createFromLangcode('it')]);
