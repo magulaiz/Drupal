@@ -108,4 +108,5 @@ class GroupedFilterTest extends ViewTestBase {
     $this->assertSession()->pageTextContains('Indonesia');
     $this->assertSession()->pageTextContains('China');
   }
+
 }
