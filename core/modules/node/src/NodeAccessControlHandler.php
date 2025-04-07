@@ -216,14 +216,31 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       return NULL;
     }
 
+    // Due to the check below, it is not possible to rely only on account
+    // permissions to determine whether the 'view own unpublished content'
+    // permission can be checked, instead we also need to check if the user has
+    // the authenticated role. Just in case anonymous and authenticated users
+    // are both granted the 'view own unpublished content' permission and also
+    // have otherwise identical permissions.
     $cacheability->addCacheContexts(['user.roles:authenticated']);
+
     // The "view own unpublished content" permission must not be granted
     // to anonymous users for security reasons.
     if (!$account->isAuthenticated()) {
       return NULL;
     }
 
+    // When access is granted due to the 'view own unpublished content'
+    // permission and for no other reason, node grants are bypassed. However,
+    // to ensure the full set of cacheable metadata is available to variation
+    // cache, additionally add the node_grants cache context so that if the
+    // status or the owner of the node changes, cache redirects will continue to
+    // reflect the latest state without needing to be invalidated.
     $cacheability->addCacheContexts(['user']);
+    if ($this->moduleHandler->hasImplementations('node_grants')) {
+      $cacheability->addCacheContexts(['user.node_grants:view']);
+    }
+
     if ($account->id() != $node->getOwnerId()) {
       return NULL;
     }
