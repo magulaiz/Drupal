@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: medium_without_time
+label: 'Medium date (without time)'
+locked: false
+pattern: 'D, j M Y'
