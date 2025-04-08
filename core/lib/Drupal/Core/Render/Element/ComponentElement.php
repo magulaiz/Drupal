@@ -6,6 +6,7 @@ use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Render\Component\Exception\InvalidComponentDataException;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Provides a Single-Directory Component render element.
@@ -49,6 +50,8 @@ class ComponentElement extends RenderElementBase {
    * @throws \Drupal\Core\Render\Component\Exception\InvalidComponentDataException
    */
   public function preRenderComponent(array $element): array {
+    $this->mergeElementAttributesToPropAttributes($element);
+
     $props = $element['#props'];
     $props_alter_callbacks = $element['#propsAlter'];
     // This callback can be used to prepare the context. For instance to replace
@@ -73,6 +76,7 @@ class ComponentElement extends RenderElementBase {
       '#template' => $inline_template,
       '#context' => $props,
     ];
+
     return $element;
   }
 
@@ -132,6 +136,31 @@ class ComponentElement extends RenderElementBase {
     }
     $template .= '{% endembed %}' . PHP_EOL;
     return $template;
+  }
+
+  /**
+   * Merge element attributes with props attributes.
+   *
+   * #attributes property is an universal property of the Render API, used by
+   * many Drupal mechanisms from Core and Contrib, so we need to inject the
+   * values in template.
+   *
+   * @param array $element
+   *   The render element.
+   */
+  private function mergeElementAttributesToPropAttributes(array &$element): void {
+    if (!isset($element["#attributes"])) {
+      return;
+    }
+
+    // If attributes value is an array, convert it to an Attribute object as
+    // \Drupal\Core\Template\Atribute::merge() expects an Attribute object.
+    $element_attributes = is_array($element["#attributes"]) ? new Attribute($element["#attributes"]) : $element["#attributes"];
+
+    // Merge ['#attributes'] with the ['#props']['attributes'].
+    $element["#props"]["attributes"] = empty($element["#props"]["attributes"])
+        ? $element_attributes
+        : $element["#props"]["attributes"]->merge($element_attributes);
   }
 
   /**
