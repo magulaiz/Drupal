@@ -136,6 +136,8 @@ class JsonApiResourceTest extends JsonApiFunctionalTestBase {
     $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
     $this->assertNotNull($data);
     $this->assertEquals(['target_id' => $childEntity->id(), 'target_uuid' => $childUuid], $data['data']['relationships'][$this->fieldName], print_r($data['data']['relationships'], TRUE));
+    $entity = $storage->load($parentEntity->id());
+    $this->assertEquals($childEntity->id(), $entity->get($this->fieldName)->target_id);
   }
 
 }
