@@ -301,4 +301,23 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertSame($this->webUser->id(), $node->getOwnerId(), 'Node authored by normal user.');
   }
 
+  /**
+   * Test that author display name is visible on node edit form.
+   */
+  public function testNodeAuthorDisplayName(): void {
+    $node = $this->drupalCreateNode([
+      'type' => 'page',
+      'title' => $this->randomMachineName(),
+      'body' => $this->randomMachineName(),
+      'uid' => $this->adminUser->id(),
+    ]);
+
+    // Check that the node form shows the author's display name.
+    \Drupal::service('module_installer')->install(['user_hooks_test']);
+    \Drupal::keyValue('user_hooks_test')->set('user_format_name_alter', TRUE);
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet($node->toUrl('edit-form'));
+    $this->assertSession()->responseContains('<em>' . $this->adminUser->id() . '</em>');
+  }
+
 }
