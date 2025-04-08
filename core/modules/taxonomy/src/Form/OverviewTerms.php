@@ -756,8 +756,7 @@ class OverviewTerms extends FormBase {
   }
 
   /**
-   * Filters a taxonomy term tree for a string
-   * and returns the terms that contain it.
+   * Filters a taxonomy term tree and returns the terms that contain the search string.
    *
    * @param array $tree
    *   The taxonomy term tree to search in.
