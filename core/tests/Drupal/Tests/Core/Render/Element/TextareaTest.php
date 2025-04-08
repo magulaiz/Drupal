@@ -35,6 +35,8 @@ class TextareaTest extends UnitTestCase {
     $data[] = ['', ['test']];
     $data[] = ['test', 'test'];
     $data[] = ['123', 123];
+    $data[] = ["\n", "\r\n"];
+    $data[] = ["\n", "\r"];
 
     return $data;
   }

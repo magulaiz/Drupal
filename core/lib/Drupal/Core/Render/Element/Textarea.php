@@ -66,7 +66,12 @@ class Textarea extends FormElementBase {
     if ($input !== FALSE && $input !== NULL) {
       // This should be a string, but allow other scalars since they might be
       // valid input in programmatic form submissions.
-      return is_scalar($input) ? (string) $input : '';
+      $input_string = is_scalar($input) ? (string) $input : '';
+      // Normalize newline characters from "\r\n" and "\r" to "\n" according to
+      // the HTML5 spec. This will cause the Form API maxlength validation to
+      // match browser maxlength validation.
+      // @see https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#limiting-user-input-length:-the-maxlength-attribute
+      return preg_replace("/\r\n?/", "\n", $input_string);
     }
     return NULL;
   }
