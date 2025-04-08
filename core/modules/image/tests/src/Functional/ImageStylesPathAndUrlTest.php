@@ -133,6 +133,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
         'extension' => 'jpeg',
       ],
     ]);
+    $this->style->save();
     $this->doImageStyleUrlAndPathTests('private');
   }
 
