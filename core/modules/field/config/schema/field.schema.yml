@@ -67,3 +67,17 @@ field.storage.*.*:
 field.field.*.*.*:
   type: field_config_base
   label: 'Field'
+  mapping:
+    # Extend `field_config_base:field_type` with a FieldConfig entity-specific
+    # constraint. (This does not apply to BaseFieldOverride entities.)
+    field_type:
+      constraints:
+        MatchesOtherConfigValue:
+          # This field_storage_config entity must exist. This is already guaranteed.
+          # @see \Drupal\field\Entity\FieldConfig
+          # @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraint
+          prefix: field.storage.
+          id: ['%parent.entity_type', '%parent.field_name']
+          propertyPath: type
+  constraints:
+    FullyValidatable: ~
