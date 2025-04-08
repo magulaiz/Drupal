@@ -74,4 +74,15 @@ interface StateInterface {
    */
   public function resetCache();
 
+  /**
+   * Returns the values if a key has been modified during the request.
+   *
+   * @return array{value: mixed, original: mixed}|null
+   *   An array containing:
+   *     - value: The last value set during the request.
+   *     - original: The initial value at the start of the request.
+   *   If the key was not set, NULL is returned.
+   */
+  public function getValuesSetDuringRequest(string $key): ?array;
+
 }

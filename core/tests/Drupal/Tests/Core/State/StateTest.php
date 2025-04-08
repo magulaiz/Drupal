@@ -384,4 +384,58 @@ class StateTest extends UnitTestCase {
     $this->assertEquals(['key' => 'value'], $state->getMultiple(['key']));
   }
 
+  /**
+   * Tests getValuesSetDuringRequest() method.
+   *
+   * @covers ::getValuesSetDuringRequest
+   */
+  public function testGetValuesSetDuringRequest(): void {
+    $values = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
+    $this->state->setMultiple($values);
+    $this->assertSame(['value' => 'value1', 'original' => NULL], $this->state->getValuesSetDuringRequest('key1'));
+    $this->assertSame(['value' => 'value2', 'original' => NULL], $this->state->getValuesSetDuringRequest('key2'));
+    $this->assertSame(['value' => 'value3', 'original' => NULL], $this->state->getValuesSetDuringRequest('key3'));
+    $this->assertNull($this->state->getValuesSetDuringRequest('key4'));
+
+    $nonOverwritingValues = ['key4' => 'value4', 'key5' => 'value5', 'key6' => 'value6'];
+    $this->state->setMultiple($nonOverwritingValues);
+    $this->assertSame(['value' => 'value1', 'original' => NULL], $this->state->getValuesSetDuringRequest('key1'));
+    $this->assertSame(['value' => 'value2', 'original' => NULL], $this->state->getValuesSetDuringRequest('key2'));
+    $this->assertSame(['value' => 'value3', 'original' => NULL], $this->state->getValuesSetDuringRequest('key3'));
+    $this->assertSame(['value' => 'value4', 'original' => NULL], $this->state->getValuesSetDuringRequest('key4'));
+    $this->assertSame(['value' => 'value5', 'original' => NULL], $this->state->getValuesSetDuringRequest('key5'));
+    $this->assertSame(['value' => 'value6', 'original' => NULL], $this->state->getValuesSetDuringRequest('key6'));
+
+    $overwritingValues = ['key5' => 'new-value-5', 'key6' => 'new-value-6'];
+    $this->state->setMultiple($overwritingValues);
+    $this->assertSame(['value' => 'new-value-5', 'original' => NULL], $this->state->getValuesSetDuringRequest('key5'));
+    $this->assertSame(['value' => 'new-value-6', 'original' => NULL], $this->state->getValuesSetDuringRequest('key6'));
+
+    $this->state->set('key4', 'new-value-4');
+    $this->assertSame(['value' => 'new-value-4', 'original' => NULL], $this->state->getValuesSetDuringRequest('key4'));
+  }
+
+  /**
+   * Tests getValuesSetDuringRequest() method with an existing value.
+   *
+   * @covers ::getValuesSetDuringRequest
+   */
+  public function testExistingGetValuesSetDuringRequest(): void {
+    $keyValueStorage = $this->getMockBuilder(KeyValueStoreInterface::class)->getMock();
+    $keyValueStorage->expects($this->once())->method('get')->with('existing')->willReturn('value');
+    $factory = $this->getMockBuilder(KeyValueFactoryInterface::class)->getMock();
+    $factory->expects($this->once())
+      ->method('get')
+      ->with('state')
+      ->willReturn($keyValueStorage);
+    $lock = $this->getMockBuilder(LockBackendInterface::class)->getMock();
+    $cache = $this->getMockBuilder(CacheBackendInterface::class)
+      ->getMock();
+    $state = new State($factory, $cache, $lock);
+    $state->set('existing', 'new-value');
+    $this->assertSame(['value' => 'new-value', 'original' => 'value'], $state->getValuesSetDuringRequest('existing'));
+    $state->set('existing', 'newer-value');
+    $this->assertSame(['value' => 'newer-value', 'original' => 'value'], $state->getValuesSetDuringRequest('existing'));
+  }
+
 }
