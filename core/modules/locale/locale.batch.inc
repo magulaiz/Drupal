@@ -243,6 +243,10 @@ function locale_translation_batch_fetch_import($project, $langcode, $options, &$
           }
         }
       }
+      elseif ($source->type == LOCALE_TRANSLATION_CURRENT) {
+        $context['message'] = t('Ignoring already imported translation for %project.', ['%project' => $source->project]);
+        $context['finished'] = 1;
+      }
     }
   }
 }
