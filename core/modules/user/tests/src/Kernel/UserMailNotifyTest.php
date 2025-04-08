@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel;
 
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -125,6 +126,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     ]));
     $this->assertNull($return);
     $this->assertEmpty($this->getMails());
+    $this->assertCount(1, \Drupal::messenger()->messagesByType(MessengerInterface::TYPE_WARNING));
   }
 
   /**
