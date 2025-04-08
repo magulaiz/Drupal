@@ -85,7 +85,8 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
     if ($parent && $parent->isPublished()) {
       $build = \Drupal::entityTypeManager()->getViewBuilder('comment')->view($parent);
     }
-  } else {
+  }
+  else {
     // The comment field output includes rendering the parent entity of the
     // thread to which the comment is a reply. The rendered entity output
     // includes the comment reply form, which contains the comment preview and
@@ -171,7 +172,8 @@ function template_preprocess_comment(&$variables): void {
     // timestamp.
     if ($comment->getChangedTime() == $comment->getCreatedTime()) {
       $variables['changed'] = $variables['created'];
-    } else {
+    }
+    else {
       $variables['changed'] = $date_formatter->format($comment->getChangedTime());
     }
 
@@ -181,7 +183,8 @@ function template_preprocess_comment(&$variables): void {
       $variables['user_picture'] = \Drupal::entityTypeManager()
         ->getViewBuilder('user')
         ->view($account, 'compact');
-    } else {
+    }
+    else {
       $variables['user_picture'] = [];
     }
 
@@ -190,7 +193,8 @@ function template_preprocess_comment(&$variables): void {
 
   if (isset($comment->in_preview)) {
     $variables['permalink'] = Link::fromTextAndUrl(t('Permalink'), Url::fromRoute('<front>'))->toString();
-  } else {
+  }
+  else {
     $variables['permalink'] = Link::fromTextAndUrl(t('Permalink'), $comment->permalink())->toString();
   }
 
@@ -207,7 +211,8 @@ function template_preprocess_comment(&$variables): void {
     // Avoid calling DateFormatterInterface::format() twice on same timestamp.
     if ($comment_parent->getChangedTime() == $comment_parent->getCreatedTime()) {
       $variables['parent_changed'] = $variables['parent_created'];
-    } else {
+    }
+    else {
       $variables['parent_changed'] = $date_formatter->format($comment_parent->getChangedTime());
     }
     $permalink_uri_parent = $comment_parent->permalink();
@@ -220,7 +225,8 @@ function template_preprocess_comment(&$variables): void {
       'In reply to @parent_title by @parent_username',
       ['@parent_username' => $variables['parent_author'], '@parent_title' => $variables['parent_title']]
     );
-  } else {
+  }
+  else {
     $variables['parent_comment'] = '';
     $variables['parent_author'] = '';
     $variables['parent_created'] = '';
@@ -233,7 +239,8 @@ function template_preprocess_comment(&$variables): void {
   if (!$skip_custom_preprocessing || !$comment->getFieldDefinition('subject')->isDisplayConfigurable('view')) {
     if (isset($comment->in_preview)) {
       $variables['title'] = Link::fromTextAndUrl($comment->getSubject(), Url::fromRoute('<front>'))->toString();
-    } else {
+    }
+    else {
       $uri = $comment->permalink();
       $attributes = $uri->getOption('attributes') ?: [];
       $attributes += ['class' => ['permalink'], 'rel' => 'bookmark'];
@@ -250,7 +257,8 @@ function template_preprocess_comment(&$variables): void {
   // Set status to a string representation of comment->status.
   if (isset($comment->in_preview)) {
     $variables['status'] = 'preview';
-  } else {
+  }
+  else {
     $variables['status'] = $comment->isPublished() ? 'published' : 'unpublished';
   }
 

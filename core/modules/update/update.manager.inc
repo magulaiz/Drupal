@@ -46,7 +46,8 @@ function _update_manager_check_backends(&$form, $operation) {
   if (empty($available_backends)) {
     if ($operation == 'update') {
       $form['available_backends']['#markup'] = t('Your server does not support updating modules and themes from this interface. Instead, update modules and themes by uploading the new versions directly to the server, as documented in <a href=":doc_url">Extending Drupal</a>.', [':doc_url' => 'https://www.drupal.org/docs/extending-drupal/overview']);
-    } else {
+    }
+    else {
       $form['available_backends']['#markup'] = t('Your server does not support adding modules and themes from this interface. Instead, add modules and themes by uploading them directly to the server, as documented in <a href=":doc_url">Extending Drupal</a>.', [':doc_url' => 'https://www.drupal.org/docs/extending-drupal/overview']);
     }
     return FALSE;
@@ -66,7 +67,8 @@ function _update_manager_check_backends(&$form, $operation) {
         ':doc_url' => 'https://www.drupal.org/docs/extending-drupal/overview',
       ]
     );
-  } else {
+  }
+  else {
     $form['available_backends']['#markup'] = \Drupal::translation()->formatPlural(
       count($available_backends),
       'Adding modules and themes requires <strong>@backends access</strong> to your server. See <a href=":doc_url">Extending Drupal</a> for other methods.',
@@ -75,7 +77,7 @@ function _update_manager_check_backends(&$form, $operation) {
         '@backends' => implode(', ', $backend_names),
         ':doc_url' => 'https://www.drupal.org/docs/extending-drupal/overview',
       ]
-    );
+      );
   }
   return TRUE;
 }
@@ -118,7 +120,8 @@ function update_manager_archive_extract($file, $directory) {
   if (file_exists($extract_location)) {
     try {
       \Drupal::service('file_system')->deleteRecursive($extract_location);
-    } catch (FileException) {
+    }
+    catch (FileException) {
       // Ignore failed deletes.
     }
   }
@@ -178,13 +181,16 @@ function update_manager_file_get($url) {
     try {
       $data = (string) \Drupal::httpClient()->get($url)->getBody();
       return \Drupal::service('file_system')->saveData($data, $local, FileExists::Replace);
-    } catch (ClientExceptionInterface $exception) {
+    }
+    catch (ClientExceptionInterface $exception) {
       \Drupal::messenger()->addError(t('Failed to fetch file due to error "%error"', ['%error' => $exception->getMessage()]));
-    } catch (FileException | InvalidStreamWrapperException $e) {
+    }
+    catch (FileException | InvalidStreamWrapperException $e) {
       \Drupal::messenger()->addError(t('Failed to save file due to error "%error"', ['%error' => $e->getMessage()]));
     }
     return FALSE;
-  } else {
+  }
+  else {
     return $local;
   }
 }
@@ -228,7 +234,8 @@ function update_manager_batch_project_get($project, $url, &$context): void {
   $extract_directory = _update_manager_extract_directory();
   try {
     update_manager_archive_extract($local_cache, $extract_directory);
-  } catch (Exception $e) {
+  }
+  catch (Exception $e) {
     $context['results']['errors'][$project] = $e->getMessage();
     return;
   }
