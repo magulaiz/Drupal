@@ -57,6 +57,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
       'block_content_type',
       'block_content_body_field',
       'd7_custom_block',
+      'd7_menu',
       'd7_block',
     ]);
     $blockRebuild = new BlockHooks();
@@ -122,6 +123,7 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
     $this->assertEntity('bartik_search_form', 'search_form_block', [], '', 'content', 'olivero', -1, '', '0');
     $this->assertEntity('bartik_user_login', 'user_login_block', [], '', 'content', 'olivero', 0, 'User login title', 'visible');
     $this->assertEntity('bartik_system_powered_by', 'system_powered_by_block', [], '', 'footer_bottom', 'olivero', 10, '', '0');
+    $this->assertEntity('bartik_menu_menu_test_menu', 'system_menu_block:menu-test-menu', [], '', 'content', 'olivero', 1, '', '0');
     $this->assertEntity('seven_system_main', 'system_main_block', [], '', 'content', 'claro', 0, '', '0');
     $this->assertEntity('seven_user_login', 'user_login_block', [], '', 'content', 'claro', 10, 'User login title', 'visible');
 
@@ -166,7 +168,6 @@ class MigrateBlockTest extends MigrateDrupal7TestBase {
       'seven_locale_language',
       'seven_forum_active',
       'seven_forum_new',
-      'bartik_menu_menu-test-menu',
       'bartik_statistics_popular',
       'seven_menu_menu-test-menu',
       'seven_statistics_popular',
