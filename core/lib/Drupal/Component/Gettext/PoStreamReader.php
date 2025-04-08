@@ -150,13 +150,14 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    *   If the URI is not yet set.
    */
   public function open() {
-    if (!empty($this->uri)) {
-      $this->fd = fopen($this->uri, 'rb');
-      $this->readHeader();
-    }
-    else {
+    if (empty($this->uri)) {
       throw new \Exception('Cannot open stream without URI set.');
     }
+    $this->fd = @fopen($this->uri, 'rb');
+    if (!$this->fd) {
+      throw new \Exception('Cannot open stream for uri ' . $this->uri);
+    }
+    $this->readHeader();
   }
 
   /**
@@ -245,7 +246,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   private function readLine() {
     // Read a line and set the stream finished indicator if it was not
     // possible anymore.
-    $line = fgets($this->fd);
+    $line = $this->fd ? fgets($this->fd) : FALSE;
     $this->finished = ($line === FALSE);
 
     if (!$this->finished) {
