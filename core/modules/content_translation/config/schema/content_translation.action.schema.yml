@@ -1,0 +1,13 @@
+action.configuration.entity:translate_action:*:
+  type: mapping
+  label: 'Configuration for "Translate" action'
+  mapping:
+    source_langcode:
+      type: langcode
+      label: 'The langcode to create translations from.'
+    target_langcodes:
+      type: sequence
+      label: 'The langcodes to create translations for.'
+      sequence:
+        type: langcode
+        label: 'Langcode'

@@ -69,6 +69,14 @@ class ContentTranslationTestHooks {
   }
 
   /**
+   * Implements hook_entity_translation_create().
+   */
+  #[Hook('entity_translation_create')]
+  public function entityTranslationCreate(EntityInterface $translation): void {
+    \Drupal::state()->set('content_translation_test.translation_created', TRUE);
+  }
+
+  /**
    * Implements hook_entity_translation_delete().
    */
   #[Hook('entity_translation_delete')]

@@ -95,6 +95,9 @@ class ContentTranslationEntityBundleInfoTest extends KernelTestBase {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $translation */
     $translation = $entity->addTranslation('it');
     $translation->save();
+    /** @var \Drupal\Core\State\StateInterface $state */
+    $state = $this->container->get('state');
+    $this->assertTrue($state->get('content_translation_test.translation_created'));
 
     $this->assertTrue($entity->isTranslatable());
   }
