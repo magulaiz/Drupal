@@ -10,9 +10,12 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests AtLeastOneOf validation constraint with both valid and invalid values.
  *
+ * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\AtLeastOneOfConstraint
+ * @covers \Drupal\Core\Validation\Plugin\Validation\Constraint\AtLeastOneOfConstraintValidator
+ *
  * @group Validation
  */
-class AtLeastOneOfConstraintTest extends KernelTestBase {
+class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
 
   /**
    * The typed data manager to use.
@@ -37,11 +40,18 @@ class AtLeastOneOfConstraintTest extends KernelTestBase {
    *
    * @dataProvider dataProvider
    */
-  public function testValidation($type, $value, $constraints, $expectedViolations): void {
+  public function testValidation($type, $value, $at_least_one_of_constraints, $expectedViolations, $extra_constraints = []): void {
     // Create a definition that specifies some AllowedValues.
-    $definition = DataDefinition::create($type)
-      ->addConstraint('AtLeastOneOf', [
-        'constraints' => $constraints,
+    $definition = DataDefinition::create($type);
+
+    if (count($extra_constraints) > 0) {
+      foreach ($extra_constraints as $name => $settings) {
+        $definition->addConstraint($name, $settings);
+      }
+    }
+
+    $definition->addConstraint('AtLeastOneOf', [
+        'constraints' => $at_least_one_of_constraints,
       ]);
 
     // Test the validation.
@@ -50,25 +60,35 @@ class AtLeastOneOfConstraintTest extends KernelTestBase {
 
     $violationMessages = [];
     foreach ($violations as $violation) {
-      $violationMessages[] = $violation->getMessage();
+      $violationMessages[] = (string) $violation->getMessage();
     }
 
     $this->assertEquals($expectedViolations, $violationMessages, 'Validation passed for correct value.');
   }
 
 
-  public static function dataProvider() {
+  public static function dataProvider(): array {
     return [
-      [
+      'It should fail on a failing sibling validator' => [
         'integer',
         1,
         [
           ['Range' => ['min' => 100]],
           ['NotNull' => []],
         ],
+        ['This value should be blank.'],
+        ['Blank' => []],
+      ],
+      'it should not fail if first validator fails' => [
+        'integer',
+        250,
+        [
+          ['AllowedValues' => [500]],
+          ['Range' => ['min' => 100]],
+        ],
         [],
       ],
-      [
+      'it should not fail if second validator fails' => [
         'integer',
         250,
         [
