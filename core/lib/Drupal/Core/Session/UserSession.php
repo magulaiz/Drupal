@@ -4,8 +4,6 @@ namespace Drupal\Core\Session;
 
 /**
  * An implementation of the user account interface for the global user.
- *
- * @todo Change all properties to protected.
  */
 #[\AllowDynamicProperties]
 class UserSession implements AccountInterface {
@@ -38,7 +36,7 @@ class UserSession implements AccountInterface {
    *
    * @var string
    */
-  public $name = '';
+  protected $name = '';
 
   /**
    * The preferred language code of the account.
@@ -210,6 +208,28 @@ class UserSession implements AccountInterface {
    */
   protected function getRoleStorage() {
     return \Drupal::entityTypeManager()->getStorage('user_role');
+  }
+
+  /**
+   * Implements magic __get() method.
+   */
+  public function __get($name): mixed {
+    if ($name === 'name') {
+      @trigger_error("Getting the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3513856", E_USER_DEPRECATED);
+      return $this->getAccountName();
+    }
+    return $this->$name ?? NULL;
+  }
+
+  /**
+   * Implements magic __isset() method.
+   */
+  public function __isset($name): bool {
+    if ($name === 'name') {
+      @trigger_error("Checking for the name property is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Session\UserSession::getAccountName() instead. See https://www.drupal.org/node/3513856", E_USER_DEPRECATED);
+      return isset($this->name);
+    }
+    return isset($this->$name);
   }
 
 }
