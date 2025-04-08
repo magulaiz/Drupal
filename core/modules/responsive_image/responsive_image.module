@@ -305,7 +305,7 @@ function template_preprocess_responsive_image(&$variables): void {
  * @return \Drupal\Core\Template\Attribute
  *   An object of attributes for the source tag.
  */
-function _responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers) {
+function _responsive_image_build_source_attributes(array $variables, BreakpointInterface $breakpoint, array $multipliers): Attribute {
   if ((empty($variables['width']) || empty($variables['height']))) {
     $image = \Drupal::service('image.factory')->get($variables['uri']);
     $width = $image->getWidth();
@@ -456,7 +456,7 @@ function responsive_image_get_mime_type($image_style_name, $extension) {
 /**
  * Wrapper around image_style_url() so we can return an empty image.
  */
-function _responsive_image_image_style_url($style_name, $path) {
+function _responsive_image_image_style_url($style_name, $path): string {
   if ($style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
     // The smallest data URI for a 1px square transparent GIF image.
     // http://probablyprogramming.com/2009/03/15/the-tiniest-gif-ever

@@ -995,7 +995,7 @@ function install_get_form($form_id, array &$install_state) {
  *
  * @see install_full_redirect_url()
  */
-function install_redirect_url($install_state) {
+function install_redirect_url($install_state): string {
   return 'core/install.php?' . UrlHelper::buildQuery($install_state['parameters']);
 }
 
@@ -1010,7 +1010,7 @@ function install_redirect_url($install_state) {
  *
  * @see install_redirect_url()
  */
-function install_full_redirect_url($install_state) {
+function install_full_redirect_url($install_state): string {
   global $base_url;
   return $base_url . '/' . install_redirect_url($install_state);
 }
@@ -1027,7 +1027,7 @@ function install_full_redirect_url($install_state) {
  * @param array $install_state
  *   An array of information about the current installation state.
  */
-function install_display_output($output, $install_state): void {
+function install_display_output($output, $install_state): never {
   // Ensure the maintenance theme is initialized.
   // The regular initialization call in install_begin_request() may not be
   // reached in case of an early installer error.
@@ -1150,7 +1150,7 @@ function install_verify_completed_task() {
  * @return bool
  *   TRUE if there are no database errors.
  */
-function install_verify_database_settings($site_path) {
+function install_verify_database_settings($site_path): bool {
   if ($database = Database::getConnectionInfo()) {
     $database = $database['default'];
     $settings_file = './' . $site_path . '/settings.php';
@@ -1191,7 +1191,7 @@ function install_verify_database_ready(): void {
 /**
  * Checks a database connection and returns any errors.
  */
-function install_database_errors($database, $settings_file) {
+function install_database_errors($database, $settings_file): array {
   $errors = [];
 
   try {
@@ -1463,10 +1463,10 @@ function install_retrieve_file($uri, $destination) {
  * @param string $uri
  *   The URI to contact.
  *
- * @return string
+ * @return bool
  *   TRUE if the URI was contacted successfully, FALSE if not.
  */
-function install_check_localization_server($uri) {
+function install_check_localization_server($uri): bool {
   try {
     \Drupal::httpClient()->head($uri);
     return TRUE;
@@ -2104,7 +2104,7 @@ function install_check_translations($langcode, $server_pattern): array {
 /**
  * Checks installation requirements and reports any errors.
  */
-function install_check_requirements($install_state) {
+function install_check_requirements($install_state): array {
   $requirements = [];
   $profile = $install_state['parameters']['profile'];
 
@@ -2366,7 +2366,7 @@ function install_display_requirements($install_state, $requirements) {
  *
  * @see install_tasks()
  */
-function install_config_import_batch() {
+function install_config_import_batch(): array {
   // We need to manually trigger the installation of core-provided entity types,
   // as those will not be handled by the module installer.
   // @see install_profile_modules()
@@ -2594,7 +2594,7 @@ function _install_config_locale_overrides_process_batch(array $names, array $lan
  * @internal
  *   All installer code is internal.
  */
-function install_recipe_required_modules() {
+function install_recipe_required_modules(): array {
   // We need to manually trigger the installation of core-provided entity types,
   // as those will not be handled by the module installer.
   // @see install_profile_modules()
@@ -2642,7 +2642,7 @@ function install_recipe_required_modules() {
  * @internal
  *   This API is experimental.
  */
-function install_recipe_batch(&$install_state) {
+function install_recipe_batch(&$install_state): array {
   $batch_builder = new BatchBuilder();
   $batch_builder
     ->setTitle(t('Installing recipe'))

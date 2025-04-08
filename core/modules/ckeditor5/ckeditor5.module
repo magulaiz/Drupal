@@ -73,7 +73,7 @@ function ckeditor5_filter_format_edit_form_submit(array $form, FormStateInterfac
  *
  * Used instead of editor_form_filter_admin_form_ajax from the editor module.
  */
-function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_state) {
+function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_state): AjaxResponse {
   $response = new AjaxResponse();
   $renderer = \Drupal::service('renderer');
 

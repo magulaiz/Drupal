@@ -25,7 +25,7 @@ function syslog_logging_settings_submit($form, FormStateInterface $form_state): 
  * @return array
  *   An array of syslog facilities for UNIX/Linux.
  */
-function syslog_facility_list() {
+function syslog_facility_list(): array {
   return [
     LOG_LOCAL0 => 'LOG_LOCAL0',
     LOG_LOCAL1 => 'LOG_LOCAL1',

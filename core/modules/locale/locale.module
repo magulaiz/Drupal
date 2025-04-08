@@ -421,7 +421,7 @@ function locale_form_language_admin_edit_form_alter_submit($form, FormStateInter
  * @return bool
  *   Whether $langcode can be translated to in locale.
  */
-function locale_is_translatable($langcode) {
+function locale_is_translatable($langcode): bool {
   return $langcode != 'en' || \Drupal::config('locale.settings')->get('translate_english');
 }
 
@@ -667,7 +667,7 @@ function locale_translation_clear_status(): void {
  *   Returns TRUE if remote translations sources should be taken into account
  *   when checking or importing translation files, FALSE otherwise.
  */
-function locale_translation_use_remote_source() {
+function locale_translation_use_remote_source(): bool {
   return \Drupal::config('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL;
 }
 
@@ -686,7 +686,7 @@ function locale_translation_use_remote_source() {
  * but omitting div and img as not needed for translation and likely to cause
  * layout issues (div) or a possible attack vector (img).
  */
-function locale_string_is_safe($string) {
+function locale_string_is_safe($string): bool {
   // Some strings have tokens in them. For tokens in the first part of href or
   // src HTML attributes, \Drupal\Component\Utility\Xss::filter() removes part
   // of the token, the part before the first colon.
@@ -766,7 +766,7 @@ function _locale_refresh_configuration(array $langcodes, array $lids): void {
  * @return string
  *   String with leading and trailing quotes removed.
  */
-function _locale_strip_quotes($string) {
+function _locale_strip_quotes($string): string {
   return implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($string, 1, -1)));
 }
 
@@ -1058,7 +1058,7 @@ function _locale_rebuild_js($langcode = NULL) {
  * Adds labels to the languages and removes checkboxes from languages from which
  * translation files could not be found.
  */
-function locale_translation_language_table($form_element) {
+function locale_translation_language_table($form_element): array {
   // Remove checkboxes of languages without updates.
   if ($form_element['#not_found']) {
     foreach ($form_element['#not_found'] as $langcode) {

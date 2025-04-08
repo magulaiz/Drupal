@@ -25,7 +25,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  *   workflow.
  */
 #[StopProceduralHookScan]
-function _update_manager_check_backends(&$form, $operation) {
+function _update_manager_check_backends(&$form, $operation): bool {
   @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
   // If file transfers will be performed locally, we do not need to display any

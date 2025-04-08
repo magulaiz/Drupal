@@ -647,7 +647,7 @@ function olivero_form_views_exposed_form_alter(&$form): void {
  *
  * @internal
  */
-function _olivero_hex_to_hsl(string $hex_string) {
+function _olivero_hex_to_hsl(string $hex_string): array {
   // Convert hexcode pairs to rgb values (0-255).
   $hex_val = trim($hex_string, '#');
 

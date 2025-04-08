@@ -245,7 +245,7 @@ function search_excerpt($keys, $text, $langcode = NULL): array {
  *   \Drupal\search\SearchTextProcessorInterface::analyze(). If a matching text
  *   segment is not located, NULL is returned.
  */
-function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NULL) {
+function _search_find_match_with_simplify($key, $text, $boundary, $langcode = NULL): ?string {
   $preceded_by_boundary = '(?<=' . $boundary . ')';
   $followed_by_boundary = '(?=' . $boundary . ')';
 

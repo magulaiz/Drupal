@@ -385,7 +385,7 @@ function template_preprocess_filter_tips(&$variables): void {
  * Each type must be processed separately, as there is no one regular
  * expression that could possibly match all of the cases in one pass.
  */
-function _filter_url($text, $filter) {
+function _filter_url($text, $filter): string {
   // Store the current text in case any of the preg_* functions fail.
   $saved_text = $text;
 
@@ -528,7 +528,7 @@ function _filter_url($text, $filter) {
  *
  * Callback for preg_replace_callback() within _filter_url().
  */
-function _filter_url_parse_full_links($match) {
+function _filter_url_parse_full_links($match): string {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 1;
 
@@ -543,7 +543,7 @@ function _filter_url_parse_full_links($match) {
  *
  * Callback for preg_replace_callback() within _filter_url().
  */
-function _filter_url_parse_email_links($match) {
+function _filter_url_parse_email_links($match): string {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 0;
 
@@ -558,7 +558,7 @@ function _filter_url_parse_email_links($match) {
  *
  * Callback for preg_replace_callback() within _filter_url().
  */
-function _filter_url_parse_partial_links($match) {
+function _filter_url_parse_partial_links($match): string {
   // The $i:th parenthesis in the regexp contains the URL.
   $i = 1;
 
@@ -611,7 +611,7 @@ function _filter_url_escape_comments($match, $escape = NULL) {
 /**
  * Shortens a long URL to a given length ending with an ellipsis.
  */
-function _filter_url_trim($text, $length = NULL) {
+function _filter_url_trim($text, $length = NULL): ?string {
   static $_length;
   if ($length !== NULL) {
     $_length = $length;
@@ -629,7 +629,7 @@ function _filter_url_trim($text, $length = NULL) {
  *
  * Based on: http://photomatt.net/scripts/autop
  */
-function _filter_autop($text) {
+function _filter_autop($text): string {
   // All block level tags
   $block = '(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|option|form|map|area|blockquote|address|math|input|p|h[1-6]|fieldset|legend|hr|article|aside|details|figcaption|figure|footer|header|hgroup|menu|nav|section|summary)';
 
@@ -723,14 +723,14 @@ function _filter_autop($text) {
 /**
  * Escapes all HTML tags, so they will be visible instead of being effective.
  */
-function _filter_html_escape($text) {
+function _filter_html_escape($text): string {
   return trim(Html::escape($text));
 }
 
 /**
  * Process callback for local image filter.
  */
-function _filter_html_image_secure_process($text) {
+function _filter_html_image_secure_process($text): string {
   // Find the path (e.g. '/') to Drupal root.
   $base_path = base_path();
   $base_path_length = mb_strlen($base_path);

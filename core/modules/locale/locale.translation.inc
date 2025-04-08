@@ -314,7 +314,7 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
  * @return string
  *   String with replaced placeholders.
  */
-function locale_translation_build_server_pattern($project, $template) {
+function locale_translation_build_server_pattern($project, $template): string {
   $variables = [
     '%project' => $project->name,
     '%version' => $project->version,
@@ -408,7 +408,7 @@ function _locale_translation_file_is_remote($uri) {
  *   - "LOCALE_TRANSLATION_SOURCE_COMPARE_GT":  $source1 > $source2 OR $source2
  *     is missing.
  */
-function _locale_translation_source_compare($source1, $source2) {
+function _locale_translation_source_compare($source1, $source2): int {
   if (isset($source1->timestamp) && isset($source2->timestamp)) {
     if ($source1->timestamp == $source2->timestamp) {
       return LOCALE_TRANSLATION_SOURCE_COMPARE_EQ;
@@ -434,7 +434,7 @@ function _locale_translation_source_compare($source1, $source2) {
  * @return array
  *   Array of translation import options.
  */
-function _locale_translation_default_update_options() {
+function _locale_translation_default_update_options(): array {
   $config = \Drupal::config('locale.settings');
   return [
     'customized' => LOCALE_NOT_CUSTOMIZED,

@@ -118,7 +118,7 @@ function views_ui_add_ajax_trigger(&$wrapping_element, $trigger_key, $refresh_pa
 /**
  * Processes a non-JavaScript fallback submit button to limit its validation errors.
  */
-function views_ui_add_limited_validation($element, FormStateInterface $form_state) {
+function views_ui_add_limited_validation($element, FormStateInterface $form_state): array {
   // Retrieve the AJAX triggering element so we can determine its parents. (We
   // know it's at the same level of the complete form array as the submit
   // button, so all we have to do to find it is swap out the submit button's
@@ -154,7 +154,7 @@ function views_ui_add_limited_validation($element, FormStateInterface $form_stat
  * be refreshed by AJAX, based on information stored in the corresponding
  * submit button form element.
  */
-function views_ui_add_ajax_wrapper($element, FormStateInterface $form_state) {
+function views_ui_add_ajax_wrapper($element, FormStateInterface $form_state): array {
   // Find the region of the complete form that needs to be refreshed by AJAX.
   // This was earlier stored in a property on the element.
   $complete_form = &$form_state->getCompleteForm();
@@ -311,7 +311,7 @@ function views_ui_build_form_url(FormStateInterface $form_state) {
  * @see _form_builder_handle_input_element()
  * @see _form_button_was_clicked()
  */
-function views_ui_form_button_was_clicked($element, FormStateInterface $form_state) {
+function views_ui_form_button_was_clicked($element, FormStateInterface $form_state): array {
   $user_input = $form_state->getUserInput();
   $process_input = empty($element['#disabled']) && ($form_state->isProgrammed() || ($form_state->isProcessingInput() && (!isset($element['#access']) || $element['#access'])));
   if ($process_input && !$form_state->getTriggeringElement() && !empty($element['#is_button']) && isset($user_input[$element['#name']]) && isset($element['#values']) && in_array($user_input[$element['#name']], array_map('strval', $element['#values']), TRUE)) {

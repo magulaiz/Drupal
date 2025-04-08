@@ -384,7 +384,7 @@ function drupal_verify_install_file($file, $mask = NULL, $type = 'file', $auto_f
  * @return bool
  *   TRUE/FALSE whether or not the directory was successfully created.
  */
-function drupal_install_mkdir($file, $mask, $message = TRUE) {
+function drupal_install_mkdir($file, $mask, $message = TRUE): bool {
   $mod = 0;
   $masks = [FILE_READABLE, FILE_WRITABLE, FILE_EXECUTABLE, FILE_NOT_READABLE, FILE_NOT_WRITABLE, FILE_NOT_EXECUTABLE];
   foreach ($masks as $m) {
@@ -435,7 +435,7 @@ function drupal_install_mkdir($file, $mask, $message = TRUE) {
  * @return bool
  *   TRUE/FALSE whether or not we were able to fix the file's permissions.
  */
-function drupal_install_fix_file($file, $mask, $message = TRUE) {
+function drupal_install_fix_file($file, $mask, $message = TRUE): bool {
   // If $file does not exist, fileperms() issues a PHP warning.
   if (!file_exists($file)) {
     return FALSE;
@@ -664,7 +664,7 @@ function drupal_requirements_severity(&$requirements) {
  * @return bool
  *   TRUE or FALSE, depending on whether the requirements are met.
  */
-function drupal_check_module($module) {
+function drupal_check_module($module): bool {
   /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
   $module_list = \Drupal::service('extension.list.module');
   $extension = $module_list->get($module);

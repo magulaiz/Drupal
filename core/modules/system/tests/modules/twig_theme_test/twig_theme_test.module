@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Helper function to test PHP variables in the Twig engine.
  */
-function _test_theme_twig_php_values() {
+function _test_theme_twig_php_values(): array {
   // Prefix each variable with "twig_" so that Twig doesn't get confused
   // between a variable and a primitive. Arrays are not tested since they should
   // be a Drupal render array.

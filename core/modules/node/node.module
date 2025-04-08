@@ -196,7 +196,7 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
  * @return bool
  *   TRUE if this is a full page view, otherwise FALSE.
  */
-function node_is_page(NodeInterface $node) {
+function node_is_page(NodeInterface $node): bool {
   $route_match = \Drupal::routeMatch();
   if ($route_match->getRouteName() == 'entity.node.canonical') {
     $page_node = $route_match->getParameter('node');

@@ -22,6 +22,7 @@ use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -32,7 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @see _batch_shutdown()
  */
-function _batch_page(Request $request) {
+function _batch_page(Request $request): Response|array|false|null {
   $batch = &batch_get();
 
   if (!($request_id = $request->query->get('id'))) {
@@ -134,7 +135,7 @@ function _batch_needs_update($new_value = NULL) {
  * @see _batch_progress_page_js()
  * @see _batch_process()
  */
-function _batch_do() {
+function _batch_do(): JsonResponse {
   // Perform actual processing.
   [$percentage, $message, $label] = _batch_process();
 
@@ -442,7 +443,7 @@ function _batch_next_set() {
  * Call the 'finished' callback of each batch set to allow custom handling of
  * the results and resolve page redirection.
  */
-function _batch_finished() {
+function _batch_finished(): ?RedirectResponse {
   $batch = &batch_get();
   $batch_finished_redirect = NULL;
 
@@ -549,6 +550,7 @@ function _batch_finished() {
       return new RedirectResponse($_batch['source_url']->setAbsolute()->toString());
     }
   }
+  return NULL;
 }
 
 /**

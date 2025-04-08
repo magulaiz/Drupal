@@ -433,7 +433,7 @@ function locale_translate_batch_finished($success, array $results): void {
  * @return object
  *   An object representing the file.
  */
-function locale_translate_file_create($filepath) {
+function locale_translate_file_create($filepath): \stdClass {
   $file = new stdClass();
   $file->filename = \Drupal::service('file_system')->basename($filepath);
   $file->uri = $filepath;
@@ -509,7 +509,7 @@ function locale_translate_file_attach_properties($file, array $options = []) {
  *   TRUE if files are removed successfully. FALSE if one or more files could
  *   not be deleted.
  */
-function locale_translate_delete_translation_files(array $projects = [], array $langcodes = []) {
+function locale_translate_delete_translation_files(array $projects = [], array $langcodes = []): bool {
   $fail = FALSE;
   locale_translation_file_history_delete($projects, $langcodes);
 

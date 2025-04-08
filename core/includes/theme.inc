@@ -71,7 +71,7 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  *
  * @see \Drupal\Core\Extension\ThemeExtensionList::$defaults
  */
-function _system_default_theme_features() {
+function _system_default_theme_features(): array {
   return [
     'favicon',
     'logo',
@@ -1776,7 +1776,7 @@ function template_preprocess_menu_local_action(&$variables): void {
  *
  * Sorts using ['_weight']['#value']
  */
-function _field_multiple_value_form_sort_helper($a, $b) {
+function _field_multiple_value_form_sort_helper($a, $b): int|float {
   $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
   $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
   return $a_weight - $b_weight;

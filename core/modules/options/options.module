@@ -65,7 +65,7 @@ function options_allowed_values(FieldStorageDefinitionInterface $definition, ?Fi
 /**
  * Checks if a list of values are being used in actual field values.
  */
-function _options_values_in_use($entity_type, $field_name, $values) {
+function _options_values_in_use($entity_type, $field_name, $values): bool {
   if ($values) {
     $result = \Drupal::entityQuery($entity_type)
       ->condition($field_name . '.value', $values, 'IN')
