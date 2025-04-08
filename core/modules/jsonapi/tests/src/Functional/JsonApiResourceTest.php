@@ -1,0 +1,143 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\Tests\jsonapi\Functional;
+
+use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Entity\TranslatableInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestHelper;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+use GuzzleHttp\RequestOptions;
+
+/**
+ * JSON:API resource tests.
+ *
+ * @group jsonapi
+ *
+ * @internal
+ */
+class JsonApiResourceTest extends JsonApiFunctionalTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'basic_auth',
+    'entity_test',
+    'jsonapi_test_field_type',
+  ];
+
+  protected string $entityTypeId = 'entity_test';
+
+  protected string $bundle = 'entity_test';
+
+  protected string $fieldName = 'field_test';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    EntityTestHelper::createBundle($this->bundle, 'Parent', $this->entityTypeId);
+
+    FieldStorageConfig::create([
+      'field_name' => $this->fieldName,
+      'type' => 'jsonapi_test_field_type_entity_reference_uuid',
+      'entity_type' => $this->entityTypeId,
+      'cardinality' => 1,
+      'settings' => [
+        'target_type' => $this->entityTypeId,
+      ],
+    ])->save();
+    FieldConfig::create([
+      'field_name' => $this->fieldName,
+      'entity_type' => $this->entityTypeId,
+      'bundle' => $this->bundle,
+      'label' => $this->randomString(),
+      'settings' => [
+        'handler' => 'default',
+        'handler_settings' => [],
+      ],
+    ])->save();
+  }
+
+  /**
+   * Ensure PATCHing to include a related entity in the response.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3476224
+   */
+  public function testPatchHandleUUIDPropertyReferenceFieldIssue3127883(): void {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $user = $this->drupalCreateUser([
+      'administer entity_test content',
+      'view test entity',
+    ]);
+
+    // Create parent and child entities.
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityTypeId);
+    $parentEntity = $storage
+      ->create([
+        'type' => $this->bundle,
+      ]);
+    $parentEntity->save();
+    $childUuid = $this->container->get('uuid')->generate();
+    $storage = $this->container->get('entity_type.manager')
+      ->getStorage($this->entityTypeId);
+    $childEntity = $storage
+      ->create([
+        'type' => $this->bundle,
+        'uuid' => $childUuid,
+      ]);
+    $childEntity->save();
+    $uuid = $childEntity->uuid();
+    $this->assertEquals($childUuid, $uuid);
+
+    // Assert a relationship can be attained between them.
+    $url = Url::fromUri(sprintf('internal:/jsonapi/%s/%s/%s', $this->entityTypeId, $this->bundle, $parentEntity->uuid()));
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+      RequestOptions::JSON => [
+        'data' => [
+          'id' => $parentEntity->uuid(),
+          'type' => sprintf('%s--%s', $this->entityTypeId, $this->bundle),
+          'relationships' => [
+            $this->fieldName => [
+              'data' => [
+                [
+                  'id' => $childUuid,
+                  'type' => sprintf('%s--%s', $this->entityTypeId, $this->bundle),
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+    $response = $this->request('PATCH', $url, $request_options);
+
+    // Assert a helpful error response is present.
+    $data = $this->getDocumentFromResponse($response, FALSE);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $this->assertNotNull($data);
+    $this->assertSame(sprintf('The following relationship fields were provided as attributes: [ %s ]', $this->fieldName), $data['errors'][0]['detail']);
+  }
+
+}
