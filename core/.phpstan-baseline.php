@@ -28720,9 +28720,33 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathFieldItemList.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Kernel\\\\PathItemLanguageFallbackTest\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/path/tests/src/Kernel/PathItemLanguageFallbackTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Kernel\\\\PathItemLanguageFallbackTest\\:\\:assertPathAliasNotExists\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/path/tests/src/Kernel/PathItemLanguageFallbackTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\path_alias\\\\Kernel\\\\AliasLanguageFallbackTest\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/path_alias/tests/src/Kernel/AliasLanguageFallbackTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\path_alias\\\\Kernel\\\\AliasLanguageFallbackTest\\:\\:assertPathAliasNotExists\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/path_alias/tests/src/Kernel/AliasLanguageFallbackTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#',
 	'identifier' => 'return.missing',
-	'count' => 3,
+	'count' => 4,
 	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathItem.php',
 ];
 $ignoreErrors[] = [
