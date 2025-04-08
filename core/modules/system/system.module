@@ -507,7 +507,7 @@ function system_preprocess_toolbar(array &$variables, $hook, $info): void {
  */
 function system_entity_form_mode_presave(EntityInterface $entity): void {
   if ($entity->get('description') !== NULL && trim($entity->get('description')) === '') {
-    @trigger_error("Setting description to an empty string is deprecated in drupal:10.4.0 and it must be null in drupal:12.0.0. See https://www.drupal.org/node/3452144", E_USER_DEPRECATED);
+    @trigger_error("Setting description to an empty string is deprecated in drupal:11.2.0 and it must be null in drupal:12.0.0. See https://www.drupal.org/node/3452144", E_USER_DEPRECATED);
     $entity->set('description', NULL);
   }
 }
