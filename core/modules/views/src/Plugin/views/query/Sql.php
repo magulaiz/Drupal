@@ -1790,7 +1790,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodSimple',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
@@ -1800,7 +1799,6 @@ class Sql extends QueryPluginBase {
         'method' => 'aggregationMethodDistinct',
         'handler' => [
           'argument' => 'groupby_numeric',
-          'field' => 'numeric',
           'filter' => 'groupby_numeric',
           'sort' => 'groupby_numeric',
         ],
