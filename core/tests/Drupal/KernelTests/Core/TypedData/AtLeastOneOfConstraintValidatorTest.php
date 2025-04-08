@@ -98,7 +98,7 @@ class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
         ],
         [],
       ],
-      [
+      'it should show multiple validation errors if none validate' => [
         'string',
         'Green',
         [
