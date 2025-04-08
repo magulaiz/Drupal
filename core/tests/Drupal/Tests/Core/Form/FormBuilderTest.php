@@ -1002,6 +1002,45 @@ class FormBuilderTest extends FormTestBase {
     ];
   }
 
+  /**
+   * Tests the detection of the triggering element.
+   */
+  public function testTriggeringElement(): void {
+    $form_arg = 'Drupal\Tests\Core\Form\TestForm';
+
+    // No triggering element.
+    $form_state = new FormState();
+    $this->formBuilder->buildForm($form_arg, $form_state);
+    $this->assertNull($form_state->getTriggeringElement());
+
+    // Single triggering element.
+    $form_state = new FormState();
+    $form_state->setMethod('GET');
+    $form_state->setUserInput(['form_id' => 'test_form', 'op' => 'Submit']);
+    $this->formBuilder->buildForm($form_arg, $form_state);
+    $triggeringElement = $form_state->getTriggeringElement();
+    $this->assertIsArray($triggeringElement);
+    $this->assertSame('op', $triggeringElement['#name']);
+
+    // Other triggering element.
+    $form_state = new FormState();
+    $form_state->setMethod('GET');
+    $form_state->setUserInput(['form_id' => 'test_form', 'other_action' => 'Other action']);
+    $this->formBuilder->buildForm($form_arg, $form_state);
+    $triggeringElement = $form_state->getTriggeringElement();
+    $this->assertIsArray($triggeringElement);
+    $this->assertSame('other_action', $triggeringElement['#name']);
+
+    // Multiple triggering elements.
+    $form_state = new FormState();
+    $form_state->setMethod('GET');
+    $form_state->setUserInput(['form_id' => 'test_form', 'op' => 'Submit', 'other_action' => 'Other action']);
+    $this->formBuilder->buildForm($form_arg, $form_state);
+    $triggeringElement = $form_state->getTriggeringElement();
+    $this->assertIsArray($triggeringElement);
+    $this->assertSame('op', $triggeringElement['#name']);
+  }
+
 }
 
 /**
