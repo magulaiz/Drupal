@@ -99,6 +99,10 @@ class FileEventSubscriber implements EventSubscriberInterface {
     // Sanitize the filename according to configuration.
     $alphanumeric = $fileSettings->get('filename_sanitization.replace_non_alphanumeric');
     $replacement = $fileSettings->get('filename_sanitization.replacement_character');
+
+    // Always replace special characters.
+    $filename = str_replace(self::SPECIAL_CHARS, $replacement, $filename);
+
     if ($transliterate) {
       $transliterated_filename = $this->transliteration->transliterate(
         $filename,
@@ -139,11 +143,6 @@ class FileEventSubscriber implements EventSubscriberInterface {
     if ($fileSettings->get('filename_sanitization.lowercase')) {
       // Force lowercase to prevent issues on case-insensitive file systems.
       $filename = mb_strtolower($filename);
-    }
-
-    if ($fileSettings->get('filename_sanitization.replace_special_chars')) {
-      // Remove special characters that could be unsafe.
-      $filename = str_replace(self::SPECIAL_CHARS, '', $filename);
     }
 
     $event->setFilename($filename . $extension);

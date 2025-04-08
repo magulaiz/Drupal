@@ -46,9 +46,6 @@ file.settings:
         replacement_character:
           type: string
           label: 'Character to use in replacements'
-        replace_special_chars:
-          type: boolean
-          label: 'Replace special characters'
 
 field.storage_settings.file:
   type: base_entity_reference_field_settings
