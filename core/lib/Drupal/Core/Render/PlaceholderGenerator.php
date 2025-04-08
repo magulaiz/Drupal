@@ -93,6 +93,9 @@ class PlaceholderGenerator implements PlaceholderGeneratorInterface {
       // The cacheability metadata for the placeholder. The rendered result of
       // the placeholder may itself be cached, if [#cache][keys] are specified.
       '#cache' => TRUE,
+      // The placeholder strategy denylist for this placeholder which can be
+      // used to skip placeholder strategies for specific render arrays.
+      '#placeholder_strategy_denylist' => TRUE,
     ]);
 
     if (isset($element['#lazy_builder_preview'])) {
