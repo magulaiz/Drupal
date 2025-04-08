@@ -20542,6 +20542,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_field_type/src/Normalizer/StringNormalizer.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\jsonapi_test_field_type\\\\Plugin\\\\Field\\\\FieldType\\\\EntityReferenceUuidItem\\:\\:\\$target_uuid\\.$#',
+	'identifier' => 'property.notFound',
+	'count' => 4,
+	'path' => __DIR__ . '/modules/jsonapi/tests/modules/jsonapi_test_field_type/src/Plugin/Field/FieldType/EntityReferenceUuidItem.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\jsonapi_test_resource_type_building\\\\EventSubscriber\\\\ResourceTypeBuildEventSubscriber\\:\\:aliasResourceTypeFields\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
