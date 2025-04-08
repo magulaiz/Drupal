@@ -248,7 +248,7 @@ class SystemHooks {
     if ($route_match instanceof StackedRouteMatchInterface) {
       $route_match = $route_match->getMasterRouteMatch();
     }
-    $current_path = $route_match->getRouteName() ? Url::fromRouteMatch($route_match)->getInternalPath() : '';
+    $current_path = $route_match->getRouteObject() ? Url::fromRouteMatch($route_match)->getInternalPath() : '';
     $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute($route_match->getRouteObject());
     $path_settings = [
       'baseUrl' => $request->getBaseUrl() . '/',

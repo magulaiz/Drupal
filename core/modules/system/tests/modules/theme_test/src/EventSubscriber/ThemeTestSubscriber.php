@@ -58,7 +58,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    * @see \Drupal\system\Tests\Theme\ThemeEarlyInitializationTest::testRequestListener()
    */
   public function onRequest(RequestEvent $event) {
-    if ($this->currentRouteMatch->getRouteName() === 'theme_test.request_listener') {
+    if ($this->currentRouteMatch->isRouteName('theme_test.request_listener')) {
       // First, force the theme registry to be rebuilt on this page request.
       // This allows us to test a full initialization of the theme system in
       // the code below.

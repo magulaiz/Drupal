@@ -36,7 +36,7 @@ class DenyNodePreview implements ResponsePolicyInterface {
    * {@inheritdoc}
    */
   public function check(Response $response, Request $request) {
-    if ($this->routeMatch->getRouteName() === 'entity.node.preview') {
+    if ($this->routeMatch->isRouteName('entity.node.preview')) {
       return static::DENY;
     }
   }
