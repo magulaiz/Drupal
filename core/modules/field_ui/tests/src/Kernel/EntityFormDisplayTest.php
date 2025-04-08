@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\field_ui\Traits\EntityDisplayTestTrait;
 
 /**
  * Tests the entity display configuration entities.
@@ -16,6 +17,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group field_ui
  */
 class EntityFormDisplayTest extends KernelTestBase {
+
+  use EntityDisplayTestTrait;
 
   /**
    * {@inheritdoc}
@@ -127,6 +130,26 @@ class EntityFormDisplayTest extends KernelTestBase {
     $this->assertEquals('unknown_widget', $options['type']);
     $widget = $form_display->getRenderer($field_name);
     $this->assertEquals($default_widget, $widget->getPluginId());
+  }
+
+  /**
+   * Tests the dependencies of field components within an entity display object.
+   */
+  public function testMultipleFieldComponentDependencies(): void {
+    // Set up two field components, each dependent on different arbitrary
+    // modules that should not already be dependencies otherwise.
+    $dependent_fields = [
+      'test_field' => 'action',
+      'test_field_2' => 'aggregator',
+    ];
+    $this->addDefaultTestFields(array_keys($dependent_fields));
+
+    $form_display = EntityFormDisplay::create([
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+    ]);
+    $this->configureAndTestMultipleFieldComponentDependencies($dependent_fields, $form_display, 'test_field_widget_dynamic_dependencies');
   }
 
   /**

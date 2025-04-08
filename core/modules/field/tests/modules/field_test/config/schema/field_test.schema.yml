@@ -149,3 +149,19 @@ field.formatter.third_party.field_test:
     foo:
       type: string
       label: 'Test setting'
+
+field.formatter.settings.field_test_dynamic_dependencies:
+  type: mapping
+  label: 'Field test dynamic dependencies'
+  mapping:
+    dependent_module:
+      type: string
+      label: 'Dependent module'
+
+field.widget.settings.test_field_widget_dynamic_dependencies:
+  type: mapping
+  label: 'Test field dynamic dependencies'
+  mapping:
+    dependent_module:
+      type: string
+      label: 'Dependent module'

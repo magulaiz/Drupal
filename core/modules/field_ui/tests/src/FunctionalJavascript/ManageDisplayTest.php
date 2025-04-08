@@ -130,6 +130,7 @@ class ManageDisplayTest extends WebDriverTestBase {
       'field_no_settings',
       'field_empty_test',
       'field_empty_setting',
+      'field_test_dynamic_dependencies',
       'field_test_default',
       'field_test_multiple',
       'field_test_with_prepare_view',
@@ -319,6 +320,7 @@ class ManageDisplayTest extends WebDriverTestBase {
       'test_field_widget',
       'test_field_widget_multilingual',
       'test_field_widget_multiple',
+      'test_field_widget_dynamic_dependencies',
     ]);
 
     $field_test_type->setValue('test_field_widget_multiple');
@@ -403,10 +405,12 @@ class ManageDisplayTest extends WebDriverTestBase {
       'test_field_widget',
       'test_field_widget_multilingual',
       'test_field_widget_multiple',
+      'test_field_widget_dynamic_dependencies',
     ]);
     $this->assertFieldSelectOptions($field_onewidgetfield_type, [
       'test_field_widget',
       'test_field_widget_multilingual',
+      'test_field_widget_dynamic_dependencies',
     ]);
 
     $field_test_drag_handle->dragTo($target);
