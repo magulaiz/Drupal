@@ -53,39 +53,26 @@ class Date extends SortPluginBase {
    */
   public function query() {
     $this->ensureMyTable();
-    switch ($this->options['granularity']) {
-      case 'second':
-      default:
-        $this->query->addOrderBy($this->tableAlias, $this->realField, $this->options['order']);
-        return;
 
-      case 'minute':
-        $formula = $this->getDateFormat('YmdHi');
-        break;
-
-      case 'hour':
-        $formula = $this->getDateFormat('YmdH');
-        break;
-
-      case 'day':
-        $formula = $this->getDateFormat('Ymd');
-        break;
-
-      case 'week':
-        $formula = $this->getDateFormat('W');
-        break;
-
-      case 'month':
-        $formula = $this->getDateFormat('Ym');
-        break;
-
-      case 'year':
-        $formula = $this->getDateFormat('Y');
-        break;
-    }
+    // Determine whether to use a formula in the query.
+    $formula = match ($this->options['granularity']) {
+      'year' => $this->getDateFormat('Y'),
+      'month' => $this->getDateFormat('Ym'),
+      'week' => $this->getDateFormat('W'),
+      'day' => $this->getDateFormat('Ymd'),
+      'hour' => $this->getDateFormat('YmdH'),
+      'minute' => $this->getDateFormat('YmdHi'),
+      'seconds' => NULL,
+      default => NULL,
+    };
 
     // Add the field.
-    $this->query->addOrderBy(NULL, $formula, $this->options['order'], $this->tableAlias . '_' . $this->field . '_' . $this->options['granularity']);
+    if ($formula) {
+      $this->query->addOrderBy(NULL, $formula, $this->options['order'], $this->tableAlias . '_' . $this->field . '_' . $this->options['granularity']);
+    }
+    else {
+      $this->query->addOrderBy($this->tableAlias, $this->realField, $this->options['order']);
+    }
   }
 
 }
