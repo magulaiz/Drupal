@@ -255,11 +255,13 @@ class UrlHelper {
    * @param string $path
    *   The internal path or external URL being linked to, such as "node/34" or
    *   "https://example.com/foo".
+   * @param string[] $allowed_protocols
+   *   The list of custom allowed protocols.
    *
    * @return bool
    *   TRUE or FALSE, where TRUE indicates an external path.
    */
-  public static function isExternal($path) {
+  public static function isExternal($path, array $allowed_protocols = []) {
     $colon_position = strpos($path, ':');
     // Some browsers treat \ as / so normalize to forward slashes.
     $path = str_replace('\\', '/', $path);
@@ -276,7 +278,7 @@ class UrlHelper {
       // if any - as this would clearly mean it is not a URL.
       || ($colon_position !== FALSE
         && !preg_match('![/?#]!', substr($path, 0, $colon_position))
-        && static::stripDangerousProtocols($path) == $path);
+        && static::stripDangerousProtocols($path, $allowed_protocols) == $path);
   }
 
   /**
@@ -387,6 +389,8 @@ class UrlHelper {
    *
    * @param string $uri
    *   A plain-text URI that might contain dangerous protocols.
+   * @param string[] $allowed_protocols
+   *   The list of custom allowed protocols.
    *
    * @return string
    *   A plain-text URI stripped of dangerous protocols. As with all plain-text
@@ -398,8 +402,8 @@ class UrlHelper {
    * @see \Drupal\Core\Url::toString()
    * @see \Drupal\Core\Url::fromUri()
    */
-  public static function stripDangerousProtocols($uri) {
-    $allowed_protocols = array_flip(static::$allowedProtocols);
+  public static function stripDangerousProtocols($uri, array $allowed_protocols = []) {
+    $allowed_protocols = array_flip(array_merge(static::$allowedProtocols, $allowed_protocols));
 
     // Iteratively remove any invalid protocol found.
     do {
