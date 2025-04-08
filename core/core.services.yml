@@ -1508,6 +1508,18 @@ services:
     class: Drupal\Core\StreamWrapper\TemporaryStream
     tags:
       - { name: stream_wrapper, scheme: temporary }
+  stream_wrapper.module:
+    class: Drupal\Core\StreamWrapper\ModuleStream
+    tags:
+      - { name: stream_wrapper, scheme: module }
+  stream_wrapper.theme:
+    class: Drupal\Core\StreamWrapper\ThemeStream
+    tags:
+      - { name: stream_wrapper, scheme: theme}
+  stream_wrapper.profile:
+    class: Drupal\Core\StreamWrapper\ProfileStream
+    tags:
+      - { name: stream_wrapper, scheme: profile }
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
     arguments: ['@config.factory']
