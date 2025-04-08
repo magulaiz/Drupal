@@ -27,7 +27,8 @@
   {{ link }}
   {% if is_active and level == 'primary' %}
     <button class="reset-appearance tabs__trigger" type="button" aria-label="{{ 'Tabs display toggle'|t }}" data-drupal-nav-tabs-trigger>
-      {% include "@claro/../images/src/hamburger-menu.svg" %}
+      <span class="hamburger-icon">{% include "@claro/../images/src/hamburger-menu.svg" %}</span>
+      <span class="close-icon">{% include "@claro/../images/icons/002e9a/ex.svg" %}</span>
     </button>
   {% endif %}
 </li>
