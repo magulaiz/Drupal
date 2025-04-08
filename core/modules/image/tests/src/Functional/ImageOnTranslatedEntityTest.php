@@ -101,7 +101,10 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('image')[0]->uri);
     $this->drupalGet('node/' . $default_language_node->id() . '/edit');
     $this->submitForm($edit, 'Save');
-    $edit = [$this->fieldName . '[0][alt]' => 'Lost in translation image', $this->fieldName . '[0][title]' => 'Lost in translation image title'];
+    $edit = [
+      $this->fieldName . '[0][alt]' => 'Lost in translation image',
+      $this->fieldName . '[0][title]' => 'Lost in translation image title',
+    ];
     $this->submitForm($edit, 'Save');
     $first_fid = $this->getLastFileId();
 
@@ -115,7 +118,10 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('image')[1]->uri);
     $this->submitForm($edit, 'Save (this translation)');
-    $edit = [$this->fieldName . '[0][alt]' => 'Scarlett Johansson image', $this->fieldName . '[0][title]' => 'Scarlett Johansson image title'];
+    $edit = [
+      $this->fieldName . '[0][alt]' => 'Scarlett Johansson image',
+      $this->fieldName . '[0][title]' => 'Scarlett Johansson image title',
+    ];
     $this->submitForm($edit, 'Save (this translation)');
     // This inspects the HTML after the post of the translation, the image
     // should be displayed on the original node.
@@ -148,7 +154,10 @@ class ImageOnTranslatedEntityTest extends ImageFieldTestBase {
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('image')[2]->uri);
     $this->submitForm($edit, 'Save (this translation)');
-    $edit = [$this->fieldName . '[0][alt]' => 'Ada Lovelace image', $this->fieldName . '[0][title]' => 'Ada Lovelace image title'];
+    $edit = [
+      $this->fieldName . '[0][alt]' => 'Ada Lovelace image',
+      $this->fieldName . '[0][title]' => 'Ada Lovelace image title',
+    ];
     $this->submitForm($edit, 'Save (this translation)');
     $third_fid = $this->getLastFileId();
 

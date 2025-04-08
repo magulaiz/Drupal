@@ -54,7 +54,10 @@ class StatusExtraTest extends NodeTestBase {
 
     // Create one unpublished node by a user who does not have the `view own
     // unpublished content` permission.
-    $node_unpublished3 = $this->drupalCreateNode(['uid' => $node_author_not_unpublished->id(), 'status' => NodeInterface::NOT_PUBLISHED]);
+    $node_unpublished3 = $this->drupalCreateNode([
+      'uid' => $node_author_not_unpublished->id(),
+      'status' => NodeInterface::NOT_PUBLISHED,
+    ]);
 
     // The administrator should simply see all nodes.
     $this->drupalLogin($admin_user);
