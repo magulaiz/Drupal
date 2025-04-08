@@ -15,7 +15,7 @@ use Drupal\Tests\Core\Database\Stub\Driver\Schema;
  *
  * Includes minimal implementations of Connection's abstract methods.
  */
-class StubConnection extends Connection {
+class StubLegacyConnection extends Connection {
 
   /**
    * {@inheritdoc}
@@ -37,14 +37,11 @@ class StubConnection extends Connection {
    *   An object of the PDO class representing a database connection.
    * @param array $connection_options
    *   An array of options for the connection.
-   * @param string[]|null $identifier_quotes
-   *   The identifier quote characters. Defaults to an empty strings.
    */
-  public function __construct(\PDO $connection, array $connection_options, $identifier_quotes = ['', '']) {
+  public function __construct(\PDO $connection, array $connection_options) {
     parent::__construct(
       $connection,
       $connection_options,
-      new StubIdentifierHandler($connection_options['prefix'] ?? '', $identifier_quotes),
     );
   }
 

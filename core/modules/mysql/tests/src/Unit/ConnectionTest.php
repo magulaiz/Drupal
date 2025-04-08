@@ -29,7 +29,7 @@ class ConnectionTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     $this->connection = $this->getMockBuilder(Connection::class)
-      ->setConstructorArgs([$this->createMock(\PDO::class), []])
+      ->setConstructorArgs([$this->createMock(\PDO::class), ['prefix' => '']])
       ->onlyMethods(['getServerVersion'])
       ->getMock();
   }

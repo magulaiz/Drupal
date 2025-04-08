@@ -63,11 +63,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  protected $identifierQuotes = ['"', '"'];
-
-  /**
-   * {@inheritdoc}
-   */
   public function __construct(\PDO $connection, array $connection_options) {
     // If the SQL mode doesn't include 'ANSI_QUOTES' (explicitly or via a
     // combination mode), then MySQL doesn't interpret a double quote as an
@@ -88,10 +83,15 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       }
     }
 
-    if ($this->identifierQuotes === ['"', '"'] && !$is_ansi_quotes_mode) {
-      $this->identifierQuotes = ['`', '`'];
-    }
-    parent::__construct($connection, $connection_options);
+    // Manage the table prefix.
+    $connection_options['prefix'] = $connection_options['prefix'] ?? '';
+    assert(is_string($connection_options['prefix']), 'The \'prefix\' connection option to ' . __METHOD__ . '() must be a string.');
+
+    parent::__construct(
+      $connection,
+      $connection_options,
+      new IdentifierHandler($connection_options['prefix'], $is_ansi_quotes_mode ? ['"', '"'] : ['`', '`']),
+    );
   }
 
   /**
@@ -295,16 +295,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   }
 
   /**
-   * Overrides \Drupal\Core\Database\Connection::createDatabase().
-   *
-   * @param string $database
-   *   The name of the database to create.
-   *
-   * @throws \Drupal\Core\Database\DatabaseNotFoundException
+   * {@inheritdoc}
    */
   public function createDatabase($database) {
     // Escape the database name.
-    $database = Database::getConnection()->escapeDatabase($database);
+    $database = Database::getConnection()->identifiers->schema($database)->forMachine();
 
     try {
       // Create the database and set it as active.
