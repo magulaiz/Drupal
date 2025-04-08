@@ -386,6 +386,16 @@ class UrlHelperTest extends TestCase {
           'fragment' => 'footer',
         ],
       ],
+      // Confirm that any URL does not trigger "Undefined array key 1" warning
+      // in URL parser.
+      [
+        "#/://#",
+        [
+          'path' => NULL,
+          'query' => [],
+          'fragment' => "/://#",
+        ],
+      ],
     ];
   }
 
