@@ -133,6 +133,11 @@ body.drag-y {
   }
 }
 
+.draggable a.tabledrag-handle {
+  float: none;
+  vertical-align: middle;
+}
+
 /* Change icon and cursor if only vertical drag is allowed. */
 
 .tabledrag-handle.tabledrag-handle-y {
