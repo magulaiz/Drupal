@@ -102,6 +102,9 @@ class FieldConfigTest extends ConfigEntityResourceTestBase {
         'links' => [
           'self' => ['href' => $self_url],
         ],
+        'meta' => [
+          'arity' => 0,
+        ],
         'attributes' => [
           'bundle' => 'camelids',
           'default_value' => [],
