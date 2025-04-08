@@ -350,7 +350,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
       $entity = $this->getEntity();
 
       // Force a non-required widget.
-      $definition = $this->getFieldDefinition();
+      $definition = clone $this->getFieldDefinition();
       $definition->setRequired(FALSE);
       $definition->setDescription('');
 
