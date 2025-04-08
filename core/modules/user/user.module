@@ -664,9 +664,9 @@ function _user_mail_notify($op, AccountInterface $account) {
     }
   }
   elseif ($account->getEmail() === NULL) {
-    \Drupal::messenger()->addWarning('The user account @account does not have an email address. No email was sent.', [
-      '@account' => $account->getDisplayName(),
-    ]);
+    \Drupal::messenger()->addWarning(t('The user account %account does not have an email address. No email was sent.', [
+      '%account' => $account->getDisplayName(),
+    ]));
   }
   return empty($mail) ? NULL : $mail['result'];
 }
