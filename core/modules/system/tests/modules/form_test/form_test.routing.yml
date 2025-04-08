@@ -583,15 +583,6 @@ form_test.textarea:
   requirements:
     _access: 'TRUE'
 
-form_test.textarea_maxlength:
-  path: '/form-test/textarea-maxlength'
-  defaults:
-    _form: '\Drupal\form_test\Form\FormTestTextareaMaxlengthForm'
-  options:
-    _admin_route: TRUE
-  requirements:
-    _access: 'TRUE'
-
 form_test.recipe_input:
   path: '/form-test/recipe-input'
   defaults:
