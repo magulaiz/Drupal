@@ -859,7 +859,7 @@ function system_requirements($phase): array {
     if ($phase == 'install') {
       \Drupal::service('file_system')->prepareDirectory($directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     }
-    $is_writable = is_writable($directory);
+    $is_writable = \Drupal::service('file_system')->isWritable($directory);
     $is_directory = is_dir($directory);
     if (!$is_writable || !$is_directory) {
       $description = '';
