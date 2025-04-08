@@ -311,6 +311,7 @@ myclabs
 mysqladmin
 mysqldump
 mystarterkit
+mytheme
 namespacing
 navs
 ndocs
