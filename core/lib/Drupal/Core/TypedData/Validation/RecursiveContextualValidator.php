@@ -89,6 +89,10 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
    * {@inheritdoc}
    */
   public function validate($data, $constraints = NULL, $groups = NULL, $is_root_call = TRUE): static {
+    if (isset($groups)) {
+      throw new \LogicException('Passing custom groups is not supported.');
+    }
+
     if (!$data instanceof TypedDataInterface) {
       throw new \InvalidArgumentException('The passed value must be a typed data object.');
     }
@@ -210,9 +214,6 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
    * {@inheritdoc}
    */
   public function validateProperty($object, $propertyName, $groups = NULL): static {
-    if (isset($groups)) {
-      throw new \LogicException('Passing custom groups is not supported.');
-    }
     if (!is_object($object)) {
       throw new \InvalidArgumentException('Passing class name is not supported.');
     }
