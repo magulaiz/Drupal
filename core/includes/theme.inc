@@ -8,6 +8,7 @@
  * customized by user themes.
  */
 
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -1585,6 +1586,15 @@ function template_preprocess_pager(&$variables): void {
   $route_name = $variables['pager']['#route_name'];
   $route_parameters = $variables['pager']['#route_parameters'] ?? [];
 
+  $link_attributes = [];
+  if (\Drupal::hasRequest() && \Drupal::request()->get(MainContentViewSubscriber::WRAPPER_FORMAT) === 'drupal_modal') {
+    $link_attributes = [
+      'class' => ['use-ajax'],
+      'data-dialog-type' => 'modal',
+      'data-accepts' => 'application/json',
+    ];
+  }
+
   /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
   $pager_manager = \Drupal::service('pager.manager');
 
@@ -1633,7 +1643,7 @@ function template_preprocess_pager(&$variables): void {
   // Create the "first" and "previous" links if we are not on the first page.
   if ($current_page > 0) {
     $items['first'] = [];
-    $items['first']['attributes'] = new Attribute();
+    $items['first']['attributes'] = new Attribute($link_attributes);
     $options = [
       'query' => $pager_manager->getUpdatedParameters($parameters, $element, 0),
     ];
@@ -1643,7 +1653,7 @@ function template_preprocess_pager(&$variables): void {
     }
 
     $items['previous'] = [];
-    $items['previous']['attributes'] = new Attribute();
+    $items['previous']['attributes'] = new Attribute($link_attributes);
     $options = [
       'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current_page - 1),
     ];
@@ -1663,7 +1673,7 @@ function template_preprocess_pager(&$variables): void {
       'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
     ];
     $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-    $items['pages'][$i]['attributes'] = new Attribute();
+    $items['pages'][$i]['attributes'] = new Attribute($link_attributes);
     if ($i == $pager_current) {
       $variables['current'] = $i;
       $items['pages'][$i]['attributes']->setAttribute('aria-current', 'page');
@@ -1677,7 +1687,7 @@ function template_preprocess_pager(&$variables): void {
   // Create the "next" and "last" links if we are not on the last page.
   if ($current_page < ($pager_max - 1)) {
     $items['next'] = [];
-    $items['next']['attributes'] = new Attribute();
+    $items['next']['attributes'] = new Attribute($link_attributes);
     $options = [
       'query' => $pager_manager->getUpdatedParameters($parameters, $element, $current_page + 1),
     ];
@@ -1687,7 +1697,7 @@ function template_preprocess_pager(&$variables): void {
     }
 
     $items['last'] = [];
-    $items['last']['attributes'] = new Attribute();
+    $items['last']['attributes'] = new Attribute($link_attributes);
     $options = [
       'query' => $pager_manager->getUpdatedParameters($parameters, $element, $pager_max - 1),
     ];
