@@ -159,7 +159,7 @@ class EntityReferenceUuidItem extends EntityReferenceItem {
     }
     elseif ($property_name === 'target_uuid') {
       $property = $this->get('entity');
-      $entity_type = $property->getDataDefinition()->getConstraint('EntityType')['type'];
+      $entity_type = $property->getDataDefinition()->getConstraint('EntityType');
       $entities = \Drupal::entityTypeManager()->getStorage($entity_type)->loadByProperties(['uuid' => $this->get('target_uuid')->getValue()]);
       if ($entity = array_shift($entities)) {
         $this->writePropertyValue('target_id', $entity->id());
