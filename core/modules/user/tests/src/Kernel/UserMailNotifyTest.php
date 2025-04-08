@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel;
 
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -107,6 +108,25 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertNull($return);
     $this->assertEmpty($this->getMails());
+  }
+
+  /**
+   * Tests mails are not sent when the account has no email address.
+   *
+   * @param string $op
+   *   The operation being performed on the account.
+   *
+   * @dataProvider userMailsProvider
+   */
+  public function testUserWithoutEmail($op): void {
+    $this->installConfig('user');
+    $this->config('user.settings')->set('notify.' . $op, TRUE)->save();
+    $return = _user_mail_notify($op, $this->createUser([], NULL, FALSE, [
+      'mail' => NULL,
+    ]));
+    $this->assertNull($return);
+    $this->assertEmpty($this->getMails());
+    $this->assertCount(1, \Drupal::messenger()->messagesByType(MessengerInterface::TYPE_WARNING));
   }
 
   /**

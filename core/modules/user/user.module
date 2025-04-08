@@ -643,7 +643,7 @@ function user_role_revoke_permissions($rid, array $permissions = []): void {
  */
 function _user_mail_notify($op, AccountInterface $account) {
 
-  if (\Drupal::config('user.settings')->get('notify.' . $op)) {
+  if ($account->getEmail() && \Drupal::config('user.settings')->get('notify.' . $op)) {
     $params['account'] = $account;
     // Get the custom site notification email to use as the from email address
     // if it has been set.
@@ -662,6 +662,11 @@ function _user_mail_notify($op, AccountInterface $account) {
       // We use the site default language for this.
       \Drupal::service('plugin.manager.mail')->mail('user', 'register_pending_approval_admin', $site_mail, \Drupal::languageManager()->getDefaultLanguage()->getId(), $params);
     }
+  }
+  elseif ($account->getEmail() === NULL) {
+    \Drupal::messenger()->addWarning(t('The user account %account does not have an email address. No email was sent.', [
+      '%account' => $account->getDisplayName(),
+    ]));
   }
   return empty($mail) ? NULL : $mail['result'];
 }
