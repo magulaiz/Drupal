@@ -12,6 +12,8 @@ namespace Drupal\Core\Extension;
 final class ProceduralCall {
 
   /**
+   * Constructs a procedural call.
+   *
    * @param array $includes
    *   An associated array, key is a function name, value is the name of the
    *   include file the function lives in, if any.

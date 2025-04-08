@@ -62,6 +62,8 @@ interface RendererInterface {
   public function renderInIsolation(&$elements);
 
   /**
+   * Renders final HTML in situations where no assets are needed.
+   *
    * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
    *   \Drupal\Core\Render\RendererInterface::renderInIsolation() instead.
    *

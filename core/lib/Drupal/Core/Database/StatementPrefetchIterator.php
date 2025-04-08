@@ -165,6 +165,8 @@ class StatementPrefetchIterator extends StatementBase {
   }
 
   /**
+   * Returns a single column from the next record of a result set.
+   *
    * @deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. Use
    *   ::fetchField() instead.
    *
