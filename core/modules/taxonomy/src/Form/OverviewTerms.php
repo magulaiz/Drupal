@@ -756,9 +756,8 @@ class OverviewTerms extends FormBase {
   }
 
   /**
-   * Return the terms from a taxonomy tree that match the filter.
-   *
-   * Whether the term matches the filter.
+   * Filters a taxonomy term tree for a string
+   * and returns the terms that contain it.
    *
    * @param array $tree
    *   The taxonomy term tree to search in.
@@ -766,6 +765,7 @@ class OverviewTerms extends FormBase {
    *   The search string.
    *
    * @return array
+   *   The terms from the taxonomy tree that match the filter.
    */
   protected function filterTerms(array $tree, string $searchString): array {
     return array_filter($tree, static function (\stdClass $term) use ($searchString) {
