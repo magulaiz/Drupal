@@ -100,6 +100,8 @@ class Rss extends RssPluginBase {
       return;
     }
 
+    $node = $this->getEntityTranslationByRelationship($node, $row);
+
     $node->rss_namespaces = [];
     $node->rss_elements = [
       [
