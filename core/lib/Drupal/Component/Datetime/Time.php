@@ -2,6 +2,7 @@
 
 namespace Drupal\Component\Datetime;
 
+use Psr\Clock\ClockInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -13,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * the class will access global variables or set a proxy request time in order
  * to return the request time.
  */
-class Time implements TimeInterface {
+class Time implements TimeInterface, ClockInterface {
 
   /**
    * The request stack.
@@ -99,6 +100,13 @@ class Time implements TimeInterface {
       $this->proxyRequestTime = $this->getCurrentMicroTime();
     }
     return $this->proxyRequestTime;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function now(): \DateTimeImmutable {
+    return \DateTimeImmutable::createFromFormat('U', $this->getCurrentTime());
   }
 
 }
