@@ -49,7 +49,7 @@ final class ComponentTestDoesNotExtendCoreTest implements Rule {
     ];
 
     foreach ($invalidParents as $invalidParent) {
-      if ($class->isSubclassOf($invalidParent)) {
+      if ($class->isSubclassOfClass($invalidParent)) {
         return [
           RuleErrorBuilder::message("Component tests should not extend {$invalidParent}.")
             ->line($node->getStartLine())
