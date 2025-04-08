@@ -23,6 +23,8 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionListTrait;
+use Drupal\layout_builder\SectionStorage\SupportAwareSectionStorageManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides an entity view display entity that has a layout.
@@ -294,6 +296,9 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     }
 
     foreach ($entities as $id => $entity) {
+      if (($this->sectionStorageManager() instanceof SupportAwareSectionStorageManagerInterface && $this->sectionStorageManager()->notSupported($entity->getEntityTypeId(), $entity->bundle(), $this->mode))) {
+        continue;
+      }
       $build_list[$id]['_layout_builder'] = $this->buildSections($entity);
 
       // If there are any sections, remove all fields with configurable display
@@ -371,7 +376,10 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     $bundle_info = \Drupal::service('entity_type.bundle.info')->getBundleInfo($this->getTargetEntityTypeId());
     $bundle_label = $bundle_info[$this->getTargetBundle()]['label'];
     $target_entity_type = $this->entityTypeManager()->getDefinition($this->getTargetEntityTypeId());
-    return new TranslatableMarkup('@bundle @label', ['@bundle' => $bundle_label, '@label' => $target_entity_type->getPluralLabel()]);
+    return new TranslatableMarkup('@bundle @label', [
+      '@bundle' => $bundle_label,
+      '@label' => $target_entity_type->getPluralLabel(),
+    ]);
   }
 
   /**
@@ -519,7 +527,9 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     foreach ($this->getSections() as $section) {
       foreach ($section->getComponents() as $component) {
         $plugin = $component->getPlugin();
-        if ($plugin instanceof DerivativeInspectionInterface && in_array($plugin->getBaseId(), ['field_block', 'extra_field_block'], TRUE)) {
+        if ($plugin instanceof DerivativeInspectionInterface &&
+         in_array($plugin->getBaseId(),
+         ['field_block', 'extra_field_block'], TRUE)) {
           // FieldBlock derivative IDs are in the format
           // [entity_type]:[bundle]:[field].
           [, , $field_block_field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin->getDerivativeId());
