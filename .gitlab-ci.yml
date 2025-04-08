@@ -56,7 +56,7 @@ workflow:
 ################
 
 variables:
-  _CONFIG_DOCKERHUB_ROOT: "drupalci"
+  _CONFIG_DOCKERHUB_ROOT: "registry.gitlab.com/drupal-infrastructure/drupalci/drupalci-environments"
   CACHE_TARGET: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}"
   CORE_GITLAB_PROJECT_ID: 59858
   # Let composer know what self.version means.
@@ -356,31 +356,6 @@ default:
     paths:
       - core/node_modules/
 
-'📔 Spell-checking':
-  <<: [ *default-job-settings-lint ]
-  stage: 🪄 Lint
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  script:
-    - *prepare-lint-directory
-    - *cspell-cache
-    - *core-spellcheck
-    - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
-    - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
-    - mv /build/core/node_modules $CI_PROJECT_DIR/core
-  cache:
-    key:
-      files:
-        - ./core/package.json
-        - ./core/yarn.lock
-    paths:
-      - ./core/node_modules
-  artifacts:
-    expire_in: 1 week
-    expose_as: 'yarn-vendor'
-    paths:
-      - core/node_modules/
-
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
@@ -513,6 +488,15 @@ default:
     KUBERNETES_CPU_REQUEST: "8"
     CONCURRENCY: 24
     _TARGET_PHP: "8.4-ubuntu"
+
+'⚡️ PHPUnit Unit tests on PHP 8.5':
+  <<: [ *default-job-settings-lint, *default-phpunit-job-settings ]
+  allow_failure: true
+  variables:
+    TESTSUITE: PHPUnit-Unit
+    KUBERNETES_CPU_REQUEST: "8"
+    CONCURRENCY: 24
+    _TARGET_PHP: "8.5-ubuntu"
 
 '✅️ PHPStan rules tests':
   <<: [ *default-job-settings-lint ]
