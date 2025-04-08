@@ -241,6 +241,7 @@ introspectable
 invalidators
 invokable
 isam
+ital
 javascripts
 jessebeach
 jqueryui
@@ -339,6 +340,7 @@ nyholm
 oembed
 onecol
 oneplusfourgrid
+opsz
 optgroups
 optin
 orgchart
@@ -443,6 +445,7 @@ singlebyte
 sirbrillig
 sitewide
 slatkin
+slnt
 smacss
 smalldatetime
 smtps
@@ -586,6 +589,8 @@ webmention
 webmozart
 webroot
 webservers
+wdth
+wght
 widthx
 wordsafe
 writeln
