@@ -446,6 +446,7 @@ class ContactSitewideTest extends BrowserTestBase {
       'administer contact forms',
       'administer permissions',
       'administer users',
+      'access dblog reports',
       'access site reports',
     ]);
     $this->drupalLogin($admin_user);

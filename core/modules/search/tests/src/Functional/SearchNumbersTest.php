@@ -79,6 +79,7 @@ class SearchNumbersTest extends BrowserTestBase {
       'search content',
       'access content',
       'administer nodes',
+      'access dblog reports',
       'access site reports',
     ]);
     $this->drupalLogin($this->testUser);

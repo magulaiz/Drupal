@@ -357,7 +357,7 @@ function template_preprocess_update_fetch_error_message(&$variables): void {
       ],
     ],
   ];
-  if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
+  if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access dblog reports')) {
     $options = ['query' => ['type' => ['update']]];
     $dblog_url = Url::fromRoute('dblog.overview', [], $options);
     $variables['error_message']['items']['#items']['dblog'] = t('Check <a href="@url">your local system logs</a> for additional error messages.', ['@url' => $dblog_url->toString()]);

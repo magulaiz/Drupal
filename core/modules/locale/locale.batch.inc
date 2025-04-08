@@ -142,7 +142,7 @@ function locale_translation_batch_status_check($project, $langcode, array $optio
 function locale_translation_batch_status_finished($success, $results): void {
   if ($success) {
     if (isset($results['failed_files'])) {
-      if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access site reports')) {
+      if (\Drupal::moduleHandler()->moduleExists('dblog') && \Drupal::currentUser()->hasPermission('access dblog reports')) {
         $message = \Drupal::translation()->formatPlural(count($results['failed_files']), 'One translation file could not be checked. <a href=":url">See the log</a> for details.', '@count translation files could not be checked. <a href=":url">See the log</a> for details.', [':url' => Url::fromRoute('dblog.overview')->toString()]);
       }
       else {

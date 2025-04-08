@@ -64,6 +64,7 @@ class ContactPersonalTest extends BrowserTestBase {
       'administer contact forms',
       'administer users',
       'administer account settings',
+      'access dblog reports',
       'access site reports',
     ]);
 
