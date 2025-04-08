@@ -229,6 +229,10 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
    * {@inheritdoc}
    */
   public function validatePropertyValue($object, $property_name, $value, $groups = NULL): static {
+    if (isset($groups)) {
+      throw new \LogicException('Passing custom groups is not supported.');
+    }
+
     if (!is_object($object)) {
       throw new \InvalidArgumentException('Passing class name is not supported.');
     }
