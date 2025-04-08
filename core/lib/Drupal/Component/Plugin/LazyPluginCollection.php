@@ -142,6 +142,9 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
     $this->remove($instance_id);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getIterator(): \ArrayIterator {
     $instances = [];
     foreach ($this->getInstanceIds() as $instance_id) {
