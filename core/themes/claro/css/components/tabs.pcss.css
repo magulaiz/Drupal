@@ -265,3 +265,11 @@
     }
   }
 }
+
+@media (forced-colors: active) {
+  .tabs__trigger {
+    & svg path {
+      fill: currentColor;
+    }
+  }
+}
