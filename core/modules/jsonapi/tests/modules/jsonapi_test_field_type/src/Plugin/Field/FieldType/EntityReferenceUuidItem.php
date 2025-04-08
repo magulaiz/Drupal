@@ -7,6 +7,7 @@ namespace Drupal\jsonapi_test_field_type\Plugin\Field\FieldType;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinition;
 use Drupal\Core\Field\Attribute\FieldType;
+use Drupal\Core\Field\EntityReferenceFieldItemList;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -26,6 +27,7 @@ use Drupal\Core\TypedData\DataReferenceTargetDefinition;
   category: 'reference',
   default_widget: 'entity_reference_autocomplete',
   default_formatter: 'entity_reference_label',
+  list_class: EntityReferenceFieldItemList::class,
 )]
 class EntityReferenceUuidItem extends EntityReferenceItem {
 

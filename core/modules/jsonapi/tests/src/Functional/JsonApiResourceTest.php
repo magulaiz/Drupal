@@ -41,7 +41,7 @@ class JsonApiResourceTest extends JsonApiFunctionalTestBase {
   /**
    * The field name.
    */
-  protected string $fieldName = 'field_test';
+  protected string $fieldName = 'field_child';
 
   /**
    * {@inheritdoc}
@@ -70,6 +70,8 @@ class JsonApiResourceTest extends JsonApiFunctionalTestBase {
         'handler_settings' => [],
       ],
     ])->save();
+
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**
@@ -105,7 +107,7 @@ class JsonApiResourceTest extends JsonApiFunctionalTestBase {
     $this->assertEquals($childUuid, $uuid);
 
     // Assert a relationship can be attained between them.
-    $url = Url::fromUri(sprintf('internal:/jsonapi/%s/%s/%s', $this->entityTypeId, $this->bundle, $parentEntity->uuid()));
+    $url = Url::fromUri(sprintf('internal:/jsonapi/%s/%s/%s/relationships/%s', $this->entityTypeId, $this->bundle, $parentEntity->uuid(), $this->fieldName));
     $request_options = [
       RequestOptions::HEADERS => [
         'Content-Type' => 'application/vnd.api+json',
@@ -114,30 +116,19 @@ class JsonApiResourceTest extends JsonApiFunctionalTestBase {
       RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
       RequestOptions::JSON => [
         'data' => [
-          'id' => $parentEntity->uuid(),
+          'id' => $childUuid,
           'type' => sprintf('%s--%s', $this->entityTypeId, $this->bundle),
-          'relationships' => [
-            $this->fieldName => [
-              'data' => [
-                [
-                  'id' => $childUuid,
-                  'type' => sprintf('%s--%s', $this->entityTypeId, $this->bundle),
-                ],
-              ],
-            ],
-          ],
         ],
       ],
     ];
     $response = $this->request('PATCH', $url, $request_options);
 
-    // Assert a helpful error response is present.
+    // Assert the relationship is PATCHed.
     $data = $this->getDocumentFromResponse($response, FALSE);
-    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
-    $this->assertNotNull($data);
-    $this->assertEquals(['target_id' => $childEntity->id(), 'target_uuid' => $childUuid], $data['data']['relationships'][$this->fieldName], print_r($data['data']['relationships'], TRUE));
-    $entity = $storage->load($parentEntity->id());
+    $this->assertSame(204, $response->getStatusCode(), (string) $response->getBody());
+    $entity = $storage->loadUnchanged($parentEntity->id());
     $this->assertEquals($childEntity->id(), $entity->get($this->fieldName)->target_id);
+    $this->assertEquals($childEntity->uuid(), $entity->get($this->fieldName)->target_uuid);
   }
 
 }
