@@ -8,6 +8,7 @@
  * customized by user themes.
  */
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -626,7 +627,14 @@ function template_preprocess_image(&$variables): void {
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
   $file_url_generator = \Drupal::service('file_url_generator');
 
-  if (!empty($variables['uri'])) {
+  if ($variables['uri'] instanceof MarkupInterface) {
+    /*
+     * This is used to explicitly bypass XSS filtering
+     * so we don't want to cast it to a string.
+     */
+    $variables['attributes']['src'] = $variables['uri'];
+  }
+  elseif (!empty($variables['uri'])) {
     $variables['attributes']['src'] = $file_url_generator->generateString($variables['uri']);
   }
   // Generate a srcset attribute conforming to the spec at

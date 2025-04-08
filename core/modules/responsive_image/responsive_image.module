@@ -4,6 +4,7 @@
  * @file
  */
 
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\image\Entity\ImageStyle;
@@ -365,9 +366,10 @@ function _responsive_image_build_source_attributes(array $variables, BreakpointI
   }
   // Sort the srcset from small to large image width or multiplier.
   ksort($srcset);
-  $source_attributes = new Attribute([
-    'srcset' => implode(', ', array_unique($srcset)),
-  ]);
+  $source_attributes = new Attribute();
+  // The srcset attributes may include data: for 1px GIFs so mark it as safe to
+  // avoid the data: protocol being escaped.
+  $source_attributes->setAttribute('srcset', Markup::create(implode(', ', array_unique($srcset))));
   $media_query = trim($breakpoint->getMediaQuery());
   if (!empty($media_query)) {
     $source_attributes->setAttribute('media', $media_query);
@@ -460,7 +462,7 @@ function _responsive_image_image_style_url($style_name, $path) {
   if ($style_name == ResponsiveImageStyleInterface::EMPTY_IMAGE) {
     // The smallest data URI for a 1px square transparent GIF image.
     // http://probablyprogramming.com/2009/03/15/the-tiniest-gif-ever
-    return 'data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+    return Markup::create('data:image/gif;base64,R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
   }
 
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
