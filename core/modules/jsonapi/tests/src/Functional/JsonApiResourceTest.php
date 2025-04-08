@@ -124,7 +124,6 @@ class JsonApiResourceTest extends JsonApiFunctionalTestBase {
     $response = $this->request('PATCH', $url, $request_options);
 
     // Assert the relationship is PATCHed.
-    $data = $this->getDocumentFromResponse($response, FALSE);
     $this->assertSame(204, $response->getStatusCode(), (string) $response->getBody());
     $entity = $storage->loadUnchanged($parentEntity->id());
     $this->assertEquals($childEntity->id(), $entity->get($this->fieldName)->target_id);
