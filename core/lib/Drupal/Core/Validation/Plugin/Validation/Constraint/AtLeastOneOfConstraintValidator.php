@@ -8,28 +8,30 @@ use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
+/**
+ * Validates the AtLeastOneOf constraint.
+ */
 class AtLeastOneOfConstraintValidator extends ConstraintValidator {
 
   /**
-   * Validate a set of contraints against a value.
+   * Validate a set of constraints against a value.
    *
    * This validator method is a copy of Symfony's AtLeastOneOf constraint. This
    * is necessary because Drupal does not support validation groups.
    *
    * @param mixed $value
+   *   The value to validate.
    * @param \Symfony\Component\Validator\Constraint $constraint
-   *
-   * @return void
+   *   The constraint to validate against.
    */
-  public function validate(mixed $value, Constraint $constraint): void
-  {
+  public function validate(mixed $value, Constraint $constraint): void {
     if (!$constraint instanceof AtLeastOneOfConstraint) {
       throw new UnexpectedTypeException($constraint, AtLeastOneOfConstraint::class);
     }
 
     $validator = $this->context->getValidator();
 
-    // Build a first violation to have the base message of the constraint translated
+    // Build a first violation to have the base message of the constraint.
     $baseMessageContext = clone $this->context;
     $baseMessageContext->buildViolation($constraint->message)->addViolation();
     $baseViolations = $baseMessageContext->getViolations();
@@ -37,7 +39,7 @@ class AtLeastOneOfConstraintValidator extends ConstraintValidator {
 
     foreach ($constraint->constraints as $key => $item) {
       $context_group = $this->context->getGroup();
-      if (!\in_array($context_group, $item->groups, true)) {
+      if (!\in_array($context_group, $item->groups, TRUE)) {
         continue;
       }
 
@@ -52,11 +54,12 @@ class AtLeastOneOfConstraintValidator extends ConstraintValidator {
       }
 
       if ($constraint->includeInternalMessages) {
-        $message = ' ['.($key + 1).'] ';
+        $message = ' [' . ($key + 1) . '] ';
 
         if ($item instanceof All || $item instanceof Collection) {
           $message .= $constraint->messageCollection;
-        } else {
+        }
+        else {
           $message .= $violations->get(\count($violations) - 1)->getMessage();
         }
 
@@ -68,4 +71,5 @@ class AtLeastOneOfConstraintValidator extends ConstraintValidator {
       ->buildViolation(implode('', $messages))
       ->addViolation();
   }
+
 }

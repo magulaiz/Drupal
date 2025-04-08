@@ -12,7 +12,8 @@ use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 /**
  * Checks that at least one of the given constraint is satisfied.
  *
- * Overrides the symfony constraint to convert the array of constraints to array of constraint objects and use them.
+ * Overrides the symfony constraint to convert the array of constraints to array
+ * of constraint objects and use them.
  */
 #[Constraint(
   id: 'AtLeastOneOf',

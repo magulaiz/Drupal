@@ -24,7 +24,6 @@ class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
    */
   protected $typedData;
 
-
   /**
    * {@inheritdoc}
    */
@@ -51,8 +50,8 @@ class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
     }
 
     $definition->addConstraint('AtLeastOneOf', [
-        'constraints' => $at_least_one_of_constraints,
-      ]);
+      'constraints' => $at_least_one_of_constraints,
+    ]);
 
     // Test the validation.
     $typed_data = $this->typedData->create($definition, $value);
@@ -66,7 +65,9 @@ class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
     $this->assertEquals($expectedViolations, $violationMessages, 'Validation passed for correct value.');
   }
 
-
+  /**
+   * Data provider for testValidation().
+   */
   public static function dataProvider(): array {
     return [
       'It should fail on a failing sibling validator' => [
@@ -107,7 +108,8 @@ class AtLeastOneOfConstraintValidatorTest extends KernelTestBase {
         [
           'This value should satisfy at least one of the following constraints: [1] The value you selected is not a valid choice. [2] This value should be blank.',
         ],
-      ]
+      ],
     ];
   }
+
 }
