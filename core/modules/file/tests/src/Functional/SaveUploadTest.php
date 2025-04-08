@@ -822,7 +822,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     // Test that the file name has only been transliterated.
-    $this->assertSession()->responseContains('File name is S  Pace--tab#	#---.txt.');
+    $this->assertSession()->responseContains('File name is S  Pace--tab-	----.txt.');
 
     // Leave transliteration on and enable whitespace replacement.
     $this->drupalLogin($admin);
@@ -836,7 +836,7 @@ class SaveUploadTest extends FileManagedTestBase {
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     // Test that the file name has been transliterated and whitespace replaced.
-    $this->assertSession()->responseContains('File name is S--Pace--tab#-#---.txt.');
+    $this->assertSession()->responseContains('File name is S--Pace--tab------.txt.');
 
     // Leave transliteration and whitespace replacement on, replace non-alpha.
     $this->drupalLogin($admin);
