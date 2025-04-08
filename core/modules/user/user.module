@@ -8,7 +8,9 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -137,7 +139,11 @@ function user_preprocess_block(&$variables): void {
  *   - account: The user account (\Drupal\Core\Session\AccountInterface).
  */
 function template_preprocess_username(&$variables): void {
+  $metadata = BubbleableMetadata::createFromRenderArray($variables);
   $account = $variables['account'] ?: new AnonymousUserSession();
+  if ($account instanceof CacheableDependencyInterface) {
+    $metadata->addCacheableDependency($account);
+  }
 
   $variables['extra'] = '';
   $variables['uid'] = $account->id();
@@ -152,7 +158,7 @@ function template_preprocess_username(&$variables): void {
   // unsanitized version, in case other preprocess functions want to implement
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.
-  $name = $account->getDisplayName();
+  $name = $account->getDisplayName() ?? '';
   $variables['name_raw'] = $account->getAccountName();
   if (mb_strlen($name) > 20) {
     $name = Unicode::truncate($name, 15, FALSE, TRUE);
@@ -162,11 +168,11 @@ function template_preprocess_username(&$variables): void {
     $variables['truncated'] = FALSE;
   }
   $variables['name'] = $name;
+  $variables['profile_access'] = FALSE;
   if ($account instanceof AccessibleInterface) {
-    $variables['profile_access'] = $account->access('view');
-  }
-  else {
-    $variables['profile_access'] = \Drupal::currentUser()->hasPermission('access user profiles');
+    $profile_access = $account->access('view linked label', NULL, TRUE);
+    $metadata->addCacheableDependency($profile_access);
+    $variables['profile_access'] = $profile_access->isAllowed();
   }
 
   $external = FALSE;
@@ -197,6 +203,7 @@ function template_preprocess_username(&$variables): void {
       ])->toString();
     }
   }
+  $metadata->applyTo($variables);
 }
 
 /**
