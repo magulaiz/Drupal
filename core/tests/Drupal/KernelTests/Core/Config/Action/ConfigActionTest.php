@@ -266,6 +266,170 @@ class ConfigActionTest extends KernelTestBase {
   }
 
   /**
+   * Tests that the simpleConfigArray actions cannot be used on config entities.
+   *
+   * @testWith ["append"]
+   *   ["prepend"]
+   *   ["splice"]
+   */
+  public function testSimpleConfigArrayFailsOnEntities(string $derivative_id): void {
+    $this->installConfig('config_test');
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage("The simpleConfigArray:$derivative_id config action cannot be used on configuration entities.");
+    $this->container->get('plugin.manager.config_action')->applyAction(
+      "simpleConfigArray:$derivative_id",
+      'config_test.dynamic.dotted.default',
+      [],
+    );
+  }
+
+  /**
+   * Tests that the simpleConfigArray actions fail on non-existent config.
+   *
+   * @testWith ["append"]
+   *    ["prepend"]
+   *    ["splice"]
+   */
+  public function testSimpleConfigArrayFailsOnNewConfig(string $derivative_id): void {
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage("Config block.block.anything cannot be updated because it does not exist.");
+    $this->container->get('plugin.manager.config_action')->applyAction(
+      "simpleConfigArray:$derivative_id",
+      'block.block.anything',
+      [],
+    );
+  }
+
+  /**
+   * Tests that the simpleConfigArray actions require a property path.
+   *
+   * @testWith ["append", null]
+   *   ["append", ""]
+   *   ["prepend", null]
+   *   ["prepend", ""]
+   *   ["splice", null]
+   *   ["splice", ""]
+   */
+  public function testSimpleConfigArrayFailsOnEmptyOrMissingPropertyPath(string $derivative_id, ?string $property_path): void {
+    $this->installConfig('config_test');
+
+    $value = [];
+    if (isset($property_path)) {
+      $value['property'] = $property_path;
+    }
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage("A property path must be passed to the simpleConfigArray:$derivative_id config action.");
+    $this->container->get('plugin.manager.config_action')->applyAction(
+      "simpleConfigArray:$derivative_id",
+      'config_test.system',
+      [$value],
+    );
+  }
+
+  /**
+   * Tests that simpleConfigArray append and prepend require an array of values.
+   *
+   * @testWith ["append", null]
+   *   ["append", "nope"]
+   *   ["prepend", null]
+   *   ["prepend", "nope"]
+   */
+  public function testSimpleConfigArrayPrependAndAppendRequireArrayOfValues(string $derivative_id, mixed $values): void {
+    $this->installConfig('config_test');
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage("The simpleConfigArray:$derivative_id config action requires an array of values.");
+    $this->container->get('plugin.manager.config_action')->applyAction(
+      "simpleConfigArray:$derivative_id",
+      'config_test.system',
+      [
+        'property' => 'array',
+        'values' => $values,
+      ],
+    );
+  }
+
+  /**
+   * Tests that the simpleConfigArray actions fail on non-array properties.
+   *
+   * @testWith ["append", {"values": [1, 2, 3]}]
+   *   ["prepend", {"values": [1, 2, 3]}]
+   *   ["splice", {"offset": 0}]
+   */
+  public function testSimpleConfigArrayOnlyWorksOnArrays(string $derivative_id, array $value): void {
+    $this->installConfig('config_test');
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage("Config config_test.system cannot be updated because the property 'string' is not an array.");
+    $this->container->get('plugin.manager.config_action')->applyAction(
+      "simpleConfigArray:$derivative_id",
+      'config_test.system',
+      ['property' => 'string'] + $value,
+    );
+  }
+
+  /**
+   * @testWith ["append", {"values": ["one", "three"]}, ["itemA", "itemB", "one", "three"]]
+   *   ["prepend", {"values": ["undo", "redo"]}, ["undo", "redo", "itemA", "itemB"]]
+   *    ["splice", {"offset": 1, "replacement": ["c", "d"]}, ["itemA", "c", "d"]]
+   *    ["splice", {"offset": 1, "length": 0, "replacement": ["c", "d"]}, ["itemA", "c", "d", "itemB"]]
+   *    ["splice", {"offset": 1, "length": 0}, ["itemA", "itemB"]]
+   *    ["splice", {"offset": 1}, ["itemA"]]
+   */
+  public function testSimpleConfigArray(string $derivative_id, array $value, array $expected_value): void {
+    $this->installConfig('config_test');
+
+    $this->container->get('plugin.manager.config_action')->applyAction(
+      "simpleConfigArray:$derivative_id",
+      'config_test.system',
+      ['property' => 'array'] + $value,
+    );
+    $this->assertSame($expected_value, $this->config('config_test.system')->get('array'));
+  }
+
+  /**
+   * @testWith ["append", [{"values": ["one", "three"]}, {"values": ["four", "six"]}], ["itemA", "itemB", "one", "three", "four", "six"]]
+   *   ["prepend", [{"values": ["undo", "redo"]}, {"values": ["bold", "italic"]}], ["bold", "italic", "undo", "redo", "itemA", "itemB"]]
+   *   ["splice", [{"offset": 1, "length": 1, "replacement": ["itemC"]}, {"offset": 2, "length": null, "replacement": ["itemD", "itemE"]}], ["itemA", "itemC", "itemD", "itemE"]]
+   */
+  public function testSimpleConfigArrayMultipleInvocations(string $derivative_id, array $values, array $expected_value): void {
+    $this->installConfig('config_test');
+
+    foreach ($values as &$value) {
+      $value['property'] = 'array';
+    }
+
+    $this->container->get('plugin.manager.config_action')->applyAction(
+      "simpleConfigArray:$derivative_id",
+      'config_test.system',
+      $values,
+    );
+    $this->assertSame($expected_value, $this->config('config_test.system')->get('array'));
+  }
+
+  /**
+   * Tests that simpleConfigArray:splice rejects invalid arguments.
+   */
+  public function testSimpleConfigArraySpliceWithInvalidArgument(): void {
+    $this->installConfig('config_test');
+
+    $this->expectException(\Error::class);
+    $this->expectExceptionMessage('Unknown named parameter $yep');
+    $this->container->get('plugin.manager.config_action')->applyAction(
+      "simpleConfigArray:splice",
+      'config_test.system',
+      [
+        'property' => 'array',
+        'offset' => 1,
+        // This parameter isn't defined by `array_splice()`.
+        'yep' => 'nope',
+      ],
+    );
+  }
+
+  /**
    * @see \Drupal\Core\Config\Action\ConfigActionManager::getShorthandActionIdsForEntityType()
    */
   public function testShorthandActionIds(): void {
