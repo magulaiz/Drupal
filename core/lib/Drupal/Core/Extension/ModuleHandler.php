@@ -568,9 +568,7 @@ class ModuleHandler implements ModuleHandlerInterface {
           else {
             $callable = $listener;
           }
-          // Ensure the hook is for an installed module or
-          // template_preprocess_HOOK().
-          if (isset($this->moduleList[$module]) || $module === 'template') {
+          if (isset($this->moduleList[$module])) {
             $this->invokeMap[$hook][$module][] = $callable;
           }
         }

@@ -533,7 +533,9 @@ class Registry implements DestructableInterface {
       // Store arguments to be passed to ModuleHandler::invoke() for executing
       // the preprocess implementation whether it is procedural or OOP. This is
       // used in ThemeManager::render().
-      $cache['preprocess invokes'][$function] = ['module' => $prefix, 'hook' => $hook];
+      if ($prefix != 'template') {
+        $cache['preprocess invokes'][$function] = ['module' => $prefix, 'hook' => $hook];
+      }
     };
 
     // This finds functions outside of modules.
@@ -645,18 +647,14 @@ class Registry implements DestructableInterface {
         if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
           $info['preprocess functions'] = [];
           $prefixes = [];
-          // Add template_preprocess_HOOK functions.
-          if (function_exists('template_preprocess_' . $hook)) {
+          // Add template_preprocess_HOOK function, if no initial preprocess
+          // callback is defined.
+          if (empty($info['initial preprocess']) && function_exists('template_preprocess_' . $hook)) {
+            // @todo trigger deprecation in https://www.drupal.org/project/drupal/issues/3513595.
             $storePreprocess($info, 'template', $hook);
           }
 
           if ($type == 'module') {
-            // Add template_preprocess_HOOK function, if no initial preprocess
-            // callback is defined.
-            if (empty($info['initial preprocess']) && function_exists('template_preprocess_' . $hook)) {
-              // @todo trigger deprecation in https://www.drupal.org/project/drupal/issues/3513595.
-              $info['preprocess functions'][] = 'template_preprocess_' . $hook;
-            }
             // Add all modules so they can intervene with their own variable
             // preprocessors. This allows them to provide variable preprocessors
             // even if they are not the owner of the current hook.
