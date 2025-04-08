@@ -13,6 +13,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Psr\Clock\ClockInterface;
 
 /**
  * @coversDefaultClass \Drupal\media\OEmbed\ProviderRepository
@@ -72,8 +73,8 @@ class ProviderRepositoryTest extends UnitTestCase {
     $this->keyValue = $key_value_factory->get('media');
 
     $this->currentTime = time();
-    $time = $this->prophesize('\Drupal\Component\Datetime\TimeInterface');
-    $time->getCurrentTime()->willReturn($this->currentTime);
+    $clock = $this->prophesize(ClockInterface::class);
+    $clock->now()->willReturn(new \DateTimeImmutable('@' . $this->currentTime));
 
     $this->logger = $this->prophesize('\Psr\Log\LoggerInterface');
     $logger_factory = $this->prophesize(LoggerChannelFactoryInterface::class);
@@ -86,7 +87,7 @@ class ProviderRepositoryTest extends UnitTestCase {
     $this->repository = new ProviderRepository(
       $client,
       $config_factory,
-      $time->reveal(),
+      $clock->reveal(),
       $key_value_factory,
       $logger_factory->reveal()
     );
