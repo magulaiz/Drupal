@@ -688,7 +688,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @runInSeparateProcess
    * @preserveGlobalState disabled
    */
-  public function testLoadWithOverridesMaintenanceMode() {
+  public function testLoadWithOverridesMaintenanceMode(): void {
 
     define('MAINTENANCE_MODE', 'update');
 
