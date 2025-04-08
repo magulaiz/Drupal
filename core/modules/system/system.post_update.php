@@ -94,6 +94,18 @@ function system_post_update_remove_rss_cdata_subscriber(): void {
 }
 
 /**
+ * Load the config and save to trigger event listener.
+ *
+ * This ensures that, if the admin theme is not defined, it will be converted to
+ * NULL.
+ *
+ * @see \Drupal\system\EventSubscriber\UpdateEmptyAdminTheme
+ */
+function system_post_update_set_theme_admin_to_null(): void {
+  \Drupal::configFactory()->getEditable('system.theme')->save();
+}
+
+/**
  * Remove path key in system.file.
  */
 function system_post_update_remove_path_key(): void {
