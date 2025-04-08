@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Drupal\Tests\system\FunctionalJavascript\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -28,8 +26,8 @@ class TextareaMaxlengthTest extends WebDriverTestBase {
    */
   public function testTextareaMaxlengthValidation(): void {
     $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
     $textarea_id = 'edit-textarea';
-    // cspell:disable-next-line
     $test_text = "abcdefghij\r\nklmnopqrs";
 
     $this->drupalGet('/form-test/textarea-maxlength');
