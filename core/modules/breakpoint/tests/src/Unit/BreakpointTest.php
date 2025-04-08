@@ -90,6 +90,62 @@ class BreakpointTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::hasMediaQuery
+   * @dataProvider providerHasMediaQuery
+   */
+  public function testHasMediaQuery(?string $mediaQuery, bool $expectedValue): void {
+    $this->pluginDefinition['mediaQuery'] = $mediaQuery;
+    $this->setupBreakpoint();
+    $this->assertEquals($expectedValue, $this->breakpoint->hasMediaQuery());
+  }
+
+  /**
+   * Test cases for ::testHasMediaQuery.
+   */
+  public static function providerHasMediaQuery(): array {
+    return [
+      'Empty string' => ['', FALSE],
+      'NULL' => [NULL, FALSE],
+      'Not empty string' => ['not empty string', TRUE],
+      'Not empty but "0" falsy string' => ['0', TRUE],
+      'Not empty but "FALSE" falsy string' => ['FALSE', TRUE],
+    ];
+  }
+
+  /**
+   * @covers ::getMediaQuery
+   * @dataProvider providerGetMediaQueryReturnsTrimmedString
+   */
+  public function testGetMediaQueryReturnsTrimmedString($defined, $expected): void {
+    $this->pluginDefinition['mediaQuery'] = $defined;
+    $this->setupBreakpoint();
+    $this->assertEquals($expected, $this->breakpoint->getMediaQuery());
+  }
+
+  /**
+   * Test cases for ::testGetMediaQueryReturnsTrimmedString.
+   */
+  public static function providerGetMediaQueryReturnsTrimmedString(): array {
+    $mediaQuery = 'only screen and (min-width: 1220px)';
+    return [
+      [$mediaQuery, $mediaQuery],
+      [" $mediaQuery", $mediaQuery],
+      ["$mediaQuery ", $mediaQuery],
+      [" $mediaQuery ", $mediaQuery],
+      ["   $mediaQuery   ", $mediaQuery],
+    ];
+  }
+
+  /**
+   * @covers ::getMediaQuery
+   */
+  public function testGetMediaQueryReturnsStringWhenUndefined(): void {
+    $this->pluginDefinition['mediaQuery'] = NULL;
+    $this->setupBreakpoint();
+    $this->assertSame('', $this->breakpoint->getMediaQuery());
+  }
+
+  /**
    * @covers ::getMultipliers
    */
   public function testGetMultipliers(): void {
