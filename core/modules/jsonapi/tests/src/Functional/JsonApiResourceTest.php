@@ -4,21 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\comment\Entity\Comment;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Uuid\Uuid;
-use Drupal\Core\Entity\TranslatableInterface;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
-use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\EntityTestHelper;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\node\Entity\Node;
-use Drupal\taxonomy\Entity\Term;
 use GuzzleHttp\RequestOptions;
 
 /**
@@ -39,10 +28,19 @@ class JsonApiResourceTest extends JsonApiFunctionalTestBase {
     'jsonapi_test_field_type',
   ];
 
+  /**
+   * The entity type ID.
+   */
   protected string $entityTypeId = 'entity_test';
 
+  /**
+   * The entity bundle.
+   */
   protected string $bundle = 'entity_test';
 
+  /**
+   * The field name.
+   */
   protected string $fieldName = 'field_test';
 
   /**

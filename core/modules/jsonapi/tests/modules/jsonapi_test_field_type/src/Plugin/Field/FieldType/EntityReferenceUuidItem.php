@@ -89,7 +89,7 @@ class EntityReferenceUuidItem extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
-  public function setValue($values, $notify = TRUE) {
+  public function setValue($values, $notify = TRUE): void {
     if (isset($values) && !is_array($values)) {
       // If either a scalar or an object was passed as the value for the item,
       // assign it to the 'entity' or 'target_uuid' depending on values type.
@@ -149,7 +149,7 @@ class EntityReferenceUuidItem extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
-  public function onChange($property_name, $notify = TRUE) {
+  public function onChange($property_name, $notify = TRUE): void {
     // Make sure that the target UUID and the target property stay in sync.
     if ($property_name === 'entity') {
       $property = $this->get('entity');
@@ -186,7 +186,7 @@ class EntityReferenceUuidItem extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
-  public function preSave() {
+  public function preSave(): void {
     if ($this->hasNewEntity()) {
       // Save the entity if it has not already been saved by some other code.
       if ($this->entity->isNew()) {
@@ -200,7 +200,6 @@ class EntityReferenceUuidItem extends EntityReferenceItem {
       $this->target_uuid = $this->entity->uuid();
     }
   }
-
 
   /**
    * Determines whether the item holds an unsaved entity.
