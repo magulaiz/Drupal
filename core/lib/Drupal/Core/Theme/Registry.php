@@ -655,10 +655,7 @@ class Registry implements DestructableInterface {
           }
 
           if ($type == 'module') {
-            // Add all modules so they can intervene with their own variable
-            // preprocessors. This allows them to provide variable preprocessors
-            // even if they are not the owner of the current hook.
-            $prefixes = array_merge($prefixes, $module_list);
+            $info['preprocess functions'] = NestedArray::mergeDeep($info['preprocess functions'] ?? [], $this->collectModulePreprocess($cache, 'preprocess_' . $hook));
           }
           elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
             // Theme engines get an extra set that come before the normally
