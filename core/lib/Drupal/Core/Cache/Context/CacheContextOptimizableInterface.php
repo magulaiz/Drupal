@@ -17,7 +17,7 @@ interface CacheContextOptimizableInterface {
    * @return bool
    *   TRUE if the context has more than one possible variations.
    */
-  public function hasVariations();
+  public function hasVariations(): bool;
 
   /**
    * Returns parent contexts for this context.
@@ -34,6 +34,6 @@ interface CacheContextOptimizableInterface {
    * @return array
    *   A list of parents cache contexts.
    */
-  public function getParentContexts();
+  public function getParentContexts(): array;
 
 }

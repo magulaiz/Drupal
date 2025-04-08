@@ -392,14 +392,14 @@ class NonStandardOptimizeCacheContext implements CacheContextInterface, CacheCon
   /**
    * {@inheritdoc}
    */
-  public function hasVariations() {
+  public function hasVariations(): bool {
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getParentContexts() {
+  public function getParentContexts(): array {
     return ['a.b'];
   }
 
@@ -434,14 +434,14 @@ class GlobalOptimizeCacheContext implements CacheContextInterface, CacheContextO
   /**
    * {@inheritdoc}
    */
-  public function hasVariations() {
+  public function hasVariations(): bool {
     return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getParentContexts() {
+  public function getParentContexts(): array {
     return [];
   }
 

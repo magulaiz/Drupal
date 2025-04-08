@@ -59,7 +59,7 @@ class TimeZoneCacheContext implements CacheContextInterface, CacheContextOptimiz
   /**
    * {@inheritdoc}
    */
-  public function hasVariations() {
+  public function hasVariations(): bool {
     // The timezone context can not have different values if the site does not
     // use configurable timezones.
     return (bool) $this->configFactory->get('system.date')->get('timezone.user.configurable');
@@ -68,7 +68,7 @@ class TimeZoneCacheContext implements CacheContextInterface, CacheContextOptimiz
   /**
    * {@inheritdoc}
    */
-  public function getParentContexts() {
+  public function getParentContexts(): array {
     return [];
   }
 
