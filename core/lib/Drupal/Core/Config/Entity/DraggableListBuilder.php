@@ -37,9 +37,9 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The storage handler for the entity type.
    *
-   * This constructor sets up the form builder for compatibility, disables
-   * pagination (to allow full drag-and-drop), and stores the weight key
-   * if it is defined in the entity type.
+   *   This constructor sets up the form builder for compatibility, disables
+   *   pagination (to allow full drag-and-drop), and stores the weight key
+   *   if it is defined in the entity type.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage) {
     parent::__construct($entity_type, $storage);
