@@ -162,6 +162,15 @@ class CommentLanguageTest extends BrowserTestBase {
         $this->assertSession()->responseContains($value);
       }
     }
+
+    $this->drupalGet('admin/content/comment');
+    $comment_links = $this->xpath('//td[contains(@class, "views-field-subject")]//a');
+
+    foreach ($comment_links as $link) {
+      $this->clickLink($link->getText());
+      $this->assertSession()->statusCodeEquals(200);
+      $this->drupalGet('admin/content/comment');
+    }
   }
 
 }
