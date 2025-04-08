@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemList;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Routing\UrlGenerator;
 use Drupal\Core\Url;
@@ -112,6 +113,7 @@ class LinkFormatterTest extends UnitTestCase {
 
     $linkItem = $this->createMock(LinkItemInterface::class);
     $entity = $this->createMock(EntityInterface::class);
+    $link = $this->createMock(Link::class);
     $linkItem->expects($this->any())
       ->method('getParent')
       ->willReturn($entity);
@@ -122,6 +124,9 @@ class LinkFormatterTest extends UnitTestCase {
       ->method('__get')
       ->with('options')
       ->willReturn([]);
+    $linkItem->expects($this->any())
+      ->method('toLink')
+      ->willReturn($link);
     $fieldDefinition = $this->createMock(FieldDefinitionInterface::class);
     $fieldList = new FieldItemList($fieldDefinition, '', $linkItem);
 
