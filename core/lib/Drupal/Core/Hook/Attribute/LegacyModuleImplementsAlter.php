@@ -18,8 +18,6 @@ namespace Drupal\Core\Hook\Attribute;
  * On older versions of Drupal which are not aware of attribute-based ordering,
  * only the legacy hook implementation is executed.
  *
- * @see https://www.drupal.org/node/3496788.
- *
  * @internal
  */
 #[\Attribute(\Attribute::TARGET_FUNCTION)]

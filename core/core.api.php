@@ -1657,7 +1657,7 @@
  * Legacy meta hooks:
  * - hook_hook_info()
  * - hook_module_implements_alter()
- * @see https://www.drupal.org/node/3496788
+ * See \Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter
  *
  * Install hooks:
  * - hook_install()
@@ -2765,5 +2765,94 @@ function hook_validation_constraint_alter(array &$definitions) {
  * @endcode
  * Session data must be deleted from custom session bags as soon as it is no
  * longer needed (see @ref sec_intro above).
+ * @}
+ */
+
+/**
+ * @defgroup ordering_hooks Ordering Hooks
+ * @{
+ * Order hooks using the order parameter on the #[Hook] attribute.
+ * @see \Drupal\Core\Hook\Attribute\Hook
+ *
+ * The order parameter accepts the following simple ordering options.
+ * Order::First and Order::Last.
+ * @see \Drupal\Core\Hook\Order\Order
+ *
+ * The order parameter also accepts the following complex ordering options.
+ * OrderBefore() and OrderAfter().
+ * @see \Drupal\Core\Hook\Order\OrderBefore
+ * @see \Drupal\Core\Hook\Order\OrderAfter
+ *
+ * Example ordering the hook first:
+ * @code
+ * #[Hook('somehook', order: Order::First)]
+ * @endcode
+ *
+ * Example ordering the hook last:
+ * @code
+ * #[Hook('somehook', order: Order::Last)]
+ * @endcode
+ *
+ * Example ordering the hook before another module's implementations:
+ * @code
+ * #[Hook('somehook', order: new OrderBefore(['othermodule']))]
+ * @endcode
+ *
+ * Example ordering the hook after another module's implementations:
+ * @code
+ * #[Hook('somehook', order: new OrderAfter(['othermodule']))]
+ * @endcode
+ *
+ * You can also specify the class and method instead of a module for both
+ * OrderBefore and OrderAfter:
+ * @code
+ * #[Hook('somehook',
+ *   order: new OrderBefore(
+ *     classesAndMethods: [
+ *       [Foo::class, 'someMethod'],
+ *       [Bar::class, 'someOtherMethod'],
+ *     ]
+ *   )
+ * )]
+ * @endcode
+ * @}
+ */
+
+/**
+ * @defgroup ordering_other_module_hooks Ordering Other Module Hooks
+ * @{
+ * Order hooks implemented in other modules with the #[ReOrderHook] attribute.
+ *
+ * @see \Drupal\Core\Hook\Attribute\ReOrderHook
+ *
+ * ReOrderHook takes the hook, class and method that is being overridden. The
+ * order parameter allows the same options as the parameter on the #[Hook]
+ * attribute. Ordering rules passed in ReOrder execute after rules defined in
+ * the #[Hook] attribute.
+ *
+ * @code
+ * #[ReOrderHook('entity_presave',
+ *   class: ContentModerationHooks::class,
+ *   method: 'entityPresave',
+ *   order: new OrderBefore(['workspaces'])
+ * )]
+ * @endcode
+ *
+ * @}
+ */
+
+/**
+ * @defgroup removing_hooks Removing Hooks
+ * @{
+ * Removing hook implementations.
+ *
+ * Hooks implemented by other modules can be removed using the #[RemoveHook]
+ * attribute.
+ *
+ * @see \Drupal\Core\Hook\Attribute\RemoveHook
+ *
+ * @code
+ * #[RemoveHook('help', class: LayoutBuilderHooks::class, method: 'help')]
+ * @endcode
  * @}
  */

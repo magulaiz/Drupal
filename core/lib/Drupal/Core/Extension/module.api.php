@@ -97,7 +97,7 @@ function hook_hook_info(): array {
  * This hook will be removed in 12.0.0. It is not deprecated in order to
  * support the "#[LegacyModuleImplementsAlter]" attribute, used prior to Drupal
  * 11.2.0.
- * See https://www.drupal.org/node/3496788.
+ * See \Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter
  *
  *
  * Only procedural implementations are supported for this hook.
@@ -122,7 +122,7 @@ function hook_hook_info(): array {
  * @param string $hook
  *   The name of the module hook being implemented.
  *
- * @see https://www.drupal.org/node/3496788
+ * @see \Drupal\Core\Hook\Attribute\LegacyModuleImplementsAlter
  */
 function hook_module_implements_alter(&$implementations, $hook) {
   if ($hook == 'form_alter') {
