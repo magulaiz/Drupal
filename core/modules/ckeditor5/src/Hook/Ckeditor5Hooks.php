@@ -311,13 +311,24 @@ class Ckeditor5Hooks {
     // This file means CKEditor 5 translations are in use on the page.
     // @see locale_js_alter()
     $placeholder_file = 'core/assets/vendor/ckeditor5/translation.js';
+    // If either the placeholder script exists, or one of the resulting language
+    // libraries were already loaded, keep filtering the scripts.
+    $filter_scripts = isset($javascript[$placeholder_file]);
+    if (!$filter_scripts) {
+      foreach ($assets->getAlreadyLoadedLibraries() as $library) {
+        if (str_starts_with($library, 'core/ckeditor5.translations.')) {
+          $filter_scripts = TRUE;
+          break;
+        }
+      }
+    }
     // This file is used to get a weight that will make it possible to aggregate
     // all translation files in a single aggregate.
     $ckeditor_dll_file = 'core/assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js';
-    if (isset($javascript[$placeholder_file])) {
+    if ($filter_scripts) {
       // Use the placeholder file weight to set all the translations files
       // weights so they can be aggregated together as expected.
-      $default_weight = $javascript[$placeholder_file]['weight'];
+      $default_weight = $javascript[$placeholder_file]['weight'] ?? 0;
       if (isset($javascript[$ckeditor_dll_file])) {
         $default_weight = $javascript[$ckeditor_dll_file]['weight'];
       }
