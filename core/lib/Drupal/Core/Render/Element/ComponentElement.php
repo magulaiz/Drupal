@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
@@ -107,6 +108,11 @@ class ComponentElement extends RenderElementBase {
       if (\is_scalar($slot_value)) {
         $slot_value = [
           "#plain_text" => (string) $slot_value,
+        ];
+      }
+      if ($slot_value instanceof MarkupInterface) {
+        $slot_value = [
+          "#markup" => $slot_value,
         ];
       }
       if (!Element::isRenderArray($slot_value)) {
