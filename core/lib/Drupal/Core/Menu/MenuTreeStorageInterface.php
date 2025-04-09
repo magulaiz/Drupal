@@ -123,11 +123,10 @@ interface MenuTreeStorageInterface {
    * to further massage the data manually before further processing happens.
    * MenuLinkTree::checkAccess() needs to be invoked afterwards.
    *
-   * The tree order is maintained using an optimized algorithm, for example by
-   * storing each parent in an individual field, see
-   * https://www.drupal.org/node/141866 for more details. However, any details
-   * of the storage should not be relied upon since it may be swapped with a
-   * different implementation.
+   * The tree order is maintained using an optimized algorithm, such as storing
+   * each parent in an individual field (e.g., a materialized path). However,
+   * the storage details are implementation-specific and should not be relied
+   * upon, as the storage mechanism may be swapped.
    *
    * @param string $menu_name
    *   The name of the menu.
