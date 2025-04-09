@@ -44,6 +44,7 @@
   padding-block: var(--admin-toolbar-space-10);
   font-variation-settings: "wght" 700;
   gap: calc(0.5 * var(--admin-toolbar-rem));
+  appearance: button;
 
   &:has(+ .toolbar-popover__wrapper .is-active) {
     color: var(--toolbar-button-has-active-child-color);
