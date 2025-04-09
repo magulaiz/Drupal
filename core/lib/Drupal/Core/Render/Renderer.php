@@ -93,6 +93,22 @@ class Renderer implements RendererInterface {
   }
 
   /**
+   * Sets the bubbleable rendering metadata that has configurable defaults.
+   *
+   * @param array &$elements
+   *   The render element.
+   */
+  protected function setDefaultBubbleableMetadata(array &$elements): void {
+    $required_cache_contexts = $this->rendererConfig['required_cache_contexts'];
+    if (isset($elements['#cache']['contexts'])) {
+      $elements['#cache']['contexts'] = Cache::mergeContexts($elements['#cache']['contexts'], $required_cache_contexts);
+    }
+    else {
+      $elements['#cache']['contexts'] = $required_cache_contexts;
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function renderRoot(&$elements) {
@@ -105,7 +121,11 @@ class Renderer implements RendererInterface {
     // Render in its own render context.
     $this->isRenderingRoot = TRUE;
     $output = $this->executeInRenderContext(new RenderContext(), function () use (&$elements) {
-      return $this->render($elements, TRUE);
+      // Ensure the final render array always has the configurable defaults.
+      $this->setDefaultBubbleableMetadata($elements);
+      $this->render($elements);
+      $this->replacePlaceholders($elements);
+      return $elements['#markup'];
     });
     $this->isRenderingRoot = FALSE;
 
@@ -117,7 +137,11 @@ class Renderer implements RendererInterface {
    */
   public function renderInIsolation(&$elements) {
     return $this->executeInRenderContext(new RenderContext(), function () use (&$elements) {
-      return $this->render($elements, TRUE);
+      // Ensure the final render array always has the configurable defaults.
+      $this->setDefaultBubbleableMetadata($elements);
+      $this->render($elements);
+      $this->replacePlaceholders($elements);
+      return $elements['#markup'];
     });
   }
 
@@ -187,7 +211,7 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function render(&$elements, $is_root_call = FALSE) {
+  public function render(&$elements) {
     // Since #pre_render, #post_render, #lazy_builder callbacks and theme
     // functions or templates may be used for generating a render array's
     // content, and we might be rendering the main content for the page, it is
@@ -200,7 +224,7 @@ class Renderer implements RendererInterface {
     // Hence, catch all exceptions, reset the isRenderingRoot property and
     // re-throw exceptions.
     try {
-      return $this->doRender($elements, $is_root_call);
+      return $this->doRender($elements);
     }
     catch (\Exception $e) {
       // Mark the ::rootRender() call finished due to this exception & re-throw.
@@ -212,15 +236,12 @@ class Renderer implements RendererInterface {
   /**
    * See the docs for ::render().
    */
-  protected function doRender(&$elements, $is_root_call = FALSE) {
+  protected function doRender(&$elements) {
     if (empty($elements)) {
       return '';
     }
 
-    if ($this->rendererConfig['debug'] === TRUE) {
-      $render_start = microtime(TRUE);
-    }
-
+    $render_start = $this->rendererConfig['debug'] === TRUE ?? microtime(TRUE);
     if (!isset($elements['#access']) && isset($elements['#access_callback'])) {
       $elements['#access'] = $this->doCallback('#access_callback', $elements['#access_callback'], [$elements]);
     }
@@ -259,19 +280,11 @@ class Renderer implements RendererInterface {
     }
     $context->push(new BubbleableMetadata());
 
-    // Set the bubbleable rendering metadata that has configurable defaults, if:
-    // - this is the root call, to ensure that the final render array definitely
-    //   has these configurable defaults, even when no subtree is render cached.
-    // - this is a render cacheable subtree, to ensure that the cached data has
-    //   the configurable defaults (which may affect the ID and invalidation).
-    if ($is_root_call || isset($elements['#cache']['keys'])) {
-      $required_cache_contexts = $this->rendererConfig['required_cache_contexts'];
-      if (isset($elements['#cache']['contexts'])) {
-        $elements['#cache']['contexts'] = Cache::mergeContexts($elements['#cache']['contexts'], $required_cache_contexts);
-      }
-      else {
-        $elements['#cache']['contexts'] = $required_cache_contexts;
-      }
+    // Set the bubbleable rendering metadata that has configurable defaults if
+    // this is a render cacheable subtree, to ensure that the cached data has
+    // the configurable defaults (which may affect the ID and invalidation).
+    if (isset($elements['#cache']['keys'])) {
+      $this->setDefaultBubbleableMetadata($elements);
     }
 
     // Try to fetch the prerendered element from cache, replace any placeholders
@@ -280,12 +293,6 @@ class Renderer implements RendererInterface {
       $cached_element = $this->renderCache->get($elements);
       if ($cached_element !== FALSE) {
         $elements = $cached_element;
-        // Only when we're in a root (non-recursive) Renderer::render() call,
-        // placeholders must be processed, to prevent breaking the render cache
-        // in case of nested elements with #cache set.
-        if ($is_root_call) {
-          $this->replacePlaceholders($elements);
-        }
         // Mark the element markup as safe if is it a string.
         if (is_string($elements['#markup'])) {
           $elements['#markup'] = Markup::create($elements['#markup']);
@@ -548,23 +555,6 @@ class Renderer implements RendererInterface {
       $context->pop();
       $context->push(new BubbleableMetadata());
       $context->update($elements);
-    }
-
-    // Only when we're in a root (non-recursive) Renderer::render() call,
-    // placeholders must be processed, to prevent breaking the render cache in
-    // case of nested elements with #cache set.
-    //
-    // By running them here, we ensure that:
-    // - they run when #cache is disabled,
-    // - they run when #cache is enabled and there is a cache miss.
-    // Only the case of a cache hit when #cache is enabled, is not handled here,
-    // that is handled earlier in Renderer::render().
-    if ($is_root_call) {
-      $this->replacePlaceholders($elements);
-      // @todo remove as part of https://www.drupal.org/node/2511330.
-      if ($context->count() !== 1) {
-        throw new \LogicException('A stray RendererInterface::render() invocation with $is_root_call = TRUE is causing bubbling of attached assets to break.');
-      }
     }
 
     // Rendering is finished, all necessary info collected!

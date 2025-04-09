@@ -319,9 +319,6 @@ interface RendererInterface {
    *
    * @param array $elements
    *   The structured array describing the data to be rendered.
-   * @param bool $is_root_call
-   *   (Internal use only.) Whether this is a recursive call or not. See
-   *   ::renderRoot().
    *
    * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
@@ -340,7 +337,7 @@ interface RendererInterface {
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    * @see \Drupal\Core\Render\RendererInterface::renderRoot()
    */
-  public function render(&$elements, $is_root_call = FALSE);
+  public function render(&$elements);
 
   /**
    * Checks whether a render context is active.
