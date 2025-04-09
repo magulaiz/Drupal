@@ -134,7 +134,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   /**
    * The operator used for the query: or|and.
    */
-  public string $operator;
+  public ?string $operator;
 
   /**
    * The title set by argument validation.
