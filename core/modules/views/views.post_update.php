@@ -87,3 +87,10 @@ function views_post_update_table_css_class(?array &$sandbox = NULL): void {
     return $view_config_updater->needsTableCssClassUpdate($view);
   });
 }
+
+/**
+ * Fix views with filter_format dependencies.
+ */
+function views_post_update_views_filter_format_dependencies(?array &$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view');
+}
