@@ -127,6 +127,10 @@
   }
 }
 
+[class*="toolbar-button--icon"]:not([data-icon-text])::before {
+  content: "";
+}
+
 .toolbar-button--primary {
   --toolbar-button-color: var(--admin-toolbar-color-white);
   --toolbar-button-bg: var(--admin-toolbar-color-blue-450);
