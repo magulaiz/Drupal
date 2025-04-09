@@ -220,6 +220,7 @@ hhvm
 hilited
 hmac
 hookname
+hqdefault
 hrefs
 htmlcorrector
 httpheader
@@ -279,6 +280,7 @@ mainpage
 maryjane
 maximumred
 maxlifetime
+maxresdefault
 maynot
 mbytes
 mediumint
