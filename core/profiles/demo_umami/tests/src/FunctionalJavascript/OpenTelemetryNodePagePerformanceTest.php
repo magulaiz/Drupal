@@ -416,7 +416,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       'ScriptCount' => 1,
       'ScriptBytes' => 12000,
       'StylesheetCount' => 2,
-      'StylesheetBytes' => 41750,
+      'StylesheetBytes' => 41250,
     ];
     $this->assertMetrics($expected, $performance_data);
   }
