@@ -98,7 +98,7 @@ class FileEventSubscriber implements EventSubscriberInterface {
 
     // Sanitize the filename according to configuration.
     $alphanumeric = $fileSettings->get('filename_sanitization.replace_non_alphanumeric');
-    $replacement = $fileSettings->get('filename_sanitization.replacement_character');
+    $replacement = $fileSettings->get('filename_sanitization.replacement_character') ?? '-';
 
     // Always replace special characters.
     $filename = str_replace(self::SPECIAL_CHARS, $replacement, $filename);
