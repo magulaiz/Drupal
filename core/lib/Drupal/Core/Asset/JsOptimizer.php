@@ -27,12 +27,8 @@ class JsOptimizer implements AssetOptimizerInterface {
    * {@inheritdoc}
    */
   public function optimize(array $js_asset) {
-    if ($js_asset['type'] !== 'file') {
-      throw new \Exception('Only file JavaScript assets can be optimized.');
-    }
-    if (!$js_asset['preprocess']) {
-      throw new \Exception('Only file JavaScript assets with preprocessing enabled can be optimized.');
-    }
+    assert($js_asset['type'] !== 'file', 'Only file JavaScript assets can be optimized.');
+    assert(!$js_asset['preprocess'], 'Only file JavaScript assets with preprocessing enabled can be optimized.');
 
     // If a BOM is found, convert the file to UTF-8, then use substr() to
     // remove the BOM from the result.
