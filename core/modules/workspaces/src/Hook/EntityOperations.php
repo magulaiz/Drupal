@@ -283,11 +283,8 @@ class EntityOperations {
   }
 
   /**
-   * Implements hook_form_alter().
-   *
    * Alters entity forms to disallow concurrent editing in multiple workspaces.
    */
-  #[Hook('form_alter')]
   public function entityFormAlter(array &$form, FormStateInterface $form_state, string $form_id): void {
     if (!$form_state->getFormObject() instanceof EntityFormInterface) {
       return;
