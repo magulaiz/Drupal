@@ -7,9 +7,9 @@ namespace Drupal\Component\Discovery;
 /**
  * Defines a classloader that detects missing classes.
  *
- * This does not really load classes, but allows calling code to explicitly
- * check whether a class that was requested failed to discovered by other
- * class loaders.
+ * This does not load classes. It allows calling code to explicitly check
+ * whether a class that was requested failed to be discovered by other class
+ * loaders.
  *
  * It also works around a PHP limitation when it attempts to load a class that
  * relies on a trait that does not exist. This is a common situation with Drupal
@@ -40,7 +40,7 @@ final class MissingClassDetectionClassLoader {
    * PHP fatal error.
    *
    * @param string $class
-   *   The classname to load.
+   *   The class name to load.
    */
   public function loadClass(string $class): void {
     $this->missingClass = TRUE;
