@@ -7,7 +7,7 @@
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
-use Drupal\Core\Hook\Attribute\StopProceduralHookScan;
+use Drupal\Core\Hook\Attribute\ProceduralHookScanStop;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
@@ -24,7 +24,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  *   workflow, or FALSE if we've hit a fatal configuration and must halt the
  *   workflow.
  */
-#[StopProceduralHookScan]
+#[ProceduralHookScanStop]
 function _update_manager_check_backends(&$form, $operation) {
   @trigger_error(__METHOD__ . '() is deprecated in drupal:11.2.0 and is removed from drupal:12.0.0. There is no replacement. Use composer to manage the code for your site. See https://www.drupal.org/node/3512364', E_USER_DEPRECATED);
 
@@ -65,7 +65,8 @@ function _update_manager_check_backends(&$form, $operation) {
       [
         '@backends' => implode(', ', $backend_names),
         ':doc_url' => 'https://www.drupal.org/docs/extending-drupal/overview',
-      ]);
+      ]
+    );
   }
   else {
     $form['available_backends']['#markup'] = \Drupal::translation()->formatPlural(
@@ -75,7 +76,8 @@ function _update_manager_check_backends(&$form, $operation) {
       [
         '@backends' => implode(', ', $backend_names),
         ':doc_url' => 'https://www.drupal.org/docs/extending-drupal/overview',
-      ]);
+      ]
+      );
   }
   return TRUE;
 }
