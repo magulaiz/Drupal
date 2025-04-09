@@ -4,9 +4,9 @@ namespace Drupal\file\EventSubscriber;
 
 use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -15,6 +15,42 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * @package Drupal\file\EventSubscriber
  */
 class FileEventSubscriber implements EventSubscriberInterface {
+
+  // The special characters to be removed from the filename.
+  const SPECIAL_CHARS = [
+    '?',
+    '[',
+    ']',
+    '/',
+    '\\',
+    '=',
+    '<',
+    '>',
+    ':',
+    ';',
+    ',',
+    "'",
+    '"',
+    '&',
+    '$',
+    '#',
+    '*',
+    '(',
+    ')',
+    '|',
+    '~',
+    '`',
+    '!',
+    '{',
+    '}',
+    '%',
+    '+',
+    '’',
+    '«',
+    '»',
+    '”',
+    '“',
+  ];
 
   /**
    * Constructs a new file event listener.
@@ -62,7 +98,11 @@ class FileEventSubscriber implements EventSubscriberInterface {
 
     // Sanitize the filename according to configuration.
     $alphanumeric = $fileSettings->get('filename_sanitization.replace_non_alphanumeric');
-    $replacement = $fileSettings->get('filename_sanitization.replacement_character');
+    $replacement = $fileSettings->get('filename_sanitization.replacement_character') ?? '-';
+
+    // Always replace special characters.
+    $filename = str_replace(self::SPECIAL_CHARS, $replacement, $filename);
+
     if ($transliterate) {
       $transliterated_filename = $this->transliteration->transliterate(
         $filename,
@@ -104,6 +144,7 @@ class FileEventSubscriber implements EventSubscriberInterface {
       // Force lowercase to prevent issues on case-insensitive file systems.
       $filename = mb_strtolower($filename);
     }
+
     $event->setFilename($filename . $extension);
   }
 

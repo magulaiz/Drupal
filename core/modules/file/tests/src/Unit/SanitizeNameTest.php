@@ -100,27 +100,27 @@ class SanitizeNameTest extends UnitTestCase {
       ],
       'Test only transliteration: complex and replace (-)' => [
         'S  Pácê--táb#	#--🙈.jpg',
-        'S  Pace--tab#	#---.jpg',
+        'S  Pace--tab-	----.jpg',
         [TRUE, '-', FALSE, FALSE, FALSE, FALSE],
       ],
       'Test only transliteration: complex and replace (_)' => [
         'S  Pácê--táb#	#--🙈.jpg',
-        'S  Pace--tab#	#--_.jpg',
+        'S  Pace--tab_	_--_.jpg',
         [TRUE, '_', FALSE, FALSE, FALSE, FALSE],
       ],
       'Test transliteration, replace (-) and replace whitespace (trim front)' => [
         '  S  Pácê--táb#	#--🙈.png',
-        'S--Pace--tab#-#---.png',
+        'S--Pace--tab------.png',
         [TRUE, '-', TRUE, FALSE, FALSE, FALSE],
       ],
       'Test transliteration, replace (-) and replace whitespace (trim both sides)' => [
         '  S  Pácê--táb#	#--🙈   .jpg',
-        'S--Pace--tab#-#---.jpg',
+        'S--Pace--tab------.jpg',
         [TRUE, '-', TRUE, FALSE, FALSE, FALSE],
       ],
       'Test transliteration, replace (_) and replace whitespace (trim both sides)' => [
         '  S  Pácê--táb#	#--🙈  .jpg',
-        'S__Pace--tab#_#--_.jpg',
+        'S__Pace--tab___--_.jpg',
         [TRUE, '_', TRUE, FALSE, FALSE, FALSE],
       ],
       'Test transliteration, replace (_), replace whitespace and replace non-alphanumeric' => [
@@ -140,7 +140,7 @@ class SanitizeNameTest extends UnitTestCase {
       ],
       'Test transliteration, replace (-), replace whitespace and deduplicate separators' => [
         '  S  Pácê--táb#	#--🙈.txt',
-        'S-Pace-tab#-#.txt',
+        'S-Pace-tab.txt',
         [TRUE, '-', TRUE, FALSE, TRUE, FALSE],
       ],
       'Test transliteration, replace (_), replace whitespace, replace non-alphanumeric and deduplicate separators' => [
@@ -160,7 +160,7 @@ class SanitizeNameTest extends UnitTestCase {
       ],
       'Ignore non-alphanumeric replacement if transliteration is not set, but still replace whitespace, deduplicate separators, and lowercase' => [
         '  2S  Pácê--táb#	#--🙈.txt',
-        '2s-pácê-táb#-#-🙈.txt',
+        '2s-pácê-táb-🙈.txt',
         [FALSE, '-', TRUE, TRUE, TRUE, TRUE],
       ],
       'Only lowercase, simple' => [

@@ -65,11 +65,11 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $this->assertSession()->pageTextNotContains($field_name);
     }
 
-    $this->generateFile('escaped-&-text', 64, 10, 'text');
+    $this->generateFile('escaped-text', 64, 10, 'text');
     $test_file = File::create([
-      'uri' => 'public://escaped-&-text.txt',
+      'uri' => 'public://escaped-text.txt',
       'name' => 'escaped-&-text',
-      'filesize' => filesize('public://escaped-&-text.txt'),
+      'filesize' => filesize('public://escaped-text.txt'),
     ]);
 
     // Create a new node with the uploaded file.
@@ -105,7 +105,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->assertSession()->pageTextContains($description);
 
     // Ensure the filename in the link's title attribute is escaped.
-    $this->assertSession()->responseContains('title="escaped-&amp;-text.txt"');
+    $this->assertSession()->responseContains('title="escaped-text.txt"');
 
     // Test that fields appear as expected after during the preview.
     // Add a second file.
