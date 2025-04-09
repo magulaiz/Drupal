@@ -2,6 +2,7 @@
 
 namespace Drupal\Component\Plugin\Discovery;
 
+use Drupal\Component\Discovery\MissingClassDetectionClassLoader;
 use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -18,6 +19,14 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    * The file cache object.
    */
   protected FileCacheInterface $fileCache;
+
+  /**
+   * An array of classes to skip.
+   *
+   * This variable has to be static because once a class has been autoloaded by
+   * PHP, it cannot be unregistered again.
+   */
+  protected static array $skipClasses = [];
 
   /**
    * Constructs a new instance.
@@ -59,6 +68,9 @@ class AttributeClassDiscovery implements DiscoveryInterface {
   public function getDefinitions() {
     $definitions = [];
 
+    $autoloader = new MissingClassDetectionClassLoader();
+    spl_autoload_register([$autoloader, 'loadClass']);
+
     // Search for classes within all PSR-4 namespace locations.
     foreach ($this->getPluginNamespaces() as $namespace => $dirs) {
       foreach ($dirs as $dir) {
@@ -81,18 +93,6 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               $sub_path = $iterator->getSubIterator()->getSubPath();
               $sub_path = $sub_path ? str_replace(DIRECTORY_SEPARATOR, '\\', $sub_path) . '\\' : '';
               $class = $namespace . '\\' . $sub_path . $fileinfo->getBasename('.php');
-              try {
-                ['id' => $id, 'content' => $content] = $this->parseClass($class, $fileinfo);
-                if ($id) {
-                  $definitions[$id] = $content;
-                  // Explicitly serialize this to create a new object instance.
-                  $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content)]);
-                }
-                else {
-                  // Store a NULL object, so that the file is not parsed again.
-                  $this->fileCache->set($fileinfo->getPathName(), [NULL]);
-                }
-              }
               // Plugins may rely on Attribute classes defined by modules that
               // are not installed. In such a case, a 'class not found' error
               // may be thrown from reflection. However, this is an unavoidable
@@ -101,16 +101,70 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               // so that it is scanned each time. This ensures that the plugin
               // definition will be found if the module it requires is
               // enabled.
+              // Additionally, PHP handles missing traits as an unrecoverable
+              // error. Register a special classloader that prevents a missing
+              // trait from causing an error, but stores that it was unable to
+              // find something. Because the classloader will result in the
+              // class being successfully autoloaded, store an array of classes
+              // to skip if this method is called again.
+              // However, if discovery runs twice in a request, first without
+              // the module that defines the missing trait, and second after it
+              // has been installed, we want the plugin to be discovered in the
+              // second case. Therefore if a module has been added to skipped
+              // classes already, check if the namespace in which the missing
+              // trait resides is available, and allow discovery if so.
+              // @todo remove this workaround once PHP treats missing traits as
+              // catchable fatal errors.
+              // @see https://github.com/php/php-src/issues/17959
+              if (array_key_exists($class, self::$skipClasses)) {
+                $missing_classes = self::$skipClasses[$class];
+                foreach ($missing_classes as $missing_class) {
+                  $missing_class_namespace = implode('\\', array_slice(explode('\\', $missing_class), 0, 2));
+                  if (!isset($this->getPluginNamespaces()[$missing_class_namespace])) {
+                    $autoloader->reset();
+                    continue 2;
+                  }
+                }
+              }
+              try {
+                $class_exists = class_exists($class, TRUE);
+                if (!$class_exists || \count($autoloader->getMissingTraits()) > 0) {
+                  // @todo remove this workaround once PHP treats missing traits
+                  // as catchable fatal errors.
+                  if (\count($autoloader->getMissingTraits()) > 0) {
+                    self::$skipClasses[$class] = $autoloader->getMissingTraits();
+                  }
+                  $autoloader->reset();
+                  continue;
+                }
+              }
               catch (\Error $e) {
-                if (!preg_match('/(Class|Interface) .* not found$/', $e->getMessage())) {
+                if (!$autoloader->hasMissingClass()) {
+                  $autoloader->reset();
+                  spl_autoload_unregister([$autoloader, 'loadClass']);
                   throw $e;
                 }
+                $autoloader->reset();
+                continue;
+              }
+              ['id' => $id, 'content' => $content] = $this->parseClass($class, $fileinfo);
+              if ($id) {
+                $definitions[$id] = $content;
+                // Explicitly serialize this to create a new object instance.
+                if (!isset(self::$skipClasses[$class])) {
+                  $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content)]);
+                }
+              }
+              else {
+                // Store a NULL object, so that the file is not parsed again.
+                $this->fileCache->set($fileinfo->getPathName(), [NULL]);
               }
             }
           }
         }
       }
     }
+    spl_autoload_unregister([$autoloader, 'loadClass']);
 
     // Plugin discovery is a memory expensive process due to reflection and the
     // number of files involved. Collect cycles at the end of discovery to be as
