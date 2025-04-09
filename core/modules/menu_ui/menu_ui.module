@@ -19,6 +19,7 @@ use Drupal\node\NodeInterface;
  */
 function _menu_ui_node_save(NodeInterface $node, array $values): void {
   /** @var \Drupal\menu_link_content\MenuLinkContentInterface $entity */
+  $needs_save = FALSE;
   if (!empty($values['entity_id'])) {
     $entity = \Drupal::service('entity.repository')->getActive('menu_link_content', $values['entity_id']);
     if ($entity->isTranslatable() && $node->isTranslatable()) {
@@ -32,7 +33,10 @@ function _menu_ui_node_save(NodeInterface $node, array $values): void {
     else {
       // Ensure the entity matches the node language.
       $entity = $entity->getUntranslated();
-      $entity->set($entity->getEntityType()->getKey('langcode'), $node->language()->getId());
+      if ($entity->language()->getId() != $node->language()->getId()) {
+        $entity->set($entity->getEntityType()->getKey('langcode'), $node->language()->getId());
+        $needs_save = TRUE;
+      }
     }
   }
   else {
@@ -42,12 +46,30 @@ function _menu_ui_node_save(NodeInterface $node, array $values): void {
       'langcode' => $node->language()->getId(),
     ]);
     $entity->enabled->value = 1;
+    $needs_save = TRUE;
   }
-  $entity->title->value = trim($values['title']);
-  $entity->description->value = trim($values['description']);
-  $entity->menu_name->value = $values['menu_name'];
-  $entity->parent->value = $values['parent'];
-  $entity->weight->value = $values['weight'] ?? 0;
+  // Check if any value changed and only save if necessary.
+  if ($entity->get('title')->value != trim($values['title'])) {
+    $entity->set('title', trim($values['title']));
+    $needs_save = TRUE;
+  }
+  if ($entity->get('description')->value != trim($values['description'])) {
+    $entity->set('description', trim($values['description']));
+    $needs_save = TRUE;
+  }
+  if ($entity->get('menu_name')->value != $values['menu_name']) {
+    $entity->set('menu_name', $values['menu_name']);
+    $needs_save = TRUE;
+  }
+  if ($entity->get('parent')->value != $values['parent']) {
+    $entity->set('parent', $values['parent']);
+    $needs_save = TRUE;
+  }
+  if ($entity->get('weight')->value != ($values['weight'] ?? 0)) {
+    $entity->set('weight', $values['weight'] ?? 0);
+    $needs_save = TRUE;
+  }
+
   if ($entity->isNew()) {
     // @todo The menu link doesn't need to be changed in a workspace context.
     //   Fix this in https://www.drupal.org/project/drupal/issues/3511204.
@@ -57,18 +79,28 @@ function _menu_ui_node_save(NodeInterface $node, array $values): void {
       // That ensures that there is a regular, valid link target that is
       // only visible to users with permission to view the latest version.
       $entity->get('link')->uri = 'internal:/node/' . $node->id() . '/latest';
+      $needs_save = TRUE;
     }
   }
   else {
-    $entity->isDefaultRevision($node->isDefaultRevision());
+    if ($entity->isDefaultRevision() != $node->isDefaultRevision()) {
+      $entity->isDefaultRevision($node->isDefaultRevision());
+      $needs_save = TRUE;
+    }
     if (!$entity->isDefaultRevision()) {
       $entity->setNewRevision(TRUE);
+      $needs_save = TRUE;
     }
     elseif ($entity->get('link')->uri !== 'entity:node/' . $node->id()) {
       $entity->get('link')->uri = 'entity:node/' . $node->id();
+      $needs_save = TRUE;
     }
   }
-  $entity->save();
+
+  if ($needs_save) {
+    $entity->isDefaultRevision($node->isDefaultRevision());
+    $entity->save();
+  }
 }
 
 /**
