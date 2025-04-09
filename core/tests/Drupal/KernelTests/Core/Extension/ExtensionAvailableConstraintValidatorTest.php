@@ -45,7 +45,7 @@ class ExtensionAvailableConstraintValidatorTest extends KernelTestBase {
     $data->setValue('fake_profile');
     $violations = $data->validate();
     $this->assertCount(1, $violations);
-    $this->assertSame("Profile 'fake_profile' does not exists.", (string) $violations->get(0)->getMessage());
+    $this->assertSame("Profile 'fake_profile' does not exist.", (string) $violations->get(0)->getMessage());
 
     // NULL should not trigger a validation error: a value may be nullable.
     $data->setValue(NULL);

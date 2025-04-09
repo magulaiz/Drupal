@@ -22,21 +22,21 @@ class ExtensionAvailableConstraint extends SymfonyConstraint {
    *
    * @var string
    */
-  public string $moduleNotExistsMessage = "Module '@name' does not exists.";
+  public string $moduleNotExistsMessage = "Module '@name' does not exist.";
 
   /**
    * The error message for a non-existent theme.
    *
    * @var string
    */
-  public string $themeNotExistsMessage = "Theme '@name' does not exists.";
+  public string $themeNotExistsMessage = "Theme '@name' does not exist.";
 
   /**
    * The error message for a non-existent profile.
    *
    * @var string
    */
-  public string $profileNotExistsMessage = "Profile '@name' does not exists.";
+  public string $profileNotExistsMessage = "Profile '@name' does not exist.";
 
   /**
    * The type of extension to look for. Can be 'module' or 'theme'.
