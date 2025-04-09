@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
+use Drupal\Core\Database\Connection;
+use Drupal\search\SearchIndexInterface;
 
 /**
  * Tests $node->save() for saving content.
@@ -23,12 +25,19 @@ class NodeSaveTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node_test'];
+  protected static $modules = ['node_test', 'search'];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Node search plugin.
+   *
+   * @var \Drupal\node\Plugin\Search\NodeSearch
+   */
+  protected $plugin;
 
   /**
    * {@inheritdoc}
@@ -166,10 +175,6 @@ class NodeSaveTest extends NodeTestBase {
     $node->title = 'updated';
     $node->save();
 
-    // Test if the node instance contains the default revision after the new
-    // changes have been applied, so other tasks can be performed after this
-    $this->assertTrue($node->isDefaultRevision(), "Node " . $node->id() . " is the current revision and other post-update tasks can be executed.");
-
     // The hook implementations node_test_node_presave() and
     // node_test_node_update() determine changes and change the title.
     $this->assertEquals('updated_presave_update', $node->label(), 'Changes have been determined.');
@@ -193,6 +198,70 @@ class NodeSaveTest extends NodeTestBase {
     // 'new'.
     $node = $this->drupalCreateNode(['title' => 'new']);
     $this->assertEquals('Node ' . $node->id(), $node->getTitle(), 'Node saved on node insert.');
+  }
+
+  /**
+   * Tests that the re-indexing of the node won't happen if it's
+   * not the default revision.
+   * 
+   * The idea is not to save URL aliases or execute certain procedures 
+   * if the node being processed is not the default revision
+   */
+  public function testNodeDefaultRevision(): void {
+    $node = Node::create([
+      'uid' => $this->webUser->id(),
+      'type' => 'article',
+      'title' => 'Initial Title 1',
+      'body' => [
+        'value' => $this->randomMachineName(32),
+        'format' => filter_default_format(),
+      ],
+    ]);
+    $node->save();
+
+    // Create different revisions (edits) of the same node 
+    for ($i = 0; $i < 3; $i++) {
+      $node->title = $this->randomMachineName();
+      $node->body = [
+        'value' => $this->randomMachineName(32),
+        'format' => filter_default_format(),
+      ];
+
+      $node->setNewRevision();
+      $node->save();
+    }
+
+    // Set up the search plugin.
+    $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
+
+    // Update the index. This does the initial processing.
+    $this->plugin->updateIndex();
+
+    // Run the shutdown function. Testing is a unique case where indexing
+    // and searching has to happen in the same request, so running the shutdown
+    // function manually is needed to finish the indexing process.
+    $search_index = \Drupal::service('search.index');
+
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $existing_revision_ids = \Drupal::entityTypeManager()->getStorage('node')->revisionIds(Node::Load($node->id()));
+
+    $vid = $existing_revision_ids[2];
+
+    // Load a previous revision
+    $old_revision = $node_storage->loadRevision($vid);
+
+    // This old revision calls postSave
+    $old_revision->postSave($node_storage, TRUE);
+
+    // postSave will call node_reindex_node_search() but it won't mark the node for re-indexing, this can 
+    // be tested by querying the search_dataset table and look for the node, it shouldn't be there
+    $database = \Drupal::database();
+
+    $result = $database->query("SELECT sid, type, reindex FROM {search_dataset} WHERE reindex > :reindex", [
+      ':reindex' => 0,
+    ])->fetchAll();
+
+    $this->assertCount(0, $result);
   }
 
 }
