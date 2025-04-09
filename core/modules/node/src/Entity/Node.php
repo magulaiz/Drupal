@@ -171,9 +171,9 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       \Drupal::service('node.grant_storage')->write($this, $grants, NULL, $update);
     }
 
-    // Reindex the node when it is updated. The node is automatically indexed
+    // Reindex the node when it is updated, but only if its the default revision. The node is automatically indexed
     // when it is added, simply by being added to the node table.
-    if ($update) {
+    if ($update && $this->isDefaultRevision()) {
       node_reindex_node_search($this->id());
     }
   }

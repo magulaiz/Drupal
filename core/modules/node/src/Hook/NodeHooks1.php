@@ -518,14 +518,26 @@ class NodeHooks1 {
   }
 
   /**
+   * Reindex the node when comments are added, updated, or deleted.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   A comment entity.
+   */
+  private function reindexNodeIfCommentOnNode($comment): void {
+    // Reindex the node when comments are added and if the node is the default revision.
+    $node = $comment->getCommentedEntity();
+    if (($comment->getCommentedEntityTypeId() == 'node') && $node->isDefaultRevision()) {
+      node_reindex_node_search($comment->getCommentedEntityId());
+    }
+  }
+
+  /**
    * Implements hook_ENTITY_TYPE_insert() for comment entities.
    */
   #[Hook('comment_insert')]
   public function commentInsert($comment): void {
     // Reindex the node when comments are added.
-    if ($comment->getCommentedEntityTypeId() == 'node') {
-      node_reindex_node_search($comment->getCommentedEntityId());
-    }
+    $this->reindexNodeIfCommentOnNode($comment);
   }
 
   /**
@@ -534,9 +546,7 @@ class NodeHooks1 {
   #[Hook('comment_update')]
   public function commentUpdate($comment): void {
     // Reindex the node when comments are changed.
-    if ($comment->getCommentedEntityTypeId() == 'node') {
-      node_reindex_node_search($comment->getCommentedEntityId());
-    }
+    $this->reindexNodeIfCommentOnNode($comment);
   }
 
   /**
@@ -545,9 +555,7 @@ class NodeHooks1 {
   #[Hook('comment_delete')]
   public function commentDelete($comment): void {
     // Reindex the node when comments are deleted.
-    if ($comment->getCommentedEntityTypeId() == 'node') {
-      node_reindex_node_search($comment->getCommentedEntityId());
-    }
+    $this->reindexNodeIfCommentOnNode($comment);
   }
 
   /**
