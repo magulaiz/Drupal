@@ -112,6 +112,9 @@ class Renderer implements RendererInterface {
    * {@inheritdoc}
    */
   public function renderRoot(&$elements) {
+    if (empty($elements)) {
+      return '';
+    }
     // Disallow calling ::renderRoot() from within another ::renderRoot() call.
     if ($this->isRenderingRoot) {
       $this->isRenderingRoot = FALSE;
@@ -123,8 +126,10 @@ class Renderer implements RendererInterface {
     $output = $this->executeInRenderContext(new RenderContext(), function () use (&$elements) {
       // Ensure the final render array always has the configurable defaults.
       $this->setDefaultBubbleableMetadata($elements);
-      $this->render($elements);
-      $this->replacePlaceholders($elements);
+      $result = $this->render($elements, TRUE);
+      if ($result === '') {
+        return '';
+      }
       return $elements['#markup'];
     });
     $this->isRenderingRoot = FALSE;
@@ -140,7 +145,6 @@ class Renderer implements RendererInterface {
       // Ensure the final render array always has the configurable defaults.
       $this->setDefaultBubbleableMetadata($elements);
       $this->render($elements);
-      $this->replacePlaceholders($elements);
       return $elements['#markup'];
     });
   }
@@ -211,7 +215,7 @@ class Renderer implements RendererInterface {
   /**
    * {@inheritdoc}
    */
-  public function render(&$elements) {
+  public function render(&$elements, $replace_placeholders = FALSE) {
     // Since #pre_render, #post_render, #lazy_builder callbacks and theme
     // functions or templates may be used for generating a render array's
     // content, and we might be rendering the main content for the page, it is
@@ -224,7 +228,7 @@ class Renderer implements RendererInterface {
     // Hence, catch all exceptions, reset the isRenderingRoot property and
     // re-throw exceptions.
     try {
-      return $this->doRender($elements);
+      return $this->doRender($elements, $replace_placeholders);
     }
     catch (\Exception $e) {
       // Mark the ::rootRender() call finished due to this exception & re-throw.
@@ -236,7 +240,7 @@ class Renderer implements RendererInterface {
   /**
    * See the docs for ::render().
    */
-  protected function doRender(&$elements) {
+  protected function doRender(&$elements, $replace_placeholders = FALSE) {
     if (empty($elements)) {
       return '';
     }
@@ -293,6 +297,10 @@ class Renderer implements RendererInterface {
       $cached_element = $this->renderCache->get($elements);
       if ($cached_element !== FALSE) {
         $elements = $cached_element;
+        // Replace placeholders if requested.
+        if ($replace_placeholders) {
+          $this->replacePlaceholders($elements);
+        }
         // Mark the element markup as safe if is it a string.
         if (is_string($elements['#markup'])) {
           $elements['#markup'] = Markup::create($elements['#markup']);
@@ -555,6 +563,9 @@ class Renderer implements RendererInterface {
       $context->pop();
       $context->push(new BubbleableMetadata());
       $context->update($elements);
+    }
+    if ($replace_placeholders) {
+      $this->replacePlaceholders($elements);
     }
 
     // Rendering is finished, all necessary info collected!
