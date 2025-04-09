@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\Node;
-use Drupal\Core\Database\Connection;
-use Drupal\search\SearchIndexInterface;
 
 /**
  * Tests $node->save() for saving content.
@@ -201,10 +199,9 @@ class NodeSaveTest extends NodeTestBase {
   }
 
   /**
-   * Tests that the re-indexing of the node shouldn't happen if it's
-   * not the default revision.
-   * 
-   * The idea is not to save URL aliases or execute certain procedures 
+   * Tests that previous revisions of a node are not re-indexed.
+   *
+   * The idea is not to save URL aliases or execute certain procedures
    * if the node being processed is not the default revision.
    */
   public function testNodeDefaultRevision(): void {
@@ -244,7 +241,7 @@ class NodeSaveTest extends NodeTestBase {
     // Gets the list of all the node revisions.
     $existing_revision_ids = \Drupal::entityTypeManager()->getStorage('node')->revisionIds(Node::Load($node->id()));
 
-    // pick a previous revision id.
+    // Pick a previous revision id.
     $vid = $existing_revision_ids[2];
 
     // Load a previous revision.
@@ -253,8 +250,9 @@ class NodeSaveTest extends NodeTestBase {
     // This old revision calls postSave.
     $old_revision->postSave($node_storage, TRUE);
 
-    // postSave will call node_reindex_node_search() but it won't mark the node for re-indexing because
-    // it's not the default revisiopn this can be tested by querying the search_dataset table, there 
+    // postSave will call node_reindex_node_search() but it won't mark the
+    // node for re-indexing becauseit's not the default revision this can
+    // be tested by querying the search_dataset table, there
     // should be any records there.
     $database = \Drupal::database();
 
