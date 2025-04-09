@@ -231,4 +231,23 @@ class UpdateMiscTest extends UpdateTestBase {
     $this->assertSession()->pageTextContains('Language');
   }
 
+  /**
+   * Checks for any errors when the email list is empty.
+   */
+  public function testEmptyEmailListNotification(): void {
+    // Reset the mail collector.
+    \Drupal::state()->set('system.test_mail_collector', []);
+
+    // Set the email list to an array with an empty string.
+    $this->config('update.settings')->set('notification.emails', [''])->save();
+
+    // Execute the cron to in order to send update e-mails.
+    $this->cronRun();
+
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+    // Check no e-mails were sent.
+    $this->assertCount(0, $captured_emails);
+
+  }
+
 }
