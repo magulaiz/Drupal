@@ -684,7 +684,7 @@ drupal.tabbingmanager:
 drupal.tabledrag:
   version: VERSION
   js:
-    misc/tabledrag.js: { weight: -1 }
+    misc/tabledrag.js: {}
   css:
     component:
       misc/components/tabledrag.module.css: { weight: -10 }
