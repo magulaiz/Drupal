@@ -647,14 +647,14 @@ class Registry implements DestructableInterface {
         if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
           $info['preprocess functions'] = [];
           $prefixes = [];
-          // Add template_preprocess_HOOK function, if no initial preprocess
-          // callback is defined.
-          if (empty($info['initial preprocess']) && function_exists('template_preprocess_' . $hook)) {
-            // @todo trigger deprecation in https://www.drupal.org/project/drupal/issues/3513595.
-            $storePreprocess($info, 'template', $hook);
-          }
 
           if ($type == 'module') {
+            // Add template_preprocess_HOOK function, if no initial preprocess
+            // callback is defined.
+            if (empty($info['initial preprocess']) && function_exists('template_preprocess_' . $hook)) {
+              // @todo trigger deprecation in https://www.drupal.org/project/drupal/issues/3513595.
+              $storePreprocess($info, 'template', $hook);
+            }
             $info['preprocess functions'] = NestedArray::mergeDeep($info['preprocess functions'] ?? [], $this->collectModulePreprocess($cache, 'preprocess_' . $hook));
           }
           elseif ($type == 'theme_engine' || $type == 'base_theme_engine') {
