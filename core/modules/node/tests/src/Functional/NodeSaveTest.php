@@ -234,8 +234,6 @@ class NodeSaveTest extends NodeTestBase {
     // Update the index.
     $this->plugin->updateIndex();
 
-    $search_index = \Drupal::service('search.index');
-
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
 
     // Gets the list of all the node revisions.
@@ -251,7 +249,7 @@ class NodeSaveTest extends NodeTestBase {
     $old_revision->postSave($node_storage, TRUE);
 
     // postSave will call node_reindex_node_search() but it won't mark the
-    // node for re-indexing becauseit's not the default revision this can
+    // node for re-indexing because it's not the default revision this can
     // be tested by querying the search_dataset table, there
     // should be any records there.
     $database = \Drupal::database();
