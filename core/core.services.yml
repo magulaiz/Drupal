@@ -67,6 +67,8 @@ parameters:
   tempstore.expire: 604800
   queue.config:
     suspendMaximumWait: 30.0
+  state.keys_set_logger.config:
+    keys: ['system.maintenance_mode']
 services:
   _defaults:
     autoconfigure: true
@@ -588,6 +590,9 @@ services:
     tags:
       - { name: needs_destruction }
   Drupal\Core\State\StateInterface: '@state'
+  state.keys_set_logger:
+    class: Drupal\Core\State\EventSubscriber\StateKeysSetLoggerSubscriber
+    arguments: ['%state.keys_set_logger.config%', '@state', '@string_translation', '@logger.factory']
   queue:
     class: Drupal\Core\Queue\QueueFactory
     autowire: true

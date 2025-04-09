@@ -384,4 +384,43 @@ class StateTest extends UnitTestCase {
     $this->assertEquals(['key' => 'value'], $state->getMultiple(['key']));
   }
 
+  /**
+   * Tests getModifiedKeys() method.
+   *
+   * @covers ::getKeysSetDuringRequest
+   */
+  public function testGetKeysSetDuringRequest(): State {
+    $values = ['key1' => 'value1', 'key2' => 'value2', 'key3' => 'value3'];
+    $this->state->setMultiple($values);
+    $this->assertEquals([
+      'key1' => ['value' => 'value1', 'original' => NULL],
+      'key2' => ['value' => 'value2', 'original' => NULL],
+      'key3' => ['value' => 'value3', 'original' => NULL],
+    ], $this->state->getKeysSetDuringRequest());
+
+    $nonOverwritingValues = ['key4' => 'value4', 'key5' => 'value5', 'key6' => 'value6'];
+    $this->state->setMultiple($nonOverwritingValues);
+    $this->assertEquals([
+      'key1' => ['value' => 'value1', 'original' => NULL],
+      'key2' => ['value' => 'value2', 'original' => NULL],
+      'key3' => ['value' => 'value3', 'original' => NULL],
+      'key4' => ['value' => 'value4', 'original' => NULL],
+      'key5' => ['value' => 'value5', 'original' => NULL],
+      'key6' => ['value' => 'value6', 'original' => NULL],
+    ], $this->state->getKeysSetDuringRequest());
+
+    $overwritingValues = ['key6' => 'new-value-6'];
+    $this->state->setMultiple($overwritingValues);
+    $this->assertEquals([
+      'key1' => ['value' => 'value1', 'original' => NULL],
+      'key2' => ['value' => 'value2', 'original' => NULL],
+      'key3' => ['value' => 'value3', 'original' => NULL],
+      'key4' => ['value' => 'value4', 'original' => NULL],
+      'key5' => ['value' => 'value5', 'original' => NULL],
+      'key6' => ['value' => 'new-value-6', 'original' => NULL],
+    ], $this->state->getKeysSetDuringRequest());
+
+    return $this->state;
+  }
+
 }

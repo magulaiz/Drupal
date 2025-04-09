@@ -31,6 +31,18 @@ class State extends CacheCollector implements StateInterface {
   protected $keyValueStore;
 
   /**
+   * Tracks keys that have been modified during the request lifecycle.
+   *
+   * This associative array is keyed by key names, where each value
+   * is an array containing these keys:
+   *   - value: The value that was set during the request. If the value was
+   *     set multiple times, this will be the last value set.
+   *   - original: The initial value that was stored at the beginning
+   *     of the request.
+   */
+  protected array $keysSetDuringRequest = [];
+
+  /**
    * Constructs a State object.
    *
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
@@ -90,6 +102,7 @@ class State extends CacheCollector implements StateInterface {
       @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
       $key = self::$deprecatedState[$key]['replacement'];
     }
+    $this->registerKeySetDuringRequest($key, $value, parent::get($key));
     $this->keyValueStore->set($key, $value);
     // If another request had a cache miss before this request, and also hasn't
     // written to cache yet, then it may already have read this value from the
@@ -108,6 +121,7 @@ class State extends CacheCollector implements StateInterface {
   public function setMultiple(array $data) {
     $this->keyValueStore->setMultiple($data);
     foreach ($data as $key => $value) {
+      $this->registerKeySetDuringRequest($key, $value, parent::get($key));
       parent::set($key, $value);
       $this->persist($key);
     }
@@ -136,6 +150,33 @@ class State extends CacheCollector implements StateInterface {
    */
   public function resetCache() {
     $this->clear();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getKeysSetDuringRequest(): array {
+    return $this->keysSetDuringRequest;
+  }
+
+  /**
+   * Registers a key that was set during the request.
+   *
+   * @param string $key
+   *   The key that was set.
+   * @param mixed $value
+   *   The value that was set.
+   * @param mixed $previousValue
+   *   The previous value that was stored.
+   */
+  protected function registerKeySetDuringRequest(string $key, mixed $value, mixed $previousValue): void {
+    if (!isset($this->keysSetDuringRequest[$key])) {
+      $this->keysSetDuringRequest[$key] = [];
+    }
+    $this->keysSetDuringRequest[$key]['value'] = $value;
+    if (!array_key_exists('original', $this->keysSetDuringRequest[$key])) {
+      $this->keysSetDuringRequest[$key]['original'] = $previousValue;
+    }
   }
 
 }
