@@ -362,7 +362,7 @@ class HookCollectorPass implements CompilerPassInterface {
    * Determines if a hook must be implemented procedurally.
    *
    * @param string $hook_name
-   *   The name of the hook to check.
+   *   The short hook name to check, without the 'hook_' prefix.
    *
    * @return bool
    *   TRUE if the hook must be implemented procedurally, FALSE otherwise.
