@@ -201,11 +201,11 @@ class NodeSaveTest extends NodeTestBase {
   }
 
   /**
-   * Tests that the re-indexing of the node won't happen if it's
+   * Tests that the re-indexing of the node shouldn't happen if it's
    * not the default revision.
    * 
    * The idea is not to save URL aliases or execute certain procedures 
-   * if the node being processed is not the default revision
+   * if the node being processed is not the default revision.
    */
   public function testNodeDefaultRevision(): void {
     $node = Node::create([
@@ -219,7 +219,7 @@ class NodeSaveTest extends NodeTestBase {
     ]);
     $node->save();
 
-    // Create different revisions (edits) of the same node 
+    // Create different revisions (edits) of the same node.
     for ($i = 0; $i < 3; $i++) {
       $node->title = $this->randomMachineName();
       $node->body = [
@@ -231,30 +231,31 @@ class NodeSaveTest extends NodeTestBase {
       $node->save();
     }
 
-    // Set up the search plugin.
+    // Set up the search configuration and the index.
     $this->plugin = $this->container->get('plugin.manager.search')->createInstance('node_search');
 
-    // Update the index. This does the initial processing.
+    // Update the index.
     $this->plugin->updateIndex();
 
-    // Run the shutdown function. Testing is a unique case where indexing
-    // and searching has to happen in the same request, so running the shutdown
-    // function manually is needed to finish the indexing process.
     $search_index = \Drupal::service('search.index');
 
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+
+    // Gets the list of all the node revisions.
     $existing_revision_ids = \Drupal::entityTypeManager()->getStorage('node')->revisionIds(Node::Load($node->id()));
 
+    // pick a previous revision id.
     $vid = $existing_revision_ids[2];
 
-    // Load a previous revision
+    // Load a previous revision.
     $old_revision = $node_storage->loadRevision($vid);
 
-    // This old revision calls postSave
+    // This old revision calls postSave.
     $old_revision->postSave($node_storage, TRUE);
 
-    // postSave will call node_reindex_node_search() but it won't mark the node for re-indexing, this can 
-    // be tested by querying the search_dataset table and look for the node, it shouldn't be there
+    // postSave will call node_reindex_node_search() but it won't mark the node for re-indexing because
+    // it's not the default revisiopn this can be tested by querying the search_dataset table, there 
+    // should be any records there.
     $database = \Drupal::database();
 
     $result = $database->query("SELECT sid, type, reindex FROM {search_dataset} WHERE reindex > :reindex", [
