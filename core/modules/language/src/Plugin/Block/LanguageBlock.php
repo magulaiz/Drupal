@@ -100,7 +100,14 @@ class LanguageBlock extends BlockBase implements ContainerFactoryPluginInterface
       $url = Url::fromRouteMatch($route_match);
     }
     $links = $this->languageManager->getLanguageSwitchLinks($type, $url);
-
+    foreach ($links->links as $id => $link) {
+      $language = $this->languageManager->getLanguage($id);
+      if ($language) {
+        // Make sure the name is translatable using the current interface language
+        $translated_name = $this->languageManager->getLanguageConfigOverride($id)->get('label');
+        $links->links[$id]['title'] = $translated_name ?? $language->getName();
+      }
+    }
     if (isset($links->links)) {
       $build = [
         '#theme' => 'links__language_block',
